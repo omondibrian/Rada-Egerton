@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../sizeConfig.dart';
 
 class RadaButton extends StatelessWidget {
   final String title;
@@ -14,13 +15,16 @@ class RadaButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 290.0,
+      width: SizeConfig.isTabletWidth ? 600 : 290.0,
+      height: SizeConfig.isTabletWidth ? 80 : 40.0,
+      padding: EdgeInsets.all(0.0),
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           border: Border.all(color: Theme.of(context).primaryColor)),
       child: TextButton(
         style: ButtonStyle(
+          minimumSize: MaterialStateProperty.all<Size>(Size(290.0, 50.0)),
           textStyle: MaterialStateProperty.all<TextStyle>(
               TextStyle(color: Colors.white)),
           backgroundColor: fill
@@ -36,8 +40,14 @@ class RadaButton extends StatelessWidget {
         child: Text(
           this.title,
           style: fill
-              ? TextStyle(color: Colors.white)
-              : TextStyle(color: Colors.black),
+              ? TextStyle(
+                  color: Colors.white,
+                  fontSize: SizeConfig.isTabletWidth ? 28 : 12,
+                )
+              : TextStyle(
+                  color: Colors.black,
+                  fontSize: SizeConfig.isTabletWidth ? 28 : 12,
+                ),
         ),
       ),
     );

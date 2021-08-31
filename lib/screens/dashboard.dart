@@ -2,18 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rada_egerton/constants.dart';
 
+import '../sizeConfig.dart';
+
 class Dashboard extends StatelessWidget {
   Widget dashBoardBuilder(BuildContext ctx, int index) {
+    final style = TextStyle(
+      fontSize: SizeConfig.isTabletWidth ? 28 : 14,
+    );
     return ListTile(
+      contentPadding:
+          SizeConfig.isTabletWidth ? EdgeInsets.all(20) : EdgeInsets.all(2.0),
       leading: SvgPicture.asset(
         dashboardItems[index]['leadingIcon'],
-        width: 80,
+        width: SizeConfig.isTabletWidth ? 90 : 60,
+        height: SizeConfig.isTabletWidth ? 60 : 40,
       ),
-      title: Text(dashboardItems[index]['title']),
-      subtitle: Text(dashboardItems[index]['subtitle']),
+      title: Text(
+        dashboardItems[index]['title'],
+        style: style,
+      ),
+      subtitle: Text(
+        dashboardItems[index]['subtitle'],
+        style: style,
+      ),
       trailing: IconButton(
+        iconSize: SizeConfig.isTabletWidth ? 50 : 30,
+        color: Theme.of(ctx).primaryColor,
         icon: Icon(Icons.arrow_forward_ios),
-        onPressed: ()=> Navigator.of(ctx).pushNamed(dashboardItems[index]['routeName']),
+        onPressed: () =>
+            Navigator.of(ctx).pushNamed(dashboardItems[index]['routeName']),
       ),
     );
   }
@@ -38,6 +55,7 @@ class Dashboard extends StatelessWidget {
     );
   }
 }
+
 
 List dashboardItems = [
   {
