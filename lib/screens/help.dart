@@ -4,7 +4,6 @@ import '../sizeConfig.dart';
 import './helpScreenTab/ContactTab.dart';
 import './helpScreenTab/locationTab.dart';
 
-
 class Help extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -22,6 +21,7 @@ class Help extends StatelessWidget {
               pinned: true,
               floating: true,
               bottom: TabBar(
+                labelPadding: EdgeInsets.symmetric(horizontal: 50.0),
                 indicatorColor: Theme.of(context).primaryColor,
                 isScrollable: true,
                 tabs: [

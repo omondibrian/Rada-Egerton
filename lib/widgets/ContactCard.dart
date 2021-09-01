@@ -16,55 +16,63 @@ class ContactCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(this.title),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Icon(
-                Icons.phone,
-                color: Theme.of(context).accentColor,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(this.phoneNumber),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Icon(
-                Icons.email,
-                color: Theme.of(context).accentColor,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(this.email),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Icon(
-                Icons.pin_drop_outlined,
-                color: Theme.of(context).accentColor,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(this.email),
-            ],
-          ),
-        ],
+      margin: EdgeInsets.all(8.0),
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  this.title,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.phone,
+                  color: Theme.of(context).accentColor,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(this.phoneNumber),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.email,
+                  color: Theme.of(context).accentColor,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(this.email),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.pin_drop_outlined,
+                  color: Theme.of(context).accentColor,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(this.email),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
