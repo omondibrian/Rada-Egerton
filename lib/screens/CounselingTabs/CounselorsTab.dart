@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/widgets/ratingBar.dart';
 import '../../providers/counselors.provider.dart';
+import '../../sizeConfig.dart';
 
 class CounselorsTab extends StatelessWidget {
   const CounselorsTab({Key? key}) : super(key: key);
@@ -18,9 +19,14 @@ class CounselorsTab extends StatelessWidget {
             Column(
               children: [
                 CircleAvatar(
-                  child: Image.network(
-                    counserlors[index].imgUrl,
-                  ),
+                 child: ClipOval(
+            child: Image.network(
+              counserlors[index].imgUrl,
+              width: SizeConfig.isTabletWidth ? 120 : 90,
+              height: SizeConfig.isTabletWidth ? 120 : 90,
+              fit: BoxFit.cover,
+            ),
+          ),
                 )
               ],
             ),
