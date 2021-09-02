@@ -75,12 +75,11 @@ class ChatScreen extends StatelessWidget {
         preferredSize: Size.fromHeight(120),
         child: CustomAppBar(title: this.title, imgUrl: this.imgUrl),
       ),
-      body: Column(
-        children: [
-        Chat(
+      body: Expanded(
+        child: Chat(
           currentUserName: 'jonathan',
         ),
-      ]),
+      ),
     );
   }
 }
