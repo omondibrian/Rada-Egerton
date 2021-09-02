@@ -15,7 +15,7 @@ class Forum extends StatelessWidget {
         height: 50,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          borderRadius: BorderRadius.circular(5),
+    
           image: DecorationImage(
             image: NetworkImage(
               this._forums[index]['imageUrl'],
