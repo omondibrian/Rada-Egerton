@@ -56,48 +56,47 @@ class Dashboard extends StatelessWidget {
   }
 }
 
-
 List dashboardItems = [
-  {
-    'title': 'Mentorship',
-    'subtitle': 'Mentorship Program',
-    'leadingIcon': 'assets/mentor.svg',
-    'routeName':AppRoutes.mentorship
-  },
-  {
-    'title': 'Help',
-    'subtitle': 'Location and Contact',
-    'leadingIcon': 'assets/help.svg',
-    'routeName':AppRoutes.help
-  },
   {
     'title': 'Information',
     'subtitle': 'Mentorship Program',
     'leadingIcon': 'assets/information.svg',
-    'routeName':AppRoutes.information
-  },
-  {
-    'title': 'Student Forums',
-    'subtitle': 'Mentorship program',
-    'leadingIcon': 'assets/forum.svg',
-    'routeName':AppRoutes.forum
+    'routeName': AppRoutes.information
   },
   {
     'title': 'Students Counseling',
     'subtitle': 'Mentorship program',
     'leadingIcon': 'assets/counseling.svg',
-    'routeName':AppRoutes.counseling
+    'routeName': AppRoutes.counseling
   },
   {
-    'title': 'Group Counseling',
+    'title': 'Student Forums',
     'subtitle': 'Mentorship program',
-    'leadingIcon': 'assets/counseling.svg',
-    'routeName':AppRoutes.counseling
+    'leadingIcon': 'assets/forum.svg',
+    'routeName': AppRoutes.forum
   },
   {
     'title': 'Notification',
     'subtitle': 'Mentorship program',
     'leadingIcon': 'assets/bell.svg',
-    'routeName':AppRoutes.notification
+    'routeName': AppRoutes.notification
+  },
+  {
+    'title': 'Help',
+    'subtitle': 'Location and Contact',
+    'leadingIcon': 'assets/help.svg',
+    'routeName': AppRoutes.help
+  },
+  {
+    'title': 'Mentorship',
+    'subtitle': 'Mentorship Program',
+    'leadingIcon': 'assets/mentor.svg',
+    'routeName': AppRoutes.mentorship
+  },
+  {
+    'title': 'Group Counseling',
+    'subtitle': 'Mentorship program',
+    'leadingIcon': 'assets/counseling.svg',
+    'routeName': AppRoutes.counseling
   },
 ];
