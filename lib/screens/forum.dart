@@ -6,15 +6,18 @@ class Forum extends StatelessWidget {
   final List _forums = [
     {
       'title': 'Covid 19',
-      'imageUrl': 'assets/background_pattern.png',
+      'imageUrl': 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.hfxGfUIe6333mIDDyqqnOgHaFb%26pid%3DApi&f=1',
+      
     },
     {
       'title': 'Hiv/Aids',
-      'imageUrl': 'assets/background_pattern.png',
+      'imageUrl': 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.hfxGfUIe6333mIDDyqqnOgHaFb%26pid%3DApi&f=1',
+      
     },
     {
       'title': 'Covid 19',
-      'imageUrl': 'assets/background_pattern.png',
+      'imageUrl': 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.hfxGfUIe6333mIDDyqqnOgHaFb%26pid%3DApi&f=1',
+      
     }
   ];
   Widget forumBuilder(BuildContext context, int index) {
@@ -30,7 +33,7 @@ class Forum extends StatelessWidget {
       ),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: AssetImage(
+          backgroundImage: NetworkImage(
             this._forums[index]['imageUrl'],
           ),
         ),
@@ -73,7 +76,11 @@ class ChatScreen extends StatelessWidget {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
-        child: CustomAppBar(title: this.title, imgUrl: this.imgUrl),
+        child: SizedBox(
+          child: SafeArea(
+            child: CustomAppBar(title: this.title, imgUrl: this.imgUrl),
+          ),
+        ),
       ),
       body: Chat(
         currentUserName: 'jonathan',
