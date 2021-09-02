@@ -11,7 +11,11 @@ class Forum extends StatelessWidget {
   Widget forumBuilder(BuildContext context, int index) {
     return ListTile(
       leading: Container(
+        width: 50,
+        height: 50,
         decoration: BoxDecoration(
+          shape:BoxShape.circle ,
+          borderRadius: BorderRadius.circular(5),
           image: DecorationImage(
             image: NetworkImage(
               this._forums[index]['imageUrl'],
