@@ -4,39 +4,17 @@ import 'package:rada_egerton/widgets/buildInput.dart';
 import '../../widgets/buildChatItem.dart';
 
 class Chat extends StatefulWidget {
-  final String title;
-  final String imgUrl;
+
   final String currentUserName;
   @override
   _ChatState createState() => _ChatState();
   Chat(
-      {required this.title,
-      required this.imgUrl,
+      {
       required this.currentUserName});
 }
 
 class _ChatState extends State<Chat> {
-  Widget customAppBar(BuildContext context) {
-    return Row(
-      children: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
-        CircleAvatar(
-          backgroundImage: NetworkImage(widget.imgUrl),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.title, style: Theme.of(context).textTheme.headline1),
-            Text('say Something',
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    ?.copyWith(color: Theme.of(context).accentColor))
-          ],
-        )
-      ],
-    );
-  }
+
 
   final List<ChatModel.Chat> _chats = getChats();
   @override
@@ -46,7 +24,7 @@ class _ChatState extends State<Chat> {
           child: Container(
               child: Stack(
         children: [
-          customAppBar(context),
+          
           Container(
             padding: EdgeInsets.only(top: 10.0),
             child: ListView.builder(
