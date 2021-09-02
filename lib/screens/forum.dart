@@ -72,7 +72,7 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(120),
+        preferredSize: Size.fromHeight(60),
         child: CustomAppBar(title: this.title, imgUrl: this.imgUrl),
       ),
       body: Chat(
