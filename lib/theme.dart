@@ -1,7 +1,7 @@
 import 'package:flutter/painting.dart';
 
 class Palette {
-  //primary and primaryShade are used as gradient in primary btn
+  //primary and accent are used as gradient in primary btn
   static Color primary = Color(0xff019C49);
   static Color accent = Color(0xff39CB7D);
   static Color sendMessage = Color(0xffDBF4C7);
