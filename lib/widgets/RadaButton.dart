@@ -20,13 +20,25 @@ class RadaButton extends StatelessWidget {
       padding: EdgeInsets.all(0.0),
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: Theme.of(context).primaryColor)),
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).primaryColor,
+            Theme.of(context).accentColor,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(color: Theme.of(context).primaryColor),
+      ),
       child: TextButton(
         style: ButtonStyle(
-          minimumSize: MaterialStateProperty.all<Size>(Size(290.0, 50.0)),
+          minimumSize: MaterialStateProperty.all<Size>(
+            Size(290.0, 50.0),
+          ),
           textStyle: MaterialStateProperty.all<TextStyle>(
-              TextStyle(color: Colors.white)),
+            TextStyle(color: Colors.white),
+          ),
           backgroundColor: fill
               ? MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)
               : MaterialStateProperty.all<Color>(Colors.white),
@@ -42,11 +54,11 @@ class RadaButton extends StatelessWidget {
           style: fill
               ? TextStyle(
                   color: Colors.white,
-                  fontSize: SizeConfig.isTabletWidth ? 28 : 12,
+                  fontSize: SizeConfig.isTabletWidth ? 28 : 14,
                 )
               : TextStyle(
                   color: Colors.black,
-                  fontSize: SizeConfig.isTabletWidth ? 28 : 12,
+                  fontSize: SizeConfig.isTabletWidth ? 28 : 14,
                 ),
         ),
       ),
