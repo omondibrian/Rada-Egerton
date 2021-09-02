@@ -71,16 +71,16 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          CustomAppBar(title: this.title, imgUrl: this.imgUrl),
-          Expanded(
-            child: Chat(
-              currentUserName: 'jonathan',
-            ),
-          )
-        ],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(120),
+        child: CustomAppBar(title: this.title, imgUrl: this.imgUrl),
       ),
+      body: Column(
+        children: [
+        Chat(
+          currentUserName: 'jonathan',
+        ),
+      ]),
     );
   }
 }
