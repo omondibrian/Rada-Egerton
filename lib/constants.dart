@@ -14,4 +14,6 @@ class AppRoutes {
   static const connectionError = "/connectionError";
   static const terms = "/terms";
   static const chat = "/chat";
+  static const profile = "/profile";
+  static const contributors = "/contributors";
 }
