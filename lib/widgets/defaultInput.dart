@@ -23,14 +23,14 @@ class DefaultInput extends StatelessWidget {
         obscureText: this.isPassword,
         textAlign: TextAlign.start,
         decoration: InputDecoration(
-            prefixIcon: Icon(this.icon),
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            hintText: this.hintText,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              borderSide:
-                  const BorderSide(color: Color(0XFFCED0D2), width: 0.0),
-            )),
+          prefixIcon: Icon(this.icon),
+          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          hintText: this.hintText,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            borderSide: const BorderSide(color: Color(0XFFCED0D2), width: 0.0),
+          ),
+        ),
         controller: this.controller,
         validator: this.validator,
       ),

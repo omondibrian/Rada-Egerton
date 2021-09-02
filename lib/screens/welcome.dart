@@ -41,7 +41,7 @@ class Welcome extends StatelessWidget {
           Center(
             child: RadaButton(
                 handleClick: () {
-                  Navigator.of(context).pushNamed(AppRoutes.dashboard);
+                  Navigator.of(context).pushNamed(AppRoutes.register);
                 },
                 title: 'Register',
                 fill: false),
