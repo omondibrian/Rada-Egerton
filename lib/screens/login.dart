@@ -47,11 +47,8 @@ class Login extends StatelessWidget {
               ),
               Text(
                 'Login',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  color: Colors.black,
-                ),
+                style: Theme.of(context).textTheme.headline1,
+                textAlign: TextAlign.center,
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -92,7 +89,11 @@ class Login extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             InkWell(
-                              child: Text('Forgot Password'),
+                              child: Text(
+                                'Forgot Password',
+                                style: Theme.of(context).textTheme.bodyText1,
+                                textAlign: TextAlign.right,
+                              ),
                             ),
                           ],
                         ),
@@ -103,8 +104,9 @@ class Login extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Don\'t have an account ',
-                              style: TextStyle(color: Colors.grey),
+                              'Don\'t have an account? ',
+                              style: Theme.of(context).textTheme.bodyText1,
+                                textAlign: TextAlign.center,
                             ),
                             InkWell(
                               onTap: () {
@@ -112,7 +114,7 @@ class Login extends StatelessWidget {
                                     context, AppRoutes.register);
                               },
                               child: Text(
-                                'Register',
+                                ' Register',
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                   fontWeight: FontWeight.bold,
