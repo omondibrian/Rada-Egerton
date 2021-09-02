@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/constants.dart';
-import 'package:rada_egerton/screens/chat.dart/chat.dart';
+import 'package:rada_egerton/screens/Contributors.dart';
+import 'package:rada_egerton/screens/Profile.dart';
 import 'package:rada_egerton/screens/counseling.dart';
 import 'package:rada_egerton/screens/dashboard.dart';
 import 'package:rada_egerton/screens/error_page.dart';
@@ -31,8 +32,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => Register());
     case AppRoutes.counseling:
       return MaterialPageRoute(builder: (context) => Counseling());
-    case AppRoutes.chat:
-      return MaterialPageRoute(builder: (context) => Chat());
+
     case AppRoutes.mentorship:
       return MaterialPageRoute(builder: (context) => Mentorship());
     case AppRoutes.help:
@@ -47,6 +47,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => Forum());
     case AppRoutes.notification:
       return MaterialPageRoute(builder: (context) => UserNotification());
+    case AppRoutes.profile:
+      return MaterialPageRoute(builder: (context) => Profile());
+    case AppRoutes.contributors:
+      return MaterialPageRoute(builder: (context) => Contributors());
     default:
       return MaterialPageRoute(builder: (context) => PageNotFound());
   }

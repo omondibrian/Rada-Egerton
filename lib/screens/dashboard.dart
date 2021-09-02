@@ -4,6 +4,8 @@ import 'package:rada_egerton/constants.dart';
 
 import '../sizeConfig.dart';
 
+enum FilterOptions { Profile, Contributors, LogOut }
+
 class Dashboard extends StatelessWidget {
   Widget dashBoardBuilder(BuildContext ctx, int index) {
     final style = TextStyle(
@@ -39,7 +41,36 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.more_vert))],
+        actions: [
+          PopupMenuButton(
+            onSelected: (FilterOptions selectedValue) {
+              if (selectedValue == FilterOptions.Profile) {
+                Navigator.of(context).pushNamed(AppRoutes.profile);
+              } else if (selectedValue == FilterOptions.LogOut) {
+                Navigator.of(context).pushNamed(AppRoutes.welcome);
+              } else {
+                Navigator.of(context).pushNamed(AppRoutes.contributors);
+              }
+            },
+            icon: Icon(
+              Icons.more_vert,
+            ),
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                child: Text('Logout'),
+                value: FilterOptions.LogOut,
+              ),
+              PopupMenuItem(
+                child: Text('Profile'),
+                value: FilterOptions.Profile,
+              ),
+              PopupMenuItem(
+                child: Text('Contributors'),
+                value: FilterOptions.Contributors,
+              ),
+            ],
+          ),
+        ],
         title: Text('Rada DashBoard'),
         centerTitle: true,
       ),
