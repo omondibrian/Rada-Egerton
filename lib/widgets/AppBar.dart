@@ -12,20 +12,32 @@ class CustomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
+        IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(Icons.arrow_back)),
         CircleAvatar(
           backgroundImage: NetworkImage(this.imgUrl),
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(this.title, style: Theme.of(context).textTheme.headline1),
-            Text('say Something',
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    ?.copyWith(color: Theme.of(context).accentColor))
-          ],
+        SizedBox(
+          width: 10,
+        ),
+        Container(
+          height: 50,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(this.title, style: Theme.of(context).textTheme.headline1),
+              Text('say Something',
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      ?.copyWith(color: Theme.of(context).accentColor))
+            ],
+          ),
         )
       ],
     );

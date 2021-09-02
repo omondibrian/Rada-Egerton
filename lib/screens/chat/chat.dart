@@ -4,42 +4,40 @@ import 'package:rada_egerton/widgets/buildInput.dart';
 import '../../widgets/buildChatItem.dart';
 
 class Chat extends StatefulWidget {
-
   final String currentUserName;
   @override
   _ChatState createState() => _ChatState();
-  Chat(
-      {
-      required this.currentUserName
-      });
+  Chat({required this.currentUserName});
 }
 
 class _ChatState extends State<Chat> {
-
-
   final List<ChatModel.Chat> _chats = getChats();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
           child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('assets/backgroud_pattern.png'),
+                    repeat: ImageRepeat.repeat),
+              ),
               child: Stack(
-        children: [
-          
-          Container(
-            padding: EdgeInsets.only(top: 10.0),
-            child: ListView.builder(
-              itemCount: _chats.length,
-              itemBuilder: (BuildContext ctx, index) =>
-                  buildItem(widget.currentUserName, this._chats[index]),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: buildInput(),
-          )
-        ],
-      ))),
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: ListView.builder(
+                      itemCount: _chats.length,
+                      itemBuilder: (BuildContext ctx, index) =>
+                          buildItem(widget.currentUserName, this._chats[index]),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: buildInput(),
+                  )
+                ],
+              ))),
     );
   }
 }
@@ -74,3 +72,4 @@ List<Map<String, dynamic>> chatContent = [
   },
   {'authorName': 'elvis', 'content': 'I like Rada at Egerton'},
 ];
+
