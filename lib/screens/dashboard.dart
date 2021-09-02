@@ -57,7 +57,7 @@ class Dashboard extends StatelessWidget {
             ),
             itemBuilder: (_) => [
               PopupMenuItem(
-                child: Text('LogOut'),
+                child: Text('Logout'),
                 value: FilterOptions.LogOut,
               ),
               PopupMenuItem(
