@@ -73,9 +73,7 @@ class ChatScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          Positioned(
-              top: 0,
-              child: CustomAppBar(title: this.title, imgUrl: this.imgUrl)),
+          CustomAppBar(title: this.title, imgUrl: this.imgUrl),
           Expanded(
             child: Chat(
               currentUserName: 'jonathan',
