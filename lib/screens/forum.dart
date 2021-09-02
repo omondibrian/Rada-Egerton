@@ -14,7 +14,7 @@ class Forum extends StatelessWidget {
         width: 50,
         height: 50,
         decoration: BoxDecoration(
-          shape:BoxShape.circle ,
+          shape: BoxShape.circle,
           borderRadius: BorderRadius.circular(5),
           image: DecorationImage(
             image: NetworkImage(
@@ -32,9 +32,16 @@ class Forum extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: forumBuilder,
-      itemCount: this._forums.length,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Forums'),
+      ),
+      body: SafeArea(
+        child: ListView.builder(
+          itemBuilder: forumBuilder,
+          itemCount: this._forums.length,
+        ),
+      ),
     );
   }
 }
