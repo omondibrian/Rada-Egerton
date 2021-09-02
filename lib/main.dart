@@ -31,7 +31,10 @@ class MyApp extends StatelessWidget {
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                   color: Palette.headerColor),
-              headline3: TextStyle(fontSize: 16.0, color: Palette.headerColor,fontWeight: FontWeight.bold),
+              headline3: TextStyle(
+                  fontSize: 16.0,
+                  color: Palette.headerColor,
+                  fontWeight: FontWeight.bold),
               subtitle1: TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,
@@ -42,9 +45,9 @@ class MyApp extends StatelessWidget {
                   TextStyle(fontSize: 14.0, color: Palette.textMutedColor),
             ),
             appBarTheme: AppBarTheme(
-                color: Colors.white,
-                iconTheme: IconThemeData(color: Palette.iconColor))),
+                color: Palette.primary,
+                iconTheme: IconThemeData(color: Colors.white))),
         onGenerateRoute: generateRoute,
-        initialRoute: AppRoutes.notification);
+        initialRoute: AppRoutes.welcome);
   }
 }
