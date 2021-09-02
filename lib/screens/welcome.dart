@@ -20,7 +20,7 @@ class Welcome extends StatelessWidget {
           ),
           Center(
             child: SvgPicture.asset(
-              'assets/help.svg',
+              'assets/welcome.svg',
               width:SizeConfig.isTabletWidth ? 600 :  200,
             ),
           ),
@@ -41,7 +41,7 @@ class Welcome extends StatelessWidget {
           Center(
             child: RadaButton(
                 handleClick: () {
-                  Navigator.of(context).pushNamed(AppRoutes.dashboard);
+                  Navigator.of(context).pushNamed(AppRoutes.register);
                 },
                 title: 'Register',
                 fill: false),
