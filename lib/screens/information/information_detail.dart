@@ -8,6 +8,15 @@ class InformationDetail extends StatefulWidget {
 class _InformationDetailState extends State<InformationDetail> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: SafeArea(
+          child: ListView(
+        children: [
+          Stack(
+            children: [],
+          )
+        ],
+      )),
+    );
   }
 }
