@@ -8,10 +8,11 @@ class Information extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text(
-        'Rada Information',
-        style: Theme.of(context).textTheme.headline1,
-      )),
+          title: Text('Rada Information',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline1
+                  ?.copyWith(color: Colors.white))),
       body: Container(
           margin: EdgeInsets.symmetric(vertical: 30),
           child: Column(
@@ -78,7 +79,6 @@ class Information extends StatelessWidget {
   }
 }
 
-
 final List<Map<String, dynamic>> informationItems = [
   {
     "image":
@@ -99,6 +99,5 @@ final List<Map<String, dynamic>> informationItems = [
     "image":
         'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
     "title": "item3"
-  
   }
 ];
