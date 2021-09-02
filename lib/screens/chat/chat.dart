@@ -10,7 +10,8 @@ class Chat extends StatefulWidget {
   _ChatState createState() => _ChatState();
   Chat(
       {
-      required this.currentUserName});
+      required this.currentUserName
+      });
 }
 
 class _ChatState extends State<Chat> {
