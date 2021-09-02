@@ -34,11 +34,12 @@ class Register extends StatelessWidget {
       body: Container(
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.topRight,
+            SizedBox(
+              height: 200,
               child: SvgPicture.asset(
                 'assets/curve_top.svg',
                 width: MediaQuery.of(context).size.width,
+                fit: BoxFit.fill,
               ),
             ),
             SizedBox(
