@@ -16,16 +16,21 @@ class CustomAppBar extends StatelessWidget {
         CircleAvatar(
           backgroundImage: NetworkImage(this.imgUrl),
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(this.title, style: Theme.of(context).textTheme.headline1),
-            Text('say Something',
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    ?.copyWith(color: Theme.of(context).accentColor))
-          ],
+        Container(
+          height: 50,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize:MainAxisSize.min ,
+            children: [
+              Text(this.title, style: Theme.of(context).textTheme.headline1),
+              Text('say Something',
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      ?.copyWith(color: Theme.of(context).accentColor))
+            ],
+          ),
         )
       ],
     );
