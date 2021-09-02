@@ -3,6 +3,101 @@ import 'package:flutter/material.dart';
 class Information extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    final List<Widget> imageSliders =
+        informationItems.map((item) => informationCard(item, context)).toList();
+
+    return Scaffold(
+      appBar: AppBar(
+          title: Text(
+        'Rada Information',
+        style: Theme.of(context).textTheme.headline1,
+      )),
+      body: Container(
+          margin: EdgeInsets.symmetric(vertical: 30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Sexual & Reproductive health",
+                  style: Theme.of(context).textTheme.headline2,
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(children: imageSliders),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Substance abuse",
+                  style: Theme.of(context).textTheme.headline2,
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(children: imageSliders),
+              ),
+            ],
+          )),
+    );
+  }
+
+  Card informationCard(Map<String, dynamic> item, BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(5.0),
+      elevation: 5,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+              child: Image.network(
+                item["image"],
+                fit: BoxFit.cover,
+                width: 200,
+                height: 150,
+              )),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+            child: Text(
+              item["title"],
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
+
+
+final List<Map<String, dynamic>> informationItems = [
+  {
+    "image":
+        'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+    "title": "Love"
+  },
+  {
+    "image":
+        'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
+    "title": "item2"
+  },
+  {
+    "image":
+        'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
+    "title": "item3"
+  },
+  {
+    "image":
+        'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
+    "title": "item3"
+  }
+];
