@@ -19,15 +19,16 @@ class CounselorsTab extends StatelessWidget {
             Column(
               children: [
                 CircleAvatar(
-                 child: ClipOval(
-            child: Image.network(
-              counserlors[index].imgUrl,
-              width: SizeConfig.isTabletWidth ? 120 : 90,
-              height: SizeConfig.isTabletWidth ? 120 : 90,
-              fit: BoxFit.cover,
-            ),
-          ),
-                )
+                  radius: SizeConfig.isTabletWidth ? 98 : 20.0,
+                  child: ClipOval(
+                    child: Image.network(
+                      counserlors[index].imgUrl,
+                      width: SizeConfig.isTabletWidth ? 120 : 90,
+                      height: SizeConfig.isTabletWidth ? 120 : 90,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
               ],
             ),
             SizedBox(
