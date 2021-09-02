@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                   color: Palette.headerColor),
-              headline3: TextStyle(fontSize: 14.0, color: Palette.headerColor),
+              headline3: TextStyle(fontSize: 16.0, color: Palette.headerColor,fontWeight: FontWeight.bold),
               subtitle1: TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,
@@ -45,6 +45,6 @@ class MyApp extends StatelessWidget {
                 color: Colors.white,
                 iconTheme: IconThemeData(color: Palette.iconColor))),
         onGenerateRoute: generateRoute,
-        initialRoute: AppRoutes.welcome);
+        initialRoute: AppRoutes.notification);
   }
 }
