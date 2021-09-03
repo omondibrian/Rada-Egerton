@@ -18,7 +18,7 @@ class CounselorsTab extends StatelessWidget {
           children: [
             Column(
               children: [
-                CircleAvator(
+                CircleAvatar(
                   radius: SizeConfig.isTabletWidth ? 98 : 20.0,
                   child: ClipOval(
                     child: Image.network(
@@ -27,6 +27,8 @@ class CounselorsTab extends StatelessWidget {
                       height: SizeConfig.isTabletWidth ? 120 : 90,
                       fit: BoxFit.cover,
                     ),
+                  ),
+                ),
               ],
             ),
             SizedBox(
