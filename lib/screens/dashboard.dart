@@ -73,6 +73,7 @@ class Dashboard extends StatelessWidget {
         ],
         title: Text('Rada DashBoard'),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: Padding(
