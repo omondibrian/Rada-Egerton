@@ -59,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
                             child: Center(
                                 child: Text("Change password",
                                     style: TextStyle(
-                                        fontSize: 23, color: Colors.white)))))
+                                        fontSize: 23, color: Colors.white)),),),),
                   ],
                 ),
               )
