@@ -9,6 +9,7 @@ class ContributorScreen extends StatelessWidget {
         backgroundColor: Colors.green,
         // impliment the revert button to prev screen
         leading: IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
+        
       ),
       body: Stack(
         children: [
