@@ -42,6 +42,7 @@ class Dashboard extends StatelessWidget {
         actions: [IconButton(onPressed: () {}, icon: Icon(Icons.more_vert))],
         title: Text('Rada DashBoard'),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: Padding(
