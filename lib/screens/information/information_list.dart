@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rada_egerton/constants.dart';
 
 class Information extends StatelessWidget {
   @override
@@ -43,37 +44,42 @@ class Information extends StatelessWidget {
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(children: imageSliders),
+                
+                child: Row(children: imageSliders,mainAxisAlignment: MainAxisAlignment.center),
               ),
             ],
           )),
     );
   }
 
-  Card informationCard(Map<String, dynamic> item, BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(5.0),
-      elevation: 5,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              child: Image.network(
-                item["image"],
-                fit: BoxFit.cover,
-                width: 200,
-                height: 150,
-              )),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-            child: Text(
-              item["title"],
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-          )
-        ],
+  Widget informationCard(Map<String, dynamic> item, BuildContext context) {
+    return InkWell(
+      onTap: () =>
+          Navigator.of(context).pushNamed(AppRoutes.informationDetails),
+      child: Card(
+        margin: EdgeInsets.all(5.0),
+        elevation: 5,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                child: Image.network(
+                  item["image"],
+                  fit: BoxFit.cover,
+                  width: 200,
+                  height: 150,
+                )),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+              child: Text(
+                item["title"],
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
