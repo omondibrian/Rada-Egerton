@@ -65,6 +65,9 @@ flutter:
     - assets/information.svg
     - assets/mentor.svg
     - assets/welcome.svg
+    - assets/egerton.png
+    - assets/srhr.png
+    - assets/unesco.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
