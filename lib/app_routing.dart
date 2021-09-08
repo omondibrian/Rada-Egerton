@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/constants.dart';
-import 'package:rada_egerton/screens/Contributors.dart';
-import 'package:rada_egerton/screens/Profile.dart';
+import 'package:rada_egerton/screens/contributors.dart';
 import 'package:rada_egerton/screens/counseling.dart';
 import 'package:rada_egerton/screens/dashboard.dart';
 import 'package:rada_egerton/screens/error_page.dart';
@@ -11,6 +10,7 @@ import 'package:rada_egerton/screens/information/information_detail.dart';
 import 'package:rada_egerton/screens/login.dart';
 import 'package:rada_egerton/screens/mentorship.dart';
 import 'package:rada_egerton/screens/notification.dart';
+import 'package:rada_egerton/screens/profile.dart';
 import 'package:rada_egerton/screens/register.dart';
 
 import 'screens/information/information_list.dart';
@@ -48,9 +48,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case AppRoutes.notification:
       return MaterialPageRoute(builder: (context) => UserNotification());
     case AppRoutes.profile:
-      return MaterialPageRoute(builder: (context) => Profile());
+      return MaterialPageRoute(builder: (context) => ProfileScreen());
     case AppRoutes.contributors:
-      return MaterialPageRoute(builder: (context) => Contributors());
+      return MaterialPageRoute(builder: (context) => ContributorScreen());
     default:
       return MaterialPageRoute(builder: (context) => PageNotFound());
   }

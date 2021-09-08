@@ -6,54 +6,77 @@ class ContributorScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
+        title: Text('Contributors'),
         // impliment the revert button to prev screen
         leading: IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
       ),
-      body: Stack(
+      body: Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Image.asset('assets/unesco.png')),
-              Expanded(
-                child: Image.asset('assets/srhr.png')),
-              Expanded(
-                child: Image.asset('assets/egerton.png')),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              children: [
+                Expanded(child: Image.asset('assets/unesco.png')),
+                Expanded(child: Image.asset('assets/srhr.png')),
+                Expanded(child: Image.asset('assets/egerton.png')),
+              ],
+            ),
           ),
-          Column(children: const <Widget>[
-            Expanded(
-              child: ListTile(
-                title: Text('Brian'),
-                subtitle: Text('University: Egerton \n Role: Software developer'),
-                //isThreeLine: Text(),
+          Expanded(
+              child: ListView(
+            children: ListTile.divideTiles(context: context, tiles: [
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+                child: Expanded(
+                  child: ListTile(
+                    title: Text('Name: Brian'),
+                    subtitle:
+                        Text('University: Egerton \nRole: Software developer'),
+                  ),
+                ),
               ),
-            ),
-            Expanded(
-              child: ListTile(
-                title: Text('Moses'),
-                subtitle: Text('University: Egerton \n Role: Software developer'),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+                child: Expanded(
+                  child: ListTile(
+                    title: Text('Name: Moses'),
+                    subtitle:
+                        Text('University: Egerton \nRole: Software developer'),
+                  ),
+                ),
               ),
-            ),
-            Expanded(
-              child: ListTile(
-                title: Text('Jonathan'),
-                subtitle: Text('University: Egerton \n Role: Software developer'),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+                child: Expanded(
+                  child: ListTile(
+                    title: Text('Name: Jonathan'),
+                    subtitle:
+                        Text('University: Egerton \nRole: Software developer'),
+                  ),
+                ),
               ),
-            ),
-            Expanded(
-              child: ListTile(
-                title: Text('Name: Onesmus'),
-                subtitle: Text('University: Egerton \n Role: Software developer'),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+                child: Expanded(
+                  child: ListTile(
+                    title: Text('Name: Onesmus'),
+                    subtitle:
+                        Text('University: Egerton \nRole: Software developer'),
+                  ),
+                ),
               ),
-            ),
-            Expanded(
-              child: ListTile(
-                title: Text('Said'),
-                subtitle: Text('University: Egerton \n Role: Software developer'),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: Expanded(
+                  child: ListTile(
+                    title: Text('Name: Said'),
+                    subtitle:
+                        Text('University: Egerton \nRole: Software developer'),
+                  ),
+                ),
               ),
-            ),
-          ])
+            ]).toList(),
+          )),
         ],
       ),
     );
