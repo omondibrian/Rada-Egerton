@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CounsellorsDTO {
   final String name;
@@ -55,5 +54,9 @@ class CounselorProvider with ChangeNotifier {
     var result = await this._dataSourse.fetchCounselors();
     this._counselors = result;
     notifyListeners();
+  }
+
+  getCounselingChats(){
+    return [];
   }
 }
