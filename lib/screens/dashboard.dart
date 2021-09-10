@@ -49,7 +49,7 @@ class Dashboard extends StatelessWidget {
               } else if (selectedValue == FilterOptions.LogOut) {
                 Navigator.of(context).pushNamed(AppRoutes.welcome);
               } else {
-                Navigator.of(context).pushNamed(AppRoutes.contributors);
+                Navigator.pushNamed(context,AppRoutes.contributors);
               }
             },
             icon: Icon(
@@ -73,6 +73,7 @@ class Dashboard extends StatelessWidget {
         ],
         title: Text('Rada DashBoard'),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: Padding(

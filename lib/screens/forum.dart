@@ -6,17 +6,17 @@ class Forum extends StatelessWidget {
   final List _forums = [
     {
       'title': 'Covid 19',
-      'imageUrl': 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.hfxGfUIe6333mIDDyqqnOgHaFb%26pid%3DApi&f=1',
+      'imageUrl': 'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
       
     },
     {
       'title': 'Hiv/Aids',
-      'imageUrl': 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.hfxGfUIe6333mIDDyqqnOgHaFb%26pid%3DApi&f=1',
+      'imageUrl': 'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
       
     },
     {
       'title': 'Covid 19',
-      'imageUrl': 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.hfxGfUIe6333mIDDyqqnOgHaFb%26pid%3DApi&f=1',
+      'imageUrl': 'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
       
     }
   ];

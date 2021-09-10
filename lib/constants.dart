@@ -1,6 +1,5 @@
 class AppRoutes {
-  static const splash = "/";
-  static const dashboard = "/home";
+  static const dashboard = "/";
   static const welcome = "/welcome";
   static const help = "/help";
   static const login = "/login";

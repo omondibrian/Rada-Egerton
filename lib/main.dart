@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
                   TextStyle(fontSize: 14.0, color: Palette.textMutedColor),
             ),
             appBarTheme: AppBarTheme(
-                iconTheme: IconThemeData(color: Palette.iconColor))),
+                iconTheme: IconThemeData(color: Colors.white))),
         onGenerateRoute: generateRoute,
         initialRoute: AppRoutes.welcome);
   }
