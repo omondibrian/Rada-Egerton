@@ -35,13 +35,14 @@ class Login extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: SvgPicture.asset(
-                  'assets/curve_top.svg',
-                  width: MediaQuery.of(context).size.width,
-                ),
+              SizedBox(
+              height: 200,
+              child: SvgPicture.asset(
+                'assets/curve_top.svg',
+                width: MediaQuery.of(context).size.width,
+                fit: BoxFit.fill,
               ),
+            ),
               SizedBox(
                 height: 50,
               ),

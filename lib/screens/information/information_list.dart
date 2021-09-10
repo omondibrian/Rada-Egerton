@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rada_egerton/constants.dart';
 
 class Information extends StatelessWidget {
   @override
@@ -8,10 +9,11 @@ class Information extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text(
-        'Rada Information',
-        style: Theme.of(context).textTheme.headline1,
-      )),
+          title: Text('Rada Information',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline1
+                  ?.copyWith(color: Colors.white))),
       body: Container(
           margin: EdgeInsets.symmetric(vertical: 30),
           child: Column(
@@ -42,42 +44,46 @@ class Information extends StatelessWidget {
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(children: imageSliders),
+                
+                child: Row(children: imageSliders,mainAxisAlignment: MainAxisAlignment.center),
               ),
             ],
           )),
     );
   }
 
-  Card informationCard(Map<String, dynamic> item, BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(5.0),
-      elevation: 5,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              child: Image.network(
-                item["image"],
-                fit: BoxFit.cover,
-                width: 200,
-                height: 150,
-              )),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-            child: Text(
-              item["title"],
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-          )
-        ],
+  Widget informationCard(Map<String, dynamic> item, BuildContext context) {
+    return InkWell(
+      onTap: () =>
+          Navigator.of(context).pushNamed(AppRoutes.informationDetails),
+      child: Card(
+        margin: EdgeInsets.all(5.0),
+        elevation: 5,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                child: Image.network(
+                  item["image"],
+                  fit: BoxFit.cover,
+                  width: 200,
+                  height: 150,
+                )),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+              child: Text(
+                item["title"],
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 }
-
 
 final List<Map<String, dynamic>> informationItems = [
   {
@@ -99,6 +105,5 @@ final List<Map<String, dynamic>> informationItems = [
     "image":
         'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
     "title": "item3"
-  
   }
 ];

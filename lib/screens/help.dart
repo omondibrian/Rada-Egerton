@@ -5,10 +5,6 @@ import '../sizeConfig.dart';
 import './helpScreenTab/ContactTab.dart';
 import './helpScreenTab/locationTab.dart';
 
-import '../sizeConfig.dart';
-import './helpScreenTab/ContactTab.dart';
-import './helpScreenTab/locationTab.dart';
-
 class Help extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -32,9 +28,7 @@ class Help extends StatelessWidget {
                 tabs: [
                   Tab(child: Text('Location', style: style)),
                   Tab(child: Text('Contact', style: style)),
-
                   Tab(child: Text('Bot', style: style)),
-
                 ],
               ),
             ),
@@ -49,3 +43,4 @@ class Help extends StatelessWidget {
     ));
   }
 }
+

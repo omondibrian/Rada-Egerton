@@ -91,25 +91,25 @@ class Dashboard extends StatelessWidget {
 List dashboardItems = [
   {
     'title': 'Information',
-    'subtitle': 'Mentorship Program',
+    'subtitle': 'Knowledge is power',
     'leadingIcon': 'assets/information.svg',
     'routeName': AppRoutes.information
   },
   {
     'title': 'Students Counseling',
-    'subtitle': 'Mentorship program',
+    'subtitle': 'Free professional Counselling',
     'leadingIcon': 'assets/counseling.svg',
     'routeName': AppRoutes.counseling
   },
   {
     'title': 'Student Forums',
-    'subtitle': 'Mentorship program',
+    'subtitle': 'Share with the group',
     'leadingIcon': 'assets/forum.svg',
     'routeName': AppRoutes.forum
   },
   {
     'title': 'Notification',
-    'subtitle': 'Mentorship program',
+    'subtitle': 'Instant Notification',
     'leadingIcon': 'assets/bell.svg',
     'routeName': AppRoutes.notification
   },
@@ -127,7 +127,7 @@ List dashboardItems = [
   },
   {
     'title': 'Group Counseling',
-    'subtitle': 'Mentorship program',
+    'subtitle': 'Free professional Counselling',
     'leadingIcon': 'assets/counseling.svg',
     'routeName': AppRoutes.counseling
   },
