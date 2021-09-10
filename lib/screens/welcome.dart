@@ -33,7 +33,7 @@ class Welcome extends StatelessWidget {
           Center(
             child: RadaButton(
                 handleClick: () {
-                  Navigator.of(context).pushNamed(AppRoutes.login);
+                  Navigator.of(context).popAndPushNamed(AppRoutes.login);
                 },
                 title: 'Login',
                 fill: true),
@@ -41,7 +41,7 @@ class Welcome extends StatelessWidget {
           Center(
             child: RadaButton(
                 handleClick: () {
-                  Navigator.of(context).pushNamed(AppRoutes.register);
+                  Navigator.of(context).popAndPushNamed(AppRoutes.register);
                 },
                 title: 'Register',
                 fill: false),

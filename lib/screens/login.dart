@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rada_egerton/constants.dart';
-import 'package:rada_egerton/theme.dart';
 import 'package:rada_egerton/widgets/RadaButton.dart';
 import 'package:rada_egerton/widgets/defaultInput.dart';
 
@@ -23,7 +22,7 @@ class Login extends StatelessWidget {
       print(userController.text);
       print(passwordController.text);
       //TODO Remove backward navigation and connect to backend
-      Navigator.pushNamed(context, AppRoutes.dashboard);
+      Navigator.of(context).popAndPushNamed(AppRoutes.dashboard);
     }
   }
 
