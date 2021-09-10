@@ -47,7 +47,6 @@ class MyApp extends StatelessWidget {
             appBarTheme: AppBarTheme(
                 color: Palette.primary,
                 iconTheme: IconThemeData(color: Colors.white))),
-
         onGenerateRoute: generateRoute,
         initialRoute: AppRoutes.welcome);
   }
