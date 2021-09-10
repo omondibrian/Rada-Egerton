@@ -81,7 +81,7 @@ class Login extends StatelessWidget {
                         height: 30,
                       ),
                       RadaButton(
-                        title: 'LogIn',
+                        title: 'Login',
                         handleClick: () => _handleSubmit(context),
                         fill: true,
                       ),
@@ -92,7 +92,7 @@ class Login extends StatelessWidget {
                           children: [
                             InkWell(
                               child: Text(
-                                'Forgot Password',
+                                'Forgot Password?',
                                 style: Theme.of(context).textTheme.bodyText1,
                                 textAlign: TextAlign.right,
                               ),

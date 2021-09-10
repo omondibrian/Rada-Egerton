@@ -9,7 +9,7 @@ class Help extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = TextStyle(
-      fontSize: SizeConfig.isTabletWidth ? 24 : 14,
+      fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
     return Scaffold(
         body: DefaultTabController(
@@ -18,13 +18,12 @@ class Help extends StatelessWidget {
         headerSliverBuilder: (BuildContext ctx, bool isScrolled) {
           return <Widget>[
             new SliverAppBar(
-              title: Text('Rada Counseling'),
+              title: Text('Location and Contact'),
               pinned: true,
               floating: true,
               bottom: TabBar(
-                labelPadding: EdgeInsets.symmetric(horizontal: 50.0),
                 indicatorColor: Theme.of(context).primaryColor,
-                isScrollable: true,
+                
                 tabs: [
                   Tab(child: Text('Location', style: style)),
                   Tab(child: Text('Contact', style: style)),

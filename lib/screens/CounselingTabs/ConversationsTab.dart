@@ -11,7 +11,7 @@ class ConversationsTab extends StatelessWidget {
     final counselorprovider = Provider.of<CounselorProvider>(context);
     var conversations = counselorprovider.conversations;
     final style = TextStyle(
-      fontSize: SizeConfig.isTabletWidth ? 24 : 14,
+      fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
     Widget conversationBuilder(BuildContext ctx, int index) {
       return ListTile(
@@ -31,7 +31,7 @@ class ConversationsTab extends StatelessWidget {
           'Hello there say something',
           style: TextStyle(
             color: Theme.of(ctx).primaryColor,
-            fontSize: SizeConfig.isTabletWidth ? 24 : 14,
+            fontSize: SizeConfig.isTabletWidth ? 16 : 14,
           ),
         ),
       );
