@@ -58,7 +58,8 @@ class Information extends StatelessWidget {
           Navigator.of(context).pushNamed(AppRoutes.informationDetails),
       child: Card(
         margin: EdgeInsets.all(5.0),
-        elevation: 5,
+        
+        clipBehavior: Clip.antiAlias,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

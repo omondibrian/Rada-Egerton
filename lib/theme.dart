@@ -8,8 +8,8 @@ class Palette {
   static Color receivedMessage = Color(0xffffffff);
   static Color shadowColor = Color(0x446C6C6C);
   static Color headerColor = Color(0xff0D1031);
-  static Color lightTextColor = Color(0xff413B5C);
-  static Color textMutedColor = Color(0xff656D78);
+  static Color lightTextColor = Color(0xff70757a);
+  static Color textMutedColor = Color(0xffbdbdbd);
   static Color outlineColor = Color(0xff9C92AC);
   static Color iconColor = Color(0xff413B5C);
   static Color backgroundColor = Color(0xffFFFFFF);

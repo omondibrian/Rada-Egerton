@@ -40,7 +40,7 @@ class UserNotification extends StatelessWidget {
   Widget notificationCard(
       NotificationDataTransfer notification, BuildContext context) {
     return Card(
-      elevation: 5,
+      clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       child: Padding(
         padding: const EdgeInsets.all(8.0),

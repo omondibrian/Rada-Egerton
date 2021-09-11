@@ -17,7 +17,7 @@ class ContactCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.all(8.0),
-      elevation: 5,
+      clipBehavior: Clip.antiAlias,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -28,13 +28,14 @@ class ContactCard extends StatelessWidget {
               children: [
                 Text(
                   this.title,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.subtitle1
                 ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                SizedBox(width: 20,),
                 Icon(
                   Icons.phone,
                   color: Theme.of(context).accentColor,
@@ -42,12 +43,13 @@ class ContactCard extends StatelessWidget {
                 SizedBox(
                   width: 10,
                 ),
-                Text(this.phoneNumber),
+                Text(this.phoneNumber,style:Theme.of(context).textTheme.subtitle2)
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                SizedBox(width: 20),
                 Icon(
                   Icons.email,
                   color: Theme.of(context).accentColor,
@@ -55,20 +57,21 @@ class ContactCard extends StatelessWidget {
                 SizedBox(
                   width: 10,
                 ),
-                Text(this.email),
+                Text(this.email,style:Theme.of(context).textTheme.subtitle2),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                SizedBox(width: 20),
                 Icon(
-                  Icons.pin_drop_outlined,
+                  Icons.location_on,
                   color: Theme.of(context).accentColor,
                 ),
                 SizedBox(
                   width: 10,
                 ),
-                Text(this.email),
+                Text(this.location,style:Theme.of(context).textTheme.subtitle2),
               ],
             ),
           ],

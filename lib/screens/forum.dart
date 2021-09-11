@@ -6,6 +6,7 @@ class Forum extends StatelessWidget {
   final List _forums = [
     {
       'title': 'Covid 19',
+
       'imageUrl': 'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
       
     },
@@ -17,7 +18,7 @@ class Forum extends StatelessWidget {
     {
       'title': 'Covid 19',
       'imageUrl': 'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
-      
+
     }
   ];
   Widget forumBuilder(BuildContext context, int index) {

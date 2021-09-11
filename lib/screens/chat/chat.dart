@@ -19,7 +19,7 @@ class _ChatState extends State<Chat> {
           child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('assets/backgroud_pattern.png'),
+                    image: AssetImage('assets/background_pattern.png'),
                     repeat: ImageRepeat.repeat),
               ),
               child: Stack(
@@ -72,4 +72,3 @@ List<Map<String, dynamic>> chatContent = [
   },
   {'authorName': 'elvis', 'content': 'I like Rada at Egerton'},
 ];
-

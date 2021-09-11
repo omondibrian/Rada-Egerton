@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import '../sizeConfig.dart';
 
 class RadaButton extends StatelessWidget {
@@ -16,20 +17,20 @@ class RadaButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: SizeConfig.isTabletWidth ? 600 : 290.0,
-      height: SizeConfig.isTabletWidth ? 80 : 40.0,
+      height: SizeConfig.isTabletWidth ? 50 : 40.0,
       padding: EdgeInsets.all(0.0),
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Theme.of(context).primaryColor,
             Theme.of(context).accentColor,
+            Theme.of(context).primaryColor,
           ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
         ),
         borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: Theme.of(context).primaryColor),
+        border: fill? Border.all(color: Colors.transparent):Border.all(color: Theme.of(context).primaryColor)
       ),
       child: TextButton(
         style: ButtonStyle(
@@ -40,7 +41,7 @@ class RadaButton extends StatelessWidget {
             TextStyle(color: Colors.white),
           ),
           backgroundColor: fill
-              ? MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)
+              ? MaterialStateProperty.all<Color>(Colors.transparent)
               : MaterialStateProperty.all<Color>(Colors.white),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
@@ -54,11 +55,11 @@ class RadaButton extends StatelessWidget {
           style: fill
               ? TextStyle(
                   color: Colors.white,
-                  fontSize: SizeConfig.isTabletWidth ? 28 : 14,
+                  fontSize: SizeConfig.isTabletWidth ? 18 : 16,
                 )
               : TextStyle(
                   color: Colors.black,
-                  fontSize: SizeConfig.isTabletWidth ? 28 : 14,
+                  fontSize: SizeConfig.isTabletWidth ? 18 : 16,
                 ),
         ),
       ),

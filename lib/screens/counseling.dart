@@ -11,7 +11,7 @@ class Counseling extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = TextStyle(
-      fontSize: SizeConfig.isTabletWidth ? 24 : 14,
+      fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
     return ChangeNotifierProvider(
       create: (_) => CounselorProvider(),
