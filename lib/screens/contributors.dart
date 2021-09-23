@@ -7,7 +7,6 @@ class ContributorScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0.0,
         // impliment the revert button to prev screen
-        leading: IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
       ),
       body: Stack(
         children: [
@@ -24,32 +23,32 @@ class ContributorScreen extends StatelessWidget {
           Column(children: const <Widget>[
             Expanded(
               child: ListTile(
-                title: Text('Brian'),
+                title: Text('Brian Omondi'),
                 subtitle: Text('University: Egerton \n Role: Software developer'),
                 //isThreeLine: Text(),
               ),
             ),
             Expanded(
               child: ListTile(
-                title: Text('Moses'),
+                title: Text('Moses Njoroge'),
                 subtitle: Text('University: Egerton \n Role: Software developer'),
               ),
             ),
             Expanded(
               child: ListTile(
-                title: Text('Jonathan'),
+                title: Text('Jonathan Onderi'),
                 subtitle: Text('University: Egerton \n Role: Software developer'),
               ),
             ),
             Expanded(
               child: ListTile(
-                title: Text('Name: Onesmus'),
+                title: Text('Name: Onesmus Okali'),
                 subtitle: Text('University: Egerton \n Role: Software developer'),
               ),
             ),
             Expanded(
               child: ListTile(
-                title: Text('Said'),
+                title: Text('Said Mohammed'),
                 subtitle: Text('University: Egerton \n Role: Software developer'),
               ),
             ),
