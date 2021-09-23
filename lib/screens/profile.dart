@@ -29,7 +29,7 @@ class ProfileScreen extends StatelessWidget {
         elevation: 0.0,
         backgroundColor: Colors.green,
         // impliment the revert button to prev screen
-        leading: IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
+        
       ),
       body: Stack(
         alignment: Alignment.center,
@@ -54,7 +54,7 @@ class ProfileScreen extends StatelessWidget {
                         width: double.infinity,
                         child: RaisedButton(
                             // TODO: create the update password function
-                            onPressed: () {},
+                            onPressed:null,
                             color: Colors.redAccent,
                             child: Center(
                                 child: Text("Change password",
@@ -105,7 +105,7 @@ class ProfileScreen extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: Colors.white,
                   image: DecorationImage(
-                    image: AssetImage('image/profile.png'),
+                    image: AssetImage('assets/indx.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
