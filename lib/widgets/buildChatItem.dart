@@ -20,7 +20,7 @@ Widget buildItem(String currentUserName, Model.Chat chatModel) {
     return SwipeableTile.swipeToTigger(
       behavior: HitTestBehavior.translucent,
       isEelevated: false,
-      color: Colors.white,
+      color: Colors.transparent,
       swipeThreshold: 0.2,
       direction: SwipeDirection.endToStart,
       onSwiped: (_) {},

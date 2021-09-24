@@ -14,7 +14,7 @@ class Login extends StatelessWidget {
     if (value == null || value.isEmpty) {
       return 'This value is required';
     }else if(!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)){
-      return 'This value must contain letters or numbers';
+      return 'This value must contain only letters or numbers';
     }
     return null;
   }
