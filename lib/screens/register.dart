@@ -18,8 +18,6 @@ class Register extends StatelessWidget {
       return 'This value is required';
     }else if(!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)){
       return 'This value must contain only letters or numbers';
-    }else if(value != username){
-      return 'Incorrect username and password';
     }
     return null;
   }
