@@ -6,20 +6,23 @@ import 'package:rada_egerton/widgets/defaultInput.dart';
 
 import '../constants.dart';
 
+  const String username = 'radaegerton';
 class Register extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final userController = TextEditingController();
   final passwordController = TextEditingController();
+  
 
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
       return 'This value is required';
     }else if(!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)){
       return 'This value must contain only letters or numbers';
+    }else if(value != username){
+      return 'Incorrect username and password';
     }
     return null;
   }
-
   void _handleRegister(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       //view registration details
