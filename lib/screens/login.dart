@@ -6,6 +6,7 @@ import 'package:rada_egerton/widgets/defaultInput.dart';
 
 import '../sizeConfig.dart';
 
+const String username='radaegerton';
 class Login extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final userController = TextEditingController();
@@ -15,6 +16,8 @@ class Login extends StatelessWidget {
       return 'This value is required';
     }else if(!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)){
       return 'This value must contain letters or numbers';
+    }else if(value != username){
+      return 'Incorrect username and password';
     }
     return null;
   }
