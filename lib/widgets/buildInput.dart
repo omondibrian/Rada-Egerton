@@ -7,7 +7,6 @@ Widget buildInput() {
     child: Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           // Button choose image
           Material(
@@ -33,7 +32,7 @@ Widget buildInput() {
             ),
             color: Colors.white,
           ),
-      
+
           // Edit text
           Flexible(
             child: Container(
@@ -42,21 +41,20 @@ Widget buildInput() {
                 style: TextStyle(color: Colors.black87, fontSize: 15.0),
                 decoration: InputDecoration.collapsed(
                   hintText: 'Type your message...',
-                  hintStyle: TextStyle(color: Colors.black,
-                  fontSize: 15.0),
+                  hintStyle: TextStyle(color: Colors.black, fontSize: 15.0),
                 ),
               ),
             ),
           ),
-      
+
           // Button send message
           Material(
             child: Container(
-              decoration:BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Palette.accent,
               ),
-              margin: EdgeInsets.symmetric(horizontal: 8.0),
+              margin: EdgeInsets.symmetric(horizontal: 3.0),
               child: IconButton(
                 icon: Icon(Icons.send),
                 onPressed: () {},
