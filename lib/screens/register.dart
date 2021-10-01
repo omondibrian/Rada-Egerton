@@ -26,7 +26,7 @@ class Register extends StatelessWidget {
       print(userController.text);
       print(passwordController.text);
       //TODO Remove backward navigation and connect to backend
-      Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+      Navigator.popAndPushNamed(context, AppRoutes.dashboard);
     }
   }
 

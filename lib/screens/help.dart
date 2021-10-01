@@ -23,7 +23,6 @@ class Help extends StatelessWidget {
               floating: true,
               bottom: TabBar(
                 indicatorColor: Theme.of(context).primaryColor,
-                
                 tabs: [
                   Tab(child: Text('Location', style: style)),
                   Tab(child: Text('Contact', style: style)),
