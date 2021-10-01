@@ -6,10 +6,12 @@ import 'package:rada_egerton/widgets/defaultInput.dart';
 
 import '../constants.dart';
 
+  const String username = 'radaegerton';
 class Register extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final userController = TextEditingController();
   final passwordController = TextEditingController();
+  
 
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
@@ -19,7 +21,6 @@ class Register extends StatelessWidget {
     }
     return null;
   }
-
   void _handleRegister(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       //view registration details
