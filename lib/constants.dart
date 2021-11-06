@@ -1,6 +1,5 @@
 class AppRoutes {
-  static const splash = "/";
-  static const dashboard = "/home";
+  static const dashboard = "/";
   static const welcome = "/welcome";
   static const help = "/help";
   static const login = "/login";
@@ -13,5 +12,7 @@ class AppRoutes {
   static const forum = "/forum";
   static const connectionError = "/connectionError";
   static const terms = "/terms";
-  static const chat = "/chat";
+  // static const chat = "/chat";
+  static const profile = "/profile";
+  static const contributors = "/contributors";
 }

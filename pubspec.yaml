@@ -32,6 +32,10 @@ dependencies:
   flutter_svg: ^0.22.0
   provider: ^6.0.0
   flutter_rating_bar: ^4.0.0
+  google_maps_flutter: ^2.0.6
+  image_picker: ^0.8.3+1
+  swipeable_tile: ^0.0.2
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
@@ -61,7 +65,7 @@ flutter:
     - assets/help.svg
     - assets/information.svg
     - assets/mentor.svg
-    - assets/welcome.svg
+    - assets/welcome.png
     - assets/egerton.png
     - assets/srhr.png
     - assets/unesco.png

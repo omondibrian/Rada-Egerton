@@ -1,36 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rada_egerton/constants.dart';
-
 import '../sizeConfig.dart';
+
+
+enum FilterOptions { Profile, Contributors, LogOut }
 
 class Dashboard extends StatelessWidget {
   Widget dashBoardBuilder(BuildContext ctx, int index) {
     final style = TextStyle(
-      fontSize: SizeConfig.isTabletWidth ? 28 : 14,
+      fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
-    return ListTile(
-      contentPadding:
-          SizeConfig.isTabletWidth ? EdgeInsets.all(20) : EdgeInsets.all(2.0),
-      leading: SvgPicture.asset(
-        dashboardItems[index]['leadingIcon'],
-        width: SizeConfig.isTabletWidth ? 90 : 60,
-        height: SizeConfig.isTabletWidth ? 60 : 40,
-      ),
-      title: Text(
-        dashboardItems[index]['title'],
-        style: style,
-      ),
-      subtitle: Text(
-        dashboardItems[index]['subtitle'],
-        style: style,
-      ),
-      trailing: IconButton(
-        iconSize: SizeConfig.isTabletWidth ? 50 : 30,
-        color: Theme.of(ctx).primaryColor,
-        icon: Icon(Icons.arrow_forward_ios),
-        onPressed: () =>
-            Navigator.of(ctx).pushNamed(dashboardItems[index]['routeName']),
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: ListTile(
+        contentPadding:
+            SizeConfig.isTabletWidth ? EdgeInsets.all(20) : EdgeInsets.only(left: 10,top: 2.0,right: 2.0,bottom: 2.0),
+        leading: SvgPicture.asset(
+          dashboardItems[index]['leadingIcon'],
+          width: SizeConfig.isTabletWidth ? 90 : 60,
+          height: SizeConfig.isTabletWidth ? 60 : 40,
+        ),
+        title: Text(
+          dashboardItems[index]['title'],
+          style: style,
+        ),
+        subtitle: Text(
+          dashboardItems[index]['subtitle'],
+          style: style,
+        ),
+        trailing: IconButton(
+          iconSize: 30,
+          color: Theme.of(ctx).primaryColor,
+          icon: Icon(Icons.arrow_forward_ios),
+          onPressed: () =>
+              Navigator.of(ctx).pushNamed(dashboardItems[index]['routeName']),
+        ),
       ),
     );
   }
@@ -39,9 +44,39 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.more_vert))],
+        actions: [
+          PopupMenuButton(
+            onSelected: (FilterOptions selectedValue) {
+              if (selectedValue == FilterOptions.Profile) {
+                Navigator.of(context).pushNamed(AppRoutes.profile);
+              } else if (selectedValue == FilterOptions.LogOut) {
+                Navigator.of(context).pushNamed(AppRoutes.welcome);
+              } else {
+                Navigator.pushNamed(context,AppRoutes.contributors);
+              }
+            },
+            icon: Icon(
+              Icons.more_vert,
+            ),
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                child: Text('Logout'),
+                value: FilterOptions.LogOut,
+              ),
+              PopupMenuItem(
+                child: Text('Profile'),
+                value: FilterOptions.Profile,
+              ),
+              PopupMenuItem(
+                child: Text('Contributors'),
+                value: FilterOptions.Contributors,
+              ),
+            ],
+          ),
+        ],
         title: Text('Rada DashBoard'),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: Padding(
@@ -56,48 +91,47 @@ class Dashboard extends StatelessWidget {
   }
 }
 
-
 List dashboardItems = [
   {
-    'title': 'Mentorship',
-    'subtitle': 'Mentorship Program',
-    'leadingIcon': 'assets/mentor.svg',
-    'routeName':AppRoutes.mentorship
+    'title': 'Information',
+    'subtitle': 'Knowledge is power',
+    'leadingIcon': 'assets/information.svg',
+    'routeName': AppRoutes.information
+  },
+  {
+    'title': 'Students Counseling',
+    'subtitle': 'Free professional Counselling',
+    'leadingIcon': 'assets/counseling.svg',
+    'routeName': AppRoutes.counseling
+  },
+  {
+    'title': 'Student Forums',
+    'subtitle': 'Share with the group',
+    'leadingIcon': 'assets/forum.svg',
+    'routeName': AppRoutes.forum
+  },
+  {
+    'title': 'Notification',
+    'subtitle': 'Instant Notification',
+    'leadingIcon': 'assets/bell.svg',
+    'routeName': AppRoutes.notification
   },
   {
     'title': 'Help',
     'subtitle': 'Location and Contact',
     'leadingIcon': 'assets/help.svg',
-    'routeName':AppRoutes.help
+    'routeName': AppRoutes.help
   },
   {
-    'title': 'Information',
+    'title': 'Mentorship',
     'subtitle': 'Mentorship Program',
-    'leadingIcon': 'assets/information.svg',
-    'routeName':AppRoutes.information
-  },
-  {
-    'title': 'Student Forums',
-    'subtitle': 'Mentorship program',
-    'leadingIcon': 'assets/forum.svg',
-    'routeName':AppRoutes.forum
-  },
-  {
-    'title': 'Students Counseling',
-    'subtitle': 'Mentorship program',
-    'leadingIcon': 'assets/counseling.svg',
-    'routeName':AppRoutes.counseling
+    'leadingIcon': 'assets/mentor.svg',
+    'routeName': AppRoutes.mentorship
   },
   {
     'title': 'Group Counseling',
-    'subtitle': 'Mentorship program',
+    'subtitle': 'Free professional Counselling',
     'leadingIcon': 'assets/counseling.svg',
-    'routeName':AppRoutes.counseling
-  },
-  {
-    'title': 'Notification',
-    'subtitle': 'Mentorship program',
-    'leadingIcon': 'assets/bell.svg',
-    'routeName':AppRoutes.notification
+    'routeName': AppRoutes.counseling
   },
 ];

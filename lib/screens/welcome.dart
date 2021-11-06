@@ -15,33 +15,33 @@ class Welcome extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.topLeft,
-            child: SvgPicture.asset('assets/curve_left.svg',
-              width:SizeConfig.isTabletWidth ? 200 :  100,),
-          ),
-          Center(
             child: SvgPicture.asset(
-              'assets/help.svg',
-              width:SizeConfig.isTabletWidth ? 600 :  200,
+              'assets/curve_left.svg',
+              width: 100,
             ),
           ),
           Center(
-            heightFactor:SizeConfig.isTabletWidth ? 2:3,
-            child: Text('Welcome to Egerton University \n rada Application',style: TextStyle(
-              fontSize: SizeConfig.isTabletWidth ? 28:14,
-            ),),
+            child: Image.asset('assets/welcome.png',width: 250,height: 250,),
+          ),
+          Center(
+            heightFactor: SizeConfig.isTabletWidth ? 2 : 3,
+            child: Text(
+              'Welcome to Egerton University \n  rada Application',
+              style: Theme.of(context).textTheme.subtitle1
+            ),
           ),
           Center(
             child: RadaButton(
                 handleClick: () {
-                  Navigator.of(context).pushNamed(AppRoutes.login);
+                  Navigator.of(context).popAndPushNamed(AppRoutes.login);
                 },
-                title: 'LogIn',
+                title: 'Login',
                 fill: true),
           ),
           Center(
             child: RadaButton(
                 handleClick: () {
-                  Navigator.of(context).pushNamed(AppRoutes.dashboard);
+                  Navigator.of(context).popAndPushNamed(AppRoutes.register);
                 },
                 title: 'Register',
                 fill: false),

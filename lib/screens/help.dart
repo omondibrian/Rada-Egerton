@@ -1,8 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:rada_egerton/screens/chat/chat.dart';
+
+import '../sizeConfig.dart';
+import './helpScreenTab/ContactTab.dart';
+import './helpScreenTab/locationTab.dart';
 
 class Help extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    final style = TextStyle(
+      fontSize: SizeConfig.isTabletWidth ? 16 : 14,
+    );
+    return Scaffold(
+        body: DefaultTabController(
+      length: 3,
+      child: NestedScrollView(
+        headerSliverBuilder: (BuildContext ctx, bool isScrolled) {
+          return <Widget>[
+            new SliverAppBar(
+              title: Text('Location and Contact'),
+              pinned: true,
+              floating: true,
+              bottom: TabBar(
+                indicatorColor: Theme.of(context).primaryColor,
+                
+                tabs: [
+                  Tab(child: Text('Location', style: style)),
+                  Tab(child: Text('Contact', style: style)),
+                  Tab(child: Text('Bot', style: style)),
+                ],
+              ),
+            ),
+          ];
+        },
+        body: TabBarView(children: [
+          LocationTab(),
+          ContactTab(),
+          Chat(currentUserName: 'jonathan')
+        ]),
+      ),
+    ));
   }
 }
+

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CounsellorsDTO {
   final String name;
@@ -23,7 +22,7 @@ class CounsellorsDataSource {
         name: 'Nzeli',
         rating: 4.5,
         imgUrl:
-            'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.hfxGfUIe6333mIDDyqqnOgHaFb%26pid%3DApi&f=1')
+            'https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.hfxGfUIe6333mIDDyqqnOgHaFb%26pid%3DApi&f=1')
   ];
 
   Future<List<CounsellorsDTO>> fetchCounselors() {
@@ -38,7 +37,7 @@ class CounselorProvider with ChangeNotifier {
   var _conversations = [
     {
       'urlPath':
-          'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.hfxGfUIe6333mIDDyqqnOgHaFb%26pid%3DApi&f=1',
+          'https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.hfxGfUIe6333mIDDyqqnOgHaFb%26pid%3DApi&f=1',
       'name': 'Nzeli'
     }
   ];
@@ -55,5 +54,9 @@ class CounselorProvider with ChangeNotifier {
     var result = await this._dataSourse.fetchCounselors();
     this._counselors = result;
     notifyListeners();
+  }
+
+  getCounselingChats(){
+    return [];
   }
 }
