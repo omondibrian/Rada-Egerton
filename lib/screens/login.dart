@@ -6,33 +6,36 @@ import 'package:rada_egerton/widgets/defaultInput.dart';
 
 import '../sizeConfig.dart';
 
-const String username='radaegerton';
+const String username = 'radaegerton';
+
 class Login extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final userController = TextEditingController();
   final passwordController = TextEditingController();
+
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
       return 'This value is required';
-    }else if(!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)){
+    } else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
       return 'This value must contain letters or numbers';
-    }else if(value != username){
+    } else if (value != username) {
       return 'Incorrect username and password';
     }
     return null;
   }
+
   void _handleSubmit(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       print(userController.text);
       print(passwordController.text);
       //TODO Remove backward navigation and connect to backend
+      //Backward navigation removed
       Navigator.of(context).popAndPushNamed(AppRoutes.dashboard);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -40,13 +43,13 @@ class Login extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-              height: 200,
-              child: SvgPicture.asset(
-                'assets/curve_top.svg',
-                width: MediaQuery.of(context).size.width,
-                fit: BoxFit.fill,
+                height: 200,
+                child: SvgPicture.asset(
+                  'assets/curve_top.svg',
+                  width: MediaQuery.of(context).size.width,
+                  fit: BoxFit.fill,
+                ),
               ),
-            ),
               SizedBox(
                 height: 50,
               ),
@@ -111,7 +114,7 @@ class Login extends StatelessWidget {
                             Text(
                               'Don\'t have an account? ',
                               style: Theme.of(context).textTheme.bodyText1,
-                                textAlign: TextAlign.center,
+                              textAlign: TextAlign.center,
                             ),
                             InkWell(
                               onTap: () {
