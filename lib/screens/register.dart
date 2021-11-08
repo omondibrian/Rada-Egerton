@@ -6,21 +6,20 @@ import 'package:rada_egerton/widgets/defaultInput.dart';
 
 import '../constants.dart';
 
-  const String username = 'radaegerton';
 class Register extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final userController = TextEditingController();
   final passwordController = TextEditingController();
-  
 
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
       return 'This value is required';
-    }else if(!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)){
+    } else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
       return 'This value must contain only letters or numbers';
     }
     return null;
   }
+
   void _handleRegister(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       //view registration details
@@ -57,7 +56,7 @@ class Register extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Form(
-                  key:_formKey,
+                  key: _formKey,
                   child: Column(
                     children: [
                       SizedBox(
@@ -82,7 +81,7 @@ class Register extends StatelessWidget {
                       ),
                       RadaButton(
                           title: 'Register',
-                          handleClick: () =>_handleRegister(context),
+                          handleClick: () => _handleRegister(context),
                           fill: true),
                       Padding(
                         padding: const EdgeInsets.all(20.0),
