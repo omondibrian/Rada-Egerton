@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+ import 'package:flutter/material.dart';
+ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rada_egerton/sizeConfig.dart';
 import 'package:rada_egerton/widgets/RadaButton.dart';
 import 'package:rada_egerton/widgets/defaultInput.dart';
@@ -14,6 +14,8 @@ class Register extends StatelessWidget {
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
       return 'This value is required';
+    } else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+      return 'This value must contain only letters or numbers';
     }
     return null;
   }
@@ -24,7 +26,7 @@ class Register extends StatelessWidget {
       print(userController.text);
       print(passwordController.text);
       //TODO Remove backward navigation and connect to backend
-      Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+      Navigator.popAndPushNamed(context, AppRoutes.dashboard);
     }
   }
 
@@ -54,7 +56,7 @@ class Register extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Form(
-                  key:_formKey,
+                  key: _formKey,
                   child: Column(
                     children: [
                       SizedBox(
@@ -79,7 +81,7 @@ class Register extends StatelessWidget {
                       ),
                       RadaButton(
                           title: 'Register',
-                          handleClick: () =>_handleRegister(context),
+                          handleClick: () => _handleRegister(context),
                           fill: true),
                       Padding(
                         padding: const EdgeInsets.all(20.0),

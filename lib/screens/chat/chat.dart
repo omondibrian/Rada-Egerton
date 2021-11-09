@@ -15,29 +15,28 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/background_pattern.png'),
-                    repeat: ImageRepeat.repeat),
+      body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/background_pattern.png'),
+                repeat: ImageRepeat.repeat),
+          ),
+          child: Stack(
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 10.0),
+                child: ListView.builder(
+                  itemCount: _chats.length,
+                  itemBuilder: (BuildContext ctx, index) =>
+                      buildItem(widget.currentUserName, this._chats[index]),
+                ),
               ),
-              child: Stack(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(top: 10.0),
-                    child: ListView.builder(
-                      itemCount: _chats.length,
-                      itemBuilder: (BuildContext ctx, index) =>
-                          buildItem(widget.currentUserName, this._chats[index]),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: buildInput(),
-                  )
-                ],
-              ))),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: buildInput(),
+              )
+            ],
+          )),
     );
   }
 }
