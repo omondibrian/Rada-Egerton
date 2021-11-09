@@ -10,7 +10,7 @@ class Mentorship extends StatelessWidget {
       body: Container(
         child: Center(
           child: Text(
-            "Comming soon",
+            "Coming soon",
             style: Theme.of(context).textTheme.headline1,
           ),
         ),

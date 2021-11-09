@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+ import 'package:flutter/material.dart';
+ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rada_egerton/sizeConfig.dart';
 import 'package:rada_egerton/widgets/RadaButton.dart';
 import 'package:rada_egerton/widgets/defaultInput.dart';
@@ -26,7 +26,7 @@ class Register extends StatelessWidget {
       print(userController.text);
       print(passwordController.text);
       //TODO Remove backward navigation and connect to backend
-      Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+      Navigator.popAndPushNamed(context, AppRoutes.dashboard);
     }
   }
 
