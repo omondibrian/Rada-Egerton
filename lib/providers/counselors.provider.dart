@@ -32,7 +32,7 @@ class CounsellorsDataSource {
 }
 
 class CounselorProvider with ChangeNotifier {
-  var _dataSourse = CounsellorsDataSource();
+  var _dataSource = CounsellorsDataSource();
   List<CounsellorsDTO> _counselors = [];
   var _conversations = [
     {
@@ -51,12 +51,12 @@ class CounselorProvider with ChangeNotifier {
   }
 
   getCounsellors() async {
-    var result = await this._dataSourse.fetchCounselors();
+    var result = await this._dataSource.fetchCounselors();
     this._counselors = result;
     notifyListeners();
   }
 
-  getCounselingChats(){
+  getCounselingChats() {
     return [];
   }
 }

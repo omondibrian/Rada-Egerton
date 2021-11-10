@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rada_egerton/widgets/ratingBar.dart';
 import '../../providers/counselors.provider.dart';
 import '../../sizeConfig.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CounselorsTab extends StatelessWidget {
   const CounselorsTab({Key? key}) : super(key: key);
@@ -10,7 +11,7 @@ class CounselorsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final counselorprovider = Provider.of<CounselorProvider>(context);
-    var counserlors = counselorprovider.counselors;
+    var counselors = counselorprovider.counselors;
     counselorprovider.getCounsellors();
     Widget conselorsBuilder(BuildContext cxt, int index) {
       return Card(
@@ -22,7 +23,7 @@ class CounselorsTab extends StatelessWidget {
                   radius: SizeConfig.isTabletWidth ? 40 : 20.0,
                   child: ClipOval(
                     child: Image.network(
-                      counserlors[index].imgUrl,
+                      counselors[index].imgUrl,
                       width: SizeConfig.isTabletWidth ? 120 : 90,
                       height: SizeConfig.isTabletWidth ? 120 : 90,
                       fit: BoxFit.cover,
@@ -38,7 +39,7 @@ class CounselorsTab extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    counserlors[index].name,
+                    counselors[index].name,
                   ),
                 ],
               ),
@@ -46,13 +47,13 @@ class CounselorsTab extends StatelessWidget {
                 children: [
                   Text('Expertise : '),
                   Text(
-                    counserlors[index].expertise,
+                    counselors[index].expertise,
                   ),
                 ],
               ),
               Row(
                 children: [
-                  ratingBar(rating: counserlors[index].rating, size: 20),
+                  ratingBar(rating: counselors[index].rating, size: 20),
                 ],
               ),
             ])
@@ -61,16 +62,17 @@ class CounselorsTab extends StatelessWidget {
       );
     }
 
-    return counserlors.isNotEmpty
+    return counselors.isNotEmpty
         ? ListView.builder(
             itemBuilder: conselorsBuilder,
-            itemCount: counserlors.length,
+            itemCount: counselors.length,
           )
         : Center(
             child: SizedBox(
               width: 80,
               height: 80,
-              child: CircularProgressIndicator(),
+              child:
+                  SpinKitSpinningLines(color: Theme.of(context).primaryColor),
             ),
           );
   }
