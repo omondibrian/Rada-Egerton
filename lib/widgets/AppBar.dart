@@ -31,11 +31,13 @@ class CustomAppBar extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(this.title, style: Theme.of(context).textTheme.headline1),
-              Text('say Something',
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1
-                      ?.copyWith(color: Theme.of(context).accentColor))
+              Text(
+                'say Something',
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    ?.copyWith(color: Theme.of(context).colorScheme.secondary),
+              ),
             ],
           ),
         )

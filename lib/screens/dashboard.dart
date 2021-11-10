@@ -15,6 +15,7 @@ class Dashboard extends StatelessWidget {
         Navigator.of(ctx).pushNamed(dashboardItems[index]['routeName']);
       },
       child: Card(
+        elevation: 5.0,
         clipBehavior: Clip.antiAlias,
         child: ListTile(
           contentPadding: SizeConfig.isTabletWidth
