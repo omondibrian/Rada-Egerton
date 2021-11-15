@@ -1,55 +1,85 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Information extends StatelessWidget {
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+  void _refreshData() async {
+    //TODO fetch new instance of information (api calls)
+    await Future.delayed(Duration(milliseconds: 1000));
+    _refreshController.refreshCompleted();
+  }
+
+  void _loadingData() async {
+    //TODO on screen actions when loading data
+    await Future.delayed(Duration(milliseconds: 1000));
+    _refreshController.loadComplete();
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> imageSliders =
         informationItems.map((item) => informationCard(item, context)).toList();
 
     return Scaffold(
-      appBar: AppBar(
-          title: Text('Rada Information',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline1
-                  ?.copyWith(color: Colors.white))),
-      body: Container(
-          margin: EdgeInsets.symmetric(vertical: 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Sexual & Reproductive health",
-                  style: Theme.of(context).textTheme.headline2,
-                  textAlign: TextAlign.left,
+        appBar: AppBar(
+            title: Text('Rada Information',
+                style: Theme.of(context)
+                    .textTheme
+                    .headline1
+                    ?.copyWith(color: Colors.white))),
+        body: SmartRefresher(
+          controller: _refreshController,
+          enablePullDown: true,
+          header: MaterialClassicHeader(
+            backgroundColor: Theme.of(context).primaryColor,
+            color: Colors.white,
+            distance: 30.0,
+          ),
+          onRefresh: _refreshData,
+          onLoading: _loadingData,
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Sexual & Reproductive health",
+                    style: Theme.of(context).textTheme.headline2,
+                    textAlign: TextAlign.left,
+                  ),
                 ),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(children: imageSliders),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Substance abuse",
-                  style: Theme.of(context).textTheme.headline2,
-                  textAlign: TextAlign.left,
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(children: imageSliders),
                 ),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                
-                child: Row(children: imageSliders,mainAxisAlignment: MainAxisAlignment.center),
-              ),
-            ],
-          )),
-    );
+                SizedBox(
+                  height: 30,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Substance abuse",
+                    style: Theme.of(context).textTheme.headline2,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                      children: imageSliders,
+                      mainAxisAlignment: MainAxisAlignment.center),
+                ),
+              ],
+            ),
+          ),
+        )
+
+        //
+        );
   }
 
   Widget informationCard(Map<String, dynamic> item, BuildContext context) {
@@ -58,7 +88,6 @@ class Information extends StatelessWidget {
           Navigator.of(context).pushNamed(AppRoutes.informationDetails),
       child: Card(
         margin: EdgeInsets.all(5.0),
-        
         clipBehavior: Clip.antiAlias,
         child: Column(
           mainAxisSize: MainAxisSize.min,

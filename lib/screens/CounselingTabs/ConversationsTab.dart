@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/providers/counselors.provider.dart';
 import '../../sizeConfig.dart';
@@ -46,7 +47,8 @@ class ConversationsTab extends StatelessWidget {
             child: SizedBox(
               width: 80,
               height: 80,
-              child: CircularProgressIndicator(),
+              child:
+                  SpinKitSpinningLines(color: Theme.of(context).primaryColor),
             ),
           );
   }

@@ -19,5 +19,7 @@ class ContactsAndLocationProvider {
 
   getLocation() {
     return [];
+    //TODO ; Fix this location display issue
+    //TODO : study GeoLocator flutter library
   }
 }
