@@ -3,22 +3,26 @@ import 'package:rada_egerton/widgets/AppBar.dart';
 import 'chat/chat.dart';
 
 class Forum extends StatelessWidget {
+  Future<void> _refreshChat() async {
+    //TODO : api call to refresh chat
+    await Future.delayed(Duration(milliseconds: 1000));
+  }
+
   final List _forums = [
     {
       'title': 'Covid 19',
-
-      'imageUrl': 'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
-      
+      'imageUrl':
+          'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
     },
     {
       'title': 'Hiv/Aids',
-      'imageUrl': 'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
-      
+      'imageUrl':
+          'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
     },
     {
       'title': 'Covid 19',
-      'imageUrl': 'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
-
+      'imageUrl':
+          'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
     }
   ];
   Widget forumBuilder(BuildContext context, int index) {
@@ -53,9 +57,16 @@ class Forum extends StatelessWidget {
         title: Text('Forums'),
       ),
       body: SafeArea(
-        child: ListView.builder(
-          itemBuilder: forumBuilder,
-          itemCount: this._forums.length,
+        child: RefreshIndicator(
+          onRefresh: () => _refreshChat(),
+          backgroundColor: Theme.of(context).primaryColor,
+          color: Colors.white,
+          displacement: 20.0,
+          edgeOffset: 5.0,
+          child: ListView.builder(
+            itemBuilder: forumBuilder,
+            itemCount: this._forums.length,
+          ),
         ),
       ),
     );
