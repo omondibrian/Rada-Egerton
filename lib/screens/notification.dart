@@ -16,6 +16,11 @@ class NotificationDataTransfer {
   }
 }
 
+Future<void> _refreshChat() async {
+  //TODO : function call to refresh notification data
+  await Future.delayed(Duration(milliseconds: 1000));
+}
+
 class UserNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -28,11 +33,18 @@ class UserNotification extends StatelessWidget {
             .headline1
             ?.copyWith(color: Colors.white),
       )),
-      body: ListView(
-        children: notificationItems
-            .map((item) => notificationCard(
-                NotificationDataTransfer.fromjson(item), context))
-            .toList(),
+      body: RefreshIndicator(
+        onRefresh: () => _refreshChat(),
+        backgroundColor: Theme.of(context).primaryColor,
+        color: Colors.white,
+        displacement: 20.0,
+        edgeOffset: 5.0,
+        child: ListView(
+          children: notificationItems
+              .map((item) => notificationCard(
+                  NotificationDataTransfer.fromjson(item), context))
+              .toList(),
+        ),
       ),
     );
   }

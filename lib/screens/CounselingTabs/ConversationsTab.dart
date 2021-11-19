@@ -14,6 +14,11 @@ class ConversationsTab extends StatelessWidget {
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
+    Future<void> _refreshChat() async {
+      //TODO : function call to refresh chat data
+      await Future.delayed(Duration(milliseconds: 1000));
+    }
+
     Widget conversationBuilder(BuildContext ctx, int index) {
       return ListTile(
         leading: CircleAvatar(
@@ -39,9 +44,16 @@ class ConversationsTab extends StatelessWidget {
     }
 
     return conversations.isNotEmpty
-        ? ListView.builder(
-            itemBuilder: conversationBuilder,
-            itemCount: conversations.length,
+        ? RefreshIndicator(
+            onRefresh: () => _refreshChat(),
+            backgroundColor: Theme.of(context).primaryColor,
+            color: Colors.white,
+            displacement: 20.0,
+            edgeOffset: 5.0,
+            child: ListView.builder(
+              itemBuilder: conversationBuilder,
+              itemCount: conversations.length,
+            ),
           )
         : Center(
             child: SizedBox(

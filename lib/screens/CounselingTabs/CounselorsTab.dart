@@ -8,6 +8,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class CounselorsTab extends StatelessWidget {
   const CounselorsTab({Key? key}) : super(key: key);
 
+  Future<void> _refreshChat() async {
+    //TODO : function call to refresh chat data
+    await Future.delayed(Duration(milliseconds: 1000));
+  }
+
   @override
   Widget build(BuildContext context) {
     final counselorprovider = Provider.of<CounselorProvider>(context);
@@ -63,9 +68,16 @@ class CounselorsTab extends StatelessWidget {
     }
 
     return counselors.isNotEmpty
-        ? ListView.builder(
-            itemBuilder: conselorsBuilder,
-            itemCount: counselors.length,
+        ? RefreshIndicator(
+            onRefresh: () => _refreshChat(),
+            backgroundColor: Theme.of(context).primaryColor,
+            color: Colors.white,
+            displacement: 20.0,
+            edgeOffset: 5.0,
+            child: ListView.builder(
+              itemBuilder: conselorsBuilder,
+              itemCount: counselors.length,
+            ),
           )
         : Center(
             child: SizedBox(

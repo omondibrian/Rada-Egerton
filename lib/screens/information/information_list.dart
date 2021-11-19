@@ -2,16 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:rada_egerton/constants.dart';
 
 class Information extends StatelessWidget {
-  void _refreshData() async {
-    //TODO fetch new instance of information (api calls)
-    await Future.delayed(Duration(milliseconds: 1000));
-  }
-
-  void _loadingData() async {
-    //TODO on screen actions when loading data
-    await Future.delayed(Duration(milliseconds: 1000));
-  }
-
   @override
   Widget build(BuildContext context) {
     final List<Widget> imageSliders =

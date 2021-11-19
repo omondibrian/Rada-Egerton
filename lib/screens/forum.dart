@@ -3,11 +3,6 @@ import 'package:rada_egerton/widgets/AppBar.dart';
 import 'chat/chat.dart';
 
 class Forum extends StatelessWidget {
-  Future<void> _refreshChat() async {
-    //TODO : api call to refresh chat
-    await Future.delayed(Duration(milliseconds: 1000));
-  }
-
   final List _forums = [
     {
       'title': 'Covid 19',
@@ -48,6 +43,11 @@ class Forum extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyText1),
       ),
     );
+  }
+
+  Future<void> _refreshChat() async {
+    //TODO : function call to refresh chat data
+    await Future.delayed(Duration(milliseconds: 1000));
   }
 
   @override
