@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -24,11 +25,16 @@ class ConversationsTab extends StatelessWidget {
         leading: CircleAvatar(
           radius: SizeConfig.isTabletWidth ? 98 : 20.0,
           child: ClipOval(
-            child: Image.network(
-              conversations[index]['urlPath'],
-              width: SizeConfig.isTabletWidth ? 120 : 90,
-              height: SizeConfig.isTabletWidth ? 120 : 90,
-              fit: BoxFit.cover,
+            child: CachedNetworkImage(
+              imageUrl: conversations[index]['urlPath'],
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
             ),
           ),
         ),

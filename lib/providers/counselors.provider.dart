@@ -22,7 +22,7 @@ class CounsellorsDataSource {
         name: 'Nzeli',
         rating: 4.5,
         imgUrl:
-            'https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.hfxGfUIe6333mIDDyqqnOgHaFb%26pid%3DApi&f=1')
+            'https://w7.pngwing.com/pngs/402/235/png-transparent-businessperson-computer-icons-avatar-passport-miscellaneous-purple-heroes.png')
   ];
 
   Future<List<CounsellorsDTO>> fetchCounselors() {
@@ -37,7 +37,7 @@ class CounselorProvider with ChangeNotifier {
   var _conversations = [
     {
       'urlPath':
-          'https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.hfxGfUIe6333mIDDyqqnOgHaFb%26pid%3DApi&f=1',
+          'https://w7.pngwing.com/pngs/402/235/png-transparent-businessperson-computer-icons-avatar-passport-miscellaneous-purple-heroes.png',
       'name': 'Nzeli'
     }
   ];

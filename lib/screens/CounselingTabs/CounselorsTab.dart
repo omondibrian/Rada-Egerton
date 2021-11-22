@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/widgets/ratingBar.dart';
@@ -27,11 +28,21 @@ class CounselorsTab extends StatelessWidget {
                 CircleAvatar(
                   radius: SizeConfig.isTabletWidth ? 40 : 20.0,
                   child: ClipOval(
-                    child: Image.network(
-                      counselors[index].imgUrl,
-                      width: SizeConfig.isTabletWidth ? 120 : 90,
-                      height: SizeConfig.isTabletWidth ? 120 : 90,
-                      fit: BoxFit.cover,
+                    child: CachedNetworkImage(
+                      imageUrl: counselors[index].imgUrl,
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        width: SizeConfig.isTabletWidth ? 120 : 90,
+                        height: SizeConfig.isTabletWidth ? 120 : 90,
+                      ),
+                      placeholder: (context, url) => SpinKitFadingCircle(
+                        color: Theme.of(context).primaryColor,
+                      ),
                     ),
                   ),
                 ),
