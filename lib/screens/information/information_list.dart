@@ -77,27 +77,18 @@ class Information extends StatelessWidget {
                   placeholder: (context, url) => SpinKitFadingCircle(
                     color: Theme.of(context).primaryColor,
                   ),
-                  fit: BoxFit.cover,
                   imageBuilder: (context, imageProvider) => Container(
                     decoration: BoxDecoration(
-                      image: DecorationImage(image: imageProvider),
+                      image: DecorationImage(
+                          image: imageProvider, fit: BoxFit.cover),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
                     ),
-                    constraints: BoxConstraints(
-                      maxWidth: 200,
-                      maxHeight: 150,
-                      minWidth: 180,
-                      minHeight: 135,
-                    ),
+                    height: 150,
+                    width: 200,
                   ),
-                )
-                //TODO : fix image not showing error on information screen
-                // Image.network(
-                //   item["image"],
-                //   fit: BoxFit.cover,
-                //   width: 200,
-                //   height: 150,
-                // ),
-                ),
+                )),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
               child: Text(
