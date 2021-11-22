@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rada_egerton/constants.dart';
 
 class Information extends StatelessWidget {
@@ -67,13 +69,35 @@ class Information extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                child: Image.network(
-                  item["image"],
+                borderRadius: BorderRadius.all(
+                  Radius.circular(5.0),
+                ),
+                child: CachedNetworkImage(
+                  imageUrl: item["image"],
+                  placeholder: (context, url) => SpinKitFadingCircle(
+                    color: Theme.of(context).primaryColor,
+                  ),
                   fit: BoxFit.cover,
-                  width: 200,
-                  height: 150,
-                )),
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(image: imageProvider),
+                    ),
+                    constraints: BoxConstraints(
+                      maxWidth: 200,
+                      maxHeight: 150,
+                      minWidth: 180,
+                      minHeight: 135,
+                    ),
+                  ),
+                )
+                //TODO : fix image not showing error on information screen
+                // Image.network(
+                //   item["image"],
+                //   fit: BoxFit.cover,
+                //   width: 200,
+                //   height: 150,
+                // ),
+                ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
               child: Text(
