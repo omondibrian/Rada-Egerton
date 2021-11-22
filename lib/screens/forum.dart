@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/widgets/AppBar.dart';
 import 'chat/chat.dart';
@@ -7,17 +8,19 @@ class Forum extends StatelessWidget {
     {
       'title': 'Covid 19',
       'imageUrl':
-          'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
+          // 'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
+          'https://i2.wp.com/cachcoc.org/wp-content/uploads/2020/12/virus.png?fit=640%2C640&ssl=1'
     },
     {
       'title': 'Hiv/Aids',
       'imageUrl':
-          'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
+          // 'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
+          'https://icon2.cleanpng.com/20180515/fwe/kisspng-centers-for-disease-control-and-prevention-prevent-5afaf68d014db7.3636826915263965570053.jpg'
     },
     {
       'title': 'Covid 19',
       'imageUrl':
-          'http://147.182.196.55/rada/uploads/1628172016139mint%20choclate%20chip.jpg',
+          'https://i2.wp.com/cachcoc.org/wp-content/uploads/2020/12/virus.png?fit=640%2C640&ssl=1',
     }
   ];
   Widget forumBuilder(BuildContext context, int index) {
@@ -33,7 +36,7 @@ class Forum extends StatelessWidget {
       ),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(
+          backgroundImage: CachedNetworkImageProvider(
             this._forums[index]['imageUrl'],
           ),
         ),
