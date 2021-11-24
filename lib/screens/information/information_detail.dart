@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rada_egerton/theme.dart';
 
 class InformationDetail extends StatefulWidget {
@@ -22,12 +24,19 @@ class _InformationDetailState extends State<InformationDetail> {
         children: [
           Stack(
             children: [
-              Image.network(
-                informationItem["image"],
-                width: MediaQuery.of(context).size.width,
-                fit: BoxFit.cover,
-                height: 300,
+              CachedNetworkImage(
+                imageUrl: informationItem["image"],
+                placeholder: (context, url) => SpinKitFadingCircle(
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
+
+              // Image.network(
+              //   informationItem["image"],
+              //   width: MediaQuery.of(context).size.width,
+              //   fit: BoxFit.cover,
+              //   height: 300,
+              // ),
               IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: Icon(
@@ -37,12 +46,15 @@ class _InformationDetailState extends State<InformationDetail> {
             ],
           ),
           Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(informationItem["title"],
-                  style: Theme.of(context).textTheme.headline1?.copyWith(
-                      decoration: TextDecoration.underline,
-                      decorationColor: Palette.primary,
-                      decorationThickness: 2))),
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              informationItem["title"],
+              style: Theme.of(context).textTheme.headline1?.copyWith(
+                  decoration: TextDecoration.underline,
+                  decorationColor: Palette.primary,
+                  decorationThickness: 2),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(

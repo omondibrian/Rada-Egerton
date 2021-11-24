@@ -22,7 +22,7 @@ class CounsellorsDataSource {
         name: 'Nzeli',
         rating: 4.5,
         imgUrl:
-            'https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.hfxGfUIe6333mIDDyqqnOgHaFb%26pid%3DApi&f=1')
+            'https://w7.pngwing.com/pngs/402/235/png-transparent-businessperson-computer-icons-avatar-passport-miscellaneous-purple-heroes.png')
   ];
 
   Future<List<CounsellorsDTO>> fetchCounselors() {
@@ -32,12 +32,12 @@ class CounsellorsDataSource {
 }
 
 class CounselorProvider with ChangeNotifier {
-  var _dataSourse = CounsellorsDataSource();
+  var _dataSource = CounsellorsDataSource();
   List<CounsellorsDTO> _counselors = [];
   var _conversations = [
     {
       'urlPath':
-          'https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.hfxGfUIe6333mIDDyqqnOgHaFb%26pid%3DApi&f=1',
+          'https://w7.pngwing.com/pngs/402/235/png-transparent-businessperson-computer-icons-avatar-passport-miscellaneous-purple-heroes.png',
       'name': 'Nzeli'
     }
   ];
@@ -51,12 +51,12 @@ class CounselorProvider with ChangeNotifier {
   }
 
   getCounsellors() async {
-    var result = await this._dataSourse.fetchCounselors();
+    var result = await this._dataSource.fetchCounselors();
     this._counselors = result;
     notifyListeners();
   }
 
-  getCounselingChats(){
+  getCounselingChats() {
     return [];
   }
 }

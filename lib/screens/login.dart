@@ -6,20 +6,29 @@ import 'package:rada_egerton/widgets/defaultInput.dart';
 
 import '../sizeConfig.dart';
 
-const String username = 'radaegerton';
-
 class Login extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final userController = TextEditingController();
   final passwordController = TextEditingController();
 
-  String? validator(String? value) {
+  //separate form validators
+
+  String? emailValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This value is required';
+    } else if (!RegExp(
+            r'^.+@[a-zA-Z0-9]+\.{1}[a-zA-Z0-9]+(\.{0,1}[a-zA-Z0-9]+)+$')
+        .hasMatch(value)) {
+      return 'Please enter a valid email address';
+    }
+    return null;
+  }
+
+  String? passwordValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'This value is required';
     } else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
-      return 'This value must contain letters or numbers';
-    } else if (value != username) {
-      return 'Incorrect username and password';
+      return 'Incorrect password';
     }
     return null;
   }
@@ -28,7 +37,7 @@ class Login extends StatelessWidget {
     if (_formKey.currentState!.validate()) {
       print(userController.text);
       print(passwordController.text);
-      //TODO Remove backward navigation and connect to backend
+      //TODO Connect to backend
       //Backward navigation removed
       Navigator.of(context).popAndPushNamed(AppRoutes.dashboard);
     }
@@ -69,7 +78,7 @@ class Login extends StatelessWidget {
                         child: DefaultInput(
                           hintText: 'Username',
                           controller: userController,
-                          validator: validator,
+                          validator: emailValidator,
                           icon: Icons.person,
                         ),
                       ),
@@ -79,7 +88,7 @@ class Login extends StatelessWidget {
                           isPassword: true,
                           hintText: 'Password',
                           controller: passwordController,
-                          validator: validator,
+                          validator: passwordValidator,
                           icon: Icons.lock,
                         ),
                       ),
