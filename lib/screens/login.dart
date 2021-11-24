@@ -11,6 +11,7 @@ class Login extends StatelessWidget {
   final userController = TextEditingController();
   final passwordController = TextEditingController();
 
+
   //separate form validators
 
   String? emailValidator(String? value) {
@@ -24,6 +25,7 @@ class Login extends StatelessWidget {
     return null;
   }
 
+
   String? passwordValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'This value is required';
@@ -33,11 +35,13 @@ class Login extends StatelessWidget {
     return null;
   }
 
+
+
   void _handleSubmit(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       print(userController.text);
       print(passwordController.text);
-      //TODO Connect to backend
+
       //Backward navigation removed
       Navigator.of(context).popAndPushNamed(AppRoutes.dashboard);
     }
