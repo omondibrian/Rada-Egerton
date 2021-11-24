@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/widgets/RadaButton.dart';
 import 'package:rada_egerton/widgets/defaultInput.dart';
 
@@ -11,8 +12,8 @@ class Login extends StatelessWidget {
   final userController = TextEditingController();
   final passwordController = TextEditingController();
 
+  final _authService = AuthServiceProvider();
 
-  //separate form validators
 
   String? emailValidator(String? value) {
     if (value == null || value.isEmpty) {
@@ -26,6 +27,20 @@ class Login extends StatelessWidget {
   }
 
 
+  void _handleSubmit(BuildContext context) async {
+    try {
+      if (_formKey.currentState!.validate()) {
+        print(userController.text);
+        print(passwordController.text);
+        //TODO Remove backward navigation and connect to backend
+        await this
+            ._authService
+            .logInUser(userController.text, passwordController.text);
+        Navigator.of(context).popAndPushNamed(AppRoutes.dashboard);
+      }
+    } catch (e) {
+    
+
   String? passwordValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'This value is required';
@@ -33,18 +48,6 @@ class Login extends StatelessWidget {
       return 'Incorrect password';
     }
     return null;
-  }
-
-
-
-  void _handleSubmit(BuildContext context) {
-    if (_formKey.currentState!.validate()) {
-      print(userController.text);
-      print(passwordController.text);
-
-      //Backward navigation removed
-      Navigator.of(context).popAndPushNamed(AppRoutes.dashboard);
-    }
   }
 
   @override
