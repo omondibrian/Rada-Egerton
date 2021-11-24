@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/sizeConfig.dart';
 import 'package:rada_egerton/widgets/RadaButton.dart';
 import 'package:rada_egerton/widgets/defaultInput.dart';
@@ -10,6 +11,7 @@ class Register extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final userController = TextEditingController();
   final passwordController = TextEditingController();
+  final _authService = AuthServiceProvider();
 
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
@@ -18,13 +20,25 @@ class Register extends StatelessWidget {
     return null;
   }
 
-  void _handleRegister(BuildContext context) {
-    if (_formKey.currentState!.validate()) {
-      //view registration details
-      print(userController.text);
-      print(passwordController.text);
-      //TODO Remove backward navigation and connect to backend
-      Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+  void _handleRegister(BuildContext context) async {
+    try {
+      if (_formKey.currentState!.validate()) {
+        //view registration details
+        print(userController.text);
+        print(passwordController.text);
+        
+        final UserDTO user = UserDTO(
+          email: userController.text,
+          password: passwordController.text,
+          userName: userController.text,
+        );
+
+        await this._authService.registerNewUser(user);
+        //TODO Remove backward navigation and connect to backend
+        Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -54,7 +68,7 @@ class Register extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Form(
-                  key:_formKey,
+                  key: _formKey,
                   child: Column(
                     children: [
                       SizedBox(
@@ -79,7 +93,7 @@ class Register extends StatelessWidget {
                       ),
                       RadaButton(
                           title: 'Register',
-                          handleClick: () =>_handleRegister(context),
+                          handleClick: () => _handleRegister(context),
                           fill: true),
                       Padding(
                         padding: const EdgeInsets.all(20.0),
