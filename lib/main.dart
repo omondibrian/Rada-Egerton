@@ -18,7 +18,9 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             // This is the theme of your application.
-            //
+            //TODO: Is there a better way to migrate the code on line 22 t colorScheme.secondary
+            // TODO and trace its visibility
+            // ignore: deprecated_member_use
             accentColor: Palette.accent,
             primaryColor: Palette.primary,
             cardColor: Palette.backgroundColor,
@@ -40,14 +42,13 @@ class MyApp extends StatelessWidget {
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,
                   color: Palette.lightTextColor),
-                subtitle2: TextStyle(
+              subtitle2: TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xff9e9e9e)),    
+                  color: Color(0xff9e9e9e)),
               bodyText1:
                   TextStyle(fontSize: 14.0, color: Palette.lightTextColor),
-              bodyText2:
-                  TextStyle(fontSize: 14.0, color: Color(0xff9e9e9e)),
+              bodyText2: TextStyle(fontSize: 14.0, color: Color(0xff9e9e9e)),
             ),
             appBarTheme: AppBarTheme(
                 color: Palette.primary,

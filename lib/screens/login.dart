@@ -11,13 +11,21 @@ class Login extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final userController = TextEditingController();
   final passwordController = TextEditingController();
+
   final _authService = AuthServiceProvider();
-  String? validator(String? value) {
+
+
+  String? emailValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'This value is required';
+    } else if (!RegExp(
+            r'^.+@[a-zA-Z0-9]+\.{1}[a-zA-Z0-9]+(\.{0,1}[a-zA-Z0-9]+)+$')
+        .hasMatch(value)) {
+      return 'Please enter a valid email address';
     }
     return null;
   }
+
 
   void _handleSubmit(BuildContext context) async {
     try {
@@ -31,8 +39,15 @@ class Login extends StatelessWidget {
         Navigator.of(context).popAndPushNamed(AppRoutes.dashboard);
       }
     } catch (e) {
-      print(e);
+    
+
+  String? passwordValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This value is required';
+    } else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+      return 'Incorrect password';
     }
+    return null;
   }
 
   @override
@@ -70,7 +85,7 @@ class Login extends StatelessWidget {
                         child: DefaultInput(
                           hintText: 'Username',
                           controller: userController,
-                          validator: validator,
+                          validator: emailValidator,
                           icon: Icons.person,
                         ),
                       ),
@@ -80,7 +95,7 @@ class Login extends StatelessWidget {
                           isPassword: true,
                           hintText: 'Password',
                           controller: passwordController,
-                          validator: validator,
+                          validator: passwordValidator,
                           icon: Icons.lock,
                         ),
                       ),

@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rada_egerton/utils/timeAgo.dart';
 
 class NotificationDataTransfer {
@@ -16,6 +18,11 @@ class NotificationDataTransfer {
   }
 }
 
+Future<void> _refreshChat() async {
+  //TODO : function call to refresh notification data
+  await Future.delayed(Duration(milliseconds: 1000));
+}
+
 class UserNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -28,11 +35,18 @@ class UserNotification extends StatelessWidget {
             .headline1
             ?.copyWith(color: Colors.white),
       )),
-      body: ListView(
-        children: notificationItems
-            .map((item) => notificationCard(
-                NotificationDataTransfer.fromjson(item), context))
-            .toList(),
+      body: RefreshIndicator(
+        onRefresh: () => _refreshChat(),
+        backgroundColor: Theme.of(context).primaryColor,
+        color: Colors.white,
+        displacement: 20.0,
+        edgeOffset: 5.0,
+        child: ListView(
+          children: notificationItems
+              .map((item) => notificationCard(
+                  NotificationDataTransfer.fromjson(item), context))
+              .toList(),
+        ),
       ),
     );
   }
@@ -49,10 +63,22 @@ class UserNotification extends StatelessWidget {
           children: [
             Row(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: Image.network(notification.imageSrc,
-                      width: 50, height: 50, fit: BoxFit.cover),
+                CachedNetworkImage(
+                  imageUrl: notification.imageSrc,
+                  placeholder: (context, url) => SpinKitFadingCircle(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: imageProvider, fit: BoxFit.cover),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                    height: 50,
+                    width: 50,
+                  ),
                 ),
                 SizedBox(
                   width: 20,

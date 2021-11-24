@@ -1,16 +1,23 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/widgets/ratingBar.dart';
 import '../../providers/counselors.provider.dart';
 import '../../sizeConfig.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CounselorsTab extends StatelessWidget {
   const CounselorsTab({Key? key}) : super(key: key);
 
+  Future<void> _refreshChat() async {
+    //TODO : function call to refresh chat data
+    await Future.delayed(Duration(milliseconds: 1000));
+  }
+
   @override
   Widget build(BuildContext context) {
     final counselorprovider = Provider.of<CounselorProvider>(context);
-    var counserlors = counselorprovider.counselors;
+    var counselors = counselorprovider.counselors;
     counselorprovider.getCounsellors();
     Widget conselorsBuilder(BuildContext cxt, int index) {
       return Card(
@@ -19,13 +26,23 @@ class CounselorsTab extends StatelessWidget {
             Column(
               children: [
                 CircleAvatar(
-                  radius: SizeConfig.isTabletWidth ? 98 : 20.0,
+                  radius: SizeConfig.isTabletWidth ? 40 : 20.0,
                   child: ClipOval(
-                    child: Image.network(
-                      counserlors[index].imgUrl,
-                      width: SizeConfig.isTabletWidth ? 120 : 90,
-                      height: SizeConfig.isTabletWidth ? 120 : 90,
-                      fit: BoxFit.cover,
+                    child: CachedNetworkImage(
+                      imageUrl: counselors[index].imgUrl,
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        width: SizeConfig.isTabletWidth ? 120 : 90,
+                        height: SizeConfig.isTabletWidth ? 120 : 90,
+                      ),
+                      placeholder: (context, url) => SpinKitFadingCircle(
+                        color: Theme.of(context).primaryColor,
+                      ),
                     ),
                   ),
                 ),
@@ -38,7 +55,7 @@ class CounselorsTab extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    counserlors[index].name,
+                    counselors[index].name,
                   ),
                 ],
               ),
@@ -46,13 +63,13 @@ class CounselorsTab extends StatelessWidget {
                 children: [
                   Text('Expertise : '),
                   Text(
-                    counserlors[index].expertise,
+                    counselors[index].expertise,
                   ),
                 ],
               ),
               Row(
                 children: [
-                  ratingBar(rating: counserlors[index].rating, size: 20),
+                  ratingBar(rating: counselors[index].rating, size: 20),
                 ],
               ),
             ])
@@ -61,16 +78,24 @@ class CounselorsTab extends StatelessWidget {
       );
     }
 
-    return counserlors.isNotEmpty
-        ? ListView.builder(
-            itemBuilder: conselorsBuilder,
-            itemCount: counserlors.length,
+    return counselors.isNotEmpty
+        ? RefreshIndicator(
+            onRefresh: () => _refreshChat(),
+            backgroundColor: Theme.of(context).primaryColor,
+            color: Colors.white,
+            displacement: 20.0,
+            edgeOffset: 5.0,
+            child: ListView.builder(
+              itemBuilder: conselorsBuilder,
+              itemCount: counselors.length,
+            ),
           )
         : Center(
             child: SizedBox(
               width: 80,
               height: 80,
-              child: CircularProgressIndicator(),
+              child:
+                  SpinKitSpinningLines(color: Theme.of(context).primaryColor),
             ),
           );
   }

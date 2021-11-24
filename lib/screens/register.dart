@@ -17,14 +17,15 @@ class Register extends StatelessWidget {
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
       return 'This value is required';
+      // } else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+      //   return 'This value must contain only letters or numbers';
+      // }
+      // return null;
     }
-    return null;
   }
 
+
   var logger = Logger();
-
-
-
   void _handleRegister(BuildContext context) async {
     try {
       if (_formKey.currentState!.validate()) {
@@ -47,7 +48,6 @@ class Register extends StatelessWidget {
       // print(e);
       this.logger.e(e);
     }
-  }
 
   @override
   Widget build(BuildContext context) {

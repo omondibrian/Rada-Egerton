@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rada_egerton/constants.dart';
 import '../sizeConfig.dart';
 
-
 enum FilterOptions { Profile, Contributors, LogOut }
 
 class Dashboard extends StatelessWidget {
@@ -11,30 +10,37 @@ class Dashboard extends StatelessWidget {
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: ListTile(
-        contentPadding:
-            SizeConfig.isTabletWidth ? EdgeInsets.all(20) : EdgeInsets.only(left: 10,top: 2.0,right: 2.0,bottom: 2.0),
-        leading: SvgPicture.asset(
-          dashboardItems[index]['leadingIcon'],
-          width: SizeConfig.isTabletWidth ? 90 : 60,
-          height: SizeConfig.isTabletWidth ? 60 : 40,
-        ),
-        title: Text(
-          dashboardItems[index]['title'],
-          style: style,
-        ),
-        subtitle: Text(
-          dashboardItems[index]['subtitle'],
-          style: style,
-        ),
-        trailing: IconButton(
-          iconSize: 30,
-          color: Theme.of(ctx).primaryColor,
-          icon: Icon(Icons.arrow_forward_ios),
-          onPressed: () =>
-              Navigator.of(ctx).pushNamed(dashboardItems[index]['routeName']),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(ctx).pushNamed(dashboardItems[index]['routeName']);
+      },
+      child: Card(
+        elevation: 5.0,
+        clipBehavior: Clip.antiAlias,
+        child: ListTile(
+          contentPadding: SizeConfig.isTabletWidth
+              ? EdgeInsets.all(20)
+              : EdgeInsets.only(left: 10, top: 2.0, right: 2.0, bottom: 2.0),
+          leading: SvgPicture.asset(
+            dashboardItems[index]['leadingIcon'],
+            width: SizeConfig.isTabletWidth ? 90 : 60,
+            height: SizeConfig.isTabletWidth ? 60 : 40,
+          ),
+          title: Text(
+            dashboardItems[index]['title'],
+            style: style,
+          ),
+          subtitle: Text(
+            dashboardItems[index]['subtitle'],
+            style: style,
+          ),
+          trailing: IconButton(
+            iconSize: 30,
+            color: Theme.of(ctx).primaryColor,
+            icon: Icon(Icons.arrow_forward_ios),
+            onPressed: () =>
+                Navigator.of(ctx).pushNamed(dashboardItems[index]['routeName']),
+          ),
         ),
       ),
     );
@@ -52,7 +58,7 @@ class Dashboard extends StatelessWidget {
               } else if (selectedValue == FilterOptions.LogOut) {
                 Navigator.of(context).pushNamed(AppRoutes.welcome);
               } else {
-                Navigator.pushNamed(context,AppRoutes.contributors);
+                Navigator.pushNamed(context, AppRoutes.contributors);
               }
             },
             icon: Icon(
