@@ -32,7 +32,8 @@ class Register extends StatelessWidget {
         print(userController.text);
         print(passwordController.text);
 
-        final UserDTO user = UserDTO(
+        final AuthDTO user = AuthDTO(
+          
             email: userController.text,
             password: passwordController.text,
             userName: userController.text,
