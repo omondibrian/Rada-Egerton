@@ -4,6 +4,7 @@ import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/sizeConfig.dart';
 import 'package:rada_egerton/widgets/RadaButton.dart';
 import 'package:rada_egerton/widgets/defaultInput.dart';
+import 'package:logger/logger.dart';
 
 import '../constants.dart';
 
@@ -20,25 +21,30 @@ class Register extends StatelessWidget {
     return null;
   }
 
+  var logger = Logger();
+
+
+
   void _handleRegister(BuildContext context) async {
     try {
       if (_formKey.currentState!.validate()) {
         //view registration details
         print(userController.text);
         print(passwordController.text);
-        
+
         final UserDTO user = UserDTO(
-          email: userController.text,
-          password: passwordController.text,
-          userName: userController.text,
-        );
+            email: userController.text,
+            password: passwordController.text,
+            userName: userController.text,
+            university: 'Egerton');
 
         await this._authService.registerNewUser(user);
         //TODO Remove backward navigation and connect to backend
         Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
       }
     } catch (e) {
-      print(e);
+      // print(e);
+      this.logger.e(e);
     }
   }
 

@@ -1,3 +1,5 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../constants.dart';
 import 'package:dio/dio.dart';
 
@@ -7,9 +9,18 @@ class AuthServiceProvider {
 
   registerNewUser(UserDTO user) async {
     final result = await this._httpClientConn.post(
-        this._hostUrl + '/api/v1/admin/user/register',
+        "${this._hostUrl}/api/v1/admin/user/register",
         data: user.toJson());
     print(result);
+  }
+
+  logInUser(String email, String password) async {
+    final result = await this._httpClientConn.post(
+        "${this._hostUrl}/api/v1/admin/user/login",
+        data: {'email': email, 'password': password});
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('TOKEN', result.data["payload"]["token"]);
+    print(result.data["payload"]["token"]);
   }
 }
 
@@ -17,11 +28,13 @@ class UserDTO {
   String _email = "";
   String _password = "";
   String _userName = "";
+  String _university = "";
 
-  UserDTO({email, password, userName}) {
+  UserDTO({email, password, userName, university}) {
     this._email = email;
     this._password = password;
     this._userName = userName;
+    this._university = university;
   }
 
   ///
@@ -30,9 +43,14 @@ class UserDTO {
 
   toJson() {
     return {
-      "email": this._email,
-      "password": this._password,
-      "userName": this._userName
+      "email": this.getEmail(),
+      "password": this.getPassword(),
+      "university": this.getUniversity()
     };
   }
+
+  String getEmail() => this._email;
+  String getPassword() => this._password;
+  String getUsername() => this._userName;
+  String getUniversity() => this._university;
 }

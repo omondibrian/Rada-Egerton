@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/widgets/RadaButton.dart';
 import 'package:rada_egerton/widgets/defaultInput.dart';
 
@@ -10,6 +11,7 @@ class Login extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final userController = TextEditingController();
   final passwordController = TextEditingController();
+  final _authService = AuthServiceProvider();
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
       return 'This value is required';
@@ -17,18 +19,24 @@ class Login extends StatelessWidget {
     return null;
   }
 
-  void _handleSubmit(BuildContext context) {
-    if (_formKey.currentState!.validate()) {
-      print(userController.text);
-      print(passwordController.text);
-      //TODO Remove backward navigation and connect to backend
-      Navigator.of(context).popAndPushNamed(AppRoutes.dashboard);
+  void _handleSubmit(BuildContext context) async {
+    try {
+      if (_formKey.currentState!.validate()) {
+        print(userController.text);
+        print(passwordController.text);
+        //TODO Remove backward navigation and connect to backend
+        await this
+            ._authService
+            .logInUser(userController.text, passwordController.text);
+        Navigator.of(context).popAndPushNamed(AppRoutes.dashboard);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -36,13 +44,13 @@ class Login extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-              height: 200,
-              child: SvgPicture.asset(
-                'assets/curve_top.svg',
-                width: MediaQuery.of(context).size.width,
-                fit: BoxFit.fill,
+                height: 200,
+                child: SvgPicture.asset(
+                  'assets/curve_top.svg',
+                  width: MediaQuery.of(context).size.width,
+                  fit: BoxFit.fill,
+                ),
               ),
-            ),
               SizedBox(
                 height: 50,
               ),
@@ -107,7 +115,7 @@ class Login extends StatelessWidget {
                             Text(
                               'Don\'t have an account? ',
                               style: Theme.of(context).textTheme.bodyText1,
-                                textAlign: TextAlign.center,
+                              textAlign: TextAlign.center,
                             ),
                             InkWell(
                               onTap: () {
