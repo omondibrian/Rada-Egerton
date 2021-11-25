@@ -13,7 +13,6 @@ class Register extends StatelessWidget {
   final userController = TextEditingController();
   final passwordController = TextEditingController();
   final _authService = AuthServiceProvider();
-
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
       return 'This value is required';
@@ -23,7 +22,6 @@ class Register extends StatelessWidget {
       // return null;
     }
   }
-
 
   var logger = Logger();
   void _handleRegister(BuildContext context) async {
@@ -41,13 +39,13 @@ class Register extends StatelessWidget {
             university: 'Egerton');
 
         await this._authService.registerNewUser(user);
-        //TODO Remove backward navigation and connect to backend
-        Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+       Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
       }
     } catch (e) {
       // print(e);
       this.logger.e(e);
     }
+  }
 
   @override
   Widget build(BuildContext context) {

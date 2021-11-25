@@ -50,6 +50,7 @@ class AuthServiceProvider {
         userName: _profile.data['user']['userName'],
         phone: _profile.data['user']['phone'],
         profilePic: _profile.data['user']['profilePic'],
+        gender: _profile.data['user']['gender'],
       );
     } catch (e) {
       print(e);
@@ -57,30 +58,36 @@ class AuthServiceProvider {
     return null;
   }
 
-    Future<UserDTO?> getProfile() async {
+  Future<UserDTO?> getProfile() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     try {
-      String authToken = this.getAuthToken().toString();
-
+      final authToken = await this.getAuthToken();
+      print('authToken  = $authToken');
+      
       var _profile = await this._httpClientConn.get(
-          "${this._hostUrl}/api/v1/admin/user/profile",
-          options: Options(
-              headers: {'Authorization': authToken}, sendTimeout: 10000),
+            "${this._hostUrl}/api/v1/admin/user/profile",
+            options: Options(
+                headers: {'Authorization': authToken}, sendTimeout: 10000),
           );
-      print(_profile.data);
+      
       _prefs.setString("user", jsonEncode(_profile.data));
-      return UserDTO(
+      var results = UserDTO(
         email: _profile.data['user']['email'],
-        id: _profile.data['user']['_id'],
-        dob: _profile.data['user']['dob'],
-        userName: _profile.data['user']['userName'],
+        id: _profile.data['user']['_id'].toString(),
+        dob: _profile.data['user']['dob'] == 'undefined'
+            ? 'default'
+            : _profile.data['user']['dob'],
+        userName: _profile.data['user']['name'],
         phone: _profile.data['user']['phone'],
         profilePic: _profile.data['user']['profilePic'],
+        gender: _profile.data['user']['gender'],
       );
+      
+      return results;
     } catch (e) {
       print(e);
     }
-    return null;
+    // return null;
   }
 }
 
@@ -122,13 +129,15 @@ class UserDTO {
   String profilePic = "";
   String dob = "";
   String id = "";
+  String gender = "";
 
-  UserDTO({email, userName, phone, profilePic, dob, id}) {
+  UserDTO({email, userName, phone, profilePic, dob, id, gender}) {
     this.id = id;
     this.email = email;
     this.userName = userName;
     this.phone = phone;
     this.profilePic = profilePic;
     this.dob = dob;
+    this.gender = gender;
   }
 }
