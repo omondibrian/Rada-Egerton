@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/services/constants.dart';
 
+// ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -13,11 +14,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> initializeState() async {
     AuthServiceProvider _authService = AuthServiceProvider();
     final results = await _authService.getProfile();
-      // print(results);
+    // print(results);
     if (results!.id.isNotEmpty) {
-      setState(() {
-        widget.profile = results;
-      });
+      setState(() => widget.profile = results);
     }
   }
 
@@ -147,7 +146,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: const EdgeInsets.only(
                       top: 30, left: 20, right: 20, bottom: 20),
                   child: TextField(
-                    controller: TextEditingController()..text = widget.profile.userName,
+                    controller: TextEditingController()
+                      ..text = widget.profile.userName,
                     decoration: InputDecoration(
                         hintText: "Username",
                         hintStyle: TextStyle(
@@ -164,14 +164,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, right: 20),
                   child: ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.red),
-                          textStyle: MaterialStateProperty.all(
-                              TextStyle(fontSize: 18))),
-                      // TODO: create the update password function
-                      onPressed: () {},
-                      child: Center(child: Text("Change password"))),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.red),
+                      textStyle: MaterialStateProperty.all(
+                        TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    // TODO: create the update password function
+                    onPressed: () {},
+                    child: Center(
+                      child: Text("Change password"),
+                    ),
+                  ),
                 ),
               ],
             ),
