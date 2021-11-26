@@ -152,21 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: Theme.of(context).primaryColor,
                           ),
                         ),
-                        // Container(
-                        //   width: 120,
-                        //   height: 120,
-                        //   decoration: BoxDecoration(
-                        //     shape: BoxShape.circle,
-                        //     color: Colors.black,
-                        //     image: DecorationImage(
-                        //       image: CachedNetworkImageProvider(
-                        //         "$BASE_URL/api/v1/uploads/${widget.profile?.profilePic}",
-                        //       ),
-                        //       //TODO : Cache Network Image
-                        //       fit: BoxFit.fill,
-                        //     ),
-                        //   ),
-                        // ),
+                        
                         Positioned(
                           left: 80,
                           top: 80,
