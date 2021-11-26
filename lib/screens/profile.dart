@@ -1,13 +1,15 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/services/constants.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../sizeConfig.dart';
 
 // ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
@@ -20,7 +22,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Dio _httpConnection = Dio();
 
   final ImagePicker _imagePicker = ImagePicker();
-  late File imageFile;
+
+  Future<String?> getAuthToken() async {
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    String? token = _preferences.getString("TOKEN");
+    return token;
+  }
+
+  Future<void> updateProfileImage() async {
+    var pickedImage = await _imagePicker.pickImage(source: ImageSource.gallery);
+    File imageFile = File(pickedImage!.path);
+    try {
+      String imageFileName = imageFile.path.split('/').last;
+      FormData formData = FormData.fromMap({
+        "profilePic": await MultipartFile.fromFile(imageFile.path,
+            filename: imageFileName),
+      });
+      Future<String?> authToken = getAuthToken();
+      await _httpConnection.put(
+        '$BASE_URL/api/v1/admin/user/profile',
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': authToken,
+            "Content-type": "multipart/form-data",
+          },
+        ),
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Future<void> initializeState() async {
     AuthServiceProvider _authService = AuthServiceProvider();
@@ -55,8 +87,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget textLabel(String text) {
-    return Text(text,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700));
+    return Text(
+      text,
+      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+    );
   }
 
   Widget textValue(String text) {
@@ -100,22 +134,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     padding: const EdgeInsets.only(top: 40.0),
                     child: Stack(
                       children: [
-                        // image design form here
                         // TODO: add an image in the projo or use the one available
-                        Container(
-                          width: 120,
-                          height: 120,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.black,
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                  "$BASE_URL/api/v1/uploads/${widget.profile?.profilePic}"),
-                              //TODO : Cache Network Image
-                              fit: BoxFit.fill,
+                        CachedNetworkImage(
+                          imageUrl:
+                              "$BASE_URL/api/v1/uploads/${widget.profile?.profilePic}",
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
                             ),
+                            width: SizeConfig.isTabletWidth ? 150 : 120,
+                            height: SizeConfig.isTabletWidth ? 150 : 120,
+                          ),
+                          placeholder: (context, url) => SpinKitFadingCircle(
+                            color: Theme.of(context).primaryColor,
                           ),
                         ),
+                        // Container(
+                        //   width: 120,
+                        //   height: 120,
+                        //   decoration: BoxDecoration(
+                        //     shape: BoxShape.circle,
+                        //     color: Colors.black,
+                        //     image: DecorationImage(
+                        //       image: CachedNetworkImageProvider(
+                        //         "$BASE_URL/api/v1/uploads/${widget.profile?.profilePic}",
+                        //       ),
+                        //       //TODO : Cache Network Image
+                        //       fit: BoxFit.fill,
+                        //     ),
+                        //   ),
+                        // ),
                         Positioned(
                           left: 80,
                           top: 80,
@@ -123,38 +175,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             backgroundColor: Colors.white,
                             child: IconButton(
                               icon: Icon(Icons.camera_alt, color: Colors.black),
-                              onPressed: () async {
-                                var pickedImage = await _imagePicker.pickImage(
-                                    source: ImageSource.gallery);
-                                imageFile = File(pickedImage!
-                                    .path); //convert from XFile to File type
-                                try {
-                                  String imageFileName =
-                                      imageFile.path.split('/').last;
-                                  FormData formData = FormData.fromMap({
-                                    "profilePic": await MultipartFile.fromFile(
-                                        imageFile.path,
-                                        filename: imageFileName),
-                                  });
-                                  SharedPreferences _preferences =
-                                      await SharedPreferences.getInstance();
-                                  String? authToken =
-                                      _preferences.getString("TOKEN");
-                                  final Response response =
-                                      await _httpConnection.put(
-                                    '$BASE_URL/api/v1/admin/user/profile',
-                                    data: formData,
-                                    options: Options(
-                                      headers: {
-                                        'Authorization': authToken,
-                                        "Content-type": "multipart/form-data",
-                                        "accept": "*/*"
-                                      },
-                                    ),
-                                  );
-                                } catch (e) {
-                                  print(e);
-                                }
+                              onPressed: () {
+                                updateProfileImage();
                               },
                             ),
                           ),

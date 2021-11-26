@@ -30,13 +30,6 @@ class _InformationDetailState extends State<InformationDetail> {
                   color: Theme.of(context).primaryColor,
                 ),
               ),
-
-              // Image.network(
-              //   informationItem["image"],
-              //   width: MediaQuery.of(context).size.width,
-              //   fit: BoxFit.cover,
-              //   height: 300,
-              // ),
               IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: Icon(
