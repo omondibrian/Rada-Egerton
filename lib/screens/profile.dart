@@ -134,7 +134,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     padding: const EdgeInsets.only(top: 40.0),
                     child: Stack(
                       children: [
-                        // TODO: add an image in the projo or use the one available
                         CachedNetworkImage(
                           imageUrl:
                               "$BASE_URL/api/v1/uploads/${widget.profile?.profilePic}",
