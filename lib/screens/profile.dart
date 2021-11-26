@@ -1,22 +1,35 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/services/constants.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
-  late UserDTO profile = UserDTO();
+  late UserDTO? profile = UserDTO();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  Dio _httpConnection = Dio();
+
+  final ImagePicker _imagePicker = ImagePicker();
+  late File imageFile;
+
   Future<void> initializeState() async {
     AuthServiceProvider _authService = AuthServiceProvider();
     final results = await _authService.getProfile();
     // print(results);
     if (results!.id.isNotEmpty) {
-      setState(() => widget.profile = results);
+      setState(() {
+        widget.profile = results;
+      });
     }
   }
 
@@ -26,16 +39,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: TextField(
           controller: TextEditingController()..text = hintTextfield,
           decoration: InputDecoration(
-              hintText: "Username",
-              hintStyle: TextStyle(
-                letterSpacing: 2,
-                color: Colors.black54,
-              ),
-              fillColor: Colors.black12,
-              filled: true,
-              border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(10.0))),
+            hintText: "Username",
+            hintStyle: TextStyle(
+              letterSpacing: 2,
+              color: Colors.black54,
+            ),
+            fillColor: Colors.black12,
+            filled: true,
+            border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
         ));
   }
 
@@ -45,11 +60,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget textValue(String text) {
-    return Text(text,
-        style: TextStyle(
-          fontSize: 18,
-          color: Colors.green,
-        ));
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 18,
+        color: Colors.green,
+      ),
+    );
   }
 
   @override
@@ -61,12 +78,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: Text('Profile'),
         backgroundColor: Colors.green,
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context, true);
-            },
-            icon: Icon(Icons.arrow_back)),
+          onPressed: () {
+            Navigator.pop(context, true);
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
       ),
-      body: widget.profile.toString().isEmpty
+      body: widget.profile == null
           ? Center(
               child: SizedBox(
                 width: 80,
@@ -92,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: Colors.black,
                             image: DecorationImage(
                               image: NetworkImage(
-                                  "$BASE_URL/api/v1/uploads/${widget.profile.profilePic}"),
+                                  "$BASE_URL/api/v1/uploads/${widget.profile?.profilePic}"),
                               //TODO : Cache Network Image
                               fit: BoxFit.fill,
                             ),
@@ -104,16 +122,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: CircleAvatar(
                             backgroundColor: Colors.white,
                             child: IconButton(
-                                icon:
-                                    Icon(Icons.camera_alt, color: Colors.black),
-                                onPressed: null),
+                              icon: Icon(Icons.camera_alt, color: Colors.black),
+                              onPressed: () async {
+                                var pickedImage = await _imagePicker.pickImage(
+                                    source: ImageSource.gallery);
+                                imageFile = File(pickedImage!
+                                    .path); //convert from XFile to File type
+                                try {
+                                  String imageFileName =
+                                      imageFile.path.split('/').last;
+                                  FormData formData = FormData.fromMap({
+                                    "profilePic": await MultipartFile.fromFile(
+                                        imageFile.path,
+                                        filename: imageFileName),
+                                  });
+                                  SharedPreferences _preferences =
+                                      await SharedPreferences.getInstance();
+                                  String? authToken =
+                                      _preferences.getString("TOKEN");
+                                  final Response response =
+                                      await _httpConnection.put(
+                                    '$BASE_URL/api/v1/admin/user/profile',
+                                    data: formData,
+                                    options: Options(
+                                      headers: {
+                                        'Authorization': authToken,
+                                        "Content-type": "multipart/form-data",
+                                        "accept": "*/*"
+                                      },
+                                    ),
+                                  );
+                                } catch (e) {
+                                  print(e);
+                                }
+                              },
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                Text(widget.profile.userName,
+                Text(widget.profile!.userName,
                     style: TextStyle(
                       fontSize: 25,
                       color: Colors.blue,
@@ -138,7 +188,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       textValue('Egerton'),
                       textValue('1'),
-                      textValue(widget.profile.gender),
+                      textValue(widget.profile!.gender),
                     ],
                   ),
                 ),
@@ -147,7 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       top: 30, left: 20, right: 20, bottom: 20),
                   child: TextField(
                     controller: TextEditingController()
-                      ..text = widget.profile.userName,
+                      ..text = widget.profile!.userName,
                     decoration: InputDecoration(
                         hintText: "Username",
                         hintStyle: TextStyle(
