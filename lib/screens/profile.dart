@@ -4,9 +4,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/services/constants.dart';
+import 'package:rada_egerton/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../sizeConfig.dart';
@@ -19,7 +21,14 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool _status = true;
   Dio _httpConnection = Dio();
+  final FocusNode myFocusNode = FocusNode();
+  GlobalKey<FormState> profileForm = GlobalKey<FormState>();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
+  TextEditingController _phoneNumberController = TextEditingController();
 
   final ImagePicker _imagePicker = ImagePicker();
 
@@ -45,9 +54,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
     } catch (e) {
+      //TODO:remove error specification statement
       print('Error from updateProfile : $e');
     }
   }
+  //TODO set iniState and dispose methods
 
   Future<void> initializeState() async {
     AuthServiceProvider _authService = AuthServiceProvider();
@@ -82,10 +93,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget textLabel(String text) {
+  Widget _labelText(String text) {
     return Text(
       text,
-      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
     );
   }
 
@@ -99,9 +114,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  String? phoneValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This value is required';
+    } else if (!RegExp(
+            r'^(?:254|\+254|0)?(7(?:(?:[129][0–9])|(?:0[0–8])|(4[0–1]))[0–9]{6})$')
+        .hasMatch(value)) {
+      return 'Please enter a valid phone number';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     this.initializeState();
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -165,74 +192,194 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-                
-
-                // Text(widget.profile!.userName,
-                //     style: TextStyle(
-                //       fontSize: 25,
-                //       color: Colors.blue,
-                //       fontWeight: FontWeight.w400,
-                //     )),
-                // Padding(
-                //   padding:
-                //       const EdgeInsets.only(top: 16.0, left: 10, right: 25),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //     children: [
-                //       textLabel('University'),
-                //       textLabel('Campus'),
-                //       textLabel('Sex')
-                //     ],
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 16.0),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //     children: [
-                //       textValue('Egerton'),
-                //       textValue('1'),
-                //       textValue(widget.profile!.gender),
-                //     ],
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(
-                //       top: 30, left: 20, right: 20, bottom: 20),
-                //   child: TextField(
-                //     controller: TextEditingController()
-                //       ..text = widget.profile!.userName,
-                //     decoration: InputDecoration(
-                //         hintText: "Username",
-                //         hintStyle: TextStyle(
-                //           letterSpacing: 2,
-                //           color: Colors.black54,
-                //         ),
-                //         fillColor: Colors.black12,
-                //         filled: true,
-                //         border: OutlineInputBorder(
-                //             borderSide: BorderSide.none,
-                //             borderRadius: BorderRadius.circular(10.0))),
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 20.0, right: 20),
-                //   child: ElevatedButton(
-                //     style: ButtonStyle(
-                //       backgroundColor: MaterialStateProperty.all(Colors.red),
-                //       textStyle: MaterialStateProperty.all(
-                //         TextStyle(fontSize: 18),
-                //       ),
-                //     ),
-                //     // TODO: create the update password function
-                //     onPressed: () {},
-                //     child: Center(
-                //       child: Text("Change password"),
-                //     ),
-                //   ),
-                // ),
+                Form(
+                  key: profileForm,
+                  //TODO insert form key
+                  child: Container(
+                    constraints: BoxConstraints(minHeight: height - 250),
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondary,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(40),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 25.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text(
+                                      'Personal Information',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    _status ? _getEditIcon() : Container(),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 25.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Expanded(child: _labelText("First Name")),
+                                Expanded(child: _labelText("Last Name")),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 2.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Flexible(
+                                  child: TextFormField(
+                                    decoration: InputDecoration(
+                                        hintText: "Enter First Name"),
+                                    enabled: !_status,
+                                    validator: RequiredValidator(
+                                        errorText: "Required"),
+                                    controller: _firstNameController,
+                                  ),
+                                ),
+                                Flexible(
+                                  child: TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: "Enter Last Name",
+                                    ),
+                                    enabled: !_status,
+                                    controller: _lastNameController,
+                                    validator: RequiredValidator(
+                                        errorText: "Required"),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 25.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[_labelText('Email ')],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 2.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Flexible(
+                                  child: TextFormField(
+                                    decoration: const InputDecoration(
+                                        hintText: "Enter Email"),
+                                    enabled: !_status,
+                                    controller: _emailController,
+                                    validator: MultiValidator(
+                                      [
+                                        RequiredValidator(
+                                            errorText: "Required"),
+                                        EmailValidator(
+                                            errorText:
+                                                "Please a provide valid email"),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 25.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[_labelText("Mobile")],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 2.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Flexible(
+                                  child: TextFormField(
+                                    decoration: const InputDecoration(
+                                      hintText: "Enter Mobile Number",
+                                    ),
+                                    enabled: !_status,
+                                    validator:
+                                        phoneValidator, //TODO: insert own phone validator
+                                    controller: _phoneNumberController,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
+    );
+  }
+
+  Widget _getEditIcon() {
+    return GestureDetector(
+      child: CircleAvatar(
+        backgroundColor: Colors.white,
+        radius: 14.0,
+        child: Icon(
+          Icons.edit,
+          color: Palette.primary,
+          size: 25.0,
+        ),
+      ),
+      onTap: () {
+        setState(() {
+          _status = false;
+        });
+      },
     );
   }
 }
