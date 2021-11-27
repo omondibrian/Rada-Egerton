@@ -48,7 +48,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case AppRoutes.notification:
       return MaterialPageRoute(builder: (context) => UserNotification());
     case AppRoutes.profile:
-      return MaterialPageRoute(builder: (context) => ProfilePage());
+      return MaterialPageRoute(builder: (context) => ProfileScreen());
     case AppRoutes.contributors:
       return MaterialPageRoute(builder: (context) => ContributorScreen());
     default:

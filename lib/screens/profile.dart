@@ -13,16 +13,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../sizeConfig.dart';
 
-class ProfilePage extends StatefulWidget {
-  // static final String path = "lib/src/pages/profile/profile8.dart";
-
+class ProfileScreen extends StatefulWidget {
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 
   late UserDTO? userProfile = UserDTO();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfileScreenState extends State<ProfileScreen> {
   //get user profile
   Future<void> getUserProfile() async {
     AuthServiceProvider _authService = AuthServiceProvider();
@@ -35,7 +33,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getUserProfile();
   }
@@ -56,10 +53,10 @@ class _ProfilePageState extends State<ProfilePage> {
               ProfileHeader(
                 avatar: CachedNetworkImageProvider(
                     'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80'),
-                coverImage: CachedNetworkImageProvider(
-                    'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80'),
-                title: "User Name",//TODO: fetch username
-                
+                coverImage:
+                    CachedNetworkImageProvider('https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80'), //TODO fetch background icon
+                title: "User Name", //TODO: fetch username
+
                 actions: <Widget>[
                   MaterialButton(
                     color: Colors.white,
@@ -114,29 +111,37 @@ class UserInfo extends StatelessWidget {
                           ListTile(
                             leading: Icon(Icons.email),
                             title: Text("Email"),
-                            subtitle: Text("sudeptech@gmail.com"),//TODO fetch user email
+                            subtitle: Text(
+                                "sudeptech@gmail.com"), //TODO fetch user email
                           ),
                           ListTile(
                             leading: Icon(Icons.phone),
                             title: Text("Phone"),
-                            subtitle: Text("99--99876-56"),//TODO fetch user phone number
+                            subtitle: Text(
+                                "99--99876-56"), //TODO fetch user phone number
                           ),
                           ListTile(
                             leading: Icon(Icons.my_location),
                             title: Text("Gender"),
-                            subtitle: Text("Kathmandu"),//TODO fetch user gender
-                          ),ListTile(
+                            subtitle:
+                                Text("Kathmandu"), //TODO fetch user gender
+                          ),
+                          ListTile(
                             leading: Icon(Icons.my_location),
                             title: Text("Gender"),
-                            subtitle: Text("Kathmandu"),//TODO fetch user date of birth
-                          ),ListTile(
+                            subtitle: Text(
+                                "Kathmandu"), //TODO fetch user date of birth
+                          ),
+                          ListTile(
                             leading: Icon(Icons.my_location),
                             title: Text("Gender"),
-                            subtitle: Text("Kathmandu"),//TODO fetch user date joined
+                            subtitle:
+                                Text("Kathmandu"), //TODO fetch user date joined
                           ),
                           ListTile(
                             leading: Icon(Icons.person),
-                            title: Text("About Me"),//  TODO: fetch user account status
+                            title: Text(
+                                "About Me"), //  TODO: fetch user account status
                             subtitle: Text(
                                 "This is a about me link and you can khow about me in this section."),
                           ),
