@@ -23,12 +23,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final ImagePicker _imagePicker = ImagePicker();
 
-  Future<String?> getAuthToken() async {
-    SharedPreferences _preferences = await SharedPreferences.getInstance();
-    String? token = _preferences.getString("TOKEN");
-    return token;
-  }
-
   Future<void> updateProfileImage() async {
     var pickedImage = await _imagePicker.pickImage(source: ImageSource.gallery);
     File imageFile = File(pickedImage!.path);
@@ -38,7 +32,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         "profilePic": await MultipartFile.fromFile(imageFile.path,
             filename: imageFileName),
       });
-      Future<String?> authToken = getAuthToken();
+      SharedPreferences _preferences = await SharedPreferences.getInstance();
+      String? authToken = _preferences.getString("TOKEN");
       await _httpConnection.put(
         '$BASE_URL/api/v1/admin/user/profile',
         data: formData,
@@ -50,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
     } catch (e) {
-      print(e);
+      print('Error from updateProfile : $e');
     }
   }
 
@@ -67,23 +62,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget textField(String hintTextfield) {
     return Material(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: TextField(
-          controller: TextEditingController()..text = hintTextfield,
-          decoration: InputDecoration(
-            hintText: "Username",
-            hintStyle: TextStyle(
-              letterSpacing: 2,
-              color: Colors.black54,
-            ),
-            fillColor: Colors.black12,
-            filled: true,
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: TextField(
+        controller: TextEditingController()..text = hintTextfield,
+        decoration: InputDecoration(
+          hintText: "Username",
+          hintStyle: TextStyle(
+            letterSpacing: 2,
+            color: Colors.black54,
           ),
-        ));
+          fillColor: Colors.black12,
+          filled: true,
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget textLabel(String text) {
@@ -136,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         CachedNetworkImage(
                           imageUrl:
-                              "$BASE_URL/api/v1/uploads/${widget.profile?.profilePic}",
+                              '$BASE_URL/api/v1/uploads/${widget.profile?.profilePic}',
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -152,7 +148,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: Theme.of(context).primaryColor,
                           ),
                         ),
-                        
                         Positioned(
                           left: 80,
                           top: 80,
@@ -170,70 +165,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-                Text(widget.profile!.userName,
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w400,
-                    )),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(top: 16.0, left: 10, right: 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      textLabel('University'),
-                      textLabel('Campus'),
-                      textLabel('Sex')
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      textValue('Egerton'),
-                      textValue('1'),
-                      textValue(widget.profile!.gender),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 30, left: 20, right: 20, bottom: 20),
-                  child: TextField(
-                    controller: TextEditingController()
-                      ..text = widget.profile!.userName,
-                    decoration: InputDecoration(
-                        hintText: "Username",
-                        hintStyle: TextStyle(
-                          letterSpacing: 2,
-                          color: Colors.black54,
-                        ),
-                        fillColor: Colors.black12,
-                        filled: true,
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(10.0))),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0, right: 20),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.red),
-                      textStyle: MaterialStateProperty.all(
-                        TextStyle(fontSize: 18),
-                      ),
-                    ),
-                    // TODO: create the update password function
-                    onPressed: () {},
-                    child: Center(
-                      child: Text("Change password"),
-                    ),
-                  ),
-                ),
+                
+
+                // Text(widget.profile!.userName,
+                //     style: TextStyle(
+                //       fontSize: 25,
+                //       color: Colors.blue,
+                //       fontWeight: FontWeight.w400,
+                //     )),
+                // Padding(
+                //   padding:
+                //       const EdgeInsets.only(top: 16.0, left: 10, right: 25),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //     children: [
+                //       textLabel('University'),
+                //       textLabel('Campus'),
+                //       textLabel('Sex')
+                //     ],
+                //   ),
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 16.0),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //     children: [
+                //       textValue('Egerton'),
+                //       textValue('1'),
+                //       textValue(widget.profile!.gender),
+                //     ],
+                //   ),
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.only(
+                //       top: 30, left: 20, right: 20, bottom: 20),
+                //   child: TextField(
+                //     controller: TextEditingController()
+                //       ..text = widget.profile!.userName,
+                //     decoration: InputDecoration(
+                //         hintText: "Username",
+                //         hintStyle: TextStyle(
+                //           letterSpacing: 2,
+                //           color: Colors.black54,
+                //         ),
+                //         fillColor: Colors.black12,
+                //         filled: true,
+                //         border: OutlineInputBorder(
+                //             borderSide: BorderSide.none,
+                //             borderRadius: BorderRadius.circular(10.0))),
+                //   ),
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.only(left: 20.0, right: 20),
+                //   child: ElevatedButton(
+                //     style: ButtonStyle(
+                //       backgroundColor: MaterialStateProperty.all(Colors.red),
+                //       textStyle: MaterialStateProperty.all(
+                //         TextStyle(fontSize: 18),
+                //       ),
+                //     ),
+                //     // TODO: create the update password function
+                //     onPressed: () {},
+                //     child: Center(
+                //       child: Text("Change password"),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
     );
