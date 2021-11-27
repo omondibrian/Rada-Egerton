@@ -14,3 +14,4 @@ class Palette {
   static Color iconColor = Color(0xff413B5C);
   static Color backgroundColor = Color(0xffFFFFFF);
 }
+// '$BASE_URL//api/v1/uploads/${widget.userProfile?.profilePic}'
