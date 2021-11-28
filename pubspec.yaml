@@ -40,7 +40,7 @@ dependencies:
   shared_preferences: ^2.0.9
   flutter_spinkit: ^5.1.0  
   cached_network_image: ^3.1.0+1
-
+  pusher_client: ^2.0.0
 
 dev_dependencies:
   flutter_test:
