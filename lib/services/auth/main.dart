@@ -13,7 +13,7 @@ class AuthServiceProvider {
     final result = await this._httpClientConn.post(
         "${this._hostUrl}/api/v1/admin/user/register",
         data: user.toJson());
-    // print(result);
+    
   }
 
   Future<void> logInUser(String email, String password) async {

@@ -87,6 +87,8 @@ flutter:
     - assets/srhr.png
     - assets/unesco.png
     - assets/logo.png
+    - assets/android-icon-192x192.png
+    - assets/android-icon-192x192-green.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
