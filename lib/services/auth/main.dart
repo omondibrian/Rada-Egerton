@@ -13,7 +13,7 @@ class AuthServiceProvider {
     final result = await this._httpClientConn.post(
         "${this._hostUrl}/api/v1/admin/user/register",
         data: user.toJson());
-    
+    // print(result);
   }
 
   Future<void> logInUser(String email, String password) async {
@@ -63,13 +63,13 @@ class AuthServiceProvider {
     try {
       final authToken = await this.getAuthToken();
       print('authToken  = $authToken');
-      
+
       var _profile = await this._httpClientConn.get(
             "${this._hostUrl}/api/v1/admin/user/profile",
             options: Options(
                 headers: {'Authorization': authToken}, sendTimeout: 10000),
           );
-      
+
       _prefs.setString("user", jsonEncode(_profile.data));
       var results = UserDTO(
         email: _profile.data['user']['email'],
@@ -81,13 +81,22 @@ class AuthServiceProvider {
         phone: _profile.data['user']['phone'],
         profilePic: _profile.data['user']['profilePic'],
         gender: _profile.data['user']['gender'],
+        accountStatus: _profile.data['user']['accountStatus'],
       );
-      
+
       return results;
     } catch (e) {
-      print(e);
+      print('Error from getProfile exception $e'); //TODO: Debugging start points
     }
-    // return null;
+    return UserDTO(
+        email: 'default',
+        userName: 'default',
+        phone: 'default',
+        profilePic: 'default',
+        dob: 'default',
+        id: 'default',
+        gender: 'default',
+        accountStatus: 'default');
   }
 }
 
@@ -123,15 +132,17 @@ class AuthDTO {
 }
 
 class UserDTO {
-  String email = "";
-  String userName = "";
-  String phone = "";
-  String profilePic = "";
-  String dob = "";
-  String id = "";
-  String gender = "";
+  String email = "default";
+  String userName = "default";
+  String phone = "default";
+  String profilePic = "default";
+  String dob = "default";
+  String id = "default";
+  String gender = "default";
+  String accountStatus = "default";
 
-  UserDTO({email, userName, phone, profilePic, dob, id, gender}) {
+  UserDTO(
+      {email, userName, phone, profilePic, dob, id, gender, accountStatus}) {
     this.id = id;
     this.email = email;
     this.userName = userName;
@@ -139,5 +150,16 @@ class UserDTO {
     this.profilePic = profilePic;
     this.dob = dob;
     this.gender = gender;
+    this.accountStatus = accountStatus;
   }
+  UserDTO.defaultDTO() : this(
+    email: 'default',
+        userName: 'default',
+        phone: 'default',
+        profilePic: 'default',
+        dob: 'default',
+        id: 'default',
+        gender: 'default',
+        accountStatus: 'default'
+  );
 }

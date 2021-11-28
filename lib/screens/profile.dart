@@ -16,19 +16,23 @@ class ProfileScreen extends StatefulWidget {
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 
-  static late UserDTO? userProfile = UserDTO();
+  late UserDTO? userProfile = UserDTO.defaultDTO();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  // UserDTO userDetails = UserDTO();
+
+  bool userInfoControllerStatus = true;
+
   Dio _httpConnection = Dio();
   final ImagePicker _imagePicker = ImagePicker();
-  //get user profile
-  Future<void> getUserProfile() async {
-    AuthServiceProvider _authService = AuthServiceProvider();
-    final authServiceResults = await _authService.getProfile();
 
+  AuthServiceProvider _authService = AuthServiceProvider();
+
+  Future<void> getUserProfile() async {
+    final authServiceResults = await _authService.getProfile();
     setState(() {
-      ProfileScreen.userProfile = authServiceResults;
+      widget.userProfile = authServiceResults;
     });
   }
 
@@ -37,12 +41,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     File imageFile = File(pickedImage!.path);
     try {
       String imageFileName = imageFile.path.split('/').last;
-      FormData formData = FormData.fromMap({
-        "profilePic": await MultipartFile.fromFile(imageFile.path,
-            filename: imageFileName),
-      });
-      SharedPreferences _preferences = await SharedPreferences.getInstance();
-      String? authToken = _preferences.getString("TOKEN");
+      FormData formData = FormData.fromMap(
+        {
+          "profilePic": await MultipartFile.fromFile(imageFile.path,
+              filename: imageFileName),
+        },
+      );
+
+      Future<String?> authToken = _authService.getAuthToken();
+
       await _httpConnection.put(
         '$BASE_URL/api/v1/admin/user/profile',
         data: formData,
@@ -59,6 +66,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  void initializeResults() {
+    // userDetails = widget.userProfile!;
+    // _lastNameController.text = userDetails.userName;
+    // _emailController.text = userDetails.email;
+    // _phoneNumberController.text = userDetails.phone;
+    // _genderController.text = userDetails.gender;
+    // _dateOfBirthController.text = userDetails.dob;
+  }
+
+  GlobalKey<FormState> profileForm = GlobalKey<FormState>();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
+  TextEditingController _phoneNumberController = TextEditingController();
+  TextEditingController _genderController = TextEditingController();
+  TextEditingController _dateOfBirthController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -67,145 +90,143 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // initializeResults();
     return Scaffold(
-        backgroundColor: Colors.grey.shade100,
-        extendBodyBehindAppBar: true,
-        extendBody: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              ProfileHeader(
-                avatar: CachedNetworkImageProvider(
-                    '$BASE_URL/api/v1/uploads/${ProfileScreen.userProfile?.profilePic}'),
-                coverImage: AssetImage(
-                    'assets/android-icon-192x192.png'), //TODO fetch background icon
-                title: "User Name", //TODO: fetch username
+      backgroundColor: Colors.grey.shade100,
+      extendBodyBehindAppBar: true,
+      extendBody: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            ProfileHeader(
+              avatar: CachedNetworkImageProvider(
+                'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+              ),
+              coverImage: AssetImage('assets/android-icon-192x192.png'),
+              title: "User Name", //TODO: fetch username
 
-                actions: <Widget>[
-                  MaterialButton(
-                    color: Colors.white,
-                    shape: CircleBorder(side: BorderSide.none),
-                    elevation: 0,
-                    child: Icon(
-                      Icons.edit,
-                      color: Theme.of(context).primaryColor,
+              actions: <Widget>[
+                MaterialButton(
+                  color: Colors.white,
+                  shape: CircleBorder(side: BorderSide.none),
+                  elevation: 0,
+                  child: Icon(
+                    Icons.edit,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () {
+                    setState(
+                      () {
+                        userInfoControllerStatus = !userInfoControllerStatus;
+                      },
+                    );
+                    //TODO: implement edit details function
+                  },
+                )
+              ],
+            ),
+            const SizedBox(height: 10.0),
+            // UserInfo(),
+
+            //TODO: insert userinfo stless widget
+            Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.only(
+                      left: 8.0,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        UserInfo.userInfoStatus = false;
-                      });
-                      //TODO: implement edit details function
-                    },
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Profile Information",
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  Card(
+                    child: Container(
+                      alignment: Alignment.topLeft,
+                      padding: EdgeInsets.all(15),
+                      child: Form(
+                        //TODO supply form key
+                        child: Column(
+                          children: <Widget>[
+                            TextFormField(
+                              decoration: InputDecoration(
+                                hintText: "Enter user name",
+                              ),
+                              enabled: !userInfoControllerStatus,
+                              controller: _lastNameController,
+                              validator:
+                                  RequiredValidator(errorText: "Required"),
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                hintText: "Enter email address",
+                              ),
+                              enabled: !userInfoControllerStatus,
+                              controller: _emailController,
+                              validator:
+                                  RequiredValidator(errorText: "Required"),
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                hintText: "Enter gender",
+                              ),
+                              enabled: !userInfoControllerStatus,
+                              controller: _genderController,
+                              validator:
+                                  RequiredValidator(errorText: "Required"),
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                hintText: "Enter date of birth",
+                              ),
+                              enabled: !userInfoControllerStatus,
+                              controller: _dateOfBirthController,
+                              validator:
+                                  RequiredValidator(errorText: "Required"),
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                hintText: "Enter phone number",
+                              ),
+                              enabled: !userInfoControllerStatus,
+                              controller: _phoneNumberController,
+                              validator:
+                                  RequiredValidator(errorText: "Required"),
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.account_box_outlined),
+                              title: Text("Account status"),
+                              subtitle: Text(
+                                  "${widget.userProfile?.accountStatus}"), //TODO fetch user account status
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.calendar_today),
+                              title: Text("Date joined"),
+                              subtitle: Text(
+                                  "${widget.userProfile?.accountStatus}"), //TODO fetch the date the user joined
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   )
                 ],
               ),
-              const SizedBox(height: 10.0),
-              UserInfo(),
-            ],
-          ),
-        ));
-  }
-}
-
-// ignore: must_be_immutable
-class UserInfo extends StatelessWidget {
-  static bool userInfoStatus = true;
-
-  GlobalKey<FormState> profileForm = GlobalKey<FormState>();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _firstNameController = TextEditingController();
-  TextEditingController _lastNameController = TextEditingController();
-  TextEditingController _phoneNumberController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: Column(
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.only(
-              left: 8.0,
             ),
-            alignment: Alignment.topLeft,
-            child: Text(
-              "Profile Information",
-              style: TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Card(
-            child: Container(
-              alignment: Alignment.topLeft,
-              padding: EdgeInsets.all(15),
-              child: Form(
-                //TODO supply form key
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Enter full name",
-                      ),
-                      enabled: !userInfoStatus,
-                      controller: _lastNameController,
-                      validator: RequiredValidator(errorText: "Required"),
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Enter email address",
-                      ),
-                      enabled: !userInfoStatus,
-                      controller: _lastNameController,
-                      validator: RequiredValidator(errorText: "Required"),
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Enter gender",
-                      ),
-                      enabled: !userInfoStatus,
-                      controller: _lastNameController,
-                      validator: RequiredValidator(errorText: "Required"),
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Enter date of birth",
-                      ),
-                      enabled: !userInfoStatus,
-                      controller: _lastNameController,
-                      validator: RequiredValidator(errorText: "Required"),
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Enter phone number",
-                      ),
-                      enabled: !userInfoStatus,
-                      controller: _lastNameController,
-                      validator: RequiredValidator(errorText: "Required"),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.account_box_outlined),
-                      title: Text("Account status"),
-                      subtitle: Text("Kathmandu"), //TODO fetch user gender
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.calendar_today),
-                      title: Text("Date joined"),
-                      subtitle: Text("Kathmandu"), //TODO fetch user gender
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -311,7 +332,7 @@ class Avatar extends StatelessWidget {
           child: CircleAvatar(
             maxRadius: SizeConfig.isTabletWidth ? 97 : 67,
             backgroundImage: CachedNetworkImageProvider(
-              '$BASE_URL/api/v1/uploads/${ProfileScreen.userProfile?.profilePic}',
+              'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
             ),
           ),
         ),
