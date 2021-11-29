@@ -39,6 +39,9 @@ class Login extends StatelessWidget {
         Navigator.of(context).popAndPushNamed(AppRoutes.dashboard);
       }
     } catch (e) {
+      print(e);
+    }
+  }
     
 
   String? passwordValidator(String? value) {
