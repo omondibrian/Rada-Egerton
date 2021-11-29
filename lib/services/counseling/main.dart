@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dartz/dartz.dart';
 import 'package:rada_egerton/services/utils.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/entities/GroupDTO.dart';
@@ -14,7 +15,7 @@ class CounselingServiceProvider {
   Dio _httpClientConn = Dio();
 
   ///fetch a  list of  counsellors with their details
-  Future<List<CounsellorsDTO>> fetchCounsellors() async {
+  Future<Either<List<CounsellorsDTO>, ErrorMessage>> fetchCounsellors() async {
     List<dynamic> counsellors = [];
     try {
       final result = await this._httpClientConn.get(
@@ -34,13 +35,16 @@ class CounselingServiceProvider {
       }
       print(counsellors);
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      return Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
     }
-    return counsellors as List<CounsellorsDTO>;
+    return Left(counsellors as List<CounsellorsDTO>);
   }
 
   ///fetch a specific counsellor details
-  Future<CounsellorsDTO> fetchCounsellor(String id) async {
+  Future<Either<CounsellorsDTO, ErrorMessage>> fetchCounsellor(
+      String id) async {
     dynamic payload;
     try {
       final result = await this._httpClientConn.get(
@@ -51,18 +55,23 @@ class CounselingServiceProvider {
           );
       payload = result.data["counsellor"];
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
     }
-    return CounsellorsDTO(
-        name: payload['name'],
-        rating: payload['rating'],
-        isOnline: payload['status'],
-        expertise: payload['expertise'],
-        imgUrl: payload['profilePic']);
+    return Left(
+      CounsellorsDTO(
+          name: payload['name'],
+          rating: payload['rating'],
+          isOnline: payload['status'],
+          expertise: payload['expertise'],
+          imgUrl: payload['profilePic']),
+    );
   }
 
   ///fetch peer counsellors
-  Future<List<PeerCounsellorDto>> fetchPeerCounsellors() async {
+  Future<Either<List<PeerCounsellorDto>, ErrorMessage>>
+      fetchPeerCounsellors() async {
     List<dynamic> peerCounsellors = [];
 
     try {
@@ -79,14 +88,17 @@ class CounselingServiceProvider {
       }
       print(peerCounsellors);
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
     }
 
-    return peerCounsellors as List<PeerCounsellorDto>;
+    return Left(peerCounsellors as List<PeerCounsellorDto>);
   }
 
   ///fetch student profile
-  Future<StudentDto?> fetchStudentData(String studentId) async {
+  Future<Either<StudentDto, ErrorMessage>?> fetchStudentData(
+      String studentId) async {
     try {
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/api/v1/admin/user/studentprofile/$studentId",
@@ -95,14 +107,14 @@ class CounselingServiceProvider {
                 sendTimeout: 10000),
           );
 
-      return StudentDto.fromJson(result.data);
+      return Left(StudentDto.fromJson(result.data));
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(ServiceUtility.handleDioExceptions(e));
     }
   }
 
   ///fetch student forums
-  Future<GroupsDto?> fetchStudentForums() async {
+  Future<Either<GroupsDto, ErrorMessage>?> fetchStudentForums() async {
     try {
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/rada/api/v1/counseling/forums",
@@ -110,14 +122,16 @@ class CounselingServiceProvider {
                 headers: {'Authorization': ServiceUtility.getAuthToken()},
                 sendTimeout: 10000),
           );
-      return GroupsDto.fromJson(result.data);
+      return Left(GroupsDto.fromJson(result.data));
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
     }
   }
 
   ///fetch student groups
-  Future<GroupsDto?> fetchStudentGroups() async {
+  Future<Either<GroupsDto, ErrorMessage>?> fetchStudentGroups() async {
     try {
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/rada/api/v1/counseling/grps",
@@ -125,14 +139,17 @@ class CounselingServiceProvider {
                 headers: {'Authorization': ServiceUtility.getAuthToken()},
                 sendTimeout: 10000),
           );
-      return GroupsDto.fromJson(result.data);
+      return Left(
+        GroupsDto.fromJson(result.data),
+      );
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(ServiceUtility.handleDioExceptions(e));
     }
   }
 
   ///subscribeToGroup
-  Future<GroupDTO?> subToNewGroup(String userId, String groupId) async {
+  Future<Either<GroupDTO, ErrorMessage>?> subToNewGroup(
+      String userId, String groupId) async {
     try {
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/rada/api/v1/counseling/subscribe/$userId/$groupId",
@@ -141,16 +158,19 @@ class CounselingServiceProvider {
                 sendTimeout: 10000),
           );
 
-      return GroupDTO(
+      return Left(
+        GroupDTO(
           id: result.data['id'],
           title: result.data['title'],
-          image: result.data['image']);
+          image: result.data['image'],
+        ),
+      );
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(ServiceUtility.handleDioExceptions(e));
     }
   }
 
-  Future<UserChatDto?> fetchUserMsgs() async {
+  Future<Either<UserChatDto, ErrorMessage>?> fetchUserMsgs() async {
     try {
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/rada/api/v1/counseling",
@@ -158,14 +178,18 @@ class CounselingServiceProvider {
                 headers: {'Authorization': ServiceUtility.getAuthToken()},
                 sendTimeout: 10000),
           );
-      return UserChatDto.fromJson(result.data);
+      return Left(
+        UserChatDto.fromJson(result.data),
+      );
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
     }
   }
 
   /// exit group
-  Future<GroupDTO?> exitGroup(String groupId) async {
+  Future<Either<GroupDTO, ErrorMessage>?> exitGroup(String groupId) async {
     try {
       final result = await this._httpClientConn.put(
             "${this._hostUrl}/rada/api/v1/counseling/$groupId",
@@ -173,17 +197,21 @@ class CounselingServiceProvider {
                 headers: {'Authorization': ServiceUtility.getAuthToken()},
                 sendTimeout: 10000),
           );
-      return GroupDTO(
-          id: result.data['id'],
-          title: result.data['title'],
-          image: result.data['image']);
+      return Left(
+        GroupDTO(
+            id: result.data['id'],
+            title: result.data['title'],
+            image: result.data['image']),
+      );
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
     }
   }
 
   ///delete group
-  Future<GroupDTO?> deleteGroup(String groupId) async {
+  Future<Either<GroupDTO, ErrorMessage>?> deleteGroup(String groupId) async {
     try {
       final result = await this._httpClientConn.delete(
             "${this._hostUrl}/rada/api/v1/counseling/$groupId",
@@ -191,19 +219,24 @@ class CounselingServiceProvider {
                 headers: {'Authorization': ServiceUtility.getAuthToken()},
                 sendTimeout: 10000),
           );
-      return GroupDTO(
-          id: result.data['id'],
-          title: result.data['title'],
-          image: result.data['image']);
+      return Left(
+        GroupDTO(
+            id: result.data['id'],
+            title: result.data['title'],
+            image: result.data['image']),
+      );
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
     }
   }
 
   ///@description sends chat messages between two users i.e from counsellor to client
   ///@params { Chat }  chatData contains the message payload to be deliverd to the  reciepient
   ///@returns chatDTO
-  Future<ChatDto?> peerCounseling(ChatPayload chatData, String userId) async {
+  Future<Either<ChatDto, ErrorMessage>?> peerCounseling(
+      ChatPayload chatData, String userId) async {
     try {
       FormData formData = FormData.fromMap({
         'message': chatData.message,
@@ -219,16 +252,21 @@ class CounselingServiceProvider {
                 headers: {'Authorization': ServiceUtility.getAuthToken()},
                 sendTimeout: 10000),
           );
-      return ChatDto.fromJson(result.data);
+      return Left(
+        ChatDto.fromJson(result.data),
+      );
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
     }
   }
 
   ///@description sends chat messages to usersin the same group or forum
   ///@params { Chat }  chatData contains the message payload to be deliverd to the  group
   ///@returns chatDTO
-  Future<ChatDto?> groupCounseling(ChatPayload chatData, String userId) async {
+  Future<Either<ChatDto, ErrorMessage>?> groupCounseling(
+      ChatPayload chatData, String userId) async {
     try {
       FormData formData = FormData.fromMap({
         'message': chatData.message,
@@ -245,9 +283,13 @@ class CounselingServiceProvider {
                 headers: {'Authorization': ServiceUtility.getAuthToken()},
                 sendTimeout: 10000),
           );
-      return ChatDto.fromJson(result.data);
+      return Left(
+        ChatDto.fromJson(result.data),
+      );
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
     }
   }
 }

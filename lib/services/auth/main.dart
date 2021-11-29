@@ -1,28 +1,32 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:dartz/dartz.dart';
 import 'package:rada_egerton/services/utils.dart';
 import 'package:rada_egerton/entities/AuthDTO.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/services/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class AuthServiceProvider {
   String _hostUrl = BASE_URL;
   Dio _httpClientConn = Dio();
 
-  Future<void> registerNewUser(AuthDTO user) async {
+  Future<Either<void, ErrorMessage>> registerNewUser(AuthDTO user) async {
     try {
       final result = await this._httpClientConn.post(
           "${this._hostUrl}/api/v1/admin/user/register",
           data: user.toJson());
       print(result);
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
     }
+    return left(null);
   }
 
-  Future<void> logInUser(String email, String password) async {
+  Future<Either<void, ErrorMessage>> logInUser(
+      String email, String password) async {
     try {
       final result = await this._httpClientConn.post(
           "${this._hostUrl}/api/v1/admin/user/login",
@@ -31,12 +35,14 @@ class AuthServiceProvider {
       prefs.setString('TOKEN', result.data["payload"]["token"]);
       print(result.data["payload"]["token"]);
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
     }
+    return left(null);
   }
 
-
-  Future<UserDTO?> updateProfile(UserDTO data) async {
+  Future<Either<UserDTO, ErrorMessage>?> updateProfile(UserDTO data) async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     try {
       String authToken = await ServiceUtility.getAuthToken() as String;
@@ -48,22 +54,25 @@ class AuthServiceProvider {
           data: data);
       print(_profile.data);
       _prefs.setString("user", jsonEncode(_profile.data));
-      return UserDTO(
-        email: _profile.data['user']['email'],
-        id: _profile.data['user']['_id'],
-        dob: _profile.data['user']['dob'],
-        userName: _profile.data['user']['userName'],
-        phone: _profile.data['user']['phone'],
-        profilePic: _profile.data['user']['profilePic'],
-        gender: _profile.data['user']['gender'],
+      return Left(
+        UserDTO(
+          email: _profile.data['user']['email'],
+          id: _profile.data['user']['_id'],
+          dob: _profile.data['user']['dob'],
+          userName: _profile.data['user']['userName'],
+          phone: _profile.data['user']['phone'],
+          profilePic: _profile.data['user']['profilePic'],
+          gender: _profile.data['user']['gender'],
+        ),
       );
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
     }
-    return null;
   }
 
-  Future<UserDTO?> getProfile() async {
+  Future<Either<UserDTO, ErrorMessage>?> getProfile() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     try {
       final authToken = await ServiceUtility.getAuthToken();
@@ -76,21 +85,23 @@ class AuthServiceProvider {
           );
 
       _prefs.setString("user", jsonEncode(_profile.data));
-      var results = UserDTO(
-        email: _profile.data['user']['email'],
-        id: _profile.data['user']['_id'].toString(),
-        dob: _profile.data['user']['dob'] == 'undefined'
-            ? 'default'
-            : _profile.data['user']['dob'],
-        userName: _profile.data['user']['name'],
-        phone: _profile.data['user']['phone'],
-        profilePic: _profile.data['user']['profilePic'],
-        gender: _profile.data['user']['gender'],
+      return Left(
+        UserDTO(
+          email: _profile.data['user']['email'],
+          id: _profile.data['user']['_id'].toString(),
+          dob: _profile.data['user']['dob'] == 'undefined'
+              ? 'default'
+              : _profile.data['user']['dob'],
+          userName: _profile.data['user']['name'],
+          phone: _profile.data['user']['phone'],
+          profilePic: _profile.data['user']['profilePic'],
+          gender: _profile.data['user']['gender'],
+        ),
       );
-
-      return results;
     } on DioError catch (e) {
-      ServiceUtility.handleDioExceptions(e);
+      Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
     }
     // return null;
   }

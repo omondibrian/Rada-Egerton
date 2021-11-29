@@ -10,25 +10,27 @@ class ServiceUtility {
     return token;
   }
 
-  static handleDioExceptions(DioError e) {
+  static ErrorMessage handleDioExceptions(DioError e) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx and is also not 304.
     if (e.response != null) {
       print(e.response!.data);
       print(e.response!.requestOptions);
+      return ErrorMessage(
+          message: e.response!.data, status: e.response!.statusCode.toString());
     } else {
       // Something happened in setting up or sending the request that triggered an Error
       print(e.requestOptions);
       print(e.message);
     }
+    return ErrorMessage(message: e.message, status: "400");
   }
 }
 
 class Pusher {
-
   late PusherClient _pusher;
 
-  Pusher({required String appKey, required  String token}) {
+  Pusher({required String appKey, required String token}) {
     PusherOptions options = PusherOptions(
       host: BASE_URL,
       wsPort: 80,
@@ -43,12 +45,18 @@ class Pusher {
 
     this._pusher = PusherClient(appKey, options, autoConnect: true);
   }
- 
-    PusherClient getConnection(){
-     return this._pusher;
-   } 
-   disconnect(){
-     this._pusher.disconnect();
-   }
 
+  PusherClient getConnection() {
+    return this._pusher;
+  }
+
+  disconnect() {
+    this._pusher.disconnect();
+  }
+}
+
+class ErrorMessage {
+  String message;
+  String status;
+  ErrorMessage({required this.message, required this.status});
 }

@@ -15,10 +15,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> initializeState() async {
     AuthServiceProvider _authService = AuthServiceProvider();
     final results = await _authService.getProfile();
-    // print(results);
-    if (results!.id.isNotEmpty) {
-      setState(() => widget.profile = results);
-    }
+    results!.fold((l) => setState(() => widget.profile = l), (r) => print(r));
   }
 
   Widget textField(String hintTextfield) {
