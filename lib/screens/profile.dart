@@ -1,17 +1,15 @@
 import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
-import 'package:rada_egerton/entities/UserDTO.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rada_egerton/screens/widgets/ProfileHeader.dart';
-
+import 'package:rada_egerton/services/utils.dart';
+import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/services/constants.dart';
-import 'package:rada_egerton/services/utils.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+import 'package:rada_egerton/screens/widgets/ProfileHeader.dart';
+
 
 
 
@@ -224,7 +222,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-
-
-
-
