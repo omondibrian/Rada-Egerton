@@ -86,7 +86,7 @@ class AuthServiceProvider {
 
       return results;
     } catch (e) {
-      print('Error from getProfile exception $e'); //TODO: Debugging start points
+      print('Error from getProfile exception $e'); //TODO: Debugging start point
     }
     return UserDTO(
         email: 'default',

@@ -20,8 +20,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // UserDTO userDetails = UserDTO();
-
   bool userInfoControllerStatus = true;
 
   Dio _httpConnection = Dio();
@@ -31,9 +29,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> getUserProfile() async {
     final authServiceResults = await _authService.getProfile();
-    setState(() {
-      widget.userProfile = authServiceResults;
-    });
+    setState(
+      () {
+        widget.userProfile = authServiceResults;
+      },
+    );
   }
 
   void updateProfileImage() async {
