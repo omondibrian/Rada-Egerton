@@ -2,13 +2,17 @@ import 'package:dio/dio.dart';
 import 'package:pusher_client/pusher_client.dart';
 import 'package:rada_egerton/services/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 
 class ServiceUtility {
+  late final DataConnectionChecker connection;
   static Future<String?> getAuthToken() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString("TOKEN");
     return token;
   }
+
+  Future<bool> get isConnected => connection.hasConnection;
 
   static ErrorMessage handleDioExceptions(DioError e) {
     // The request was made and the server responded with a status code
