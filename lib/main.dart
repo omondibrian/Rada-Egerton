@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_routing.dart';
 import 'constants.dart';

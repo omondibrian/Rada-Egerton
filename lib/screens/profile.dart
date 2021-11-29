@@ -4,8 +4,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:image_picker/image_picker.dart';
+
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/services/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,6 +23,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  Future<void> initializeState() async {
+    AuthServiceProvider _authService = AuthServiceProvider();
+    final results = await _authService.getProfile();
+    results!.fold((l) => setState(() => widget.profile = l), (r) => print(r));
   bool userInfoControllerStatus = true;
 
   Dio _httpConnection = Dio();
