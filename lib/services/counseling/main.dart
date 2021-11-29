@@ -16,22 +16,27 @@ class CounselingServiceProvider {
 
   ///fetch a  list of  counsellors with their details
   Future<Either<List<CounsellorsDTO>, ErrorMessage>> fetchCounsellors() async {
-    List<dynamic> counsellors = [];
+    List<CounsellorsDTO> counsellors = [];
     try {
+      String? authToken = await ServiceUtility.getAuthToken();
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/api/v1/admin/user/counsellors",
             options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: 10000),
+                headers: {'Authorization': authToken}, sendTimeout: 10000),
           );
       List payload = result.data["counsellors"];
       for (var i = 0; i < payload.length; i++) {
-        counsellors.add(CounsellorsDTO(
-            name: payload[i]['name'],
-            rating: payload[i]['rating'],
-            isOnline: payload[i]['status'],
-            expertise: payload[i]['expertise'],
-            imgUrl: payload[i]['profilePic']));
+        // print(
+        //   double.parse(payload[i]['rating'].toString()),
+        // );
+        counsellors.add(
+          CounsellorsDTO(
+              name: payload[i]['name'],
+              rating: double.parse(payload[i]['rating'].toString()),
+              isOnline: payload[i]['status'] == 'online',
+              expertise: payload[i]['expertise'],
+              imgUrl: payload[i]['profilePic']),
+        );
       }
       print(counsellors);
     } on DioError catch (e) {
@@ -39,7 +44,7 @@ class CounselingServiceProvider {
         ServiceUtility.handleDioExceptions(e),
       );
     }
-    return Left(counsellors as List<CounsellorsDTO>);
+    return Left(counsellors);
   }
 
   ///fetch a specific counsellor details
@@ -47,11 +52,11 @@ class CounselingServiceProvider {
       String id) async {
     dynamic payload;
     try {
+      String authToken = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/api/v1/admin/user/counsellor/$id",
             options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: 10000),
+                headers: {'Authorization': authToken}, sendTimeout: 10000),
           );
       payload = result.data["counsellor"];
     } on DioError catch (e) {
@@ -172,10 +177,11 @@ class CounselingServiceProvider {
 
   Future<Either<UserChatDto, ErrorMessage>?> fetchUserMsgs() async {
     try {
+      String? authToken = await ServiceUtility.getAuthToken() ;
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/rada/api/v1/counseling",
             options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
+                headers: {'Authorization': authToken},
                 sendTimeout: 10000),
           );
       return Left(

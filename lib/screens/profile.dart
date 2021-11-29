@@ -14,16 +14,19 @@ import 'package:rada_egerton/screens/widgets/ProfileHeader.dart';
 class ProfileScreen extends StatefulWidget {
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
-
-  late UserDTO? userProfile = UserDTO();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late UserDTO _user = UserDTO.defaultDTO();
+
   Future<void> initializeState() async {
     AuthServiceProvider _authService = AuthServiceProvider();
     final results = await _authService.getProfile();
-    results!.fold(
-        (user) => setState(() => widget.userProfile = user), (r) => print(r));
+    results!.fold((user) {
+      setState(() => _user = user);
+
+      print('user data from initializeState() ${user.userName}');
+    }, (r) => print(r));
   }
 
   bool userInfoControllerStatus = true;
@@ -61,13 +64,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void initializeResults() {
-    // userDetails = widget.userProfile!;
-    // _lastNameController.text = userDetails.userName;
-    // _emailController.text = userDetails.email;
-    // _phoneNumberController.text = userDetails.phone;
-    // _genderController.text = userDetails.gender;
-    // _dateOfBirthController.text = userDetails.dob;
+  @override
+  void initState() {
+    initializeState();
+    initializeDetails();
+    super.initState();
+  }
+
+  void initializeDetails() {
+    _lastNameController.text = _user.userName;
+    _emailController.text = _user.email;
+    _phoneNumberController.text = _user.phone;
+    _genderController.text = _user.gender;
+    _dateOfBirthController.text = _user.dob;
+
+    print(_user.userName);
+    print('Last Name controller value : ${_lastNameController.value}');
   }
 
   GlobalKey<FormState> profileForm = GlobalKey<FormState>();
@@ -87,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: widget.userProfile!.id.isEmpty
+      body: _user.id.isEmpty
           ? Text('loading')
           : SingleChildScrollView(
               child: Column(
@@ -97,7 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
                     ),
                     coverImage: AssetImage('assets/android-icon-192x192.png'),
-                    title: "User Name", //TODO: fetch username
+                    title: "${_user.userName}", //TODO: fetch username
 
                     actions: <Widget>[
                       MaterialButton(
@@ -152,8 +164,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Column(
                                 children: <Widget>[
                                   TextFormField(
-                                    decoration: InputDecoration(
-                                      hintText: "Enter user name",
+                                     decoration: InputDecoration(
+                                      hintText: "Enter userName",
                                     ),
                                     enabled: !userInfoControllerStatus,
                                     controller: _lastNameController,
@@ -161,8 +173,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         errorText: "Required"),
                                   ),
                                   TextFormField(
-                                    decoration: InputDecoration(
-                                      hintText: "Enter email address",
+                                     decoration: InputDecoration(
+                                      hintText: "Enter ",//TODOS
                                     ),
                                     enabled: !userInfoControllerStatus,
                                     controller: _emailController,
@@ -200,13 +212,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     leading: Icon(Icons.account_box_outlined),
                                     title: Text("Account status"),
                                     subtitle: Text(
-                                        "${widget.userProfile?.email}"), //TODO fetch user account status
+                                        "${_user.email}"), //TODO fetch user account status
                                   ),
                                   ListTile(
                                     leading: Icon(Icons.calendar_today),
                                     title: Text("Date joined"),
                                     subtitle: Text(
-                                        "${widget.userProfile?.email}"), //TODO fetch the date the user joined
+                                        "${_user.email}"), //TODO fetch the date the user joined
                                   ),
                                 ],
                               ),

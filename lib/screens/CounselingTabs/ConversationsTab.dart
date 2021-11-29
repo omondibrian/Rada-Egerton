@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:rada_egerton/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/providers/counselors.provider.dart';
+import 'package:rada_egerton/services/constants.dart';
 import '../../sizeConfig.dart';
 
 class ConversationsTab extends StatelessWidget {
@@ -11,7 +13,9 @@ class ConversationsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final counselorprovider = Provider.of<CounselorProvider>(context);
-    var conversations = counselorprovider.conversations;
+    var conversations = counselorprovider.conversations.data.payload.groupMsgs;
+    counselorprovider.getConversations();
+
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
@@ -20,13 +24,15 @@ class ConversationsTab extends StatelessWidget {
       await Future.delayed(Duration(milliseconds: 1000));
     }
 
+    
     Widget conversationBuilder(BuildContext ctx, int index) {
+    Info infoConversations = conversations[index].info ;
       return ListTile(
         leading: CircleAvatar(
           radius: SizeConfig.isTabletWidth ? 98 : 20.0,
           child: ClipOval(
             child: CachedNetworkImage(
-              imageUrl: conversations[index]['urlPath'],
+              imageUrl: "$BASE_URL/api/v1/uploads/${infoConversations.image}",
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -38,14 +44,14 @@ class ConversationsTab extends StatelessWidget {
             ),
           ),
         ),
-        title: Text(conversations[index]['name'], style: style),
+        title: Text(infoConversations.title, style: style),
         subtitle: Text(
-          'Hello there say something',
+          conversations.last.messages.last.message,
           style: TextStyle(
             color: Theme.of(ctx).primaryColor,
             fontSize: SizeConfig.isTabletWidth ? 16 : 14,
           ),
-        ),
+        ),//TODO insert clickable functionality for chat
       );
     }
 

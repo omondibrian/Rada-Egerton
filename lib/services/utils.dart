@@ -3,16 +3,13 @@ import 'package:pusher_client/pusher_client.dart';
 import 'package:rada_egerton/services/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class ServiceUtility {
-
   static Future<String?> getAuthToken() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString("TOKEN");
+    print('Token from service utility $token');
     return token;
   }
-
-
 
   static ErrorMessage handleDioExceptions(DioError e) {
     // The request was made and the server responded with a status code

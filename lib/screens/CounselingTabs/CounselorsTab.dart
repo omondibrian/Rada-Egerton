@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rada_egerton/services/constants.dart';
 import 'package:rada_egerton/widgets/ratingBar.dart';
 import '../../providers/counselors.provider.dart';
 import '../../sizeConfig.dart';
@@ -29,7 +30,7 @@ class CounselorsTab extends StatelessWidget {
                   radius: SizeConfig.isTabletWidth ? 40 : 20.0,
                   child: ClipOval(
                     child: CachedNetworkImage(
-                      imageUrl: counselors[index].imgUrl,
+                      imageUrl:"$BASE_URL/api/v1/uploads/${counselors[index].imgUrl}",
                       imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
