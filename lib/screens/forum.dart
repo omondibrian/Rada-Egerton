@@ -43,9 +43,7 @@ class Forum extends StatelessWidget {
       );
     }
 
-    return ChangeNotifierProvider(
-      create: (_) => CounselorProvider(),
-      child: Scaffold(
+    return  Scaffold(
         appBar: AppBar(
           title: Text('Forums'),
         ),
@@ -62,8 +60,8 @@ class Forum extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
+   
   }
 }
 

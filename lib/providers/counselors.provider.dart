@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/entities/CounsellorsDTO.dart';
+import 'package:rada_egerton/entities/PeerCounsellorDTO.dart';
 import 'package:rada_egerton/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/services/counseling/main.dart';
 
 class CounsellorsDataSource {
   List<CounsellorsDTO> _counsellors = [];
+  List<PeerCounsellorDto> _peerCounsellors = [];
 
   Future<List<CounsellorsDTO>> fetchCounselors() async {
-    //TODO:intergrate with api to retrive real data
     CounselingServiceProvider counselingProvider = CounselingServiceProvider();
     var results = await counselingProvider.fetchCounsellors();
     results.fold(
@@ -15,6 +16,16 @@ class CounsellorsDataSource {
       (error) => print('Error from fetchCounsellor() :${error.message}'),
     );
     return this._counsellors;
+  }
+
+  Future<List<PeerCounsellorDto>> fetchPeerCounselors() async {
+    CounselingServiceProvider counselingProvider = CounselingServiceProvider();
+    var results = await counselingProvider.fetchPeerCounsellors();
+    results.fold(
+      (counsellors) => this._peerCounsellors = counsellors,
+      (error) => print('Error from fetchPeerCounsellor() :${error.message}'),
+    );
+    return this._peerCounsellors;
   }
 
   Future<UserChatDto> fetchChats() async {
@@ -32,6 +43,7 @@ class CounsellorsDataSource {
 class CounselorProvider with ChangeNotifier {
   var _dataSource = CounsellorsDataSource();
   List<CounsellorsDTO> _counselors = [];
+  List<PeerCounsellorDto> _peerCounsellors = [];
   late UserChatDto _conversations = UserChatDto(
     data: Data(
       msg: '',
@@ -40,7 +52,18 @@ class CounselorProvider with ChangeNotifier {
   );
 
   List<CounsellorsDTO> get counselors {
+    if (this._counselors.length != 0) {
+      getCounsellors();
+    }
+
     return [...this._counselors];
+  }
+
+  List<PeerCounsellorDto> get peerCounselors {
+    if (this._peerCounsellors.length != 0) {
+      getPeerCounsellors();
+    }
+    return [...this._peerCounsellors];
   }
 
   UserChatDto get conversations {
@@ -56,6 +79,12 @@ class CounselorProvider with ChangeNotifier {
   getCounsellors() async {
     var result = await this._dataSource.fetchCounselors();
     this._counselors = result;
+    notifyListeners();
+  }
+
+  getPeerCounsellors() async {
+    var result = await this._dataSource.fetchPeerCounselors();
+    this._peerCounsellors = result;
     notifyListeners();
   }
 

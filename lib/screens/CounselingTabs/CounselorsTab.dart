@@ -10,16 +10,17 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class CounselorsTab extends StatelessWidget {
   const CounselorsTab({Key? key}) : super(key: key);
 
-  Future<void> _refreshChat() async {
-    //TODO : function call to refresh chat data
-    await Future.delayed(Duration(milliseconds: 1000));
-  }
-
   @override
   Widget build(BuildContext context) {
     final counselorprovider = Provider.of<CounselorProvider>(context);
     var counselors = counselorprovider.counselors;
+
+    Future<void> _refreshChat() async {
+      counselorprovider.getCounsellors();
+    }
+
     counselorprovider.getCounsellors();
+
     Widget conselorsBuilder(BuildContext cxt, int index) {
       return Card(
         child: Row(
@@ -30,7 +31,8 @@ class CounselorsTab extends StatelessWidget {
                   radius: SizeConfig.isTabletWidth ? 40 : 20.0,
                   child: ClipOval(
                     child: CachedNetworkImage(
-                      imageUrl:"$BASE_URL/api/v1/uploads/${counselors[index].imgUrl}",
+                      imageUrl:
+                          "$BASE_URL/api/v1/uploads/${counselors[index].imgUrl}",
                       imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(

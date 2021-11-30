@@ -11,6 +11,11 @@ class ServiceUtility {
     return token;
   }
 
+  static Future<bool> isAuthenticated() async {
+    var token = await getAuthToken();
+    return token!.isNotEmpty;
+  }
+
   static ErrorMessage handleDioExceptions(DioError e) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx and is also not 304.
