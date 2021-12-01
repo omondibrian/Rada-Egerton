@@ -53,6 +53,6 @@ class MyApp extends StatelessWidget {
                 color: Palette.primary,
                 iconTheme: IconThemeData(color: Colors.white))),
         onGenerateRoute: generateRoute,
-        initialRoute: AppRoutes.welcome);
+        initialRoute: AppRoutes.splash);
   }
 }

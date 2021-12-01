@@ -3,38 +3,45 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rada_egerton/screens/profileDetails.dart';
-
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/services/constants.dart';
 import 'package:rada_egerton/services/utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:rada_egerton/widgets/RadaButton.dart';
 import '../sizeConfig.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
-
-  late UserDTO? userProfile = UserDTO();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  Future<void> initializeState() async {
+  UserDTO? userProfile;
+  GlobalKey<FormState> profileForm = GlobalKey<FormState>();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _userNameController = TextEditingController();
+  TextEditingController _phoneNumberController = TextEditingController();
+  TextEditingController _genderController = TextEditingController();
+  TextEditingController _dateOfBirthController = TextEditingController();
+  bool _editStatus = false;
+  Future<void> init() async {
     AuthServiceProvider _authService = AuthServiceProvider();
     final results = await _authService.getProfile();
-    results!
-        .fold((l) => setState(() => widget.userProfile = l), (r) => print(r));
-    bool userInfoControllerStatus = true;
+    results!.fold((l) {
+      userProfile = l;
+      _userNameController.text = userProfile!.userName;
+      _emailController.text = userProfile!.email;
+      _phoneNumberController.text = userProfile!.phone;
+      _genderController.text = userProfile!.gender;
+      _dateOfBirthController.text = userProfile!.dob;
+      setState(() {});
+    }, (r) => print(r));
 
     Dio _httpConnection = Dio();
-    final ImagePicker _imagePicker = ImagePicker();
 
+    final ImagePicker _imagePicker = ImagePicker();
     void updateProfileImage() async {
       var pickedImage =
           await _imagePicker.pickImage(source: ImageSource.gallery);
@@ -65,170 +72,197 @@ class _ProfileScreenState extends State<ProfileScreen> {
         print('Error from updateProfile : $e');
       }
     }
+  }
 
-    void initializeResults() {
-      // userDetails = widget.userProfile!;
-      // _lastNameController.text = userDetails.userName;
-      // _emailController.text = userDetails.email;
-      // _phoneNumberController.text = userDetails.phone;
-      // _genderController.text = userDetails.gender;
-      // _dateOfBirthController.text = userDetails.dob;
-    }
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
 
-    GlobalKey<FormState> profileForm = GlobalKey<FormState>();
-    TextEditingController _emailController = TextEditingController();
-    TextEditingController _lastNameController = TextEditingController();
-    TextEditingController _phoneNumberController = TextEditingController();
-    TextEditingController _genderController = TextEditingController();
-    TextEditingController _dateOfBirthController = TextEditingController();
-
-    @override
-    void initState() {
-      super.initState();
-    }
-
-    @override
-    Widget build(BuildContext context) {
-      // initializeResults();
-      return Scaffold(
-        backgroundColor: Colors.grey.shade100,
-        extendBodyBehindAppBar: true,
-        extendBody: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              ProfileHeader(
-                avatar: CachedNetworkImageProvider(
-                  'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
-                ),
-                coverImage: AssetImage('assets/android-icon-192x192.png'),
-                title: "User Name", //TODO: fetch username
-
-                actions: <Widget>[
-                  MaterialButton(
-                    color: Colors.white,
-                    shape: CircleBorder(side: BorderSide.none),
-                    elevation: 0,
-                    child: Icon(
-                      Icons.edit,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    onPressed: () {
-                      setState(
-                        () {
-                          userInfoControllerStatus = !userInfoControllerStatus;
-                        },
-                      );
-                      //TODO: implement edit details function
-                    },
-                  )
-                ],
+  @override
+  Widget build(BuildContext context) {
+    // initializeResults();
+    return Scaffold(
+      backgroundColor: Colors.grey.shade100,
+      extendBodyBehindAppBar: true,
+      extendBody: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            ProfileHeader(
+              avatar: CachedNetworkImageProvider(
+                'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
               ),
-              const SizedBox(height: 10.0),
-              // UserInfo(),
+              coverImage: AssetImage('assets/android-icon-192x192.png'),
+              title: userProfile == null ? "User Name" : userProfile!.userName,
+              actions: <Widget>[
+                MaterialButton(
+                  color: Colors.white,
+                  shape: CircleBorder(side: BorderSide.none),
+                  elevation: 0,
+                  child: Icon(
+                    Icons.edit,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () {
+                    setState(
+                      () {
+                        _editStatus = !_editStatus;
+                      },
+                    );
+                    //TODO: implement edit details function
+                  },
+                )
+              ],
+            ),
+            const SizedBox(height: 10.0),
+            // UserInfo(),
 
-              //TODO: insert userinfo stless widget
-              Container(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.only(
-                        left: 8.0,
-                      ),
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Profile Information",
-                        style: TextStyle(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    Card(
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        padding: EdgeInsets.all(15),
-                        child: Form(
-                          //TODO supply form key
-                          child: Column(
-                            children: <Widget>[
-                              TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: "Enter user name",
-                                ),
-                                enabled: !userInfoControllerStatus,
-                                controller: _lastNameController,
-                                validator:
-                                    RequiredValidator(errorText: "Required"),
-                              ),
-                              TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: "Enter email address",
-                                ),
-                                enabled: !userInfoControllerStatus,
-                                controller: _emailController,
-                                validator:
-                                    RequiredValidator(errorText: "Required"),
-                              ),
-                              TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: "Enter gender",
-                                ),
-                                enabled: !userInfoControllerStatus,
-                                controller: _genderController,
-                                validator:
-                                    RequiredValidator(errorText: "Required"),
-                              ),
-                              TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: "Enter date of birth",
-                                ),
-                                enabled: !userInfoControllerStatus,
-                                controller: _dateOfBirthController,
-                                validator:
-                                    RequiredValidator(errorText: "Required"),
-                              ),
-                              TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: "Enter phone number",
-                                ),
-                                enabled: !userInfoControllerStatus,
-                                controller: _phoneNumberController,
-                                validator:
-                                    RequiredValidator(errorText: "Required"),
-                              ),
-                              ListTile(
-                                leading: Icon(Icons.account_box_outlined),
-                                title: Text("Account status"),
-                                subtitle: Text(
-                                    "${widget.userProfile?.email}"), //TODO fetch user account status
-                              ),
-                              ListTile(
-                                leading: Icon(Icons.calendar_today),
-                                title: Text("Date joined"),
-                                subtitle: Text(
-                                    "${widget.userProfile?.email}"), //TODO fetch the date the user joined
-                              ),
-                            ],
+            //TODO: insert userinfo stless widget
+            Container(
+              padding: EdgeInsets.all(10),
+              child: userProfile == null
+                  ? CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(Colors.black87),
+                    )
+                  : Column(
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.only(
+                            left: 8.0,
+                          ),
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "Profile Information",
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                            ),
+                            textAlign: TextAlign.left,
                           ),
                         ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
+                        Card(
+                          child: Container(
+                            alignment: Alignment.topLeft,
+                            padding: EdgeInsets.all(15),
+                            child: Form(
+                              //TODO supply form key
+                              child: Column(
+                                children: <Widget>[
+                                  TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: "Enter user name",
+                                    ),
+                                    enabled: _editStatus,
+                                    controller: _userNameController,
+                                    autofocus: true,
+                                    validator: RequiredValidator(
+                                        errorText: "Required"),
+                                  ),
+                                  TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: "Enter email address",
+                                    ),
+                                    enabled: _editStatus,
+                                    controller: _emailController,
+                                    validator: RequiredValidator(
+                                        errorText: "Required"),
+                                  ),
+                                  TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: "Enter gender",
+                                    ),
+                                    enabled: _editStatus,
+                                    controller: _genderController,
+                                    validator: RequiredValidator(
+                                        errorText: "Required"),
+                                  ),
+                                  TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: "Enter date of birth",
+                                    ),
+                                    enabled: _editStatus,
+                                    controller: _dateOfBirthController,
+                                    validator: RequiredValidator(
+                                        errorText: "Required"),
+                                  ),
+                                  TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: "Enter phone number",
+                                    ),
+                                    enabled: _editStatus,
+                                    controller: _phoneNumberController,
+                                    validator: RequiredValidator(
+                                        errorText: "Required"),
+                                  ),
+                                  ListTile(
+                                    leading: Icon(Icons.account_box_outlined),
+                                    title: Text("Account status"),
+                                    subtitle: Text(
+                                        "${userProfile?.email}"), //TODO fetch user account status
+                                  ),
+                                  ListTile(
+                                    leading: Icon(Icons.calendar_today),
+                                    title: Text("Date joined"),
+                                    subtitle: Text(
+                                        "${userProfile?.email}"), //TODO fetch the date the user joined
+                                  ),
+                                  _editStatus
+                                      ? _getActionButtons()
+                                      : SizedBox(
+                                          height: 50,
+                                        )
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+            ),
+          ],
         ),
-      );
-    }
+      ),
+    );
+  }
+
+  Widget _getActionButtons() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(right: 10.0),
+            child: RadaButton(
+              title: 'Save',
+              handleClick: () => {}, //TODO: -update profile
+              fill: true,
+            ),
+          ),
+          flex: 2,
+        ),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: RadaButton(
+              title: 'Cancel',
+              handleClick: () => {
+                setState(() => {_editStatus = false})
+              },
+              fill: false,
+            ),
+          ),
+          flex: 2,
+        ),
+      ],
+    );
   }
 }
 

@@ -12,6 +12,7 @@ import 'package:rada_egerton/screens/mentorship.dart';
 import 'package:rada_egerton/screens/notification.dart';
 import 'package:rada_egerton/screens/profile.dart';
 import 'package:rada_egerton/screens/register.dart';
+import 'package:rada_egerton/screens/slash.dart';
 
 import 'screens/information/information_list.dart';
 import 'screens/welcome.dart';
@@ -24,6 +25,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   Navigator.of(context).pushNamed(AppRoutes.login)  - route to login page
    */
   switch (settings.name) {
+    case AppRoutes.splash:
+      return MaterialPageRoute(builder: (context) => SplashScreen());
     case AppRoutes.welcome:
       return MaterialPageRoute(builder: (context) => Welcome());
     case AppRoutes.login:
