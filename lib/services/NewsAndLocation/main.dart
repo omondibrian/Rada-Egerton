@@ -43,4 +43,22 @@ class NewsAndLocationServiceProvider {
       );
     }
   }
+
+  Future<Either<List<Contact>, ErrorMessage>> getContacts() async {
+    String? _authtoken = await ServiceUtility.getAuthToken();
+    try {
+      final result = await this._httpClientConn.get(
+            "${this._hostUrl}/api/v1/admin/contact",
+            options: Options(
+                headers: {'Authorization': _authtoken},
+                sendTimeout: this._timeOut),
+          );
+      Iterable l = result.data["contacts"];
+      print( result.data["contacts"]);
+      return Left(List<Contact>.from(l.map((j) => Contact.fromJson(j))));
+    } on DioError catch (e) {
+      var errMsg = ServiceUtility.handleDioExceptions(e);
+      return Right(errMsg);
+    }
+  }
 }

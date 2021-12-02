@@ -19,12 +19,11 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   UserDTO? userProfile;
-  GlobalKey<FormState> profileForm = GlobalKey<FormState>();
+  GlobalKey<FormState> _profileForm = GlobalKey<FormState>();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _userNameController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
-  TextEditingController _genderController = TextEditingController();
-  TextEditingController _dateOfBirthController = TextEditingController();
+
   bool _editStatus = false;
   Future<void> init() async {
     AuthServiceProvider _authService = AuthServiceProvider();
@@ -34,8 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _userNameController.text = userProfile!.userName;
       _emailController.text = userProfile!.email;
       _phoneNumberController.text = userProfile!.phone;
-      _genderController.text = userProfile!.gender;
-      _dateOfBirthController.text = userProfile!.dob;
+
       setState(() {});
     }, (r) => print(r));
 
@@ -152,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             alignment: Alignment.topLeft,
                             padding: EdgeInsets.all(15),
                             child: Form(
-                              //TODO supply form key
+                              key: _profileForm,
                               child: Column(
                                 children: <Widget>[
                                   TextFormField(
@@ -176,24 +174,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                   TextFormField(
                                     decoration: InputDecoration(
-                                      hintText: "Enter gender",
-                                    ),
-                                    enabled: _editStatus,
-                                    controller: _genderController,
-                                    validator: RequiredValidator(
-                                        errorText: "Required"),
-                                  ),
-                                  TextFormField(
-                                    decoration: InputDecoration(
-                                      hintText: "Enter date of birth",
-                                    ),
-                                    enabled: _editStatus,
-                                    controller: _dateOfBirthController,
-                                    validator: RequiredValidator(
-                                        errorText: "Required"),
-                                  ),
-                                  TextFormField(
-                                    decoration: InputDecoration(
                                       hintText: "Enter phone number",
                                     ),
                                     enabled: _editStatus,
@@ -210,8 +190,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ListTile(
                                     leading: Icon(Icons.calendar_today),
                                     title: Text("Date joined"),
-                                    subtitle: Text(
-                                        "${userProfile?.email}"), //TODO fetch the date the user joined
+                                    subtitle: Text("${userProfile?.email}"),
+                                  ),
+                                  ListTile(
+                                    leading: Icon(Icons.calendar_today),
+                                    title: Text("Date of birth"),
+                                    subtitle: Text("${userProfile?.dob}"),
+                                  ),
+                                  ListTile(
+                                    leading: Icon(Icons.person),
+                                    title: Text("Gender"),
+                                    subtitle: Text("${userProfile?.gender}"),
                                   ),
                                   _editStatus
                                       ? _getActionButtons()

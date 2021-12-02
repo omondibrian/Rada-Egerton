@@ -26,16 +26,15 @@ class ContactCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
-                  this.title,
-                  style: Theme.of(context).textTheme.subtitle1
-                ),
+                Text(this.title, style: Theme.of(context).textTheme.subtitle1),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(width: 20,),
+                SizedBox(
+                  width: 20,
+                ),
                 Icon(
                   Icons.phone,
                   color: Theme.of(context).accentColor,
@@ -43,7 +42,8 @@ class ContactCard extends StatelessWidget {
                 SizedBox(
                   width: 10,
                 ),
-                Text(this.phoneNumber,style:Theme.of(context).textTheme.subtitle2)
+                Text(this.phoneNumber,
+                    style: Theme.of(context).textTheme.subtitle2)
               ],
             ),
             Row(
@@ -57,7 +57,7 @@ class ContactCard extends StatelessWidget {
                 SizedBox(
                   width: 10,
                 ),
-                Text(this.email,style:Theme.of(context).textTheme.subtitle2),
+                Text(this.email, style: Theme.of(context).textTheme.subtitle2),
               ],
             ),
             Row(
@@ -71,7 +71,8 @@ class ContactCard extends StatelessWidget {
                 SizedBox(
                   width: 10,
                 ),
-                Text(this.location,style:Theme.of(context).textTheme.subtitle2),
+                Text(this.location,
+                    style: Theme.of(context).textTheme.subtitle2),
               ],
             ),
           ],

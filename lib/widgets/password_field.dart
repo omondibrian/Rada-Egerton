@@ -47,8 +47,9 @@ class _PasswordFieldState extends State<PasswordField> {
 String? passwordValidator(String? value) {
   if (value == null || value.isEmpty) {
     return 'This value is required';
-  } else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
-    return 'Incorrect password';
   }
+  // else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+  //   return 'Incorrect password';
+  // }
   return null;
 }

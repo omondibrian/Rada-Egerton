@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             // This is the theme of your application.
-            //TODO: Is there a better way to migrate the code on line 22 t colorScheme.secondary
+            //TODO: Is there a better way to migrate the code on line 22 t colorScheme.accentColor
             // TODO and trace its visibility
             // ignore: deprecated_member_use
             accentColor: Palette.accent,
