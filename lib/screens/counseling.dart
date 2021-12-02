@@ -42,10 +42,10 @@ class Counseling extends StatelessWidget {
                     indicatorColor: Theme.of(context).primaryColor,
                     isScrollable: true,
                     tabs: [
-                      Tab(child: Text('private Sessions', style: style)),
-                      Tab(child: Text('Group Sessions', style: style)),
                       Tab(child: Text('Counselors', style: style)),
                       Tab(child: Text('Peer Counselors', style: style)),
+                      Tab(child: Text('private Sessions', style: style)),
+                      Tab(child: Text('Group Sessions', style: style)),
                     ],
                   ),
                 ),

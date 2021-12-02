@@ -16,7 +16,7 @@ class PrivateSessionsTab extends StatelessWidget {
   final String userId = "3"; //to be changed later
   sendMessage(ChatPayload chat, String userId) async {
     var service = CounselingServiceProvider();
-    await service.groupCounseling(chat, userId);
+    await service.peerCounseling(chat, userId);
   }
 
   @override
@@ -33,19 +33,19 @@ class PrivateSessionsTab extends StatelessWidget {
       await Future.delayed(Duration(milliseconds: 1000));
     }
 
-    Future<Widget> conversationBuilder(BuildContext ctx, int index) async {
+    Widget conversationBuilder(BuildContext ctx, int index)  {
       var counsellorId = conversations[index].senderId == this.userId
           ? conversations[index].reciepient
           : conversations[index].senderId;
 
-      var infoConversations = await counselorprovider.counselorById(counsellorId);
+      var infoConversations = counselorprovider.counselorById(counsellorId);;
 
       return GestureDetector(
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ChatScreen<PeerMsg>(
-              title: infoConversations!.name,
+              title: '${infoConversations!.name}',
               imgUrl: "$BASE_URL/api/v1/uploads/${infoConversations.imgUrl}",
               msgs: conversations,
               sendMessage: sendMessage,
@@ -71,7 +71,7 @@ class PrivateSessionsTab extends StatelessWidget {
               ),
             ),
           ),
-          title: Text(infoConversations.name, style: style),
+          title: Text('${infoConversations.name}', style: style),
           subtitle: Text(
             conversations.last.message,
             style: TextStyle(

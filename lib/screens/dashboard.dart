@@ -105,7 +105,7 @@ List dashboardItems = [
     'routeName': AppRoutes.information
   },
   {
-    'title': 'Students Counseling',
+    'title': 'Counseling',
     'subtitle': 'Free professional Counselling',
     'leadingIcon': 'assets/counseling.svg',
     'routeName': AppRoutes.counseling

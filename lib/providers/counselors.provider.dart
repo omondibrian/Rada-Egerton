@@ -55,7 +55,6 @@ class CounselorProvider with ChangeNotifier {
   var _dataSource = CounsellorsDataSource();
   List<CounsellorsDTO> _counselors = [];
   List<PeerCounsellorDto> _peerCounsellors = [];
-   late  CounsellorsDTO _counsellor;
   late UserChatDto _conversations = UserChatDto(
     data: Data(
       msg: '',
@@ -71,10 +70,14 @@ class CounselorProvider with ChangeNotifier {
     return [...this._counselors];
   }
 
-  Future<CounsellorsDTO?> counselorById(String id) {
-    return this._dataSource.fetchCounsellor(id).then((counsellor) {
-      return counsellor;
-    });
+  CounsellorsDTO? counselorById(String id) {
+    CounsellorsDTO? result;
+    for (var i = 0; i < this._counselors.length; i++) {
+      if (this._counselors[i].id == id) {
+        result = this._counselors[i];
+      }
+    }
+    return result;
   }
 
   List<PeerCounsellorDto> get peerCounselors {
