@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/theme.dart';
 
-Widget buildInput() {
+Widget buildInput(Function(ChatPayload chat, String userId) onSubmit,
+    String userId, String reciepient, String? groupId, String? replyId) {
+  final _chatController = TextEditingController();
   return ClipRRect(
     borderRadius: BorderRadius.circular(30.0),
     child: Container(
@@ -37,7 +40,7 @@ Widget buildInput() {
           Flexible(
             child: Container(
               child: TextField(
-                onSubmitted: (value) {},
+                controller: _chatController,
                 style: TextStyle(color: Colors.black87, fontSize: 15.0),
                 decoration: InputDecoration.collapsed(
                   hintText: 'Type your message...',
@@ -57,7 +60,23 @@ Widget buildInput() {
               margin: EdgeInsets.symmetric(horizontal: 3.0),
               child: IconButton(
                 icon: Icon(Icons.send),
-                onPressed: () {},
+                onPressed: () {
+                  var chat = ChatPayload(
+                    groupsId: groupId,
+                    id: 0,
+                    imageUrl: "",
+                    message: _chatController.text,
+                    senderId: userId,
+                    reciepient: reciepient,
+                    reply: replyId,
+                    status: "0",
+                  );
+
+                  onSubmit(chat, userId);
+                  _chatController.clear();
+
+                  print("message sent");
+                },
               ),
             ),
             color: Colors.white,

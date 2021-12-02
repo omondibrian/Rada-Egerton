@@ -35,7 +35,6 @@ class Help extends StatelessWidget {
         body: TabBarView(children: [
           LocationTab(),
           ContactTab(),
-          Chat(currentUserName: 'jonathan')
         ]),
       ),
     ));

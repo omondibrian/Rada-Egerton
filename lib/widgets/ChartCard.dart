@@ -1,14 +1,15 @@
-
 import 'package:flutter/material.dart';
+import 'package:rada_egerton/services/constants.dart';
 
 import '../theme.dart';
 import '../screens/chat/chat.model.dart';
 
 Widget chatCard(Chat chat, Color chatCardColor, MainAxisAlignment alignment,
     CrossAxisAlignment crossAxisAlignment) {
+  print("media = ${chat.media!.isEmpty}");
   return Row(
     children: <Widget>[
-      chat.media == null
+      chat.media!.isEmpty
           // Text
           ? Container(
               margin: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
@@ -38,7 +39,7 @@ Widget chatCard(Chat chat, Color chatCardColor, MainAxisAlignment alignment,
                 children: [
                   Material(
                     child: Image.network(
-                      chat.media!,
+                      "$BASE_URL/api/v1/uploads/${chat.media!}",
                       loadingBuilder: (BuildContext context, Widget child,
                           ImageChunkEvent? loadingProgress) {
                         if (loadingProgress == null) return child;

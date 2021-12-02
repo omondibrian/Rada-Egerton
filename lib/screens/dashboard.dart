@@ -134,10 +134,5 @@ List dashboardItems = [
     'leadingIcon': 'assets/mentor.svg',
     'routeName': AppRoutes.mentorship
   },
-  {
-    'title': 'Group Counseling',
-    'subtitle': 'Free professional Counselling',
-    'leadingIcon': 'assets/counseling.svg',
-    'routeName': AppRoutes.counseling
-  },
+
 ];

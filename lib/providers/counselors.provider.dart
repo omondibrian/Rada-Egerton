@@ -13,9 +13,20 @@ class CounsellorsDataSource {
     var results = await counselingProvider.fetchCounsellors();
     results.fold(
       (counsellors) => this._counsellors = counsellors,
-      (error) => print('Error from fetchCounsellor() :${error.message}'),
+      (error) => print('Error from fetchCounsellors() :${error.message}'),
     );
     return this._counsellors;
+  }
+
+  Future<CounsellorsDTO?> fetchCounsellor(String id) async {
+    CounsellorsDTO? counsellor;
+    CounselingServiceProvider counselingProvider = CounselingServiceProvider();
+    var results = await counselingProvider.fetchCounsellor(id);
+    results.fold(
+      (counsellor) => counsellor = counsellor,
+      (error) => print('Error from fetchCounsellor() :${error.message}'),
+    );
+    return counsellor;
   }
 
   Future<List<PeerCounsellorDto>> fetchPeerCounselors() async {
@@ -44,6 +55,7 @@ class CounselorProvider with ChangeNotifier {
   var _dataSource = CounsellorsDataSource();
   List<CounsellorsDTO> _counselors = [];
   List<PeerCounsellorDto> _peerCounsellors = [];
+   late  CounsellorsDTO _counsellor;
   late UserChatDto _conversations = UserChatDto(
     data: Data(
       msg: '',
@@ -57,6 +69,12 @@ class CounselorProvider with ChangeNotifier {
     }
 
     return [...this._counselors];
+  }
+
+  Future<CounsellorsDTO?> counselorById(String id) {
+    return this._dataSource.fetchCounsellor(id).then((counsellor) {
+      return counsellor;
+    });
   }
 
   List<PeerCounsellorDto> get peerCounselors {
