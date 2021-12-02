@@ -1,35 +1,16 @@
-// import 'package:flutter/material.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-// class LocationTab extends StatelessWidget {
-
-//   LocationTab({Key? key}) : super(key: key);
-//   late final GoogleMapController mapController;
-//   final CameraPosition _initialPosition = CameraPosition(
-//     bearing: 90,
-//     target: const LatLng(20.5937, 78.9629),
-//     tilt: 45,
-//     zoom: 4,
-//   );
-
-//   void _onMapCreated(GoogleMapController controller) {
-//     mapController = controller;
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GoogleMap(
-//       onMapCreated: _onMapCreated,
-//       initialCameraPosition: this._initialPosition,
-//     );
-//   }
-// }
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-// void main() => runApp(LocationTab());
+void main() {
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
+  }
+  runApp(LocationTab());
+}
 
 class LocationTab extends StatefulWidget {
   @override
@@ -40,37 +21,50 @@ class MapSampleState extends State<LocationTab> {
   Completer<GoogleMapController> _controller = Completer();
 
   static final CameraPosition _initialCameraPosition = CameraPosition(
-    target: LatLng(3, 37),
-    zoom: 4,
+    tilt: 45,
+    target: LatLng(-0.36932651926935073, 35.9313568419356),
+    zoom: 20.0,
   );
 
-  static final CameraPosition _kLake = CameraPosition(
+  static final CameraPosition _egertonntcc = CameraPosition(
     bearing: 90,
-    target: const LatLng(20.5937, 78.9629),
+    target: const LatLng(-0.28896128588051473, 36.05793424851361),
     tilt: 45,
-    zoom: 1,
+    zoom: 20.0,
   );
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       body: GoogleMap(
-        mapType: MapType.hybrid,
+        mapType: MapType.normal,
+        zoomGesturesEnabled: true,
+        tiltGesturesEnabled: true,
+        buildingsEnabled: true,
+        gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+          new Factory<OneSequenceGestureRecognizer>(
+            () => new EagerGestureRecognizer(),
+          ),
+        ].toSet(),
         initialCameraPosition: _initialCameraPosition,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('To the lake!'),
-        icon: Icon(Icons.directions_boat),
+        onPressed: _gotoNTCC,
+        label: Text('NTCC'),
+        icon: Icon(Icons.school_outlined),
       ),
     );
   }
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  Future<void> _gotoNTCC() async {
+    final GoogleMapController mapController = await _controller.future;
+    mapController.animateCamera(CameraUpdate.newCameraPosition(_egertonntcc));
   }
 }
+
+//Dean Of Sudent's location -0.36932651926935073, 35.9313568419356
+//Counselling's department -0.36973278363331785, 35.93140758698434
+//Egerton Town Campus -0.28896128588051473, 36.05793424851361
