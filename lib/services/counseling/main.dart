@@ -27,14 +27,18 @@ class CounselingServiceProvider {
           );
       List payload = result.data["counsellors"];
       for (var i = 0; i < payload.length; i++) {
-        counsellors.add(CounsellorsDTO(
+        counsellors.add(
+          CounsellorsDTO(
             name: payload[i]['name'],
             rating: double.parse(
               payload[i]['rating'].toString(),
             ),
             isOnline: payload[i]['status'] == "online",
             expertise: payload[i]['expertise'],
-            imgUrl: payload[i]['profilePic']));
+            imgUrl: payload[i]['profilePic'],
+            id: payload[i]["_id"],
+          ),
+        );
       }
       print(counsellors);
     } on DioError catch (e) {
@@ -58,25 +62,29 @@ class CounselingServiceProvider {
             }, sendTimeout: 10000),
           );
       payload = result.data["counsellor"];
+      print(payload);
     } on DioError catch (e) {
       Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
+
     return Left(
       CounsellorsDTO(
-          name: payload['name'],
-          rating: double.parse(payload['rating'].toString()),
-          isOnline: payload['status'] == "online",
-          expertise: payload['expertise'],
-          imgUrl: payload['profilePic']),
+        name: payload['name'],
+        rating: double.parse(payload['rating'].toString()),
+        isOnline: payload['status'] == "online",
+        expertise: payload['expertise'],
+        imgUrl: payload['profilePic'],
+        id: payload["_id"],
+      ),
     );
   }
 
   ///fetch peer counsellors
   Future<Either<List<PeerCounsellorDto>, ErrorMessage>>
       fetchPeerCounsellors() async {
-     List<PeerCounsellorDto> peerCounsellors = [];
+    List<PeerCounsellorDto> peerCounsellors = [];
 
     try {
       String token = await ServiceUtility.getAuthToken() as String;

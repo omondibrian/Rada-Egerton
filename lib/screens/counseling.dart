@@ -53,10 +53,10 @@ class Counseling extends StatelessWidget {
             },
             body: TabBarView(
               children: <Widget>[
+                CounselorsTab(),
+                PeerCounselorsTab(),
                 PrivateSessionsTab(),
                 GroupSessionsTab(),
-                CounselorsTab(),
-                PeerCounselorsTab()
               ],
             ),
           ),
