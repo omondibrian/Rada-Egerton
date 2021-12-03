@@ -5,7 +5,6 @@ import 'package:rada_egerton/services/utils.dart';
 import 'package:rada_egerton/entities/NewsDTO.dart';
 import 'package:rada_egerton/entities/locationDto.dart';
 
-
 class NewsAndLocationServiceProvider {
   String _hostUrl = BASE_URL;
   Dio _httpClientConn = Dio();

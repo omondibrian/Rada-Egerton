@@ -13,7 +13,7 @@ class Help extends StatelessWidget {
     );
     return Scaffold(
         body: DefaultTabController(
-      length: 3,
+      length: 2,
       child: NestedScrollView(
         headerSliverBuilder: (BuildContext ctx, bool isScrolled) {
           return <Widget>[
@@ -26,7 +26,6 @@ class Help extends StatelessWidget {
                 tabs: [
                   Tab(child: Text('Location', style: style)),
                   Tab(child: Text('Contact', style: style)),
-                  Tab(child: Text('Bot', style: style)),
                 ],
               ),
             ),
@@ -35,10 +34,8 @@ class Help extends StatelessWidget {
         body: TabBarView(children: [
           LocationTab(),
           ContactTab(),
-          Chat(currentUserName: 'jonathan')
         ]),
       ),
     ));
   }
 }
-

@@ -4,6 +4,7 @@ import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/widgets/RadaButton.dart';
 import 'package:rada_egerton/widgets/defaultInput.dart';
+import 'package:rada_egerton/widgets/password_field.dart';
 
 import '../sizeConfig.dart';
 
@@ -13,7 +14,6 @@ class Login extends StatelessWidget {
   final passwordController = TextEditingController();
 
   final _authService = AuthServiceProvider();
-
 
   String? emailValidator(String? value) {
     if (value == null || value.isEmpty) {
@@ -25,7 +25,6 @@ class Login extends StatelessWidget {
     }
     return null;
   }
-
 
   void _handleSubmit(BuildContext context) async {
     try {
@@ -42,16 +41,8 @@ class Login extends StatelessWidget {
       print(e);
     }
   }
-    
 
-  String? passwordValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'This value is required';
-    } else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
-      return 'Incorrect password';
-    }
-    return null;
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -94,13 +85,7 @@ class Login extends StatelessWidget {
                       ),
                       SizedBox(
                         width: SizeConfig.isTabletWidth ? 600 : 290.0,
-                        child: DefaultInput(
-                          isPassword: true,
-                          hintText: 'Password',
-                          controller: passwordController,
-                          validator: passwordValidator,
-                          icon: Icons.lock,
-                        ),
+                        child: PasswordField(passwordController),
                       ),
                       SizedBox(
                         height: 30,
