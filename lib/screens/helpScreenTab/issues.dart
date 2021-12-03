@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/entities/ComplaintDto.dart';
 import 'package:rada_egerton/services/Issues/main.dart';
@@ -30,11 +29,25 @@ class _IssuesState extends State<Issues> {
   void createIssue() async {
     if (_formKey.currentState!.validate()) {
       final result = await _issueService.createNewIssue({
-        "issueCategory": _selectedIssueCategory,
-        "issue": _messageController.text
+        "issueCategoryID": _selectedIssueCategory.toString(),
+        "issue": _messageController.text,
+        "status": "3"
       });
+      result.fold(
+          (l) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("Issue created successfuly",
+                    style: TextStyle(color: Theme.of(context).primaryColor)),
+                duration: Duration(seconds: 10000),
+              )),
+          (r) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("Issue created successfuly",
+                    style: TextStyle(color: Theme.of(context).errorColor)),
+                duration: Duration(seconds: 10000),
+                action: SnackBarAction(label: "retry", onPressed: createIssue),
+              )));
     }
   }
+  // action: SnackBarAction(label: "retry", onPressed: fetchData),
 
   @override
   void initState() {

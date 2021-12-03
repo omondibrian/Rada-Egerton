@@ -14,7 +14,6 @@ class IssueServiceProvider {
   Future<Either<ComplaintDto, ErrorMessage>> createNewIssue(
       Map<String, dynamic> data) async {
     String? authToken = await ServiceUtility.getAuthToken();
-    print(data);
     try {
       final result = await this._httpClientConn.post(
           "${this._hostUrl}/api/v1/issues/",
@@ -22,6 +21,8 @@ class IssueServiceProvider {
               headers: {'Authorization': authToken},
               sendTimeout: this._timeOut),
           data: json.encode(data));
+
+      print(result);
       return Left(ComplaintDto.fromJson(result.data));
     } on DioError catch (e) {
       var errMsg = ServiceUtility.handleDioExceptions(e);

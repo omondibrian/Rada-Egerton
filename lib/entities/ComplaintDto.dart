@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-ComplaintDto complaintDtoFromJson(String str) =>
-    ComplaintDto.fromJson(json.decode(str));
+// ComplaintDto complaintDtoFromJson(String str) =>
+//     ComplaintDto.fromJson(json.decode(str));
 
-String complaintDtoToJson(ComplaintDto data) => json.encode(data.toJson());
+// String complaintDtoToJson(ComplaintDto data) => json.encode(data.toJson());
 
 class ComplaintDto {
   ComplaintDto({
@@ -55,10 +55,10 @@ class NewIssue {
   });
 
   int id;
-  String forwardedTo;
+  String? forwardedTo;
   String userId;
   String name;
-  String natureOfComplaint;
+  String? natureOfComplaint;
   String status;
   String universityId;
   String issue;
