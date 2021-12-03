@@ -4,6 +4,7 @@ import 'package:rada_egerton/services/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ServiceUtility {
+  // late final DataConnectionChecker connection;
   static Future<String?> getAuthToken() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString("TOKEN");
