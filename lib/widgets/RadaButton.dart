@@ -21,17 +21,18 @@ class RadaButton extends StatelessWidget {
       padding: EdgeInsets.all(0.0),
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Theme.of(context).accentColor,
-            Theme.of(context).primaryColor,
-          ],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
-        borderRadius: BorderRadius.circular(5),
-        border: fill? Border.all(color: Colors.transparent):Border.all(color: Theme.of(context).primaryColor)
-      ),
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).accentColor,
+              Theme.of(context).primaryColor,
+            ],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(5),
+          border: fill
+              ? Border.all(color: Colors.transparent)
+              : Border.all(color: Theme.of(context).primaryColor)),
       child: TextButton(
         style: ButtonStyle(
           minimumSize: MaterialStateProperty.all<Size>(

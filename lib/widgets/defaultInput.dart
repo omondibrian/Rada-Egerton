@@ -30,9 +30,11 @@ class DefaultInput extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(5)),
             borderSide: const BorderSide(color: Color(0X55CED0D2), width: 0.0),
           ),
+          
         ),
         controller: this.controller,
         validator: this.validator,
+        
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/screens/chat/chat.dart';
+import 'package:rada_egerton/screens/helpScreenTab/issues.dart';
 
 import '../sizeConfig.dart';
 import './helpScreenTab/ContactTab.dart';
@@ -26,18 +27,14 @@ class Help extends StatelessWidget {
                 tabs: [
                   Tab(child: Text('Location', style: style)),
                   Tab(child: Text('Contact', style: style)),
-                  Tab(child: Text('Bot', style: style)),
+                  Tab(child: Text('Issues', style: style)),
                 ],
               ),
             ),
           ];
         },
-        body: TabBarView(children: [
-          LocationTab(),
-          ContactTab(),
-        ]),
+        body: TabBarView(children: [LocationTab(), ContactTab(), Issues()]),
       ),
     ));
   }
 }
-

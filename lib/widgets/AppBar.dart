@@ -33,10 +33,8 @@ class CustomAppBar extends StatelessWidget {
               Text(this.title, style: Theme.of(context).textTheme.headline1),
               Text(
                 'say Something',
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    ?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    color: Theme.of(context).accentColor),
               ),
             ],
           ),
