@@ -1,9 +1,7 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/entities/ComplaintDto.dart';
 import 'package:rada_egerton/services/Issues/main.dart';
-import 'package:rada_egerton/sizeConfig.dart';
 import 'package:rada_egerton/widgets/RadaButton.dart';
 
 class Issues extends StatefulWidget {
@@ -22,7 +20,6 @@ class _IssuesState extends State<Issues> {
     result.fold(
         (issueCategories) => setState(() {
               _issueCategories = issueCategories;
-              print(issueCategories);
             }),
         (error) => {
               //TODO: handle error
@@ -30,10 +27,26 @@ class _IssuesState extends State<Issues> {
             });
   }
 
+  void createIssue() async {
+    if (_formKey.currentState!.validate()) {
+      final result = await _issueService.createNewIssue({
+        "issueCategory": _selectedIssueCategory,
+        "issue": _messageController.text
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     init();
+  }
+
+  String? valid(String? value) {
+    if (value!.isEmpty) {
+      return "Requried";
+    }
+    return null;
   }
 
   @override
@@ -53,6 +66,7 @@ class _IssuesState extends State<Issues> {
               maxLines: 15,
               controller: _messageController,
               minLines: 10,
+              validator: valid,
               decoration: InputDecoration(
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -67,8 +81,8 @@ class _IssuesState extends State<Issues> {
               height: 30,
             ),
             RadaButton(
-              title: 'Subrmit',
-              handleClick: () => {},
+              title: 'Submit',
+              handleClick: createIssue,
               fill: true,
             ),
           ],

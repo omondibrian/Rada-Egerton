@@ -1,3 +1,4 @@
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
@@ -10,14 +11,17 @@ class IssueServiceProvider {
   Dio _httpClientConn = Dio();
   final _timeOut = 10000;
   // issues/category
-  Future<Either<ComplaintDto, ErrorMessage>> createNewIssue() async {
+  Future<Either<ComplaintDto, ErrorMessage>> createNewIssue(
+      Map<String, dynamic> data) async {
+    String? authToken = await ServiceUtility.getAuthToken();
+    print(data);
     try {
-      final result = await this._httpClientConn.get(
-            "${this._hostUrl}/api/v1/admin/news",
-            options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: this._timeOut),
-          );
+      final result = await this._httpClientConn.post(
+          "${this._hostUrl}/api/v1/issues/",
+          options: Options(
+              headers: {'Authorization': authToken},
+              sendTimeout: this._timeOut),
+          data: json.encode(data));
       return Left(ComplaintDto.fromJson(result.data));
     } on DioError catch (e) {
       var errMsg = ServiceUtility.handleDioExceptions(e);

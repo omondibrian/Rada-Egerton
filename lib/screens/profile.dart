@@ -80,7 +80,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // initializeResults();
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       extendBodyBehindAppBar: true,
@@ -113,7 +112,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         _editStatus = !_editStatus;
                       },
                     );
-                    //TODO: implement edit details function
                   },
                 )
               ],
@@ -121,13 +119,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 10.0),
             // UserInfo(),
 
-            //TODO: insert userinfo stless widget
             Container(
               padding: EdgeInsets.all(10),
+              alignment: Alignment.center,
               child: userProfile == null
-                  ? CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(Colors.black87),
-                    )
+                  ? CircularProgressIndicator()
                   : Column(
                       children: <Widget>[
                         Container(
@@ -250,6 +246,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           flex: 2,
         ),
+      ],
+    );
+  }
+
+  Widget _avator(BuildContext context, String profileImage) {
+    return Stack(
+      children: [
+        CircleAvatar(
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          maxRadius: SizeConfig.isTabletWidth ? 100 : 70,
+          child: CircleAvatar(
+            maxRadius: SizeConfig.isTabletWidth ? 97 : 67,
+            backgroundImage: CachedNetworkImageProvider(
+              profileImage,
+            ),
+          ),
+        ),
+        Positioned(
+          left: 100,
+          top: 90,
+          child: CircleAvatar(
+            backgroundColor: Colors.white,
+            child: IconButton(
+              icon: Icon(Icons.camera_alt, color: Colors.black),
+              onPressed: () {
+                // updateProfileImage();//TODO: sort this function out
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _profileHeader(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Ink(
+          height: 200,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondary,
+            image: DecorationImage(
+                image: AssetImage('assets/android-icon-192x192.png'),
+                fit: BoxFit.cover),
+          ),
+        ),
+        Ink(
+          height: 200,
+          decoration: BoxDecoration(
+            color: Colors.black38,
+          ),
+        ),
+        Container(
+          width: double.infinity,
+          margin: const EdgeInsets.only(top: 160),
+          child: Column(
+            children: <Widget>[
+              _avator(context, ""),
+              Text(
+                userProfile == null ? "User Profile" : userProfile!.userName,
+                style: Theme.of(context).textTheme.headline1,
+              ),
+            ],
+          ),
+        )
       ],
     );
   }
@@ -376,17 +437,3 @@ class Avatar extends StatelessWidget {
     );
   }
 }
-// Container(
-            //   decoration: BoxDecoration(
-            //     shape: BoxShape.circle,
-            //     image: DecorationImage(
-            //       image: imageProvider,
-            //       fit: BoxFit.cover,
-            //     ),
-            //   ),
-            //   width: SizeConfig.isTabletWidth ? 150 : 120,
-            //   height: SizeConfig.isTabletWidth ? 150 : 120,
-            // ),
-            // placeholder: (context, url) => SpinKitFadingCircle(
-            //   color: Theme.of(context).primaryColor,
-            // ),

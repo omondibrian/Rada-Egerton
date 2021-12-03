@@ -10,35 +10,36 @@ class NewsAndLocationServiceProvider {
   Dio _httpClientConn = Dio();
   final _timeOut = 10000;
 
-  Future<Either<NewsDto, ErrorMessage>?> fetchNews() async {
+  Future<Either<List<News>, ErrorMessage>> fetchNews() async {
+    String? _authtoken = await ServiceUtility.getAuthToken();
     try {
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/api/v1/admin/news",
             options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
+                headers: {'Authorization': _authtoken},
                 sendTimeout: this._timeOut),
           );
-      return Left(
-        NewsDto.fromJson(result.data),
-      );
+      Iterable l = result.data["news"];
+      return Left(List<News>.from(l.map((j) => News.fromJson(j))));
     } on DioError catch (e) {
-      Right(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
   }
 
-  Future<Either<LocationsDto, ErrorMessage>?> fetchLocationPins() async {
+  Future<Either<LocationsDto, ErrorMessage>> fetchLocationPins() async {
+    String? _authtoken = await ServiceUtility.getAuthToken();
     try {
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/api/v1/admin/location",
             options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
+                headers: {'Authorization': _authtoken},
                 sendTimeout: this._timeOut),
           );
       return Left(LocationsDto.fromJson(result.data));
     } on DioError catch (e) {
-      Right(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -54,7 +55,6 @@ class NewsAndLocationServiceProvider {
                 sendTimeout: this._timeOut),
           );
       Iterable l = result.data["contacts"];
-      print( result.data["contacts"]);
       return Left(List<Contact>.from(l.map((j) => Contact.fromJson(j))));
     } on DioError catch (e) {
       var errMsg = ServiceUtility.handleDioExceptions(e);
