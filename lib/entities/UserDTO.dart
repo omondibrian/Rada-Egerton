@@ -1,4 +1,3 @@
-
 class UserDTO {
   String email = "";
   String userName = "";
@@ -16,5 +15,16 @@ class UserDTO {
     this.profilePic = profilePic;
     this.dob = dob;
     this.gender = gender;
+  }
+  factory UserDTO.defaultDTO() {
+    return UserDTO(
+      email: '',
+      dob: '',
+      id: '',
+      userName: '',
+      phone: '',
+      profilePic: '',
+      gender: '',
+    );
   }
 }

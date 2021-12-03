@@ -31,7 +31,6 @@ dependencies:
   flutter_svg: ^0.23.0+1
   provider: ^6.0.0
   flutter_rating_bar: ^4.0.0
-  google_maps_flutter: ^2.0.6
   image_picker: ^0.8.3+1
   swipeable_tile: ^0.0.2
   intl: ^0.17.0
@@ -44,6 +43,9 @@ dependencies:
   dartz: ^0.10.0
   # data_connection_checker: ^0.3.4
   form_field_validator: ^1.1.0
+  internet_connection_checker: ^0.0.1+3
+  google_maps_flutter: ^2.1.1
+  
 
 dev_dependencies:
   flutter_test:
@@ -88,6 +90,11 @@ flutter:
     - assets/srhr.png
     - assets/unesco.png
     - assets/logo.png
+<<<<<<< HEAD
+    - assets/android-icon-192x192.png
+=======
+    - assets/message.png
+>>>>>>> main
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

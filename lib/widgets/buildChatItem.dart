@@ -5,9 +5,10 @@ import '../theme.dart';
 import '../widgets/ChartCard.dart';
 import '../screens/chat/chat.model.dart' as Model;
 
-Widget buildItem(String currentUserName, Model.Chat chatModel) {
+Widget buildItem(String currentUserId, Model.Chat chatModel,
+    Function(String reply) onReply) {
   var chat = chatModel;
-  if (chat.authorName == currentUserName) {
+  if (chat.authorId == currentUserId) {
     // Right (my message)
     return Column(
       children: [
@@ -23,7 +24,9 @@ Widget buildItem(String currentUserName, Model.Chat chatModel) {
       color: Colors.transparent,
       swipeThreshold: 0.2,
       direction: SwipeDirection.endToStart,
-      onSwiped: (_) {},
+      onSwiped: (_) {
+        onReply(chat.id!);
+      },
       key: UniqueKey(),
       backgroundBuilder: (context, direction, progress) {
         bool vibrated = false;

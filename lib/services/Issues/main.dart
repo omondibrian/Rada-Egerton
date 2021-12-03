@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
 import 'package:rada_egerton/services/utils.dart';
@@ -8,15 +10,19 @@ class IssueServiceProvider {
   String _hostUrl = BASE_URL;
   Dio _httpClientConn = Dio();
   final _timeOut = 10000;
-
-  Future<Either<ComplaintDto, ErrorMessage>> createNewIssue() async {
+  // issues/category
+  Future<Either<ComplaintDto, ErrorMessage>> createNewIssue(
+      Map<String, dynamic> data) async {
+    String? authToken = await ServiceUtility.getAuthToken();
     try {
-      final result = await this._httpClientConn.get(
-            "${this._hostUrl}/api/v1/admin/news",
-            options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: this._timeOut),
-          );
+      final result = await this._httpClientConn.post(
+          "${this._hostUrl}/api/v1/issues/",
+          options: Options(
+              headers: {'Authorization': authToken},
+              sendTimeout: this._timeOut),
+          data: json.encode(data));
+
+      print(result);
       return Left(ComplaintDto.fromJson(result.data));
     } on DioError catch (e) {
       var errMsg = ServiceUtility.handleDioExceptions(e);
@@ -24,4 +30,22 @@ class IssueServiceProvider {
     }
   }
 
+  Future<Either<List<IssueCategory>, ErrorMessage>> getIssueCategories() async {
+    String? _authtoken = await ServiceUtility.getAuthToken();
+    try {
+      final result = await this._httpClientConn.get(
+            "${this._hostUrl}/api/v1/issues/category",
+            options: Options(
+                headers: {'Authorization': _authtoken},
+                sendTimeout: this._timeOut),
+          );
+      Iterable l = result.data["issuesCategories"]["issueCategories"];
+
+      return Left(
+          List<IssueCategory>.from(l.map((j) => IssueCategory.fromJson(j))));
+    } on DioError catch (e) {
+      var errMsg = ServiceUtility.handleDioExceptions(e);
+      return Right(errMsg);
+    }
+  }
 }

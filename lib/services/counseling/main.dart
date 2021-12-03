@@ -16,20 +16,23 @@ class CounselingServiceProvider {
 
   ///fetch a  list of  counsellors with their details
   Future<Either<List<CounsellorsDTO>, ErrorMessage>> fetchCounsellors() async {
-    List<dynamic> counsellors = [];
+    List<CounsellorsDTO> counsellors = [];
+    String token = await ServiceUtility.getAuthToken() as String;
     try {
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/api/v1/admin/user/counsellors",
-            options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: 10000),
+            options: Options(headers: {
+              'Authorization': token,
+            }, sendTimeout: 10000),
           );
       List payload = result.data["counsellors"];
       for (var i = 0; i < payload.length; i++) {
         counsellors.add(CounsellorsDTO(
             name: payload[i]['name'],
-            rating: payload[i]['rating'],
-            isOnline: payload[i]['status'],
+            rating: double.parse(
+              payload[i]['rating'].toString(),
+            ),
+            isOnline: payload[i]['status'] == "online",
             expertise: payload[i]['expertise'],
             imgUrl: payload[i]['profilePic']));
       }
@@ -39,7 +42,7 @@ class CounselingServiceProvider {
         ServiceUtility.handleDioExceptions(e),
       );
     }
-    return Left(counsellors as List<CounsellorsDTO>);
+    return Left(counsellors);
   }
 
   ///fetch a specific counsellor details
@@ -47,11 +50,12 @@ class CounselingServiceProvider {
       String id) async {
     dynamic payload;
     try {
+      String token = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/api/v1/admin/user/counsellor/$id",
-            options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: 10000),
+            options: Options(headers: {
+              'Authorization': token,
+            }, sendTimeout: 10000),
           );
       payload = result.data["counsellor"];
     } on DioError catch (e) {
@@ -62,8 +66,8 @@ class CounselingServiceProvider {
     return Left(
       CounsellorsDTO(
           name: payload['name'],
-          rating: payload['rating'],
-          isOnline: payload['status'],
+          rating: double.parse(payload['rating'].toString()),
+          isOnline: payload['status'] == "online",
           expertise: payload['expertise'],
           imgUrl: payload['profilePic']),
     );
@@ -72,19 +76,20 @@ class CounselingServiceProvider {
   ///fetch peer counsellors
   Future<Either<List<PeerCounsellorDto>, ErrorMessage>>
       fetchPeerCounsellors() async {
-    List<dynamic> peerCounsellors = [];
+     List<PeerCounsellorDto> peerCounsellors = [];
 
     try {
+      String token = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/api/v1/admin/user/peercounsellors",
-            options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: 10000),
+            options: Options(headers: {
+              'Authorization': token,
+            }, sendTimeout: 10000),
           );
       List payload = result.data["counsellors"];
 
       for (var i = 0; i < payload.length; i++) {
-        peerCounsellors.add(PeerCounsellorDto.fromJson(payload[1]));
+        peerCounsellors.add(PeerCounsellorDto.fromJson(payload[i]));
       }
       print(peerCounsellors);
     } on DioError catch (e) {
@@ -93,18 +98,19 @@ class CounselingServiceProvider {
       );
     }
 
-    return Left(peerCounsellors as List<PeerCounsellorDto>);
+    return Left(peerCounsellors);
   }
 
   ///fetch student profile
   Future<Either<StudentDto, ErrorMessage>?> fetchStudentData(
       String studentId) async {
     try {
+      String token = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/api/v1/admin/user/studentprofile/$studentId",
-            options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: 10000),
+            options: Options(headers: {
+              'Authorization': token,
+            }, sendTimeout: 10000),
           );
 
       return Left(StudentDto.fromJson(result.data));
@@ -116,11 +122,12 @@ class CounselingServiceProvider {
   ///fetch student forums
   Future<Either<GroupsDto, ErrorMessage>?> fetchStudentForums() async {
     try {
+      String token = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/rada/api/v1/counseling/forums",
-            options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: 10000),
+            options: Options(headers: {
+              'Authorization': token,
+            }, sendTimeout: 10000),
           );
       return Left(GroupsDto.fromJson(result.data));
     } on DioError catch (e) {
@@ -133,11 +140,12 @@ class CounselingServiceProvider {
   ///fetch student groups
   Future<Either<GroupsDto, ErrorMessage>?> fetchStudentGroups() async {
     try {
+      String token = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/rada/api/v1/counseling/grps",
-            options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: 10000),
+            options: Options(headers: {
+              'Authorization': token,
+            }, sendTimeout: 10000),
           );
       return Left(
         GroupsDto.fromJson(result.data),
@@ -151,11 +159,12 @@ class CounselingServiceProvider {
   Future<Either<GroupDTO, ErrorMessage>?> subToNewGroup(
       String userId, String groupId) async {
     try {
+      String token = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/rada/api/v1/counseling/subscribe/$userId/$groupId",
-            options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: 10000),
+            options: Options(headers: {
+              'Authorization': token,
+            }, sendTimeout: 10000),
           );
 
       return Left(
@@ -172,11 +181,12 @@ class CounselingServiceProvider {
 
   Future<Either<UserChatDto, ErrorMessage>?> fetchUserMsgs() async {
     try {
+      String token = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.get(
             "${this._hostUrl}/rada/api/v1/counseling",
-            options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: 10000),
+            options: Options(headers: {
+              'Authorization': token,
+            }, sendTimeout: 10000),
           );
       return Left(
         UserChatDto.fromJson(result.data),
@@ -191,11 +201,12 @@ class CounselingServiceProvider {
   /// exit group
   Future<Either<GroupDTO, ErrorMessage>?> exitGroup(String groupId) async {
     try {
+      String token = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.put(
             "${this._hostUrl}/rada/api/v1/counseling/$groupId",
-            options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: 10000),
+            options: Options(headers: {
+              'Authorization': token,
+            }, sendTimeout: 10000),
           );
       return Left(
         GroupDTO(
@@ -213,11 +224,12 @@ class CounselingServiceProvider {
   ///delete group
   Future<Either<GroupDTO, ErrorMessage>?> deleteGroup(String groupId) async {
     try {
+      String token = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.delete(
             "${this._hostUrl}/rada/api/v1/counseling/$groupId",
-            options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: 10000),
+            options: Options(headers: {
+              'Authorization': token,
+            }, sendTimeout: 10000),
           );
       return Left(
         GroupDTO(
@@ -238,6 +250,7 @@ class CounselingServiceProvider {
   Future<Either<ChatDto, ErrorMessage>?> peerCounseling(
       ChatPayload chatData, String userId) async {
     try {
+      String token = await ServiceUtility.getAuthToken() as String;
       FormData formData = FormData.fromMap({
         'message': chatData.message,
         'sender_id': chatData.senderId,
@@ -248,9 +261,9 @@ class CounselingServiceProvider {
       final result = await this._httpClientConn.post(
             "${this._hostUrl}/rada/api/v1/counseling/peerToPeerCounseling",
             data: formData,
-            options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: 10000),
+            options: Options(headers: {
+              'Authorization': token,
+            }, sendTimeout: 10000),
           );
       return Left(
         ChatDto.fromJson(result.data),
@@ -268,6 +281,7 @@ class CounselingServiceProvider {
   Future<Either<ChatDto, ErrorMessage>?> groupCounseling(
       ChatPayload chatData, String userId) async {
     try {
+      String token = await ServiceUtility.getAuthToken() as String;
       FormData formData = FormData.fromMap({
         'message': chatData.message,
         'sender_id': chatData.senderId,
@@ -279,9 +293,9 @@ class CounselingServiceProvider {
       final result = await this._httpClientConn.post(
             "${this._hostUrl}/rada/api/v1/counseling/groupCounseling",
             data: formData,
-            options: Options(
-                headers: {'Authorization': ServiceUtility.getAuthToken()},
-                sendTimeout: 10000),
+            options: Options(headers: {
+              'Authorization': token,
+            }, sendTimeout: 10000),
           );
       return Left(
         ChatDto.fromJson(result.data),

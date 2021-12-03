@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/screens/helpScreenTab/issues.dart';
 import 'package:rada_egerton/screens/contributors.dart';
 import 'package:rada_egerton/screens/counseling.dart';
 import 'package:rada_egerton/screens/dashboard.dart';
@@ -54,6 +55,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => ProfileScreen());
     case AppRoutes.contributors:
       return MaterialPageRoute(builder: (context) => ContributorScreen());
+    
     default:
       return MaterialPageRoute(builder: (context) => PageNotFound());
   }

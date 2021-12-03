@@ -149,7 +149,7 @@ class PeerMsg {
         message: json["message"],
         imageUrl: json["imageUrl"],
         senderId: json["sender_id"],
-        groupsId: json["Groups_id"] == null ? null : json["Groups_id"],
+        groupsId: json["Groups_id"] == null ? '' : json["Groups_id"],
         reply: json["reply"],
         status: json["status"],
         reciepient: json["reciepient"],

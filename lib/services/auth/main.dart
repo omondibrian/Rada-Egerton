@@ -6,10 +6,13 @@ import 'package:rada_egerton/entities/AuthDTO.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/services/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class AuthServiceProvider {
   String _hostUrl = BASE_URL;
   Dio _httpClientConn = Dio();
+  
+  Future<bool> isConnected() => InternetConnectionChecker().hasConnection;
 
   Future<Either<void, ErrorMessage>> registerNewUser(AuthDTO user) async {
     try {

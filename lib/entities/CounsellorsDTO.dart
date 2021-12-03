@@ -4,10 +4,13 @@ class CounsellorsDTO {
   final bool isOnline;
   final String expertise;
   final String imgUrl;
+    final String? id;
+
   CounsellorsDTO(
       {required this.name,
       required this.rating,
       required this.isOnline,
       required this.expertise,
-      required this.imgUrl});
+      required this.imgUrl,
+      this.id,});
 }
