@@ -11,7 +11,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:rada_egerton/providers/counselors.provider.dart';
 
 class PrivateSessionsTab extends StatelessWidget {
-
   PrivateSessionsTab({Key? key}) : super(key: key);
   final String userId = "3"; //to be changed later
   sendMessage(ChatPayload chat, String userId) async {
@@ -28,18 +27,19 @@ class PrivateSessionsTab extends StatelessWidget {
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
-    
+
     Future<void> _refreshChat() async {
       await Future.delayed(Duration(milliseconds: 1000));
     }
 
-    Widget conversationBuilder(BuildContext ctx, int index)  {
+    Widget conversationBuilder(BuildContext ctx, int index) {
       var counsellorId = conversations[index].senderId == this.userId
           ? conversations[index].reciepient
           : conversations[index].senderId;
 
-      var infoConversations = counselorprovider.counselorById(counsellorId);;
-
+      var infoConversations = counselorprovider.counselorById(counsellorId);
+    
+      print(" info = $infoConversations");
       return GestureDetector(
         onTap: () => Navigator.push(
           context,
@@ -59,7 +59,8 @@ class PrivateSessionsTab extends StatelessWidget {
             radius: SizeConfig.isTabletWidth ? 98 : 20.0,
             child: ClipOval(
               child: CachedNetworkImage(
-                imageUrl: "$BASE_URL/api/v1/uploads/${infoConversations!.imgUrl}",
+                imageUrl:
+                    "$BASE_URL/api/v1/uploads/${infoConversations!.imgUrl}",
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(

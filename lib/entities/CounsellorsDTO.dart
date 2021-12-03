@@ -4,7 +4,7 @@ class CounsellorsDTO {
   final bool isOnline;
   final String expertise;
   final String imgUrl;
-    final String? id;
+  final String? id;
 
   CounsellorsDTO(
       {required this.name,
@@ -13,4 +13,6 @@ class CounsellorsDTO {
       required this.expertise,
       required this.imgUrl,
       this.id,});
+
+    
 }

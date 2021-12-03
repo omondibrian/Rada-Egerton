@@ -73,8 +73,10 @@ class CounselorProvider with ChangeNotifier {
   CounsellorsDTO? counselorById(String id) {
     CounsellorsDTO? result;
     for (var i = 0; i < this._counselors.length; i++) {
+      print(" cid = ${this._counselors[i]}");
       if (this._counselors[i].id == id) {
         result = this._counselors[i];
+        print(" counsellor = ${this._counselors[i]}");
       }
     }
     return result;
