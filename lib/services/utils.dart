@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:pusher_client/pusher_client.dart';
+import 'package:rada_egerton/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/services/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,6 +32,31 @@ class ServiceUtility {
       print(e.message);
     }
     return ErrorMessage(message: e.message, status: "400");
+  }
+
+  static List<Message> combinePeerMsgs(List<PeerMsg> msgs, String userId) {
+    List<String> userIds = [];
+    Message extractMsgs(String receipientId) {
+      List<PeerMsg> msg = [];
+      for (var i = 0; i < msgs.length; i++) {
+        //check if message belongs to the user and the current reciepient the add it to list
+        if (msgs[i].senderId == userId || msgs[i].senderId == receipientId) {
+          if (msgs[i].reciepient == userId ||
+              msgs[i].reciepient == receipientId) {
+            msg.add(msgs[i]);
+          }
+        }
+      }
+      return Message(recipient: receipientId, msg: msg);
+    }
+
+    //get a list of receipients compared to the user id
+    for (var i = 0; i < msgs.length; i++) {
+      userIds.add(
+          userId == msgs[i].senderId ? msgs[i].reciepient : msgs[i].senderId);
+    }
+
+    return userIds.toSet().toList().map(extractMsgs).toList();
   }
 }
 
@@ -66,4 +92,10 @@ class ErrorMessage {
   String message;
   String status;
   ErrorMessage({required this.message, required this.status});
+}
+
+class Message {
+  String recipient;
+  List<PeerMsg> msg;
+  Message({required this.recipient, required this.msg});
 }

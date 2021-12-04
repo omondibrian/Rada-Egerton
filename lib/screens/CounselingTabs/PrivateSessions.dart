@@ -1,3 +1,5 @@
+import 'package:rada_egerton/services/utils.dart';
+
 import '../../sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,24 +23,23 @@ class PrivateSessionsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final counselorprovider = Provider.of<CounselorProvider>(context);
-    var conversations = counselorprovider.conversations.data.payload.peerMsgs;
-    counselorprovider.getConversations();
-
+    var conversations = ServiceUtility.combinePeerMsgs(
+      counselorprovider.conversations.data.payload.peerMsgs,
+      this.userId,
+    );
+  
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
 
     Future<void> _refreshChat() async {
-      await Future.delayed(Duration(milliseconds: 1000));
+      counselorprovider.getConversations();
     }
 
     Widget conversationBuilder(BuildContext ctx, int index) {
-      var counsellorId = conversations[index].senderId == this.userId
-          ? conversations[index].reciepient
-          : conversations[index].senderId;
-
+      var counsellorId = conversations[index].recipient;
       var infoConversations = counselorprovider.counselorById(counsellorId);
-    
+
       print(" info = $infoConversations");
       return GestureDetector(
         onTap: () => Navigator.push(
@@ -47,7 +48,7 @@ class PrivateSessionsTab extends StatelessWidget {
             builder: (context) => ChatScreen<PeerMsg>(
               title: '${infoConversations!.name}',
               imgUrl: "$BASE_URL/api/v1/uploads/${infoConversations.imgUrl}",
-              msgs: conversations,
+              msgs: conversations[index].msg,
               sendMessage: sendMessage,
               groupId: "",
               reciepient: counsellorId,
@@ -74,7 +75,7 @@ class PrivateSessionsTab extends StatelessWidget {
           ),
           title: Text('${infoConversations.name}', style: style),
           subtitle: Text(
-            conversations.last.message,
+            conversations[index].msg.last.message,
             style: TextStyle(
               color: Theme.of(ctx).primaryColor,
               fontSize: SizeConfig.isTabletWidth ? 16 : 14,

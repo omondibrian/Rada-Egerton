@@ -22,7 +22,6 @@ class GroupSessionsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final counselorprovider = Provider.of<CounselorProvider>(context);
     var conversations = counselorprovider.conversations.data.payload.groupMsgs;
-    counselorprovider.getConversations();
 
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
