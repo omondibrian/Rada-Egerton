@@ -8,16 +8,6 @@ class CounsellorsDataSource {
   List<CounsellorsDTO> _counsellors = [];
   List<PeerCounsellorDto>? _peerCounsellors;
 
-  Future<List<CounsellorsDTO>> fetchCounselors() async {
-    CounselingServiceProvider counselingProvider = CounselingServiceProvider();
-    var results = await counselingProvider.fetchCounsellors();
-    results.fold(
-      (counsellors) => this._counsellors = counsellors,
-      (error) => print('Error from fetchCounsellors() :${error.message}'),
-    );
-    return this._counsellors;
-  }
-
   Future<CounsellorsDTO?> fetchCounsellor(String id) async {
     CounsellorsDTO? counsellor;
     CounselingServiceProvider counselingProvider = CounselingServiceProvider();
@@ -27,16 +17,6 @@ class CounsellorsDataSource {
       (error) => print('Error from fetchCounsellor() :${error.message}'),
     );
     return counsellor;
-  }
-
-  Future<List<PeerCounsellorDto>> fetchPeerCounselors() async {
-    CounselingServiceProvider counselingProvider = CounselingServiceProvider();
-    var results = await counselingProvider.fetchPeerCounsellors();
-    results.fold(
-      (counsellors) => this._peerCounsellors = counsellors,
-      (error) => print('Error from fetchPeerCounsellor() :${error.message}'),
-    );
-    return this._peerCounsellors!;
   }
 
   Future<UserChatDto> fetchChats() async {
@@ -100,8 +80,11 @@ class CounselorProvider with ChangeNotifier {
   }
 
   getConversations() async {
-    var result = await this._dataSource.fetchChats();
-    this._conversations = result;
+    var results = await _service.fetchUserMsgs();
+    results!.fold(
+      (userChats) => {this._conversations = userChats},
+      (error) => print('Error from fetchChats() :${error.message}'),
+    );
     notifyListeners();
   }
 
