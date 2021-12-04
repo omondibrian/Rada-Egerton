@@ -5,7 +5,6 @@ import 'package:rada_egerton/services/constants.dart';
 import 'package:rada_egerton/widgets/ratingBar.dart';
 import '../../providers/counselors.provider.dart';
 import '../../sizeConfig.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CounselorsTab extends StatelessWidget {
   const CounselorsTab({Key? key}) : super(key: key);
@@ -15,14 +14,15 @@ class CounselorsTab extends StatelessWidget {
     final counselorprovider = Provider.of<CounselorProvider>(context);
     var counselors = counselorprovider.counselors;
 
-    Future<void> _refreshChat() async {
+    Future<void> _refresh() async {
       counselorprovider.getCounsellors();
     }
 
-    counselorprovider.getCounsellors();
-
     Widget conselorsBuilder(BuildContext cxt, int index) {
       return Card(
+        elevation: 1,
+        margin: EdgeInsets.only(bottom: 10),
+         
         child: Row(
           children: [
             Column(
@@ -43,7 +43,8 @@ class CounselorsTab extends StatelessWidget {
                         width: SizeConfig.isTabletWidth ? 120 : 90,
                         height: SizeConfig.isTabletWidth ? 120 : 90,
                       ),
-                      placeholder: (context, url) => SpinKitFadingCircle(
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
@@ -81,25 +82,27 @@ class CounselorsTab extends StatelessWidget {
       );
     }
 
-    return counselors.isNotEmpty
-        ? RefreshIndicator(
-            onRefresh: () => _refreshChat(),
-            backgroundColor: Theme.of(context).primaryColor,
-            color: Colors.white,
-            displacement: 20.0,
-            edgeOffset: 5.0,
-            child: ListView.builder(
-              itemBuilder: conselorsBuilder,
-              itemCount: counselors.length,
+    return counselorprovider.counselorsLoading
+        ? Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
             ),
           )
-        : Center(
-            child: SizedBox(
-              width: 80,
-              height: 80,
-              child:
-                  SpinKitSpinningLines(color: Theme.of(context).primaryColor),
-            ),
-          );
+        : counselors.isNotEmpty
+            ? RefreshIndicator(
+                onRefresh: () => _refresh(),
+                backgroundColor: Theme.of(context).primaryColor,
+                color: Colors.white,
+                displacement: 20.0,
+                edgeOffset: 5.0,
+                child: ListView.builder(
+                  itemBuilder: conselorsBuilder,
+                  itemCount: counselors.length,
+                ),
+              )
+            : Padding(
+                padding: EdgeInsets.all(8),
+                child: Text("No counselors available"),
+              );
   }
 }

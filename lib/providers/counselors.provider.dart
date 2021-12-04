@@ -6,7 +6,7 @@ import 'package:rada_egerton/services/counseling/main.dart';
 
 class CounsellorsDataSource {
   List<CounsellorsDTO> _counsellors = [];
-  List<PeerCounsellorDto> _peerCounsellors = [];
+  List<PeerCounsellorDto>? _peerCounsellors;
 
   Future<List<CounsellorsDTO>> fetchCounselors() async {
     CounselingServiceProvider counselingProvider = CounselingServiceProvider();
@@ -36,7 +36,7 @@ class CounsellorsDataSource {
       (counsellors) => this._peerCounsellors = counsellors,
       (error) => print('Error from fetchPeerCounsellor() :${error.message}'),
     );
-    return this._peerCounsellors;
+    return this._peerCounsellors!;
   }
 
   Future<UserChatDto> fetchChats() async {
@@ -55,6 +55,15 @@ class CounselorProvider with ChangeNotifier {
   var _dataSource = CounsellorsDataSource();
   List<CounsellorsDTO> _counselors = [];
   List<PeerCounsellorDto> _peerCounsellors = [];
+  CounselingServiceProvider _service = CounselingServiceProvider();
+  bool counselorsLoading = true;
+  bool peerCouselorsLoading = true;
+
+  CounselorProvider() {
+    getCounsellors();
+    getPeerCounsellors();
+  }
+
   late UserChatDto _conversations = UserChatDto(
     data: Data(
       msg: '',
@@ -63,9 +72,9 @@ class CounselorProvider with ChangeNotifier {
   );
 
   List<CounsellorsDTO> get counselors {
-    if (this._counselors.length != 0) {
-      getCounsellors();
-    }
+    // if (this._counselors.length != 0) {
+    //   getCounsellors();
+    // }
 
     return [...this._counselors];
   }
@@ -83,9 +92,6 @@ class CounselorProvider with ChangeNotifier {
   }
 
   List<PeerCounsellorDto> get peerCounselors {
-    if (this._peerCounsellors.length != 0) {
-      getPeerCounsellors();
-    }
     return [...this._peerCounsellors];
   }
 
@@ -100,14 +106,23 @@ class CounselorProvider with ChangeNotifier {
   }
 
   getCounsellors() async {
-    var result = await this._dataSource.fetchCounselors();
-    this._counselors = result;
+    final results = await _service.fetchCounsellors();
+    results.fold((counsellors) {
+      this._counselors = counsellors;
+    }, (error) => {});
+    counselorsLoading = false;
     notifyListeners();
   }
 
   getPeerCounsellors() async {
-    var result = await this._dataSource.fetchPeerCounselors();
-    this._peerCounsellors = result;
+    final results = await _service.fetchPeerCounsellors();
+    results.fold(
+      (peerCounselors) {
+        this._peerCounsellors = peerCounselors;
+      },
+      (error) => {},
+    );
+    peerCouselorsLoading = false;
     notifyListeners();
   }
 

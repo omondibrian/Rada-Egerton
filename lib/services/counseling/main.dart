@@ -10,6 +10,7 @@ import 'package:rada_egerton/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/entities/CounsellorsDTO.dart';
 import 'package:rada_egerton/entities/PeerCounsellorDTO.dart';
 
+
 class CounselingServiceProvider {
   String _hostUrl = BASE_URL;
   Dio _httpClientConn = Dio();
@@ -36,11 +37,10 @@ class CounselingServiceProvider {
             isOnline: payload[i]['status'] == "online",
             expertise: payload[i]['expertise'],
             imgUrl: payload[i]['profilePic'],
-            id: payload[i]["_id"],
+            id: payload[i]["_id"].toString(),
           ),
         );
       }
-      print(counsellors);
     } on DioError catch (e) {
       return Right(
         ServiceUtility.handleDioExceptions(e),
