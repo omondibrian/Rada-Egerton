@@ -37,12 +37,12 @@ class _IssuesState extends State<Issues> {
           (l) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text("Issue created successfuly",
                     style: TextStyle(color: Theme.of(context).primaryColor)),
-                duration: Duration(seconds: 10000),
+                duration: Duration(seconds: 10),
               )),
           (r) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text("Issue created successfuly",
                     style: TextStyle(color: Theme.of(context).errorColor)),
-                duration: Duration(seconds: 10000),
+                duration: Duration(seconds: 10),
                 action: SnackBarAction(label: "retry", onPressed: createIssue),
               )));
     }
