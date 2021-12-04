@@ -1,53 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/entities/CounsellorsDTO.dart';
+import 'package:rada_egerton/entities/GroupsDTO.dart';
 import 'package:rada_egerton/entities/PeerCounsellorDTO.dart';
-import 'package:rada_egerton/entities/UserChatsDTO.dart';
+import 'package:rada_egerton/entities/UserChatsDTO.dart' as User;
 import 'package:rada_egerton/services/counseling/main.dart';
 
-class CounsellorsDataSource {
-  List<CounsellorsDTO> _counsellors = [];
-  List<PeerCounsellorDto>? _peerCounsellors;
-
-  Future<CounsellorsDTO?> fetchCounsellor(String id) async {
-    CounsellorsDTO? counsellor;
-    CounselingServiceProvider counselingProvider = CounselingServiceProvider();
-    var results = await counselingProvider.fetchCounsellor(id);
-    results.fold(
-      (counsellor) => counsellor = counsellor,
-      (error) => print('Error from fetchCounsellor() :${error.message}'),
-    );
-    return counsellor;
-  }
-
-  Future<UserChatDto> fetchChats() async {
-    var chats;
-    CounselingServiceProvider counselingProvider = CounselingServiceProvider();
-    var results = await counselingProvider.fetchUserMsgs();
-    results!.fold(
-      (userChats) => chats = userChats,
-      (error) => print('Error from fetchChats() :${error.message}'),
-    );
-    return chats;
-  }
-}
 
 class CounselorProvider with ChangeNotifier {
-  var _dataSource = CounsellorsDataSource();
   List<CounsellorsDTO> _counselors = [];
   List<PeerCounsellorDto> _peerCounsellors = [];
   CounselingServiceProvider _service = CounselingServiceProvider();
+  late GroupsDto _forums ;
+
   bool counselorsLoading = true;
   bool peerCouselorsLoading = true;
 
   CounselorProvider() {
     getCounsellors();
     getPeerCounsellors();
+    getForums();
+    getConversations();
   }
 
-  late UserChatDto _conversations = UserChatDto(
-    data: Data(
+   User.UserChatDto _conversations = User.UserChatDto(
+    data: User.Data(
       msg: '',
-      payload: Payload(forumMsgs: [], peerMsgs: [], groupMsgs: []),
+      payload: User.Payload(forumMsgs: [], peerMsgs: [], groupMsgs: []),
     ),
   );
 
@@ -75,7 +53,7 @@ class CounselorProvider with ChangeNotifier {
     return [...this._peerCounsellors];
   }
 
-  UserChatDto get conversations {
+  User.UserChatDto get conversations {
     return this._conversations;
   }
 
@@ -84,6 +62,16 @@ class CounselorProvider with ChangeNotifier {
     results!.fold(
       (userChats) => {this._conversations = userChats},
       (error) => print('Error from fetchChats() :${error.message}'),
+    );
+    notifyListeners();
+  }
+
+
+  getForums() async {
+    var results = await _service.fetchStudentForums();
+    results!.fold(
+      (forums) => {this._forums = forums},
+      (error) => print('Error from fetchForums() :${error.message}'),
     );
     notifyListeners();
   }
