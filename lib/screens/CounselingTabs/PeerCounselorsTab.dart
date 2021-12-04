@@ -15,14 +15,13 @@ class PeerCounselorsTab extends StatelessWidget {
     final counselorprovider = Provider.of<CounselorProvider>(context);
     var counselors = counselorprovider.peerCounselors;
 
-    Future<void> _refreshChat() async {
+    Future<void> _refresh() async {
       counselorprovider.getPeerCounsellors();
-      print('refresh');
     }
 
-    print(counselors);
     Widget peerCounsellorBuilder(BuildContext cxt, int index) {
       return Card(
+        margin: EdgeInsets.only(bottom: 10),
         child: Row(
           children: [
             Column(
@@ -43,7 +42,7 @@ class PeerCounselorsTab extends StatelessWidget {
                         width: SizeConfig.isTabletWidth ? 120 : 90,
                         height: SizeConfig.isTabletWidth ? 120 : 90,
                       ),
-                      placeholder: (context, url) => SpinKitFadingCircle(
+                      placeholder: (context, url) => CircularProgressIndicator(
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
@@ -76,25 +75,27 @@ class PeerCounselorsTab extends StatelessWidget {
       );
     }
 
-    return counselors.isNotEmpty
-        ? RefreshIndicator(
-            onRefresh: () => _refreshChat(),
+    return counselorprovider.peerCouselorsLoading
+        ? Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ),
+          )
+        : RefreshIndicator(
+            onRefresh: () => _refresh(),
             backgroundColor: Theme.of(context).primaryColor,
             color: Colors.white,
             displacement: 20.0,
             edgeOffset: 5.0,
-            child: ListView.builder(
-              itemBuilder: peerCounsellorBuilder,
-              itemCount: counselors.length,
-            ),
-          )
-        : Center(
-            child: SizedBox(
-              width: 80,
-              height: 80,
-              child:
-                  SpinKitSpinningLines(color: Theme.of(context).primaryColor),
-            ),
+            child: counselors.isNotEmpty
+                ? ListView.builder(
+                    itemBuilder: peerCounsellorBuilder,
+                    itemCount: counselors.length,
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("No peer couselor available"),
+                  ),
           );
   }
 }
