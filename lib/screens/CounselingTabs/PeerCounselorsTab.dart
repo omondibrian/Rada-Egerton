@@ -14,7 +14,6 @@ class PeerCounselorsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final counselorprovider = Provider.of<CounselorProvider>(context);
     var counselors = counselorprovider.peerCounselors;
-    counselorprovider.getPeerCounsellors();
 
     Future<void> _refreshChat() async {
       counselorprovider.getPeerCounsellors();
