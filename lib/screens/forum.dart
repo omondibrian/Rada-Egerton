@@ -17,13 +17,14 @@ class Forum extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final counselorprovider = Provider.of<CounselorProvider>(context);
-    var conversations = counselorprovider.conversations.data.payload.forumMsgs;
-    counselorprovider.getConversations();
+    var forumsConversations =
+        counselorprovider.conversations.data.payload.forumMsgs;
     Widget forumBuilder(BuildContext context, int index) {
-      var forums = conversations[index].info;
-      var messages = conversations[index].messages;
-      String imageUrl = "$BASE_URL/api/v1/uploads/${forums.image}";
-
+      var forum = forumsConversations[index].info;
+      var messages = forumsConversations[index].messages;
+      print(messages);
+      String imageUrl = "$BASE_URL/api/v1/uploads/${forum.image}";
+      print(forum);
       sendMessage(ChatPayload chat, String userId) async {
         var service = CounselingServiceProvider();
         await service.groupCounseling(chat, userId);
@@ -34,24 +35,24 @@ class Forum extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => ChatScreen<PeerMsg>(
-              title: forums.title,
-              imgUrl:imageUrl,
+              title: forum.title,
+              imgUrl: imageUrl,
               msgs: messages,
               sendMessage: sendMessage,
-              groupId: forums.id.toString(),
-              reciepient: forums.id.toString(),
+              groupId: forum.id.toString(),
+              reciepient: forum.id.toString(),
             ),
           ),
         ),
         child: ListTile(
           leading: CircleAvatar(
             backgroundImage: CachedNetworkImageProvider(
-             imageUrl,
+              imageUrl,
             ),
           ),
           title:
-              Text(forums.title, style: Theme.of(context).textTheme.headline1),
-          subtitle: Text(conversations.last.messages.last.message,
+              Text(forum.title, style: Theme.of(context).textTheme.headline1),
+          subtitle: Text("say something...",
               style: Theme.of(context).textTheme.bodyText1),
         ),
       );
@@ -62,17 +63,23 @@ class Forum extends StatelessWidget {
         title: Text('Forums'),
       ),
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () => _refreshChat(),
-          backgroundColor: Theme.of(context).primaryColor,
-          color: Colors.white,
-          displacement: 20.0,
-          edgeOffset: 5.0,
-          child: ListView.builder(
-            itemBuilder: forumBuilder,
-            itemCount: conversations.length,
-          ),
-        ),
+        child: forumsConversations.isEmpty
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
+                ),
+              )
+            : RefreshIndicator(
+                onRefresh: () => _refreshChat(),
+                backgroundColor: Theme.of(context).primaryColor,
+                color: Colors.white,
+                displacement: 20.0,
+                edgeOffset: 5.0,
+                child: ListView.builder(
+                  itemBuilder: forumBuilder,
+                  itemCount: forumsConversations.length,
+                ),
+              ),
       ),
     );
   }
