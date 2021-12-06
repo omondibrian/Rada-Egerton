@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rada_egerton/providers/UserProvider.dart';
 import 'package:rada_egerton/providers/counselors.provider.dart';
 import 'package:rada_egerton/theme.dart';
 
@@ -14,8 +15,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => CounselorProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => CounselorProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => RadaApplicationProvider(),
+        )
+      ],
       child: MaterialApp(
           title: 'Rada',
           debugShowCheckedModeBanner: false,

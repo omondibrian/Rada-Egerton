@@ -10,7 +10,6 @@ import 'package:rada_egerton/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/entities/CounsellorsDTO.dart';
 import 'package:rada_egerton/entities/PeerCounsellorDTO.dart';
 
-
 class CounselingServiceProvider {
   String _hostUrl = BASE_URL;
   Dio _httpClientConn = Dio();
@@ -273,6 +272,7 @@ class CounselingServiceProvider {
               'Authorization': token,
             }, sendTimeout: 10000),
           );
+      print(result.data);
       return Left(
         ChatDto.fromJson(result.data),
       );

@@ -11,7 +11,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 class AuthServiceProvider {
   String _hostUrl = BASE_URL;
   Dio _httpClientConn = Dio();
-  
+
   Future<bool> isConnected() => InternetConnectionChecker().hasConnection;
 
   Future<Either<void, ErrorMessage>> registerNewUser(AuthDTO user) async {
@@ -19,7 +19,6 @@ class AuthServiceProvider {
       final result = await this._httpClientConn.post(
           "${this._hostUrl}/api/v1/admin/user/register",
           data: user.toJson());
-      print(result);
     } on DioError catch (e) {
       Right(
         ServiceUtility.handleDioExceptions(e),
@@ -49,25 +48,12 @@ class AuthServiceProvider {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     try {
       String authToken = await ServiceUtility.getAuthToken() as String;
-
       var _profile = await this._httpClientConn.put(
           "${this._hostUrl}/api/v1/admin/user/profile",
           options: Options(
               headers: {'Authorization': authToken}, sendTimeout: 10000),
           data: data);
-      print(_profile.data);
-      _prefs.setString("user", jsonEncode(_profile.data));
-      return Left(
-        UserDTO(
-          email: _profile.data['user']['email'],
-          id: _profile.data['user']['_id'],
-          dob: _profile.data['user']['dob'],
-          userName: _profile.data['user']['userName'],
-          phone: _profile.data['user']['phone'],
-          profilePic: _profile.data['user']['profilePic'],
-          gender: _profile.data['user']['gender'],
-        ),
-      );
+      return this._saveUser(_profile, _prefs);
     } on DioError catch (e) {
       Right(
         ServiceUtility.handleDioExceptions(e),
@@ -79,33 +65,30 @@ class AuthServiceProvider {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     try {
       final authToken = await ServiceUtility.getAuthToken();
-      print('authToken  = $authToken');
-
-      var _profile = await this._httpClientConn.get(
-            "${this._hostUrl}/api/v1/admin/user/profile",
-            options: Options(
-                headers: {'Authorization': authToken}, sendTimeout: 10000),
-          );
-
-      _prefs.setString("user", jsonEncode(_profile.data));
-      return Left(
-        UserDTO(
-          email: _profile.data['user']['email'],
-          id: _profile.data['user']['_id'].toString(),
-          dob: _profile.data['user']['dob'] == 'undefined'
-              ? 'default'
-              : _profile.data['user']['dob'],
-          userName: _profile.data['user']['name'],
-          phone: _profile.data['user']['phone'],
-          profilePic: _profile.data['user']['profilePic'],
-          gender: _profile.data['user']['gender'],
-        ),
-      );
+      String? _user = _prefs.getString("user");
+      print(_user);
+      if (_user == null) {
+        print('usrs gfjfhfh');
+        var _profile = await this._httpClientConn.get(
+              "${this._hostUrl}/api/v1/admin/user/profile",
+              options: Options(
+                  headers: {'Authorization': authToken}, sendTimeout: 10000),
+            );
+        // print(_profile.data);
+        return _saveUser(_profile, _prefs);
+      }
+      return Left(UserDTO.fromJson(json.decode(_user)));
     } on DioError catch (e) {
       Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
     // return null;
+  }
+
+  _saveUser(Response<dynamic> _profile, SharedPreferences _prefs) {
+    var user = UserDTO.fromJson(_profile.data["user"]);
+    _prefs.setString("user", userDtoToJson(user));
+    return Left(user);
   }
 }

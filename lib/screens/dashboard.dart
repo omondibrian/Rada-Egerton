@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../sizeConfig.dart';
 
 enum FilterOptions { Profile, Contributors, LogOut }
@@ -68,6 +69,11 @@ class Dashboard extends StatelessWidget {
               PopupMenuItem(
                 child: Text('Logout'),
                 value: FilterOptions.LogOut,
+                onTap: () async {
+                  SharedPreferences _prefs =
+                      await SharedPreferences.getInstance();
+                  _prefs.clear();
+                },
               ),
               PopupMenuItem(
                 child: Text('Profile'),
@@ -134,5 +140,4 @@ List dashboardItems = [
     'leadingIcon': 'assets/mentor.svg',
     'routeName': AppRoutes.mentorship
   },
-
 ];

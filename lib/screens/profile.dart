@@ -17,7 +17,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late UserDTO _user = UserDTO.defaultDTO();
+  late UserDTO _user;
 
   Future<void> initializeState() async {
     AuthServiceProvider _authService = AuthServiceProvider();
@@ -164,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Column(
                                 children: <Widget>[
                                   TextFormField(
-                                     decoration: InputDecoration(
+                                    decoration: InputDecoration(
                                       hintText: "Enter userName",
                                     ),
                                     enabled: !userInfoControllerStatus,
@@ -173,8 +173,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         errorText: "Required"),
                                   ),
                                   TextFormField(
-                                     decoration: InputDecoration(
-                                      hintText: "Enter ",//TODOS
+                                    decoration: InputDecoration(
+                                      hintText: "Enter ", //TODOS
                                     ),
                                     enabled: !userInfoControllerStatus,
                                     controller: _emailController,

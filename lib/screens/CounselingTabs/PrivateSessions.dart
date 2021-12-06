@@ -1,3 +1,4 @@
+import 'package:rada_egerton/providers/UserProvider.dart';
 import 'package:rada_egerton/services/utils.dart';
 
 import '../../sizeConfig.dart';
@@ -14,7 +15,6 @@ import 'package:rada_egerton/providers/counselors.provider.dart';
 
 class PrivateSessionsTab extends StatelessWidget {
   PrivateSessionsTab({Key? key}) : super(key: key);
-  final String userId = "3"; //to be changed later
   sendMessage(ChatPayload chat, String userId) async {
     var service = CounselingServiceProvider();
     await service.peerCounseling(chat, userId);
@@ -23,11 +23,18 @@ class PrivateSessionsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final counselorprovider = Provider.of<CounselorProvider>(context);
+    final appProvider = Provider.of<RadaApplicationProvider>(context);
+    String userId = "";
+    if (appProvider.user != null) {
+      userId = appProvider.user!.id; 
+
+    }
+
     var conversations = ServiceUtility.combinePeerMsgs(
       counselorprovider.conversations.data.payload.peerMsgs,
-      this.userId,
+      userId,
     );
-  
+
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
@@ -40,7 +47,6 @@ class PrivateSessionsTab extends StatelessWidget {
       var counsellorId = conversations[index].recipient;
       var infoConversations = counselorprovider.counselorById(counsellorId);
 
-      print(" info = $infoConversations");
       return GestureDetector(
         onTap: () => Navigator.push(
           context,
@@ -75,7 +81,7 @@ class PrivateSessionsTab extends StatelessWidget {
           ),
           title: Text('${infoConversations.name}', style: style),
           subtitle: Text(
-            conversations[index].msg.last.message,
+            "say something",
             style: TextStyle(
               color: Theme.of(ctx).primaryColor,
               fontSize: SizeConfig.isTabletWidth ? 16 : 14,
