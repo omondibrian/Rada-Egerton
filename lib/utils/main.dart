@@ -65,6 +65,7 @@ class Pusher {
       // host: BASE_URL,
       cluster: "eu",
       // wsPort: 80,
+
       encrypted: false,
       auth: PusherAuth(
         "$BASE_URL/rada/api/v1/pusher/auth",
@@ -74,7 +75,8 @@ class Pusher {
       ),
     );
 
-    this._pusher = PusherClient(appKey, options, autoConnect: true);
+    this._pusher =
+        PusherClient(appKey, options, autoConnect: true, enableLogging: false);
   }
 
   PusherClient getConnection() {

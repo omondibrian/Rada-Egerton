@@ -40,13 +40,14 @@ class GroupSessionsTab extends StatelessWidget {
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen<ChatPayload>(
+            builder: (context) => ChatScreen(
               title: infoConversations.title,
               imgUrl: "$BASE_URL/api/v1/uploads/${infoConversations.image}",
-              msgs: msgs,
               sendMessage: sendMessage,
               groupId: infoConversations.id.toString(),
               reciepient: infoConversations.id.toString(),
+              chatIndex: index,
+              mode: ChatModes.GROUP,
             ),
           ),
         ),

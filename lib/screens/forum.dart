@@ -36,13 +36,14 @@ class Forum extends StatelessWidget {
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen<ChatPayload>(
+            builder: (context) => ChatScreen(
               title: forum.title,
               imgUrl: imageUrl,
-              msgs: messages,
               sendMessage: sendMessage,
               groupId: forum.id.toString(),
               reciepient: forum.id.toString(),
+              chatIndex: index,
+              mode: ChatModes.FORUM,
             ),
           ),
         ),
