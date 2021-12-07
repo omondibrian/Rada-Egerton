@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:pusher_client/pusher_client.dart';
-import 'package:rada_egerton/entities/UserChatsDTO.dart';
-import 'package:rada_egerton/services/constants.dart';
+import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ServiceUtility {
@@ -31,10 +31,10 @@ class ServiceUtility {
     return ErrorMessage(message: e.message, status: "400");
   }
 
-  static List<Message> combinePeerMsgs(List<PeerMsg> msgs, String userId) {
+  static List<Message> combinePeerMsgs(List<ChatPayload> msgs, String userId) {
     List<String> userIds = [];
     Message extractMsgs(String receipientId) {
-      List<PeerMsg> msg = [];
+      List<ChatPayload> msg = [];
       for (var i = 0; i < msgs.length; i++) {
         //check if message belongs to the user and the current reciepient the add it to list
         if (msgs[i].senderId == userId || msgs[i].senderId == receipientId) {
@@ -94,6 +94,6 @@ class ErrorMessage {
 
 class Message {
   String recipient;
-  List<PeerMsg> msg;
+  List<ChatPayload> msg;
   Message({required this.recipient, required this.msg});
 }

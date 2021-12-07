@@ -1,4 +1,5 @@
-import 'package:rada_egerton/services/constants.dart';
+
+import 'package:rada_egerton/constants.dart';
 
 class News {
   News({

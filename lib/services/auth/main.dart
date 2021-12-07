@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
-import 'package:rada_egerton/services/utils.dart';
+import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/entities/AuthDTO.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
-import 'package:rada_egerton/services/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
@@ -16,7 +16,7 @@ class AuthServiceProvider {
 
   Future<Either<void, ErrorMessage>> registerNewUser(AuthDTO user) async {
     try {
-      final result = await this._httpClientConn.post(
+      await this._httpClientConn.post(
           "${this._hostUrl}/api/v1/admin/user/register",
           data: user.toJson());
     } on DioError catch (e) {
@@ -35,6 +35,7 @@ class AuthServiceProvider {
           data: {'email': email, 'password': password});
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('TOKEN', result.data["payload"]["token"]);
+      //TODO: remove print statement
       print(result.data["payload"]["token"]);
     } on DioError catch (e) {
       Right(

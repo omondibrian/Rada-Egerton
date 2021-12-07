@@ -1,14 +1,14 @@
 import '../../sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
-import 'package:rada_egerton/services/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
 import 'package:rada_egerton/entities/UserChatsDTO.dart';
+import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:rada_egerton/services/counseling/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:rada_egerton/providers/counselors.provider.dart';
 
 class GroupSessionsTab extends StatelessWidget {
   GroupSessionsTab({Key? key}) : super(key: key);
@@ -20,8 +20,8 @@ class GroupSessionsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final counselorprovider = Provider.of<CounselorProvider>(context);
-    var conversations = counselorprovider.conversations.data.payload.groupMsgs;
+    final chatsprovider = Provider.of<ChatProvider>(context);
+    var conversations = chatsprovider.groupMessages;
 
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
@@ -32,19 +32,21 @@ class GroupSessionsTab extends StatelessWidget {
 
     Widget conversationBuilder(BuildContext ctx, int index) {
       Info infoConversations = conversations[index].info;
-      var msgs = conversations[index].messages;
+      var msgs = conversations[index]
+          .messages
+          .map((msg) => chatsprovider.convertToChatPayload(msg))
+          .toList();
       return GestureDetector(
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen<PeerMsg>(
+            builder: (context) => ChatScreen<ChatPayload>(
               title: infoConversations.title,
               imgUrl: "$BASE_URL/api/v1/uploads/${infoConversations.image}",
               msgs: msgs,
               sendMessage: sendMessage,
               groupId: infoConversations.id.toString(),
-              reciepient: infoConversations.id.toString() ,
-              
+              reciepient: infoConversations.id.toString(),
             ),
           ),
         ),

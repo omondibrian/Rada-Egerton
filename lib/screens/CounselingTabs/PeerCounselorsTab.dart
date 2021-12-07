@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rada_egerton/constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:rada_egerton/providers/counselors.provider.dart';
-import 'package:rada_egerton/services/constants.dart';
 
 import '../../sizeConfig.dart';
 

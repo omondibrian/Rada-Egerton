@@ -1,15 +1,13 @@
-import 'package:rada_egerton/providers/UserProvider.dart';
-import 'package:rada_egerton/services/utils.dart';
-
 import '../../sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
-import 'package:rada_egerton/services/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
-import 'package:rada_egerton/entities/UserChatsDTO.dart';
-import 'package:rada_egerton/services/counseling/main.dart';
+import 'package:rada_egerton/providers/UserProvider.dart';
+import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:rada_egerton/providers/counselors.provider.dart';
 
@@ -20,6 +18,7 @@ class PrivateSessionsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final counselorprovider = Provider.of<CounselorProvider>(context);
+    final chatsprovider = Provider.of<ChatProvider>(context);
     final appProvider = Provider.of<RadaApplicationProvider>(context);
     String userId = "";
     if (appProvider.user != null) {
@@ -27,7 +26,7 @@ class PrivateSessionsTab extends StatelessWidget {
     }
     
     var conversations = ServiceUtility.combinePeerMsgs(
-      counselorprovider.conversations.data.payload.peerMsgs,
+      chatsprovider.privateMessages,
       userId,
     );
 
@@ -36,7 +35,7 @@ class PrivateSessionsTab extends StatelessWidget {
     );
 
     Future<void> _refreshChat() async {
-      counselorprovider.getConversations();
+      chatsprovider.getConversations();
     }
 
     Widget conversationBuilder(BuildContext ctx, int index) {
@@ -47,11 +46,11 @@ class PrivateSessionsTab extends StatelessWidget {
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen<PeerMsg>(
+            builder: (context) => ChatScreen<ChatPayload>(
               title: '${infoConversations!.name}',
               imgUrl: "$BASE_URL/api/v1/uploads/${infoConversations.imgUrl}",
               msgs: conversations[index].msg,
-              sendMessage:counselorprovider.sendPeerCounselingMessage,
+              sendMessage:chatsprovider.sendPeerCounselingMessage,
               groupId: "",
               reciepient: counsellorId,
             ),

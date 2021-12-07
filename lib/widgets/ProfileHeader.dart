@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/screens/widgets/Avator.dart';
+import 'package:rada_egerton/widgets/Avator.dart';
 
 class ProfileHeader extends StatelessWidget {
   final AssetImage coverImage;
