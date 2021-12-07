@@ -1,95 +1,92 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
-import 'package:rada_egerton/theme.dart';
 
-Widget chatInput(Function(ChatPayload chat, String userId) onSubmit,
-    String userId, String reciepient, String? groupId, String? replyId) {
+class ChatInputBar extends StatelessWidget {
+  final String userId;
+  final String reciepient;
+  final String? groupId;
+  final String? replyId;
   final _chatController = TextEditingController();
-  return ClipRRect(
-    // borderRadius: BorderRadius.circular(30.0),
-    child: Container(
+  final Function(ChatPayload chat, String userId) onSubmit;
+
+  ChatInputBar({
+    required this.onSubmit,
+    required this.groupId,
+    required this.userId,
+    required this.reciepient,
+    required this.replyId,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          // Button choose image
-          Material(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 1.0),
-              child: IconButton(
-                icon: Icon(Icons.image),
-                onPressed: () {},
-                color: Colors.black,
-              ),
-            ),
-            color: Colors.white,
+          Expanded(
+            child: ChatInput(),
           ),
-          //Emoji button
-          Material(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 1.0),
-              child: IconButton(
-                icon: Icon(Icons.face),
-                onPressed: () {},
-                color: Colors.black,
-              ),
-            ),
-            color: Colors.white,
+          SizedBox(
+            width: 5.0,
           ),
+          GestureDetector(
+            onTap: () {
+              var chat = ChatPayload(
+                groupsId: this.groupId,
+                id: 0,
+                imageUrl: "",
+                message: _chatController.text,
+                senderId: this.userId,
+                reciepient: this.reciepient,
+                reply: this.replyId,
+                status: "0",
+              );
 
-          // Edit text
-          Flexible(
-            child: Container(
-              child: TextField(
-                
-                controller: _chatController,
-                style: TextStyle(color: Colors.black87, fontSize: 15.0),
-                decoration: InputDecoration.collapsed(
-                  hintText: 'Type your message...',
-                  hintStyle: TextStyle(color: Colors.black, fontSize: 15.0),
-                ),
-              ),
+              this.onSubmit(chat, userId);
+              _chatController.clear();
+            },
+            child: CircleAvatar(
+              child: Icon(Icons.send),
             ),
-          ),
-
-          // Button send message
-          Material(
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Palette.accent,
-              ),
-              margin: EdgeInsets.symmetric(horizontal: 3.0),
-              child: IconButton(
-                icon: Icon(Icons.send),
-                onPressed: () {
-                  var chat = ChatPayload(
-                    groupsId: groupId,
-                    id: 0,
-                    imageUrl: "",
-                    message: _chatController.text,
-                    senderId: userId,
-                    reciepient: reciepient,
-                    reply: replyId,
-                    status: "0",
-                  );
-
-                  onSubmit(chat, userId);
-                  _chatController.clear();
-
-                },
-              ),
-            ),
-            color: Colors.white,
           ),
         ],
       ),
-      width: double.infinity,
-      height: 50.0,
-      decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Colors.black87, width: 0.5),
-          ),
-          color: Colors.white),
-    ),
-  );
+    );
+  }
 }
+class ChatInput extends StatelessWidget {
+  const ChatInput({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20.0),
+      child: Container(
+        color: Colors.white,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 8.0),
+            Icon(Icons.insert_emoticon,
+                size: 30.0, color: Theme.of(context).hintColor),
+            SizedBox(width: 8.0),
+            Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Type a message',
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+            Icon(Icons.attach_file,
+                size: 30.0, color: Theme.of(context).hintColor),
+            SizedBox(width: 8.0),
+            Icon(Icons.camera_alt,
+                size: 30.0, color: Theme.of(context).hintColor),
+            SizedBox(width: 8.0),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
