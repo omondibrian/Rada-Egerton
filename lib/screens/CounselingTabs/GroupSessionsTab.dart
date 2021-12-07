@@ -2,40 +2,30 @@ import '../../sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
-import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
 import 'package:rada_egerton/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
-import 'package:rada_egerton/services/counseling/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class GroupSessionsTab extends StatelessWidget {
   GroupSessionsTab({Key? key}) : super(key: key);
-
-  sendMessage(ChatPayload chat, String userId) async {
-    var service = CounselingServiceProvider();
-    await service.groupCounseling(chat, userId);
-  }
-
   @override
   Widget build(BuildContext context) {
     final chatsprovider = Provider.of<ChatProvider>(context);
+
     var conversations = chatsprovider.groupMessages;
 
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
     Future<void> _refreshChat() async {
-      await Future.delayed(Duration(milliseconds: 1000));
+      chatsprovider.getConversations();
     }
 
     Widget conversationBuilder(BuildContext ctx, int index) {
       Info infoConversations = conversations[index].info;
-      var msgs = conversations[index]
-          .messages
-          .map((msg) => chatsprovider.convertToChatPayload(msg))
-          .toList();
+
       return GestureDetector(
         onTap: () => Navigator.push(
           context,
@@ -43,7 +33,7 @@ class GroupSessionsTab extends StatelessWidget {
             builder: (context) => ChatScreen(
               title: infoConversations.title,
               imgUrl: "$BASE_URL/api/v1/uploads/${infoConversations.image}",
-              sendMessage: sendMessage,
+              sendMessage: chatsprovider.sendGroupMessage,
               groupId: infoConversations.id.toString(),
               reciepient: infoConversations.id.toString(),
               chatIndex: index,
@@ -75,7 +65,7 @@ class GroupSessionsTab extends StatelessWidget {
               color: Theme.of(ctx).primaryColor,
               fontSize: SizeConfig.isTabletWidth ? 16 : 14,
             ),
-          ), //TODO insert clickable functionality for chat
+          ), 
         ),
       );
     }

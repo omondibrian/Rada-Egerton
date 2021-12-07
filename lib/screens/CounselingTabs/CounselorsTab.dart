@@ -6,7 +6,6 @@ import '../../providers/counselors.provider.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/widgets/ratingBar.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
-import 'package:rada_egerton/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/services/counseling/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
