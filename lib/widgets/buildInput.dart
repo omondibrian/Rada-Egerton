@@ -40,6 +40,7 @@ Widget buildInput(Function(ChatPayload chat, String userId) onSubmit,
           Flexible(
             child: Container(
               child: TextField(
+                
                 controller: _chatController,
                 style: TextStyle(color: Colors.black87, fontSize: 15.0),
                 decoration: InputDecoration.collapsed(
@@ -75,7 +76,6 @@ Widget buildInput(Function(ChatPayload chat, String userId) onSubmit,
                   onSubmit(chat, userId);
                   _chatController.clear();
 
-                  print("message sent");
                 },
               ),
             ),

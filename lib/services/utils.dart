@@ -22,14 +22,11 @@ class ServiceUtility {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx and is also not 304.
     if (e.response != null) {
-      print(e.response!.data);
-      print(e.response!.requestOptions);
       return ErrorMessage(
           message: e.response!.data, status: e.response!.statusCode.toString());
     } else {
       // Something happened in setting up or sending the request that triggered an Error
-      print(e.requestOptions);
-      print(e.message);
+
     }
     return ErrorMessage(message: e.message, status: "400");
   }
@@ -65,8 +62,9 @@ class Pusher {
 
   Pusher({required String appKey, required String token}) {
     PusherOptions options = PusherOptions(
-      host: BASE_URL,
-      wsPort: 80,
+      // host: BASE_URL,
+      cluster: "eu",
+      // wsPort: 80,
       encrypted: false,
       auth: PusherAuth(
         "$BASE_URL/rada/api/v1/pusher/auth",

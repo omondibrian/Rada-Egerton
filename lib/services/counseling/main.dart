@@ -10,7 +10,6 @@ import 'package:rada_egerton/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/entities/CounsellorsDTO.dart';
 import 'package:rada_egerton/entities/PeerCounsellorDTO.dart';
 
-
 class CounselingServiceProvider {
   String _hostUrl = BASE_URL;
   Dio _httpClientConn = Dio();
@@ -62,7 +61,6 @@ class CounselingServiceProvider {
             }, sendTimeout: 10000),
           );
       payload = result.data["counsellor"];
-      print(payload);
     } on DioError catch (e) {
       Right(
         ServiceUtility.handleDioExceptions(e),
@@ -99,7 +97,6 @@ class CounselingServiceProvider {
       for (var i = 0; i < payload.length; i++) {
         peerCounsellors.add(PeerCounsellorDto.fromJson(payload[i]));
       }
-      print(peerCounsellors);
     } on DioError catch (e) {
       Right(
         ServiceUtility.handleDioExceptions(e),
@@ -273,6 +270,7 @@ class CounselingServiceProvider {
               'Authorization': token,
             }, sendTimeout: 10000),
           );
+      print(result.data);
       return Left(
         ChatDto.fromJson(result.data),
       );

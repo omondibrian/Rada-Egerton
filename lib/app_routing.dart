@@ -13,7 +13,7 @@ import 'package:rada_egerton/screens/mentorship.dart';
 import 'package:rada_egerton/screens/notification.dart';
 import 'package:rada_egerton/screens/profile.dart';
 import 'package:rada_egerton/screens/register.dart';
-import 'package:rada_egerton/screens/slash.dart';
+import 'package:rada_egerton/screens/splash.dart';
 
 import 'screens/information/information_list.dart';
 import 'screens/welcome.dart';

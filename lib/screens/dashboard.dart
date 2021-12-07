@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/providers/chat.provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../sizeConfig.dart';
 
 enum FilterOptions { Profile, Contributors, LogOut }
@@ -10,6 +13,9 @@ class Dashboard extends StatelessWidget {
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
+    final chatProvider = Provider.of<ChatProvider>(ctx);
+    // chatProvider.privateChannel();
+    
     return GestureDetector(
       onTap: () {
         Navigator.of(ctx).pushNamed(dashboardItems[index]['routeName']);
@@ -35,12 +41,12 @@ class Dashboard extends StatelessWidget {
             style: style,
           ),
           trailing: IconButton(
-            iconSize: 30,
-            color: Theme.of(ctx).primaryColor,
-            icon: Icon(Icons.arrow_forward_ios),
-            onPressed: () =>
-                Navigator.of(ctx).pushNamed(dashboardItems[index]['routeName']),
-          ),
+              iconSize: 30,
+              color: Theme.of(ctx).primaryColor,
+              icon: Icon(Icons.arrow_forward_ios),
+              onPressed: () {
+                Navigator.of(ctx).pushNamed(dashboardItems[index]['routeName']);
+              }),
         ),
       ),
     );
@@ -68,6 +74,11 @@ class Dashboard extends StatelessWidget {
               PopupMenuItem(
                 child: Text('Logout'),
                 value: FilterOptions.LogOut,
+                onTap: () async {
+                  SharedPreferences _prefs =
+                      await SharedPreferences.getInstance();
+                  _prefs.clear();
+                },
               ),
               PopupMenuItem(
                 child: Text('Profile'),
@@ -134,5 +145,4 @@ List dashboardItems = [
     'leadingIcon': 'assets/mentor.svg',
     'routeName': AppRoutes.mentorship
   },
-
 ];

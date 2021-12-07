@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/entities/CounsellorsDTO.dart';
 import 'package:rada_egerton/entities/GroupsDTO.dart';
 import 'package:rada_egerton/entities/PeerCounsellorDTO.dart';
 import 'package:rada_egerton/entities/UserChatsDTO.dart' as User;
 import 'package:rada_egerton/services/counseling/main.dart';
 
-
 class CounselorProvider with ChangeNotifier {
   List<CounsellorsDTO> _counselors = [];
   List<PeerCounsellorDto> _peerCounsellors = [];
   CounselingServiceProvider _service = CounselingServiceProvider();
-  late GroupsDto _forums ;
+  late GroupsDto _forums;
 
   bool counselorsLoading = true;
   bool peerCouselorsLoading = true;
@@ -22,7 +22,7 @@ class CounselorProvider with ChangeNotifier {
     getConversations();
   }
 
-   User.UserChatDto _conversations = User.UserChatDto(
+  User.UserChatDto _conversations = User.UserChatDto(
     data: User.Data(
       msg: '',
       payload: User.Payload(forumMsgs: [], peerMsgs: [], groupMsgs: []),
@@ -40,10 +40,8 @@ class CounselorProvider with ChangeNotifier {
   CounsellorsDTO? counselorById(String id) {
     CounsellorsDTO? result;
     for (var i = 0; i < this._counselors.length; i++) {
-      print(" cid = ${this._counselors[i]}");
       if (this._counselors[i].id == id) {
         result = this._counselors[i];
-        print(" counsellor = ${this._counselors[i]}");
       }
     }
     return result;
@@ -60,12 +58,13 @@ class CounselorProvider with ChangeNotifier {
   getConversations() async {
     var results = await _service.fetchUserMsgs();
     results!.fold(
-      (userChats) => {this._conversations = userChats},
+      (userChats) {
+        this._conversations = userChats;
+      },
       (error) => print('Error from fetchChats() :${error.message}'),
     );
     notifyListeners();
   }
-
 
   getForums() async {
     var results = await _service.fetchStudentForums();
@@ -97,7 +96,21 @@ class CounselorProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  getCounselingChats() {
-    return [];
+
+  sendPeerCounselingMessage(ChatPayload chat, String userId) async {
+    var service = CounselingServiceProvider();
+    final result = await service.peerCounseling(chat, userId);
+    result!.fold((chat) {
+      this._conversations.data.payload.peerMsgs.add(User.PeerMsg(
+          id: chat.data.payload.id,
+          message: chat.data.payload.message,
+          imageUrl: chat.data.payload.imageUrl,
+          senderId: chat.data.payload.senderId,
+          groupsId: chat.data.payload.groupsId??"",
+          reply: chat.data.payload.reply??"",
+          status: chat.data.payload.status,
+          reciepient: chat.data.payload.reciepient));
+    }, (r) => null);
+    notifyListeners();
   }
 }
