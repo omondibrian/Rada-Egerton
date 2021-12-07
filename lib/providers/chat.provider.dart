@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:rada_egerton/config.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:pusher_client/pusher_client.dart';
-import 'package:rada_egerton/entities/ChatDto.dart';
+import 'package:rada_egerton/entities/ChatDto.dart' as chats;
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/services/counseling/main.dart';
@@ -13,10 +16,9 @@ class ChatProvider with ChangeNotifier {
   late String _userId;
   late PusherClient _pusher;
 
-  List<ChatPayload> _privateMsgs = [];
+  List<chats.ChatPayload> _privateMsgs = [];
   List<Msg> _groupMsgs = [];
   List<Msg> _forumMsgs = [];
-
   String _channelName = "radaComms";
 
   CounselingServiceProvider _service = CounselingServiceProvider();
@@ -37,7 +39,19 @@ class ChatProvider with ChangeNotifier {
   void privateChannel() {
     this.channel = _pusher.subscribe("$_channelName$_userId");
     channel.bind(ChatEvent.CHAT, (PusherEvent? event) {
-      print(event!.data);
+      appendNewChat(
+        chats.ChatDto(
+          data: chats.Data(
+            msg: "",
+            payload: chats.Payload.fromJson(
+              jsonDecode(
+                event!.data as String,
+              )["chat"],
+            ),
+          ),
+        ),
+      );
+      notifyListeners();
     });
   }
 
@@ -88,19 +102,24 @@ class ChatProvider with ChangeNotifier {
     var service = CounselingServiceProvider();
     final result = await service.peerCounseling(chat, userId);
     result!.fold((chat) {
-      this._privateMsgs.add(
-            ChatPayload(
-              id: chat.data.payload.id,
-              message: chat.data.payload.message,
-              imageUrl: chat.data.payload.imageUrl,
-              senderId: chat.data.payload.senderId,
-              groupsId: chat.data.payload.groupsId ?? "",
-              reply: chat.data.payload.reply ?? "",
-              status: chat.data.payload.status,
-              reciepient: chat.data.payload.reciepient,
-            ),
-          );
+      appendNewChat(chat);
     }, (r) => null);
     notifyListeners();
+  }
+
+  void appendNewChat(ChatDto chat) {
+    this._privateMsgs.add(
+          ChatPayload(
+            id: chat.data.payload.id,
+            message: chat.data.payload.message,
+            imageUrl: chat.data.payload.imageUrl,
+            senderId: chat.data.payload.senderId,
+            groupsId: chat.data.payload.groupsId ?? "",
+            reply: chat.data.payload.reply ?? "",
+            status: chat.data.payload.status,
+            reciepient: chat.data.payload.reciepient,
+          ),
+        );
+    print(" chat ${_privateMsgs.length}");
   }
 }

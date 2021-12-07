@@ -6,7 +6,7 @@ Widget chatInput(Function(ChatPayload chat, String userId) onSubmit,
     String userId, String reciepient, String? groupId, String? replyId) {
   final _chatController = TextEditingController();
   return ClipRRect(
-    borderRadius: BorderRadius.circular(30.0),
+    // borderRadius: BorderRadius.circular(30.0),
     child: Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

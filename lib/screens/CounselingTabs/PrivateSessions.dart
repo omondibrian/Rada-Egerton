@@ -46,13 +46,14 @@ class PrivateSessionsTab extends StatelessWidget {
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen<ChatPayload>(
+            builder: (context) => ChatScreen(
               title: '${infoConversations!.name}',
               imgUrl: "$BASE_URL/api/v1/uploads/${infoConversations.imgUrl}",
-              msgs: conversations[index].msg,
               sendMessage:chatsprovider.sendPeerCounselingMessage,
               groupId: "",
               reciepient: counsellorId,
+              chatIndex: index,
+              mode: ChatModes.PRIVATE,
             ),
           ),
         ),

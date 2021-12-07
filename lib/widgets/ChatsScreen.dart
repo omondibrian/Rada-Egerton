@@ -1,61 +1,62 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
-import 'package:rada_egerton/entities/UserDTO.dart';
+import 'package:rada_egerton/providers/UserProvider.dart';
+import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:rada_egerton/services/auth/main.dart';
+import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/widgets/AppBar.dart';
 import 'package:rada_egerton/screens/chat/chat.dart';
-import 'package:rada_egerton/entities/UserChatsDTO.dart';
 
-class ChatScreen<T> extends StatefulWidget {
+class ChatScreen extends StatefulWidget {
   final String title;
   final String imgUrl;
-  final List<T> msgs;
   final Function(ChatPayload chat, String userId) sendMessage;
   final String reciepient;
   final String? groupId;
-
+  final int chatIndex;
+  final String mode;
   ChatScreen({
     Key? key,
     required this.title,
     required this.imgUrl,
-    required this.msgs,
     required this.sendMessage,
     required this.reciepient,
     required this.groupId,
-  }) {
-    print(this.msgs);
-  }
+    required this.chatIndex,
+    required this.mode,
+  });
 
   @override
-  State<ChatScreen<T>> createState() => _ChatScreenState<T>();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState<T> extends State<ChatScreen<T>> {
-  String? _userId;
-
-  final service = AuthServiceProvider();
-
-  Future<void> init() async {
-    final result = await service.getProfile();
-    result!.fold((user) {
-      print(user);
-      _userId = user.id;
-      setState(() {});
-    }, (error) {
-      print(error);
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    init();
-  }
-
+class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
+    final chatsprovider = Provider.of<ChatProvider>(context);
+    final radaProvider = Provider.of<RadaApplicationProvider>(context);
+    List<ChatPayload> messages = [];
+    if (widget.mode == ChatModes.PRIVATE) {
+      messages = ServiceUtility.combinePeerMsgs(
+        chatsprovider.privateMessages,
+        radaProvider.user!.id,
+      )[widget.chatIndex]
+          .msg;
+    } else if (widget.mode == ChatModes.GROUP) {
+      messages = chatsprovider.groupMessages[widget.chatIndex].messages
+          .map(
+            (msg) => chatsprovider.convertToChatPayload(msg),
+          )
+          .toList();
+    } else if (widget.mode == ChatModes.FORUM) {
+      messages = chatsprovider.forumMessages[widget.chatIndex].messages
+          .map(
+            (msg) => chatsprovider.convertToChatPayload(msg),
+          )
+          .toList();
+    }
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
@@ -66,16 +67,15 @@ class _ChatScreenState<T> extends State<ChatScreen<T>> {
           ),
         ),
       ),
-      body: _userId == null
+      body: radaProvider.user!.id.isEmpty
           ? Center(
               child: CircularProgressIndicator(
                 color: Theme.of(context).primaryColor,
               ),
             )
-          : Chat<PeerMsg>(
-              //TODO : use actual user id from auth
-              currentUserId: _userId!,
-              chatList: this.widget.msgs as List<PeerMsg>,
+          : Chat<ChatPayload>(
+              currentUserId: radaProvider.user!.id,
+              chatList: messages,
               sendMessage: this.widget.sendMessage,
               reciepient: this.widget.reciepient,
               groupId: this.widget.groupId,

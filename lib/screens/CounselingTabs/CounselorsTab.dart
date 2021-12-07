@@ -32,13 +32,14 @@ class CounselorsTab extends StatelessWidget {
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen<PeerMsg>(
+            builder: (context) => ChatScreen(
               title: counselors[index].name,
               imgUrl: "$BASE_URL/api/v1/uploads/${counselors[index].imgUrl}",
-              msgs: [],
               sendMessage: sendMessage,
               groupId: counselors[index].id.toString(),
               reciepient: counselors[index].id.toString(),
+              chatIndex: index,
+              mode: ChatModes.PRIVATE,
             ),
           ),
         ),
