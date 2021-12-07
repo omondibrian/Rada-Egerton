@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'dart:io';
-
-import 'package:rada_egerton/entities/UserChatsDTO.dart';
+import 'dart:convert';
+import 'package:rada_egerton/entities/ChatDto.dart';
 
 ChatModel chatModelFromJson(String str) => ChatModel.fromJson(json.decode(str));
 
@@ -25,13 +23,14 @@ class ChatModel {
 }
 
 class Chat {
-  Chat(
-      {required this.authorId,
-      required this.content,
-      this.id,
-      this.media,
-      this.picture,
-      this.video});
+  Chat({
+    required this.authorId,
+    required this.content,
+    this.id,
+    this.media,
+    this.picture,
+    this.video,
+  });
 
   String? id;
   String authorId;
@@ -40,7 +39,7 @@ class Chat {
   //formdata
   final File? picture;
   final File? video;
-  factory Chat.fromJson(PeerMsg json ) => Chat(
+  factory Chat.fromJson(ChatPayload json) => Chat(
         id: json.id.toString(),
         authorId: json.senderId,
         content: json.message,
@@ -48,9 +47,7 @@ class Chat {
       );
 
   Map<String, dynamic> toJson() => {
-        
         "sender_id": authorId,
         "message": content,
-       
       };
 }

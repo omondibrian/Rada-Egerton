@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/constants.dart';
-import 'package:rada_egerton/services/utils.dart';
+import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/theme.dart';
 
 class SplashScreen extends StatefulWidget {

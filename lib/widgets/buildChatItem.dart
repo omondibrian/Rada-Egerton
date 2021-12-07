@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swipeable_tile/swipeable_tile.dart';
 
 import '../theme.dart';
-import '../widgets/ChartCard.dart';
+import 'ChatCard.dart';
 import '../screens/chat/chat.model.dart' as Model;
 
 Widget buildItem(String currentUserId, Model.Chat chatModel,

@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
-import 'package:rada_egerton/services/utils.dart';
+import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/entities/GroupDTO.dart';
-import 'package:rada_egerton/services/constants.dart';
 import 'package:rada_egerton/entities/GroupsDTO.dart';
 import 'package:rada_egerton/entities/StudentDTO.dart';
 import 'package:rada_egerton/entities/UserChatsDTO.dart';

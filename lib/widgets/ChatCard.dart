@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:rada_egerton/services/constants.dart';
-
 import '../theme.dart';
+import 'package:flutter/material.dart';
 import '../screens/chat/chat.model.dart';
+import 'package:rada_egerton/constants.dart';
 
 Widget chatCard(Chat chat, Color chatCardColor, MainAxisAlignment alignment,
     CrossAxisAlignment crossAxisAlignment) {

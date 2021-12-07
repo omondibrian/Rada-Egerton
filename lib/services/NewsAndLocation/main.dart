@@ -1,8 +1,7 @@
-
-import '../constants.dart';
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
-import 'package:rada_egerton/services/utils.dart';
+import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/entities/NewsDTO.dart';
 import 'package:rada_egerton/entities/locationDto.dart';
 import 'package:rada_egerton/entities/ContactsDto.dart';

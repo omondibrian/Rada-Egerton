@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
-import 'package:rada_egerton/providers/counselors.provider.dart';
 import 'package:rada_egerton/screens/chat/chat.model.dart' as ChatModel;
-import 'package:rada_egerton/widgets/buildInput.dart';
+import 'package:rada_egerton/widgets/chatInput.dart';
 import '../../widgets/buildChatItem.dart';
 
+// ignore: must_be_immutable
 class Chat<T> extends StatefulWidget {
   final String currentUserId;
   final List<T> chatList;
@@ -31,8 +30,6 @@ class Chat<T> extends StatefulWidget {
 class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
-    final counselorprovider = Provider.of<CounselorProvider>(context);
-    var _ = counselorprovider.conversations;
     var _chats = widget.chatList
         .map(
           (chat) => ChatModel.Chat.fromJson(chat),
@@ -43,8 +40,11 @@ class _ChatState extends State<Chat> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('assets/background_pattern.png'),
-              repeat: ImageRepeat.repeat),
+            image: AssetImage(
+              'assets/background_pattern.png',
+            ),
+            repeat: ImageRepeat.repeat,
+          ),
         ),
         child: Stack(
           children: [
@@ -53,12 +53,15 @@ class _ChatState extends State<Chat> {
               child: ListView.builder(
                 itemCount: _chats.length,
                 itemBuilder: (BuildContext ctx, index) => buildItem(
-                    widget.currentUserId, _chats[index], widget.initReply),
+                  widget.currentUserId,
+                  _chats[index],
+                  widget.initReply,
+                ),
               ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: buildInput(
+              child: chatInput(
                 widget.sendMessage,
                 widget.currentUserId,
                 widget.reciepient,

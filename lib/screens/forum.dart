@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
-import 'package:rada_egerton/services/constants.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
-import 'package:rada_egerton/entities/UserChatsDTO.dart';
+import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:rada_egerton/services/counseling/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:rada_egerton/providers/counselors.provider.dart';
 
 class Forum extends StatelessWidget {
-  Future<void> _refreshChat() async {
-    //TODO : function call to refresh chat data
-    await Future.delayed(Duration(milliseconds: 1000));
-  }
-
   @override
   Widget build(BuildContext context) {
-    final counselorprovider = Provider.of<CounselorProvider>(context);
-    var forumsConversations =
-        counselorprovider.conversations.data.payload.forumMsgs;
+    final chatsprovider = Provider.of<ChatProvider>(context);
+    var forumsConversations = chatsprovider.groupMessages;
+
+    Future<void> _refreshChat() async {
+      chatsprovider.getConversations();
+    }
+
     Widget forumBuilder(BuildContext context, int index) {
       var forum = forumsConversations[index].info;
-      var messages = forumsConversations[index].messages;
+      var messages = forumsConversations[index]
+          .messages
+          .map((msg) => chatsprovider.convertToChatPayload(msg))
+          .toList();
+      //TODO:remove print method
       print(messages);
       String imageUrl = "$BASE_URL/api/v1/uploads/${forum.image}";
       print(forum);
@@ -34,7 +36,7 @@ class Forum extends StatelessWidget {
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen<PeerMsg>(
+            builder: (context) => ChatScreen<ChatPayload>(
               title: forum.title,
               imgUrl: imageUrl,
               msgs: messages,
