@@ -15,10 +15,7 @@ import 'package:rada_egerton/providers/counselors.provider.dart';
 
 class PrivateSessionsTab extends StatelessWidget {
   PrivateSessionsTab({Key? key}) : super(key: key);
-  sendMessage(ChatPayload chat, String userId) async {
-    var service = CounselingServiceProvider();
-    await service.peerCounseling(chat, userId);
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +23,9 @@ class PrivateSessionsTab extends StatelessWidget {
     final appProvider = Provider.of<RadaApplicationProvider>(context);
     String userId = "";
     if (appProvider.user != null) {
-      userId = appProvider.user!.id; 
-
+      userId = appProvider.user!.id;
     }
-
+    
     var conversations = ServiceUtility.combinePeerMsgs(
       counselorprovider.conversations.data.payload.peerMsgs,
       userId,
@@ -55,7 +51,7 @@ class PrivateSessionsTab extends StatelessWidget {
               title: '${infoConversations!.name}',
               imgUrl: "$BASE_URL/api/v1/uploads/${infoConversations.imgUrl}",
               msgs: conversations[index].msg,
-              sendMessage: sendMessage,
+              sendMessage:counselorprovider.sendPeerCounselingMessage,
               groupId: "",
               reciepient: counsellorId,
             ),

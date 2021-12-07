@@ -61,7 +61,6 @@ class CounselingServiceProvider {
             }, sendTimeout: 10000),
           );
       payload = result.data["counsellor"];
-      print(payload);
     } on DioError catch (e) {
       Right(
         ServiceUtility.handleDioExceptions(e),
@@ -98,7 +97,6 @@ class CounselingServiceProvider {
       for (var i = 0; i < payload.length; i++) {
         peerCounsellors.add(PeerCounsellorDto.fromJson(payload[i]));
       }
-      print(peerCounsellors);
     } on DioError catch (e) {
       Right(
         ServiceUtility.handleDioExceptions(e),

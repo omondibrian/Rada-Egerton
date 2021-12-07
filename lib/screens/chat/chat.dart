@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
+import 'package:rada_egerton/providers/counselors.provider.dart';
 import 'package:rada_egerton/screens/chat/chat.model.dart' as ChatModel;
 import 'package:rada_egerton/widgets/buildInput.dart';
 import '../../widgets/buildChatItem.dart';
@@ -29,6 +31,8 @@ class Chat<T> extends StatefulWidget {
 class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
+    final counselorprovider = Provider.of<CounselorProvider>(context);
+    var _ = counselorprovider.conversations;
     var _chats = widget.chatList
         .map(
           (chat) => ChatModel.Chat.fromJson(chat),

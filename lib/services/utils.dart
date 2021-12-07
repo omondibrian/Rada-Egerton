@@ -62,8 +62,9 @@ class Pusher {
 
   Pusher({required String appKey, required String token}) {
     PusherOptions options = PusherOptions(
-      host: BASE_URL,
-      wsPort: 80,
+      // host: BASE_URL,
+      cluster: "eu",
+      // wsPort: 80,
       encrypted: false,
       auth: PusherAuth(
         "$BASE_URL/rada/api/v1/pusher/auth",

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/entities/CounsellorsDTO.dart';
 import 'package:rada_egerton/entities/GroupsDTO.dart';
 import 'package:rada_egerton/entities/PeerCounsellorDTO.dart';
@@ -95,7 +96,21 @@ class CounselorProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  getCounselingChats() {
-    return [];
+
+  sendPeerCounselingMessage(ChatPayload chat, String userId) async {
+    var service = CounselingServiceProvider();
+    final result = await service.peerCounseling(chat, userId);
+    result!.fold((chat) {
+      this._conversations.data.payload.peerMsgs.add(User.PeerMsg(
+          id: chat.data.payload.id,
+          message: chat.data.payload.message,
+          imageUrl: chat.data.payload.imageUrl,
+          senderId: chat.data.payload.senderId,
+          groupsId: chat.data.payload.groupsId??"",
+          reply: chat.data.payload.reply??"",
+          status: chat.data.payload.status,
+          reciepient: chat.data.payload.reciepient));
+    }, (r) => null);
+    notifyListeners();
   }
 }

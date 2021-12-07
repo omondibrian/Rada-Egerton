@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/providers/UserProvider.dart';
+import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:rada_egerton/providers/counselors.provider.dart';
 import 'package:rada_egerton/theme.dart';
 
@@ -22,6 +23,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => RadaApplicationProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ChatProvider(),
         )
       ],
       child: MaterialApp(
