@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
-import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
-import 'package:rada_egerton/services/counseling/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class Forum extends StatelessWidget {
@@ -19,18 +17,8 @@ class Forum extends StatelessWidget {
 
     Widget forumBuilder(BuildContext context, int index) {
       var forum = forumsConversations[index].info;
-      var messages = forumsConversations[index]
-          .messages
-          .map((msg) => chatsprovider.convertToChatPayload(msg))
-          .toList();
-      //TODO:remove print method
-      print(messages);
       String imageUrl = "$BASE_URL/api/v1/uploads/${forum.image}";
-      print(forum);
-      sendMessage(ChatPayload chat, String userId) async {
-        var service = CounselingServiceProvider();
-        await service.groupCounseling(chat, userId);
-      }
+
 
       return GestureDetector(
         onTap: () => Navigator.push(
@@ -39,7 +27,7 @@ class Forum extends StatelessWidget {
             builder: (context) => ChatScreen(
               title: forum.title,
               imgUrl: imageUrl,
-              sendMessage: sendMessage,
+              sendMessage: chatsprovider.sendGroupMessage,
               groupId: forum.id.toString(),
               reciepient: forum.id.toString(),
               chatIndex: index,
