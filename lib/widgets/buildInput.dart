@@ -18,34 +18,19 @@ Widget buildInput(Function(ChatPayload chat, String userId) onSubmit,
               child: IconButton(
                 icon: Icon(Icons.image),
                 onPressed: () {},
-                color: Colors.black,
+                // color: Colors.black,
               ),
             ),
             color: Colors.white,
           ),
           //Emoji button
-          Material(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 1.0),
-              child: IconButton(
-                icon: Icon(Icons.face),
-                onPressed: () {},
-                color: Colors.black,
-              ),
-            ),
-            color: Colors.white,
-          ),
 
-          // Edit text
           Flexible(
             child: Container(
               child: TextField(
-                
                 controller: _chatController,
-                style: TextStyle(color: Colors.black87, fontSize: 15.0),
                 decoration: InputDecoration.collapsed(
                   hintText: 'Type your message...',
-                  hintStyle: TextStyle(color: Colors.black, fontSize: 15.0),
                 ),
               ),
             ),
@@ -60,7 +45,10 @@ Widget buildInput(Function(ChatPayload chat, String userId) onSubmit,
               ),
               margin: EdgeInsets.symmetric(horizontal: 3.0),
               child: IconButton(
-                icon: Icon(Icons.send),
+                icon: Icon(
+                  Icons.send,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   var chat = ChatPayload(
                     groupsId: groupId,
@@ -75,7 +63,6 @@ Widget buildInput(Function(ChatPayload chat, String userId) onSubmit,
 
                   onSubmit(chat, userId);
                   _chatController.clear();
-
                 },
               ),
             ),
