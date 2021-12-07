@@ -15,10 +15,6 @@ class Chat<T> extends StatefulWidget {
   final Function(ChatPayload chat, String userId) sendMessage;
   final String reciepient;
   final String? groupId;
-  String reply = "";
-  void initReply(String reply) {
-    this.reply = reply;
-  }
 
   @override
   _ChatState createState() => _ChatState();
@@ -32,6 +28,9 @@ class Chat<T> extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
+  ChatModel.Chat? reply;
+  FocusNode inputNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     var _chats = widget.chatList
@@ -40,9 +39,16 @@ class _ChatState extends State<Chat> {
         )
         .toList();
 
-    print(jsonEncode(_chats.last));
     final chatProvider = Provider.of<ChatProvider>(context, listen: true);
     chatProvider.addListener(() => setState(() {}));
+    void initReply(ChatModel.Chat reply) {
+      this.reply = reply;
+      inputNode.requestFocus();
+      setState(() {});
+    }
+
+// to open keyboard call this function;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -62,23 +68,46 @@ class _ChatState extends State<Chat> {
                 itemBuilder: (BuildContext ctx, index) => buildItem(
                   widget.currentUserId,
                   _chats[index],
-                  widget.initReply,
+                  initReply,
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: chatInput(
-                widget.sendMessage,
-                widget.currentUserId,
-                widget.reciepient,
-                widget.groupId,
-                widget.reply,
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                reply != null ? replyToMessage(reply!) : Container(),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: chatInput(
+                      widget.sendMessage,
+                      widget.currentUserId,
+                      widget.reciepient,
+                      widget.groupId,
+                      reply?.id.toString(),
+                      inputNode),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget replyToMessage(ChatModel.Chat chat) {
+    return Container(
+        decoration: BoxDecoration(color: Colors.white),
+        margin: EdgeInsets.only(bottom: 2),
+        child: Row(children: [
+          Icon(
+            Icons.reply,
+          ),
+          Expanded(child: Text(chat.content)),
+          IconButton(
+              onPressed: () => setState(() {
+                    reply = null;
+                  }),
+              icon: Icon(Icons.close))
+        ]));
   }
 }
