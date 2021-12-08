@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:rada_egerton/theme.dart';
 import '../sizeConfig.dart';
 
 class RadaButton extends StatelessWidget {
@@ -23,7 +24,7 @@ class RadaButton extends StatelessWidget {
       decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Theme.of(context).accentColor,
+              Palette.accent,
               Theme.of(context).primaryColor,
             ],
             begin: Alignment.centerLeft,
