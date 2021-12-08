@@ -134,6 +134,7 @@ class CounselingServiceProvider {
               'Authorization': token,
             }, sendTimeout: 10000),
           );
+      print(result.data);
       return Left(GroupsDto.fromJson(result.data));
     } on DioError catch (e) {
       Right(
@@ -288,6 +289,7 @@ class CounselingServiceProvider {
       ChatPayload chatData, String userId) async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
+      print(" 'message': ${chatData.message}");
       FormData formData = FormData.fromMap({
         'message': chatData.message,
         'sender_id': chatData.senderId,

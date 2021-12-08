@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rada_egerton/screens/chat/chat.model.dart';
 import 'package:swipeable_tile/swipeable_tile.dart';
 
 import '../theme.dart';
@@ -6,7 +7,7 @@ import 'ChatCard.dart';
 import '../screens/chat/chat.model.dart' as Model;
 
 Widget buildItem(String currentUserId, Model.Chat chatModel,
-    Function(String reply) onReply) {
+   void Function(Chat onreply) onReply) {
   var chat = chatModel;
   if (chat.authorId == currentUserId) {
     // Right (my message)
@@ -25,7 +26,7 @@ Widget buildItem(String currentUserId, Model.Chat chatModel,
       swipeThreshold: 0.2,
       direction: SwipeDirection.endToStart,
       onSwiped: (_) {
-        onReply(chat.id!);
+        onReply(chat);
       },
       key: UniqueKey(),
       backgroundBuilder: (context, direction, progress) {

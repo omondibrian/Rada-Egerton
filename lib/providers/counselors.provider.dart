@@ -12,6 +12,7 @@ class CounselorProvider with ChangeNotifier {
 
   bool counselorsLoading = true;
   bool peerCouselorsLoading = true;
+  bool isForumLoading = true;
 
   CounselorProvider() {
     getCounsellors();
@@ -47,6 +48,7 @@ class CounselorProvider with ChangeNotifier {
       (forums) => {this._forums = forums},
       (error) => print('Error from fetchForums() :${error.message}'),
     );
+    this.isForumLoading = false;
     notifyListeners();
   }
 

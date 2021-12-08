@@ -50,11 +50,17 @@ class _ChatScreenState extends State<ChatScreen> {
           )
           .toList();
     } else if (widget.mode == ChatModes.FORUM) {
-      messages = chatsprovider.forumMessages[widget.chatIndex].messages
-          .map(
-            (msg) => chatsprovider.convertToChatPayload(msg),
-          )
-          .toList();
+      for (var i = 0; i < chatsprovider.forumMessages.length; i++) {
+        var forum = chatsprovider.forumMessages[i];
+        if (widget.groupId == forum.info.id.toString()) {
+          messages = forum.messages
+              .map(
+                (msg) => chatsprovider.convertToChatPayload(msg),
+              )
+              .toList();
+          break;
+        }
+      }
     }
     return Scaffold(
       appBar: PreferredSize(
