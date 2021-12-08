@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
-import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:rada_egerton/screens/chat/chat.model.dart' as ChatModel;
 import 'package:rada_egerton/theme.dart';
-import 'package:rada_egerton/widgets/chatInput.dart';
+
 import '../../widgets/buildChatItem.dart';
 
 // ignore: must_be_immutable
