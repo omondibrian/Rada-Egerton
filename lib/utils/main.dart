@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:pusher_client/pusher_client.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
+import 'package:rada_egerton/entities/GroupsDTO.dart' as Groups;
+import 'package:rada_egerton/entities/UserChatsDTO.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ServiceUtility {
@@ -9,7 +11,6 @@ class ServiceUtility {
   static Future<String?> getAuthToken() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString("TOKEN");
-    print('Token from service utility $token');
     return token;
   }
 
@@ -56,6 +57,33 @@ class ServiceUtility {
 
     return userIds.toSet().toList().map(extractMsgs).toList();
   }
+
+  static List<ForumPayload> parseForums(
+      Groups.GroupsDto? forums, List<Msg> forumMsgs)  {
+    if (forums == null) return [];
+    List<ForumPayload> finalForumList = [];
+    for (var i = 0; i < forumMsgs.length; i++) {
+      int subForumIndex = forums.data.payload
+          .indexWhere((info) => info.id == forumMsgs[i].info.id);
+      if (subForumIndex != -1) {
+        finalForumList.insert(
+          0,
+          ForumPayload(
+            isSubscribed: true,
+            forum: forums.data.payload[subForumIndex],
+          ),
+        );
+      } else {
+        finalForumList.add(
+          ForumPayload(
+            isSubscribed: false,
+            forum: forums.data.payload[subForumIndex],
+          ),
+        );
+      }
+    }
+    return finalForumList;
+  }
 }
 
 class Pusher {
@@ -99,4 +127,10 @@ class Message {
   String recipient;
   List<ChatPayload> msg;
   Message({required this.recipient, required this.msg});
+}
+
+class ForumPayload {
+  bool isSubscribed;
+  Groups.Payload forum;
+  ForumPayload({required this.isSubscribed, required this.forum});
 }

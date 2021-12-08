@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rada_egerton/providers/ApplicationProvider.dart';
+import 'package:rada_egerton/theme.dart';
+import 'package:rada_egerton/widgets/NewGroupForm.dart';
+import 'package:rada_egerton/widgets/RadaButton.dart';
+import 'package:rada_egerton/widgets/defaultInput.dart';
+
+import '../sizeConfig.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String title;
   final String imgUrl;
+  final String? groupId;
   CustomAppBar({
     Key? key,
     required this.title,
     required this.imgUrl,
+    this.groupId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    
     void _openBottomSheet() {
       showBottomSheet(
           context: context,
@@ -38,6 +49,8 @@ class CustomAppBar extends StatelessWidget {
           });
     }
 
+  
+
     return Row(
       children: [
         IconButton(
@@ -63,8 +76,10 @@ class CustomAppBar extends StatelessWidget {
                 Text(this.title, style: Theme.of(context).textTheme.headline3),
                 Text(
                   'say Something',
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                      color: Theme.of(context).accentColor, fontSize: 14),
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      ?.copyWith(color: Palette.accent, fontSize: 14),
                 ),
               ],
             ),
@@ -75,15 +90,18 @@ class CustomAppBar extends StatelessWidget {
             Icons.more_vert,
           ),
           itemBuilder: (_) => [
-            PopupMenuItem(child: Text('Add Member'), onTap: _openBottomSheet),
             PopupMenuItem(
-                child: Text(
-                  'Leave Group',
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
-                ),
-                // onTap: _openBottomSheet
-                ),
+              child: Text('Add Member'),
+              onTap: _openBottomSheet,
+            ),
 
+            PopupMenuItem(
+              child: Text(
+                'Leave Group',
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+              // onTap: _openBottomSheet
+            ),
           ],
         )
       ],

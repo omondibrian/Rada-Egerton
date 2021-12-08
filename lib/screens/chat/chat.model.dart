@@ -30,12 +30,14 @@ class Chat {
     this.media,
     this.picture,
     this.video,
+    this.reply
   });
 
   String? id;
   String authorId;
   String content;
   String? media;
+  String? reply;
   //formdata
   final File? picture;
   final File? video;
@@ -44,6 +46,7 @@ class Chat {
         authorId: json.senderId,
         content: json.message,
         media: json.imageUrl,
+        reply: json.reply
       );
 
   Map<String, dynamic> toJson() => {
