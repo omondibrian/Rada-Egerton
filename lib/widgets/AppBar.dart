@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rada_egerton/providers/UserProvider.dart';
+import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/theme.dart';
 import 'package:rada_egerton/widgets/RadaButton.dart';
 import 'package:rada_egerton/widgets/defaultInput.dart';
@@ -48,62 +48,66 @@ class CustomAppBar extends StatelessWidget {
           });
     }
 
-    _addNewGroup() {
-      validator(value) {
-        if (value == null || value.isEmpty) {
-          return 'This value is required';
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    final grpNameController = TextEditingController();
+    final descriptionController = TextEditingController();
+
+    void _handleSubmit(BuildContext context) async {
+      try {
+        if (_formKey.currentState!.validate()) {
+          radaApplicationProvider.createNewGroup(
+              grpNameController.text, descriptionController.text);
         }
+      } catch (e) {
+        print(e);
       }
+    }
 
-      final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-      final grpNameController = TextEditingController();
-      final descriptionController = TextEditingController();
-
-      void _handleSubmit(BuildContext context) async {
-        try {
-          if (_formKey.currentState!.validate()) {
-            radaApplicationProvider.createNewGroup(
-                grpNameController.text, descriptionController.text);
-          }
-        } catch (e) {
-          print(e);
-        }
+    validator(value) {
+      if (value == null || value.isEmpty) {
+        return 'This value is required';
       }
+    }
 
-      showModalBottomSheet(
+    void _addNewGroup() {
+      showBottomSheet(
           context: context,
           builder: (context) {
-            return Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: SizeConfig.isTabletWidth ? 600 : 290.0,
-                      child: TextFormField(
-                        textAlign: TextAlign.start,
-                        decoration: InputDecoration(
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                          hintText: "GroupName",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                            borderSide: const BorderSide(
-                                color: Color(0X55CED0D2), width: 0.0),
+            return Wrap(children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        child: TextFormField(
+                          textAlign: TextAlign.start,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 10),
+                            hintText: "GroupName",
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                              borderSide: const BorderSide(
+                                  color: Color(0X55CED0D2), width: 0.0),
+                            ),
                           ),
+                          controller: grpNameController,
+                          validator: validator,
                         ),
-                        controller: grpNameController,
-                        validator: validator,
                       ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.isTabletWidth ? 600 : 290.0,
-                      child: TextFormField(
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
                         textAlign: TextAlign.start,
+                        maxLines: 10,
+                        minLines: 4,
                         decoration: InputDecoration(
                           contentPadding:
-                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                              EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                           hintText: "Description ...",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -114,19 +118,30 @@ class CustomAppBar extends StatelessWidget {
                         controller: descriptionController,
                         validator: validator,
                       ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    RadaButton(
-                      title: 'create',
-                      handleClick: () => _handleSubmit(context),
-                      fill: true,
-                    ),
-                  ],
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Row(children: [
+                        Expanded(
+                          child: RadaButton(
+                            title: 'create',
+                            handleClick: () => _handleSubmit(context),
+                            fill: true,
+                          ),
+                        ),
+                        Expanded(
+                          child: RadaButton(
+                            title: 'close',
+                            handleClick: () => _handleSubmit(context),
+                            fill: false,
+                          ),
+                        ),
+                      ])
+                    ],
+                  ),
                 ),
               ),
-            );
+            ]);
           });
     }
 
@@ -174,7 +189,7 @@ class CustomAppBar extends StatelessWidget {
               onTap: _openBottomSheet,
             ),
             PopupMenuItem(
-              child: Text('+ New Group'),
+              child: Text('New Group'),
               onTap: _addNewGroup,
             ),
             PopupMenuItem(

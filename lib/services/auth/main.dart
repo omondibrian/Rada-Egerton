@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/entities/userRoles.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/entities/AuthDTO.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
@@ -57,6 +58,22 @@ class AuthServiceProvider {
       return this._saveUser(_profile, _prefs);
     } on DioError catch (e) {
       Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
+    }
+  }
+
+  Future<Either<UserRole, ErrorMessage>> getUserRoles(String userId) async {
+    try {
+      String authToken = await ServiceUtility.getAuthToken() as String;
+      var _result = await this._httpClientConn.get(
+            "${this._hostUrl}/api/v1/admin/role/$userId",
+            options: Options(
+                headers: {'Authorization': authToken}, sendTimeout: 10000),
+          );
+      return Left(UserRole(_result.data["userRole"]["role"]));
+    } on DioError catch (e) {
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }

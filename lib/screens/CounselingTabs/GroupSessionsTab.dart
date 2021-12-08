@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../../sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +17,6 @@ class GroupSessionsTab extends StatelessWidget {
     final chatsprovider = Provider.of<ChatProvider>(context);
 
     var conversations = chatsprovider.groupMessages;
-
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
@@ -25,7 +26,7 @@ class GroupSessionsTab extends StatelessWidget {
 
     Widget conversationBuilder(BuildContext ctx, int index) {
       Info infoConversations = conversations[index].info;
-
+      print(jsonEncode(infoConversations));
       return GestureDetector(
         onTap: () => Navigator.push(
           context,
@@ -60,12 +61,12 @@ class GroupSessionsTab extends StatelessWidget {
           ),
           title: Text(infoConversations.title, style: style),
           subtitle: Text(
-            conversations.last.messages.last.message,
+            "say something",
             style: TextStyle(
               color: Theme.of(ctx).primaryColor,
               fontSize: SizeConfig.isTabletWidth ? 16 : 14,
             ),
-          ), 
+          ),
         ),
       );
     }

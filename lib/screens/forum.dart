@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
-import 'package:rada_egerton/providers/UserProvider.dart';
+import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/providers/counselors.provider.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
@@ -23,7 +23,7 @@ class Forum extends StatelessWidget {
 
     Widget forumBuilder(BuildContext context, int index) {
       var forum = forums[index].forum;
-
+      print(forums);
       String imageUrl = "$BASE_URL/api/v1/uploads/${forum.image}";
 
       joinNewGroup() async {

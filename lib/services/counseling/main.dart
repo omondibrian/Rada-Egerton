@@ -219,11 +219,9 @@ class CounselingServiceProvider {
               'Authorization': token,
             }, sendTimeout: 10000),
           );
+      print(result.data);
       return Left(
-        GroupDTO(
-            id: result.data['id'],
-            title: result.data['title'],
-            image: result.data['image']),
+        GroupDTO.fromJson(result.data['data']['payload']),
       );
     } on DioError catch (e) {
       Right(
@@ -290,6 +288,7 @@ class CounselingServiceProvider {
         'sender_id': chatData.senderId,
         "receipient": chatData.reciepient,
         "reply": chatData.reply,
+        "user_type":chatData.role,
         "status": "0"
       });
       //send the chat to the api server

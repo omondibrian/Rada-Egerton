@@ -44,6 +44,7 @@ class _ChatState extends State<Chat> {
       reciepient: widget.reciepient,
       reply: reply?.id,
       status: "0",
+      
     );
 
     widget.sendMessage(chat, widget.currentUserId);

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:rada_egerton/config.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
+import 'package:rada_egerton/entities/userRoles.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:pusher_client/pusher_client.dart';
 import 'package:rada_egerton/entities/ChatDto.dart' as chats;
@@ -20,6 +21,7 @@ class ChatProvider with ChangeNotifier {
   List<Msg> _groupMsgs = [];
   List<Msg> _forumMsgs = [];
   String _channelName = "radaComms";
+  late UserRole userRole;
 
   CounselingServiceProvider _service = CounselingServiceProvider();
 
@@ -32,7 +34,11 @@ class ChatProvider with ChangeNotifier {
     _pusher =
         Pusher(appKey: pusherApiKey, token: _autoken ?? "").getConnection();
     var result = await AuthServiceProvider().getProfile();
-    result!.fold((user) => {this._userId = user.id}, (error) => print(error));
+    result!.fold((user) async {
+      this._userId = user.id;
+      var role = await AuthServiceProvider().getUserRoles(user.id);
+      role.fold((_userRole) => {userRole = _userRole}, (r) => {});
+    }, (error) => print(error));
     privateChannel();
   }
 
@@ -100,6 +106,7 @@ class ChatProvider with ChangeNotifier {
 
   sendPeerCounselingMessage(ChatPayload chat, String userId) async {
     var service = CounselingServiceProvider();
+
     final result = await service.peerCounseling(chat, userId);
     result!.fold((chat) {
       appendNewChat(chat);

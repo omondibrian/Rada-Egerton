@@ -1,19 +1,19 @@
+import 'dart:convert';
+
 import '../../sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/utils/main.dart';
-import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
-import 'package:rada_egerton/providers/UserProvider.dart';
+import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:rada_egerton/providers/counselors.provider.dart';
 
 class PrivateSessionsTab extends StatelessWidget {
   PrivateSessionsTab({Key? key}) : super(key: key);
- 
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class PrivateSessionsTab extends StatelessWidget {
     if (appProvider.user != null) {
       userId = appProvider.user!.id;
     }
-    
+
     var conversations = ServiceUtility.combinePeerMsgs(
       chatsprovider.privateMessages,
       userId,
@@ -41,15 +41,15 @@ class PrivateSessionsTab extends StatelessWidget {
     Widget conversationBuilder(BuildContext ctx, int index) {
       var counsellorId = conversations[index].recipient;
       var infoConversations = counselorprovider.counselorById(counsellorId);
-
+      print(index);
       return GestureDetector(
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ChatScreen(
-              title: '${infoConversations!.name}',
-              imgUrl: "$BASE_URL/api/v1/uploads/${infoConversations.imgUrl}",
-              sendMessage:chatsprovider.sendPeerCounselingMessage,
+              title: '${infoConversations?.name}',
+              imgUrl: "$BASE_URL/api/v1/uploads/${infoConversations?.imgUrl}",
+              sendMessage: chatsprovider.sendPeerCounselingMessage,
               groupId: "",
               reciepient: counsellorId,
               chatIndex: index,
@@ -63,7 +63,7 @@ class PrivateSessionsTab extends StatelessWidget {
             child: ClipOval(
               child: CachedNetworkImage(
                 imageUrl:
-                    "$BASE_URL/api/v1/uploads/${infoConversations!.imgUrl}",
+                    "$BASE_URL/api/v1/uploads/${infoConversations?.imgUrl}",
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -75,7 +75,7 @@ class PrivateSessionsTab extends StatelessWidget {
               ),
             ),
           ),
-          title: Text('${infoConversations.name}', style: style),
+          title: Text('${infoConversations?.name}', style: style),
           subtitle: Text(
             "say something",
             style: TextStyle(

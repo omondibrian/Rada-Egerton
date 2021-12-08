@@ -5,7 +5,7 @@ import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/widgets/AppBar.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/screens/chat/chat.dart';
-import 'package:rada_egerton/providers/UserProvider.dart';
+import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
 
 class ChatScreen extends StatefulWidget {
