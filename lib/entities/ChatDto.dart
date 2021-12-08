@@ -104,7 +104,7 @@ class ChatPayload {
     String imageUrl;
     String senderId;
     dynamic groupsId;
-    dynamic reply;
+    String? reply;
     String status;
     String reciepient;
 
