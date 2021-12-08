@@ -204,6 +204,34 @@ class CounselingServiceProvider {
     }
   }
 
+  /// create new  group
+  Future<Either<GroupDTO, ErrorMessage>?> createGroup(
+      String name, String desc) async {
+    try {
+      String token = await ServiceUtility.getAuthToken() as String;
+      final result = await this._httpClientConn.post(
+            "${this._hostUrl}/rada/api/v1/counseling",
+            data: {
+              "title": name,
+              "description": desc,
+            },
+            options: Options(headers: {
+              'Authorization': token,
+            }, sendTimeout: 10000),
+          );
+      return Left(
+        GroupDTO(
+            id: result.data['id'],
+            title: result.data['title'],
+            image: result.data['image']),
+      );
+    } on DioError catch (e) {
+      Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
+    }
+  }
+
   /// exit group
   Future<Either<GroupDTO, ErrorMessage>?> exitGroup(String groupId) async {
     try {
@@ -261,6 +289,7 @@ class CounselingServiceProvider {
         'message': chatData.message,
         'sender_id': chatData.senderId,
         "receipient": chatData.reciepient,
+        "reply": chatData.reply,
         "status": "0"
       });
       //send the chat to the api server
@@ -295,6 +324,7 @@ class CounselingServiceProvider {
         'sender_id': chatData.senderId,
         "receipient": chatData.reciepient,
         "groupId": chatData.groupsId,
+        "reply": chatData.reply,
         "status": "0"
       });
       //send the chat to the api server
