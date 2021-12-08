@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rada_egerton/providers/UserProvider.dart';
+import 'package:rada_egerton/theme.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String title;
   final String imgUrl;
+  final String? groupId;
   CustomAppBar({
     Key? key,
     required this.title,
     required this.imgUrl,
+    this.groupId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var radaApplicationProvider = Provider.of<RadaApplicationProvider>(context);
     void _openBottomSheet() {
       showBottomSheet(
           context: context,
@@ -64,7 +70,7 @@ class CustomAppBar extends StatelessWidget {
                 Text(
                   'say Something',
                   style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                      color: Theme.of(context).accentColor, fontSize: 14),
+                      color: Palette.accent, fontSize: 14),
                 ),
               ],
             ),
@@ -81,17 +87,7 @@ class CustomAppBar extends StatelessWidget {
                   'Leave Group',
                   style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
-                // onTap: _openBottomSheet
-                ),
-
-            // PopupMenuItem(
-            //   child: Text('Profile'),
-            //   value: Options.Profile,
-            // ),
-            // PopupMenuItem(
-            //   child: Text('Contributors'),
-            //   value: Options.Contributors,
-            // ),
+                onTap: () => radaApplicationProvider.leftGroup(this.groupId!)),
           ],
         )
       ],
