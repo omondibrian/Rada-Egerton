@@ -261,6 +261,7 @@ class CounselingServiceProvider {
         'message': chatData.message,
         'sender_id': chatData.senderId,
         "receipient": chatData.reciepient,
+        "reply": chatData.reply,
         "status": "0"
       });
       //send the chat to the api server
@@ -295,6 +296,7 @@ class CounselingServiceProvider {
         'sender_id': chatData.senderId,
         "receipient": chatData.reciepient,
         "groupId": chatData.groupsId,
+        "reply": chatData.reply,
         "status": "0"
       });
       //send the chat to the api server

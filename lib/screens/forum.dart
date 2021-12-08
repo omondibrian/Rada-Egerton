@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/providers/UserProvider.dart';
 import 'package:rada_egerton/providers/counselors.provider.dart';
+import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -11,16 +13,44 @@ class Forum extends StatelessWidget {
   Widget build(BuildContext context) {
     final chatsprovider = Provider.of<ChatProvider>(context);
     final counseligProvider = Provider.of<CounselorProvider>(context);
-
-    var forums = counseligProvider.forums?.data.payload ?? [];
+    final radaAppProvider = Provider.of<RadaApplicationProvider>(context);
+    var forums = ServiceUtility.parseForums(
+        counseligProvider.forums, chatsprovider.forumMessages);
 
     Future<void> _refreshChat() async {
       counseligProvider.getForums();
     }
 
     Widget forumBuilder(BuildContext context, int index) {
-      var forum = forums[index];
+      var forum = forums[index].forum;
+
       String imageUrl = "$BASE_URL/api/v1/uploads/${forum.image}";
+
+      joinNewGroup() async {
+        var res = await radaAppProvider.joinGroup(
+          forum.id.toString(),
+        );
+        res!.fold(
+          (grp) async {
+            chatsprovider.getConversations();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatScreen(
+                  title: forum.title,
+                  imgUrl: imageUrl,
+                  sendMessage: chatsprovider.sendGroupMessage,
+                  groupId: forum.id.toString(),
+                  reciepient: forum.id.toString(),
+                  chatIndex: index,
+                  mode: ChatModes.FORUM,
+                ),
+              ),
+            );
+          },
+          (err) => print(err.message),
+        );
+      }
 
       return GestureDetector(
         onTap: () => Navigator.push(
@@ -48,6 +78,12 @@ class Forum extends StatelessWidget {
               Text(forum.title, style: Theme.of(context).textTheme.headline1),
           subtitle: Text("say something...",
               style: Theme.of(context).textTheme.bodyText1),
+          trailing: forums[index].isSubscribed
+              ? TextButton(
+                  child: Text('Join'),
+                  onPressed: joinNewGroup,
+                )
+              : null,
         ),
       );
     }
