@@ -84,14 +84,6 @@ class CustomAppBar extends StatelessWidget {
                 // onTap: _openBottomSheet
                 ),
 
-            // PopupMenuItem(
-            //   child: Text('Profile'),
-            //   value: Options.Profile,
-            // ),
-            // PopupMenuItem(
-            //   child: Text('Contributors'),
-            //   value: Options.Contributors,
-            // ),
           ],
         )
       ],
