@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:rada_egerton/providers/counselors.provider.dart';
+import 'package:rada_egerton/widgets/ChatsScreen.dart';
 
 import '../../sizeConfig.dart';
 
@@ -12,6 +14,7 @@ class PeerCounselorsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final counselorprovider = Provider.of<CounselorProvider>(context);
+    final chatsprovider = Provider.of<ChatProvider>(context);
     var counselors = counselorprovider.peerCounselors;
 
     Future<void> _refresh() async {
@@ -19,57 +22,75 @@ class PeerCounselorsTab extends StatelessWidget {
     }
 
     Widget peerCounsellorBuilder(BuildContext cxt, int index) {
-      return Card(
-        margin: EdgeInsets.only(bottom: 10),
-        child: Row(
-          children: [
-            Column(
-              children: [
-                CircleAvatar(
-                  radius: SizeConfig.isTabletWidth ? 40 : 20.0,
-                  child: ClipOval(
-                    child: CachedNetworkImage(
-                      imageUrl:
-                          "$BASE_URL/api/v1/uploads/${counselors[index].profilePic}",
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
+      var peerCounsellors = counselors[index];
+      return GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatScreen(
+              title: '${peerCounsellors.name}',
+              imgUrl: "$BASE_URL/api/v1/uploads/${peerCounsellors.profilePic}",
+              sendMessage: chatsprovider.sendPeerCounselingMessage,
+              groupId: "",
+              reciepient: peerCounsellors.id.toString(),
+              chatIndex: index,
+              mode: ChatModes.PRIVATE,
+            ),
+          ),
+        ),
+        child: Card(
+          margin: EdgeInsets.only(bottom: 10),
+          child: Row(
+            children: [
+              Column(
+                children: [
+                  CircleAvatar(
+                    radius: SizeConfig.isTabletWidth ? 40 : 20.0,
+                    child: ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            "$BASE_URL/api/v1/uploads/${peerCounsellors.profilePic}",
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
                           ),
+                          width: SizeConfig.isTabletWidth ? 120 : 90,
+                          height: SizeConfig.isTabletWidth ? 120 : 90,
                         ),
-                        width: SizeConfig.isTabletWidth ? 120 : 90,
-                        height: SizeConfig.isTabletWidth ? 120 : 90,
-                      ),
-                      placeholder: (context, url) => CircularProgressIndicator(
-                        color: Theme.of(context).primaryColor,
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                     ),
                   ),
+                ],
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(
+                  children: [
+                    Text(
+                      counselors[index].name,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(
-              width: 20,
-            ),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(
-                children: [
-                  Text(
-                    counselors[index].name,
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text('Expertise : '),
-                  Text(
-                    counselors[index].expertise,
-                  ),
-                ],
-              ),
-            ])
-          ],
+                Row(
+                  children: [
+                    Text('Expertise : '),
+                    Text(
+                      peerCounsellors.expertise,
+                    ),
+                  ],
+                ),
+              ])
+            ],
+          ),
         ),
       );
     }

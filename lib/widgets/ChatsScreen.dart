@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
-import 'package:rada_egerton/entities/ChatDto.dart';
-import 'package:rada_egerton/providers/UserProvider.dart';
-import 'package:rada_egerton/providers/chat.provider.dart';
-import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/widgets/AppBar.dart';
+import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/screens/chat/chat.dart';
+import 'package:rada_egerton/providers/UserProvider.dart';
+import 'package:rada_egerton/providers/chat.provider.dart';
 
 class ChatScreen extends StatefulWidget {
   final String title;
@@ -51,11 +50,17 @@ class _ChatScreenState extends State<ChatScreen> {
           )
           .toList();
     } else if (widget.mode == ChatModes.FORUM) {
-      messages = chatsprovider.forumMessages[widget.chatIndex].messages
-          .map(
-            (msg) => chatsprovider.convertToChatPayload(msg),
-          )
-          .toList();
+      for (var i = 0; i < chatsprovider.forumMessages.length; i++) {
+        var forum = chatsprovider.forumMessages[i];
+        if (widget.groupId == forum.info.id.toString()) {
+          messages = forum.messages
+              .map(
+                (msg) => chatsprovider.convertToChatPayload(msg),
+              )
+              .toList();
+          break;
+        }
+      }
     }
     return Scaffold(
       appBar: PreferredSize(

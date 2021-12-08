@@ -22,6 +22,7 @@ class ServiceUtility {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx and is also not 304.
     if (e.response != null) {
+      print(e.response!.data);
       return ErrorMessage(
           message: e.response!.data, status: e.response!.statusCode.toString());
     } else {

@@ -107,7 +107,9 @@ class ChatProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void appendNewChat(ChatDto chat) {
+  void appendNewChat(
+    ChatDto chat,
+  ) {
     this._privateMsgs.add(
           ChatPayload(
             id: chat.data.payload.id,
@@ -120,6 +122,34 @@ class ChatProvider with ChangeNotifier {
             reciepient: chat.data.payload.reciepient,
           ),
         );
-    print(" chat ${_privateMsgs.length}");
+  }
+
+  sendGroupMessage(ChatPayload chat, String userId) async {
+    var service = CounselingServiceProvider();
+    var result = await service.groupCounseling(chat, userId);
+    result!.fold((chat) {
+      this._groupMsgs.forEach(
+        (group) {
+          if (group.info.id == chat.data.payload.groupsId) {
+            appendToGroupMessages(group, chat);
+          }
+        },
+      );
+    }, (error) => print(error.message));
+  }
+
+  void appendToGroupMessages(Msg group, ChatDto chat) {
+    group.messages.add(
+      PeerMsg(
+        id: chat.data.payload.id,
+        message: chat.data.payload.message,
+        imageUrl: chat.data.payload.imageUrl,
+        senderId: chat.data.payload.senderId,
+        groupsId: chat.data.payload.groupsId ?? "",
+        reply: chat.data.payload.reply ?? "",
+        status: chat.data.payload.status,
+        reciepient: chat.data.payload.reciepient,
+      ),
+    );
   }
 }

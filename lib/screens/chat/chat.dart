@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:rada_egerton/screens/chat/chat.model.dart' as ChatModel;
+import 'package:rada_egerton/theme.dart';
 import 'package:rada_egerton/widgets/chatInput.dart';
 import '../../widgets/buildChatItem.dart';
 
@@ -30,6 +31,29 @@ class Chat<T> extends StatefulWidget {
 class _ChatState extends State<Chat> {
   ChatModel.Chat? reply;
   FocusNode inputNode = FocusNode();
+  TextEditingController _chatController = TextEditingController();
+  @override
+  void dispose() {
+    super.dispose();
+    inputNode.dispose();
+  }
+
+  onTap() {
+    var chat = ChatPayload(
+      groupsId: widget.groupId,
+      id: 0,
+      imageUrl: "",
+      message: _chatController.text,
+      senderId: widget.currentUserId,
+      reciepient: widget.reciepient,
+      reply: reply?.id.toString(),
+      status: "0",
+    );
+
+    widget.sendMessage(chat, widget.currentUserId);
+    _chatController.clear();
+    inputNode.unfocus();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +63,6 @@ class _ChatState extends State<Chat> {
         )
         .toList();
 
-    final chatProvider = Provider.of<ChatProvider>(context, listen: true);
-    chatProvider.addListener(() => setState(() {}));
     void initReply(ChatModel.Chat reply) {
       this.reply = reply;
       inputNode.requestFocus();
@@ -75,17 +97,8 @@ class _ChatState extends State<Chat> {
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                reply != null ? replyToMessage(reply!) : Container(),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: chatInput(
-                      widget.sendMessage,
-                      widget.currentUserId,
-                      widget.reciepient,
-                      widget.groupId,
-                      reply?.id.toString(),
-                      inputNode),
-                ),
+                // reply != null ? replyToMessage(reply!) : Container(),
+                chatInput(context),
               ],
             ),
           ],
@@ -97,7 +110,7 @@ class _ChatState extends State<Chat> {
   Widget replyToMessage(ChatModel.Chat chat) {
     return Container(
         decoration: BoxDecoration(color: Colors.white),
-        margin: EdgeInsets.only(bottom: 2),
+        // margin: EdgeInsets.only(bottom: 2),
         child: Row(children: [
           Icon(
             Icons.reply,
@@ -109,5 +122,66 @@ class _ChatState extends State<Chat> {
                   }),
               icon: Icon(Icons.close))
         ]));
+  }
+
+  Widget chatInput(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 8, bottom: 3, right: 8, top: 2),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    reply != null ? replyToMessage(reply!) : Container(),
+                    Row(
+                      children: <Widget>[
+                        SizedBox(width: 8.0),
+                        Icon(Icons.insert_emoticon,
+                            size: 30.0, color: Theme.of(context).hintColor),
+                        SizedBox(width: 8.0),
+                        Expanded(
+                          child: TextField(
+                            maxLines: 10,
+                            minLines: 1,
+                            // expands: true,
+                            controller: this._chatController,
+                            focusNode: this.inputNode,
+                            decoration: InputDecoration(
+                              hintText: 'Type a message',
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8.0),
+                        Icon(Icons.camera_alt,
+                            size: 30.0, color: Theme.of(context).hintColor),
+                        SizedBox(width: 8.0),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 5.0,
+          ),
+          GestureDetector(
+            onTap: onTap,
+            child: CircleAvatar(
+              backgroundColor: Palette.accent,
+              child: Icon(
+                Icons.send,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
