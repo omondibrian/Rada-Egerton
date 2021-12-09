@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:rada_egerton/config.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
@@ -16,7 +17,7 @@ class ChatProvider with ChangeNotifier {
   late Channel channel;
   late String _userId;
   late PusherClient _pusher;
-
+  ChangeNotifierInfo? info;
   List<chats.ChatPayload> _privateMsgs = [];
   List<Msg> _groupMsgs = [];
   List<Msg> _forumMsgs = [];
@@ -57,6 +58,7 @@ class ChatProvider with ChangeNotifier {
           ),
         ),
       );
+      info = ChangeNotifierInfo("Connected", Colors.green);
       notifyListeners();
     });
   }
@@ -108,9 +110,12 @@ class ChatProvider with ChangeNotifier {
     var service = CounselingServiceProvider();
     ChatPayload chatData = finalChatPayload(chat);
     final result = await service.peerCounseling(chatData, userId);
-    result!.fold((chat) {
+    result.fold((chat) {
       appendNewChat(chat);
-    }, (r) => null);
+    }, (error) {
+      print(error);
+      info = ChangeNotifierInfo(error.message, Colors.red);
+    });
     notifyListeners();
   }
 
@@ -163,7 +168,10 @@ class ChatProvider with ChangeNotifier {
           }
         },
       );
-    }, (error) => print(error.message));
+    }, (error) {
+      info = ChangeNotifierInfo(error.message, Colors.red);
+    });
+    notifyListeners();
   }
 
   void appendToGroupMessages(Msg group, ChatDto chat) {

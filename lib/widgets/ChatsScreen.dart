@@ -36,6 +36,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final chatsprovider = Provider.of<ChatProvider>(context);
     final radaProvider = Provider.of<RadaApplicationProvider>(context);
+
     List<ChatPayload> messages = [];
     if (widget.mode == ChatModes.PRIVATE) {
       messages = ServiceUtility.combinePeerMsgs(
@@ -63,31 +64,30 @@ class _ChatScreenState extends State<ChatScreen> {
       }
     }
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: SizedBox(
-          child: SafeArea(
-            child: CustomAppBar(
-              title: this.widget.title,
-              imgUrl: this.widget.imgUrl,
-              groupId: this.widget.groupId,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(60),
+          child: SizedBox(
+            child: SafeArea(
+              child: CustomAppBar(
+                title: this.widget.title,
+                imgUrl: this.widget.imgUrl,
+                groupId: this.widget.groupId,
+              ),
             ),
           ),
         ),
-      ),
-      body: radaProvider.user!.id.isEmpty
-          ? Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor,
-              ),
-            )
-          : Chat<ChatPayload>(
-              currentUserId: radaProvider.user!.id,
-              chatList: messages,
-              sendMessage: this.widget.sendMessage,
-              reciepient: this.widget.reciepient,
-              groupId: this.widget.groupId,
-            ),
-    );
+        body: radaProvider.user!.id.isEmpty
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
+                ),
+              )
+            : Chat<ChatPayload>(
+                currentUserId: radaProvider.user!.id,
+                chatList: messages,
+                sendMessage: this.widget.sendMessage,
+                reciepient: this.widget.reciepient,
+                groupId: this.widget.groupId,
+              ));
   }
 }

@@ -176,9 +176,9 @@ class CounselingServiceProvider {
 
       return Left(
         GroupDTO(
-          id: result.data['id'],
-          title: result.data['title'],
-          image: result.data['image'],
+          id: result.data['data']['payload']['id'].toString(),
+          title: result.data['data']['payload']['title'],
+          image: result.data['data']['payload']['image'],
         ),
       );
     } on DioError catch (e) {
@@ -258,7 +258,7 @@ class CounselingServiceProvider {
   Future<Either<UserDTO, ErrorMessage>?> queryUserData(String queryString) async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
-      final result = await this._httpClientConn.put(
+      final result = await this._httpClientConn.get(
             "${this._hostUrl}/api/v1/admin/user/queryUserInfo/$queryString",
             options: Options(headers: {
               'Authorization': token,
@@ -300,7 +300,7 @@ class CounselingServiceProvider {
   ///@description sends chat messages between two users i.e from counsellor to client
   ///@params { Chat }  chatData contains the message payload to be deliverd to the  reciepient
   ///@returns chatDTO
-  Future<Either<ChatDto, ErrorMessage>?> peerCounseling(
+  Future<Either<ChatDto, ErrorMessage>> peerCounseling(
       ChatPayload chatData, String userId) async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;

@@ -15,13 +15,8 @@ class CustomAppBar extends StatelessWidget {
     required this.imgUrl,
     this.groupId,
   }) : super(key: key);
-  
-  Widget addMember(BuildContext ctx) {
-    return AddMembers(
-      groupId: this.groupId!,
-    );
-  }
 
+ 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<RadaApplicationProvider>(context);
@@ -68,9 +63,13 @@ class CustomAppBar extends StatelessWidget {
               child: Text('Add Member'),
               onTap: () {
                 showBottomSheet(
-                  context: context,
-                  builder: addMember,
-                );
+                    context: context,
+                    builder: (ctx) => AddMembers(
+                          groupId: this.groupId!,
+                        ),
+                    constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height * 0.5,
+                        maxWidth: MediaQuery.of(context).size.width));
               },
             ),
             PopupMenuItem(
