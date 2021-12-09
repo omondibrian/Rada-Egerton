@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rada_egerton/providers/UserProvider.dart';
+import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/theme.dart';
-import 'package:rada_egerton/widgets/RadaButton.dart';
-import 'package:rada_egerton/widgets/defaultInput.dart';
-
-import '../sizeConfig.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String title;
@@ -20,116 +16,7 @@ class CustomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var radaApplicationProvider = Provider.of<RadaApplicationProvider>(context);
-    void _openBottomSheet() {
-      showBottomSheet(
-          context: context,
-          builder: (context) {
-            final theme = Theme.of(context);
-            return Wrap(
-              children: [
-                ListTile(
-                  title: Text('Title 1'),
-                ),
-                ListTile(
-                  title: Text('Title 2'),
-                ),
-                ListTile(
-                  title: Text('Title 3'),
-                ),
-                ListTile(
-                  title: Text('Title 4'),
-                ),
-                ListTile(
-                  title: Text('Title 5'),
-                ),
-              ],
-            );
-          });
-    }
-
-    _addNewGroup() {
-      validator(value) {
-        if (value == null || value.isEmpty) {
-          return 'This value is required';
-        }
-      }
-
-      final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-      final grpNameController = TextEditingController();
-      final descriptionController = TextEditingController();
-
-      void _handleSubmit(BuildContext context) async {
-        try {
-          if (_formKey.currentState!.validate()) {
-            radaApplicationProvider.createNewGroup(
-                grpNameController.text, descriptionController.text);
-          }
-        } catch (e) {
-          print(e);
-        }
-      }
-
-      showModalBottomSheet(
-          context: context,
-          builder: (context) {
-            return Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: SizeConfig.isTabletWidth ? 600 : 290.0,
-                      child: TextFormField(
-                        textAlign: TextAlign.start,
-                        decoration: InputDecoration(
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                          hintText: "GroupName",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                            borderSide: const BorderSide(
-                                color: Color(0X55CED0D2), width: 0.0),
-                          ),
-                        ),
-                        controller: grpNameController,
-                        validator: validator,
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.isTabletWidth ? 600 : 290.0,
-                      child: TextFormField(
-                        textAlign: TextAlign.start,
-                        decoration: InputDecoration(
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                          hintText: "Description ...",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                            borderSide: const BorderSide(
-                                color: Color(0X55CED0D2), width: 0.0),
-                          ),
-                        ),
-                        controller: descriptionController,
-                        validator: validator,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    RadaButton(
-                      title: 'create',
-                      handleClick: () => _handleSubmit(context),
-                      fill: true,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          });
-    }
-
+    final provider = Provider.of<RadaApplicationProvider>(context);
     return Row(
       children: [
         IconButton(
@@ -171,18 +58,19 @@ class CustomAppBar extends StatelessWidget {
           itemBuilder: (_) => [
             PopupMenuItem(
               child: Text('Add Member'),
-              onTap: _openBottomSheet,
+              onTap: () {},
             ),
             PopupMenuItem(
-              child: Text('+ New Group'),
-              onTap: _addNewGroup,
+              onTap: () {
+                provider.leaveGroup(groupId!);
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Leave Group',
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+              // onTap: _openBottomSheet
             ),
-            PopupMenuItem(
-                child: Text(
-                  'Leave Group',
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
-                ),
-                onTap: () => radaApplicationProvider.leftGroup(this.groupId!)),
           ],
         )
       ],

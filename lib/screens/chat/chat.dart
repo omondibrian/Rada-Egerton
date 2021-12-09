@@ -30,8 +30,8 @@ class _ChatState extends State<Chat> {
   TextEditingController _chatController = TextEditingController();
   @override
   void dispose() {
-    super.dispose();
     inputNode.dispose();
+    super.dispose();
   }
 
   onTap() {
@@ -42,8 +42,9 @@ class _ChatState extends State<Chat> {
       message: _chatController.text,
       senderId: widget.currentUserId,
       reciepient: widget.reciepient,
-      reply: reply?.id.toString(),
+      reply: reply?.id,
       status: "0",
+      
     );
 
     widget.sendMessage(chat, widget.currentUserId);
@@ -66,6 +67,12 @@ class _ChatState extends State<Chat> {
     }
 
 // to open keyboard call this function;
+    ChatModel.Chat? _filterChat(String? id) {
+      if (id == null) return null;
+      for (int i = 0; i < _chats.length; ++i) {
+        if (_chats[i].id == id) return _chats[i];
+      }
+    }
 
     return Scaffold(
       body: Container(
@@ -83,17 +90,16 @@ class _ChatState extends State<Chat> {
               padding: EdgeInsets.only(top: 10.0, bottom: 50),
               child: ListView.builder(
                 itemCount: _chats.length,
-                itemBuilder: (BuildContext ctx, index) => buildItem(
-                  widget.currentUserId,
-                  _chats[index],
-                  initReply,
-                ),
+                itemBuilder: (BuildContext ctx, index) => buildChatItem(
+                    widget.currentUserId,
+                    _chats[index],
+                    initReply,
+                    _filterChat(_chats[index].reply)),
               ),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                // reply != null ? replyToMessage(reply!) : Container(),
                 chatInput(context),
               ],
             ),
@@ -105,7 +111,13 @@ class _ChatState extends State<Chat> {
 
   Widget replyToMessage(ChatModel.Chat chat) {
     return Container(
-        decoration: BoxDecoration(color: Colors.white),
+        margin: EdgeInsets.only(left: 3),
+        decoration: BoxDecoration(
+          border: Border(
+            left: BorderSide(width: 5.0, color: Palette.accent),
+          ),
+          color: Colors.white,
+        ),
         // margin: EdgeInsets.only(bottom: 2),
         child: Row(children: [
           Icon(
