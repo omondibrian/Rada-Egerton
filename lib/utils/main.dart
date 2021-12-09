@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/rendering.dart';
 import 'package:pusher_client/pusher_client.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
@@ -59,7 +60,7 @@ class ServiceUtility {
   }
 
   static List<ForumPayload> parseForums(
-      Groups.GroupsDto? forums, List<Msg> forumMsgs)  {
+      Groups.GroupsDto? forums, List<Msg> forumMsgs) {
     if (forums == null) return [];
     List<ForumPayload> finalForumList = [];
     for (var i = 0; i < forumMsgs.length; i++) {
@@ -133,4 +134,10 @@ class ForumPayload {
   bool isSubscribed;
   Groups.Payload forum;
   ForumPayload({required this.isSubscribed, required this.forum});
+}
+
+class ChangeNotifierInfo {
+  String message;
+  Color messageTypeColor;
+  ChangeNotifierInfo(this.message, this.messageTypeColor);
 }

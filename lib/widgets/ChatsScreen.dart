@@ -36,6 +36,14 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final chatsprovider = Provider.of<ChatProvider>(context);
     final radaProvider = Provider.of<RadaApplicationProvider>(context);
+    print("chat provide_${chatsprovider.info}");
+    if (chatsprovider.info != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(chatsprovider.info!.message,
+            style: TextStyle(color: chatsprovider.info!.messageTypeColor)),
+        duration: Duration(seconds: 10),
+      ));
+    }
     List<ChatPayload> messages = [];
     if (widget.mode == ChatModes.PRIVATE) {
       messages = ServiceUtility.combinePeerMsgs(
