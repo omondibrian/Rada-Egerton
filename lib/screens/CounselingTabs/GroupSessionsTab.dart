@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+import 'package:rada_egerton/providers/ApplicationProvider.dart';
+import 'package:rada_egerton/theme.dart';
+import 'package:rada_egerton/widgets/NewGroupForm.dart';
+
 import '../../sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,9 +28,10 @@ class GroupSessionsTab extends StatelessWidget {
       chatsprovider.getConversations();
     }
 
+    var radaApplicationProvider = Provider.of<RadaApplicationProvider>(context);
+
     Widget conversationBuilder(BuildContext ctx, int index) {
       Info infoConversations = conversations[index].info;
-      print(jsonEncode(infoConversations));
       return GestureDetector(
         onTap: () => Navigator.push(
           context,
@@ -71,25 +76,37 @@ class GroupSessionsTab extends StatelessWidget {
       );
     }
 
-    return conversations.isNotEmpty
-        ? RefreshIndicator(
-            onRefresh: () => _refreshChat(),
-            backgroundColor: Theme.of(context).primaryColor,
-            color: Colors.white,
-            displacement: 20.0,
-            edgeOffset: 5.0,
-            child: ListView.builder(
-              itemBuilder: conversationBuilder,
-              itemCount: conversations.length,
-            ),
-          )
-        : Center(
-            child: SizedBox(
-              width: 80,
-              height: 80,
-              child:
-                  SpinKitSpinningLines(color: Theme.of(context).primaryColor),
-            ),
-          );
+    return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.group_add,color: Colors.white,),
+          backgroundColor: Palette.accent,
+          onPressed: () {
+            showBottomSheet(
+                context: context,
+                builder: (context) {
+                  return newGroupForm(context, radaApplicationProvider);
+                });
+          },
+        ),
+        body: conversations.isNotEmpty
+            ? RefreshIndicator(
+                onRefresh: () => _refreshChat(),
+                backgroundColor: Theme.of(context).primaryColor,
+                color: Colors.white,
+                displacement: 20.0,
+                edgeOffset: 5.0,
+                child: ListView.builder(
+                  itemBuilder: conversationBuilder,
+                  itemCount: conversations.length,
+                ),
+              )
+            : Center(
+                child: SizedBox(
+                  width: 80,
+                  height: 80,
+                  child: SpinKitSpinningLines(
+                      color: Theme.of(context).primaryColor),
+                ),
+              ));
   }
 }

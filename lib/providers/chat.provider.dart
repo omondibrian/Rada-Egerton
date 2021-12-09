@@ -21,7 +21,7 @@ class ChatProvider with ChangeNotifier {
   List<Msg> _groupMsgs = [];
   List<Msg> _forumMsgs = [];
   String _channelName = "radaComms";
-  late UserRole userRole;
+  UserRole userRole = UserRole([]);
 
   CounselingServiceProvider _service = CounselingServiceProvider();
 

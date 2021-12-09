@@ -1,7 +1,3 @@
-import 'package:provider/provider.dart';
-import 'package:rada_egerton/providers/ApplicationProvider.dart';
-import 'package:rada_egerton/theme.dart';
-import 'package:rada_egerton/widgets/NewGroupForm.dart';
 
 import '../sizeConfig.dart';
 import 'package:flutter/material.dart';
@@ -16,20 +12,9 @@ class Counseling extends StatelessWidget {
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
-    var radaApplicationProvider = Provider.of<RadaApplicationProvider>(context);
 
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.group_add),
-          backgroundColor: Palette.accent,
-          onPressed: () {
-            showBottomSheet(
-                context: context,
-                builder: (context) {
-                  return NewGroupForm(context, radaApplicationProvider);
-                });
-          },
-        ),
+       
         body: DefaultTabController(
           length: 4,
           child: NestedScrollView(

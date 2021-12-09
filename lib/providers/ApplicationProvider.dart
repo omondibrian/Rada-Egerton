@@ -34,7 +34,8 @@ class RadaApplicationProvider with ChangeNotifier {
     return _serviceProvider.subToNewGroup(this._user!.id, grpId);
   }
 
-  Future<Either<GroupDTO, ErrorMessage>?> leftGroup(String grpId) async {
+  Future<Either<GroupDTO, ErrorMessage>?> leaveGroup(String grpId) async {
+    print("group id $grpId");
     return _serviceProvider.exitGroup(grpId);
   }
 

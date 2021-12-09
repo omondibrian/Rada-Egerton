@@ -68,7 +68,10 @@ class _ChatScreenState extends State<ChatScreen> {
         child: SizedBox(
           child: SafeArea(
             child: CustomAppBar(
-                title: this.widget.title, imgUrl: this.widget.imgUrl),
+              title: this.widget.title,
+              imgUrl: this.widget.imgUrl,
+              groupId: this.widget.groupId,
+            ),
           ),
         ),
       ),

@@ -70,7 +70,7 @@ class _ChatState extends State<Chat> {
     ChatModel.Chat? _filterChat(String? id) {
       if (id == null) return null;
       for (int i = 0; i < _chats.length; ++i) {
-        if (_chats[i].reply == id) return _chats[i];
+        if (_chats[i].id == id) return _chats[i];
       }
     }
 

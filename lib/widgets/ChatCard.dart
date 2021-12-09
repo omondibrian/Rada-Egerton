@@ -20,16 +20,16 @@ class ChatCard extends StatelessWidget {
         decoration: BoxDecoration(
             color: chatCardColor, borderRadius: BorderRadius.circular(8.0)),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (replyTo != null)
               Container(
                 child: Text(replyTo!.content),
-                padding: EdgeInsets.symmetric(vertical: 3),
+                padding: EdgeInsets.symmetric(vertical: 3,horizontal: 3),
                 decoration: BoxDecoration(
                   border: Border(
                     left: BorderSide(width: 5.0, color: Palette.accent),
                   ),
-                  color: Colors.white,
                 ),
               ),
             chat.media!.isEmpty

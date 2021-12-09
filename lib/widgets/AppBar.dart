@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/theme.dart';
-import 'package:rada_egerton/widgets/NewGroupForm.dart';
-import 'package:rada_egerton/widgets/RadaButton.dart';
-import 'package:rada_egerton/widgets/defaultInput.dart';
-
-import '../sizeConfig.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String title;
@@ -21,36 +16,7 @@ class CustomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    void _openBottomSheet() {
-      showBottomSheet(
-          context: context,
-          builder: (context) {
-            final theme = Theme.of(context);
-            return Wrap(
-              children: [
-                ListTile(
-                  title: Text('Title 1'),
-                ),
-                ListTile(
-                  title: Text('Title 2'),
-                ),
-                ListTile(
-                  title: Text('Title 3'),
-                ),
-                ListTile(
-                  title: Text('Title 4'),
-                ),
-                ListTile(
-                  title: Text('Title 5'),
-                ),
-              ],
-            );
-          });
-    }
-
-  
-
+    final provider = Provider.of<RadaApplicationProvider>(context);
     return Row(
       children: [
         IconButton(
@@ -92,10 +58,13 @@ class CustomAppBar extends StatelessWidget {
           itemBuilder: (_) => [
             PopupMenuItem(
               child: Text('Add Member'),
-              onTap: _openBottomSheet,
+              onTap: () {},
             ),
-
             PopupMenuItem(
+              onTap: () {
+                provider.leaveGroup(groupId!);
+                Navigator.of(context).pop();
+              },
               child: Text(
                 'Leave Group',
                 style: TextStyle(color: Theme.of(context).colorScheme.error),

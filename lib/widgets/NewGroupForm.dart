@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/providers/ApplicationProvider.dart';
 
-Widget NewGroupForm(
+Widget newGroupForm(
   BuildContext context,
   RadaApplicationProvider radaApplicationProvider,
 ) {
@@ -17,6 +17,7 @@ Widget NewGroupForm(
         radaApplicationProvider.createNewGroup(
             grpNameController.text, descriptionController.text);
       }
+      Navigator.of(context).pop();
     } catch (e) {
       print(e);
     }
@@ -29,12 +30,22 @@ Widget NewGroupForm(
   }
 
   return Wrap(children: [
-    Padding(
-      padding: const EdgeInsets.all(20.0),
+    Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: Colors.grey.shade200))),
       child: Form(
         key: _formKey,
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Create New Group",
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline2,
+              ),
+            ),
             SizedBox(
               child: TextFormField(
                 textAlign: TextAlign.start,
@@ -86,7 +97,7 @@ Widget NewGroupForm(
               Expanded(
                 child: RadaButton(
                   title: 'close',
-                  handleClick: () => _handleSubmit(context),
+                  handleClick: () => Navigator.of(context).pop(),
                   fill: false,
                 ),
               ),
