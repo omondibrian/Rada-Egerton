@@ -43,7 +43,7 @@ class CounselorsTab extends StatelessWidget {
           ),
         ),
         child: Card(
-          elevation: 1,
+          elevation: 0,
           margin: EdgeInsets.only(bottom: 10),
           child: Row(
             children: [

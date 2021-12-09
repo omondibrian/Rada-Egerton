@@ -39,13 +39,13 @@ class PeerCounselorsTab extends StatelessWidget {
           ),
         ),
         child: Card(
+          elevation: 0,
           margin: EdgeInsets.only(bottom: 10),
           child: Row(
             children: [
               Column(
                 children: [
                   CircleAvatar(
-                    radius: SizeConfig.isTabletWidth ? 40 : 20.0,
                     child: ClipOval(
                       child: CachedNetworkImage(
                         imageUrl:

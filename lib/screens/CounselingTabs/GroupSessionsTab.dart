@@ -49,7 +49,6 @@ class GroupSessionsTab extends StatelessWidget {
         ),
         child: ListTile(
           leading: CircleAvatar(
-            radius: SizeConfig.isTabletWidth ? 98 : 20.0,
             child: ClipOval(
               child: CachedNetworkImage(
                 imageUrl: "$BASE_URL/api/v1/uploads/${infoConversations.image}",

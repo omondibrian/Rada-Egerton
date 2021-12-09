@@ -110,9 +110,10 @@ class ChatProvider with ChangeNotifier {
     var service = CounselingServiceProvider();
     ChatPayload chatData = finalChatPayload(chat);
     final result = await service.peerCounseling(chatData, userId);
-    result!.fold((chat) {
+    result.fold((chat) {
       appendNewChat(chat);
     }, (error) {
+      print(error);
       info = ChangeNotifierInfo(error.message, Colors.red);
     });
     notifyListeners();

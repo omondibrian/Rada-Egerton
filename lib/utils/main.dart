@@ -24,9 +24,9 @@ class ServiceUtility {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx and is also not 304.
     if (e.response != null) {
-      print(e.response!.data);
       return ErrorMessage(
-          message: e.response!.data, status: e.response!.statusCode.toString());
+          message: e.response!.data["message"] ?? "An error occured",
+          status: e.response!.statusCode.toString());
     } else {
       // Something happened in setting up or sending the request that triggered an Error
 
