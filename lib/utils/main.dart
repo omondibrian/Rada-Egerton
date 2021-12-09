@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pusher_client/pusher_client.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
@@ -9,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ServiceUtility {
   // late final DataConnectionChecker connection;
+  final ImagePicker _imagePicker = ImagePicker();
   static Future<String?> getAuthToken() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     final token = _prefs.getString("TOKEN");
@@ -84,6 +88,12 @@ class ServiceUtility {
       }
     }
     return finalForumList;
+  }
+
+  Future<File> uploadImage() async {
+    var pickedImage = await _imagePicker.pickImage(source: ImageSource.gallery);
+    File imageFile = File(pickedImage!.path);
+    return imageFile;
   }
 }
 
