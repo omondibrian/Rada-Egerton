@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/entities/GroupDTO.dart';
@@ -62,7 +63,7 @@ class CounselingServiceProvider {
           );
       payload = result.data["counsellor"];
     } on DioError catch (e) {
-      Right(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -98,7 +99,7 @@ class CounselingServiceProvider {
         peerCounsellors.add(PeerCounsellorDto.fromJson(payload[i]));
       }
     } on DioError catch (e) {
-      Right(
+     return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -137,7 +138,7 @@ class CounselingServiceProvider {
       print(result.data);
       return Left(GroupsDto.fromJson(result.data));
     } on DioError catch (e) {
-      Right(
+     return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -157,7 +158,7 @@ class CounselingServiceProvider {
         GroupsDto.fromJson(result.data),
       );
     } on DioError catch (e) {
-      Right(ServiceUtility.handleDioExceptions(e));
+     return Right(ServiceUtility.handleDioExceptions(e));
     }
   }
 
@@ -181,7 +182,7 @@ class CounselingServiceProvider {
         ),
       );
     } on DioError catch (e) {
-      Right(ServiceUtility.handleDioExceptions(e));
+     return Right(ServiceUtility.handleDioExceptions(e));
     }
   }
 
@@ -198,7 +199,7 @@ class CounselingServiceProvider {
         UserChatDto.fromJson(result.data),
       );
     } on DioError catch (e) {
-      Right(
+     return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -224,7 +225,7 @@ class CounselingServiceProvider {
         GroupDTO.fromJson(result.data['data']['payload']),
       );
     } on DioError catch (e) {
-      Right(
+     return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -247,7 +248,27 @@ class CounselingServiceProvider {
             image: result.data['image']),
       );
     } on DioError catch (e) {
-      Right(
+     return Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
+    }
+  }
+
+    /// query user data
+  Future<Either<UserDTO, ErrorMessage>?> queryUserData(String queryString) async {
+    try {
+      String token = await ServiceUtility.getAuthToken() as String;
+      final result = await this._httpClientConn.put(
+            "${this._hostUrl}/api/v1/admin/user/queryUserInfo/$queryString",
+            options: Options(headers: {
+              'Authorization': token,
+            }, sendTimeout: 10000),
+          );
+      return Left(
+        UserDTO.fromJson(result.data["user"])
+      );
+    } on DioError catch (e) {
+     return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -270,7 +291,7 @@ class CounselingServiceProvider {
             image: result.data['image']),
       );
     } on DioError catch (e) {
-      Right(
+     return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -304,7 +325,7 @@ class CounselingServiceProvider {
         ChatDto.fromJson(result.data),
       );
     } on DioError catch (e) {
-      Right(
+     return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -338,7 +359,7 @@ class CounselingServiceProvider {
         ChatDto.fromJson(result.data),
       );
     } on DioError catch (e) {
-      Right(
+     return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }

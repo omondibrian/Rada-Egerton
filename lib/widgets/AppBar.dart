@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/theme.dart';
 
+import 'AddMembers.dart';
+
 class CustomAppBar extends StatelessWidget {
   final String title;
   final String imgUrl;
@@ -13,6 +15,12 @@ class CustomAppBar extends StatelessWidget {
     required this.imgUrl,
     this.groupId,
   }) : super(key: key);
+  
+  Widget addMember(BuildContext ctx) {
+    return AddMembers(
+      groupId: this.groupId!,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +66,12 @@ class CustomAppBar extends StatelessWidget {
           itemBuilder: (_) => [
             PopupMenuItem(
               child: Text('Add Member'),
-              onTap: () {},
+              onTap: () {
+                showBottomSheet(
+                  context: context,
+                  builder: addMember,
+                );
+              },
             ),
             PopupMenuItem(
               onTap: () {

@@ -21,7 +21,7 @@ class AuthServiceProvider {
           "${this._hostUrl}/api/v1/admin/user/register",
           data: user.toJson());
     } on DioError catch (e) {
-      Right(
+     return  Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -36,8 +36,6 @@ class AuthServiceProvider {
           data: {'email': email, 'password': password});
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('TOKEN', result.data["payload"]["token"]);
-      //TODO: remove print statement
-      print(result.data["payload"]["token"]);
     } on DioError catch (e) {
       Right(
         ServiceUtility.handleDioExceptions(e),
@@ -57,7 +55,7 @@ class AuthServiceProvider {
           data: data);
       return this._saveUser(_profile, _prefs);
     } on DioError catch (e) {
-      Right(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -97,7 +95,7 @@ class AuthServiceProvider {
       }
       return Left(UserDTO.fromJson(json.decode(_user)));
     } on DioError catch (e) {
-      Right(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
