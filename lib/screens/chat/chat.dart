@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/screens/chat/chat.model.dart' as ChatModel;
 import 'package:rada_egerton/theme.dart';
+import 'package:rada_egerton/utils/main.dart';
 
 import '../../widgets/buildChatItem.dart';
 
@@ -34,6 +37,7 @@ class _ChatState extends State<Chat> {
     super.dispose();
   }
 
+  // File? imageUrl;
   onTap() {
     var chat = ChatPayload(
       groupsId: widget.groupId,
@@ -44,7 +48,6 @@ class _ChatState extends State<Chat> {
       reciepient: widget.reciepient,
       reply: reply?.id,
       status: "0",
-      
     );
 
     widget.sendMessage(chat, widget.currentUserId);
@@ -148,9 +151,9 @@ class _ChatState extends State<Chat> {
                     Row(
                       children: <Widget>[
                         SizedBox(width: 8.0),
-                        Icon(Icons.insert_emoticon,
-                            size: 30.0, color: Theme.of(context).hintColor),
-                        SizedBox(width: 8.0),
+                        // Icon(Icons.insert_emoticon,
+                        //     size: 30.0, color: Theme.of(context).hintColor),
+                        // SizedBox(width: 8.0),
                         Expanded(
                           child: TextField(
                             maxLines: 10,
@@ -165,9 +168,15 @@ class _ChatState extends State<Chat> {
                           ),
                         ),
                         SizedBox(width: 8.0),
-                        Icon(Icons.camera_alt,
-                            size: 30.0, color: Theme.of(context).hintColor),
-                        SizedBox(width: 8.0),
+                        // IconButton(
+                        //   icon: Icon(Icons.camera_alt,
+                        //       size: 30.0, color: Theme.of(context).hintColor),
+                        //   onPressed: () async {
+                        //     this.imageUrl =
+                        //         await ServiceUtility().uploadImage();
+                        //   },
+                        // ),
+                        // SizedBox(width: 8.0),
                       ],
                     ),
                   ],
