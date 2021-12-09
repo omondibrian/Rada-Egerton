@@ -21,7 +21,7 @@ class AuthServiceProvider {
           "${this._hostUrl}/api/v1/admin/user/register",
           data: user.toJson());
     } on DioError catch (e) {
-     return  Right(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -44,7 +44,7 @@ class AuthServiceProvider {
     return left(null);
   }
 
-  Future<Either<UserDTO, ErrorMessage>?> updateProfile(UserDTO data) async {
+  Future<Either<UserDTO, ErrorMessage>> updateProfile(UserDTO data) async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     try {
       String authToken = await ServiceUtility.getAuthToken() as String;
@@ -52,8 +52,14 @@ class AuthServiceProvider {
           "${this._hostUrl}/api/v1/admin/user/profile",
           options: Options(
               headers: {'Authorization': authToken}, sendTimeout: 10000),
-          data: data);
-      return this._saveUser(_profile, _prefs);
+          data: json.encode({
+            'name': data.userName,
+            "phone": data.phone,
+          }));
+
+      UserDTO user = UserDTO.fromJson(_profile.data["user"]);
+      _prefs.setString("user", userDtoToJson(user));
+      return Left(user);
     } on DioError catch (e) {
       return Right(
         ServiceUtility.handleDioExceptions(e),
@@ -91,7 +97,9 @@ class AuthServiceProvider {
                   headers: {'Authorization': authToken}, sendTimeout: 10000),
             );
         // print(_profile.data);
-        return _saveUser(_profile, _prefs);
+        UserDTO user = UserDTO.fromJson(_profile.data["user"]);
+        _prefs.setString("user", userDtoToJson(user));
+        return Left(user);
       }
       return Left(UserDTO.fromJson(json.decode(_user)));
     } on DioError catch (e) {
@@ -102,9 +110,5 @@ class AuthServiceProvider {
     // return null;
   }
 
-  _saveUser(Response<dynamic> _profile, SharedPreferences _prefs) {
-    var user = UserDTO.fromJson(_profile.data["user"]);
-    _prefs.setString("user", userDtoToJson(user));
-    return Left(user);
-  }
+
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rada_egerton/sizeConfig.dart';
 
 class Avatar extends StatelessWidget {
-  final ImageProvider<dynamic> image;
+  final String imageUrl;
   final Color borderColor;
   final Color? backgroundColor;
   final double radius;
@@ -11,13 +11,41 @@ class Avatar extends StatelessWidget {
 
   const Avatar(
       {Key? key,
-      required this.image,
+      required this.imageUrl,
       this.borderColor = Colors.green,
       this.backgroundColor,
       this.radius = 30,
       this.borderWidth = 5})
       : super(key: key);
+  void updateProfileImage() async {
+    var pickedImage = await _imagePicker.pickImage(source: ImageSource.gallery);
+    File imageFile = File(pickedImage!.path);
+    try {
+      String imageFileName = imageFile.path.split('/').last;
+      FormData formData = FormData.fromMap(
+        {
+          "profilePic": await MultipartFile.fromFile(imageFile.path,
+              filename: imageFileName),
+        },
+      );
 
+      Future<String?> authToken = _authService.getAuthToken();
+
+      await _httpConnection.put(
+        '$BASE_URL/api/v1/admin/user/profile',
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': authToken,
+            "Content-type": "multipart/form-data",
+          },
+        ),
+      );
+    } catch (e) {
+      //TODO:remove error specification statement
+      print('Error from updateProfile : $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -28,7 +56,7 @@ class Avatar extends StatelessWidget {
           child: CircleAvatar(
             maxRadius: SizeConfig.isTabletWidth ? 97 : 67,
             backgroundImage: CachedNetworkImageProvider(
-              'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+              imageUrl,
             ),
           ),
         ),
