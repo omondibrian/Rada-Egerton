@@ -1,3 +1,6 @@
+import 'package:provider/provider.dart';
+import 'package:rada_egerton/providers/chat.provider.dart';
+
 import 'RadaButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,16 +13,18 @@ Widget newGroupForm(
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final grpNameController = TextEditingController();
   final descriptionController = TextEditingController();
-
+  final _chatProvide = Provider.of<ChatProvider>(context);
   void _handleSubmit(BuildContext context) async {
-    try {
-      if (_formKey.currentState!.validate()) {
-        radaApplicationProvider.createNewGroup(
-            grpNameController.text, descriptionController.text);
-      }
+    if (_formKey.currentState!.validate()) {
+      final _info = await radaApplicationProvider.createNewGroup(
+          grpNameController.text, descriptionController.text);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+        _info.message,
+        style: TextStyle(color: _info.messageTypeColor),
+      )));
+      _chatProvide.getConversations();
       Navigator.of(context).pop();
-    } catch (e) {
-      print(e);
     }
   }
 

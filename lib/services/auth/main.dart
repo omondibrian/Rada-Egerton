@@ -75,7 +75,9 @@ class AuthServiceProvider {
             options: Options(
                 headers: {'Authorization': authToken}, sendTimeout: 10000),
           );
-      return Left(UserRole(_result.data["userRole"]["role"]));
+      Iterable _userRoles = _result.data["userRole"]["role"];
+      return Left(
+          UserRole(List<String>.from(_userRoles.map((r) => r["name"]))));
     } on DioError catch (e) {
       return Right(
         ServiceUtility.handleDioExceptions(e),
@@ -88,7 +90,7 @@ class AuthServiceProvider {
     try {
       final authToken = await ServiceUtility.getAuthToken();
       String? _user = _prefs.getString("user");
-      print(_user);
+
       if (_user == null) {
         print('usrs gfjfhfh');
         var _profile = await this._httpClientConn.get(
@@ -110,5 +112,21 @@ class AuthServiceProvider {
     // return null;
   }
 
-
+  Future<Either<UserDTO, ErrorMessage>?> getStudentProfile(
+      String userId) async {
+    try {
+      final authToken = await ServiceUtility.getAuthToken();
+      var _profile = await this._httpClientConn.get(
+            "${this._hostUrl}/api/v1/admin/user/studentprofile/$userId",
+            options: Options(
+                headers: {'Authorization': authToken}, sendTimeout: 10000),
+          );
+      UserDTO user = UserDTO.fromJson(_profile.data["user"]);
+      return Left(user);
+    } on DioError catch (e) {
+      return Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
+    }
+  }
 }

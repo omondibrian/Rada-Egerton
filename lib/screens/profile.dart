@@ -84,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+     
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: AppBar(
@@ -92,7 +92,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         elevation: 0,
       ),
       body: _user == null
-          ? Text('loading')
+          ? Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ),
+            )
           : SingleChildScrollView(
               child: Column(
                 children: <Widget>[

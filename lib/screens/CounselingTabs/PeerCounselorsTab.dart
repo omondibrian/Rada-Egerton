@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
-import 'package:rada_egerton/providers/counselors.provider.dart';
+import 'package:rada_egerton/providers/counselling.provider.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
 
 import '../../sizeConfig.dart';
@@ -14,6 +15,7 @@ class PeerCounselorsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final counselorprovider = Provider.of<CounselorProvider>(context);
+    final applicationProvider = Provider.of<RadaApplicationProvider>(context);
     final chatsprovider = Provider.of<ChatProvider>(context);
     var counselors = counselorprovider.peerCounselors;
 
@@ -24,20 +26,27 @@ class PeerCounselorsTab extends StatelessWidget {
     Widget peerCounsellorBuilder(BuildContext cxt, int index) {
       var peerCounsellors = counselors[index];
       return GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChatScreen(
-              title: '${peerCounsellors.name}',
-              imgUrl: "$BASE_URL/api/v1/uploads/${peerCounsellors.profilePic}",
-              sendMessage: chatsprovider.sendPeerCounselingMessage,
-              groupId: "",
-              reciepient: peerCounsellors.id.toString(),
-              chatIndex: index,
-              mode: ChatModes.PRIVATE,
+        onTap: () {
+          //prevent
+          if (peerCounsellors.id.toString() == applicationProvider.user!.id) {
+            return null;
+          }
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatScreen(
+                title: '${peerCounsellors.name}',
+                imgUrl:
+                    "$BASE_URL/api/v1/uploads/${peerCounsellors.profilePic}",
+                sendMessage: chatsprovider.sendPrivateCounselingMessage,
+                groupId: "",
+                reciepient: peerCounsellors.id.toString(),
+                chatIndex: index,
+                mode: ChatModes.PRIVATE,
+              ),
             ),
-          ),
-        ),
+          );
+        },
         child: Card(
           elevation: 0,
           margin: EdgeInsets.only(bottom: 10),
@@ -77,12 +86,17 @@ class PeerCounselorsTab extends StatelessWidget {
                   children: [
                     Text(
                       counselors[index].name,
+                      style: Theme.of(context).textTheme.subtitle1,
                     ),
                   ],
                 ),
                 Row(
                   children: [
-                    Text('Expertise : '),
+                    Text('Expertise : ',
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle2!
+                            .copyWith(fontSize: 14)),
                     Text(
                       peerCounsellors.expertise,
                     ),
@@ -108,9 +122,12 @@ class PeerCounselorsTab extends StatelessWidget {
             displacement: 20.0,
             edgeOffset: 5.0,
             child: counselors.isNotEmpty
-                ? ListView.builder(
-                    itemBuilder: peerCounsellorBuilder,
-                    itemCount: counselors.length,
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: ListView.builder(
+                      itemBuilder: peerCounsellorBuilder,
+                      itemCount: counselors.length,
+                    ),
                   )
                 : Padding(
                     padding: const EdgeInsets.all(8.0),

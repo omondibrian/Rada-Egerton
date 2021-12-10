@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/theme.dart';
 import 'package:rada_egerton/utils/main.dart';
+import 'package:rada_egerton/widgets/AddMembers.dart';
 import 'package:rada_egerton/widgets/AppBar.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/screens/chat/chat.dart';
@@ -11,7 +13,8 @@ import 'package:rada_egerton/providers/chat.provider.dart';
 class ChatScreen extends StatefulWidget {
   final String title;
   final String imgUrl;
-  final Function(ChatPayload chat, String userId) sendMessage;
+  final Future<InfoMessage> Function(ChatPayload chat, String userId)
+      sendMessage;
   final String reciepient;
   final String? groupId;
   final int chatIndex;
@@ -72,6 +75,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 title: this.widget.title,
                 imgUrl: this.widget.imgUrl,
                 groupId: this.widget.groupId,
+                recepientId: widget.reciepient,
+                conversationMode: widget.mode,
               ),
             ),
           ),

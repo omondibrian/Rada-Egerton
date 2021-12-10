@@ -15,6 +15,7 @@ class AppRoutes {
   static const splash = "/splash";
   // static const chat = "/chat";
   static const profile = "/profile";
+  static const viewProfile = "/view-profile";
   static const contributors = "/contributors";
 }
 

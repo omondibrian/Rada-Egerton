@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pusher_client/pusher_client.dart';
@@ -8,6 +9,7 @@ import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/entities/GroupsDTO.dart' as Groups;
 import 'package:rada_egerton/entities/UserChatsDTO.dart';
+import 'package:rada_egerton/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ServiceUtility {
@@ -67,22 +69,24 @@ class ServiceUtility {
       Groups.GroupsDto? forums, List<Msg> forumMsgs) {
     if (forums == null) return [];
     List<ForumPayload> finalForumList = [];
-    for (var i = 0; i < forumMsgs.length; i++) {
-      int subForumIndex = forums.data.payload
-          .indexWhere((info) => info.id == forumMsgs[i].info.id);
+    print("messages $forumMsgs");
+    for (var i = 0; i < forums.data.payload.length; i++) {
+      int subForumIndex = forumMsgs
+          .indexWhere((msg) => msg.info.id == forums.data.payload[i].id);
+      print(subForumIndex);
       if (subForumIndex != -1) {
         finalForumList.insert(
           0,
           ForumPayload(
             isSubscribed: true,
-            forum: forums.data.payload[subForumIndex],
+            forum: forums.data.payload[i],
           ),
         );
       } else {
         finalForumList.add(
           ForumPayload(
             isSubscribed: false,
-            forum: forums.data.payload[subForumIndex],
+            forum: forums.data.payload[i],
           ),
         );
       }
@@ -146,8 +150,10 @@ class ForumPayload {
   ForumPayload({required this.isSubscribed, required this.forum});
 }
 
-class ChangeNotifierInfo {
+class InfoMessage {
   String message;
   Color messageTypeColor;
-  ChangeNotifierInfo(this.message, this.messageTypeColor);
+  static Color success = Palette.primary;
+  static Color error = Colors.red;
+  InfoMessage(this.message, this.messageTypeColor);
 }

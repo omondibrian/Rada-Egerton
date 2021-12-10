@@ -20,8 +20,7 @@ class IssueServiceProvider {
               headers: {'Authorization': authToken},
               sendTimeout: this._timeOut),
           data: json.encode(data));
-      //TODO: remove print statement
-      print(result);
+      
       return Left(ComplaintDto.fromJson(result.data));
     } on DioError catch (e) {
       var errMsg = ServiceUtility.handleDioExceptions(e);

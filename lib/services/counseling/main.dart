@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
 import 'package:rada_egerton/constants.dart';
@@ -84,7 +86,6 @@ class CounselingServiceProvider {
   Future<Either<List<PeerCounsellorDto>, ErrorMessage>>
       fetchPeerCounsellors() async {
     List<PeerCounsellorDto> peerCounsellors = [];
-
     try {
       String token = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.get(
@@ -99,7 +100,7 @@ class CounselingServiceProvider {
         peerCounsellors.add(PeerCounsellorDto.fromJson(payload[i]));
       }
     } on DioError catch (e) {
-     return Right(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -138,7 +139,7 @@ class CounselingServiceProvider {
       print(result.data);
       return Left(GroupsDto.fromJson(result.data));
     } on DioError catch (e) {
-     return Right(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -158,7 +159,7 @@ class CounselingServiceProvider {
         GroupsDto.fromJson(result.data),
       );
     } on DioError catch (e) {
-     return Right(ServiceUtility.handleDioExceptions(e));
+      return Right(ServiceUtility.handleDioExceptions(e));
     }
   }
 
@@ -182,7 +183,7 @@ class CounselingServiceProvider {
         ),
       );
     } on DioError catch (e) {
-     return Right(ServiceUtility.handleDioExceptions(e));
+      return Right(ServiceUtility.handleDioExceptions(e));
     }
   }
 
@@ -199,7 +200,7 @@ class CounselingServiceProvider {
         UserChatDto.fromJson(result.data),
       );
     } on DioError catch (e) {
-     return Right(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -220,12 +221,11 @@ class CounselingServiceProvider {
               'Authorization': token,
             }, sendTimeout: 10000),
           );
-      print(result.data);
       return Left(
         GroupDTO.fromJson(result.data['data']['payload']),
       );
     } on DioError catch (e) {
-     return Right(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -243,19 +243,20 @@ class CounselingServiceProvider {
           );
       return Left(
         GroupDTO(
-            id: result.data['id'],
-            title: result.data['title'],
-            image: result.data['image']),
+            id: result.data["data"]["payload"]['id'].toString(),
+            title: result.data["data"]["payload"]['title'],
+            image: result.data["data"]["payload"]['image']),
       );
     } on DioError catch (e) {
-     return Right(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
   }
 
-    /// query user data
-  Future<Either<UserDTO, ErrorMessage>?> queryUserData(String queryString) async {
+  /// query user data
+  Future<Either<UserDTO, ErrorMessage>?> queryUserData(
+      String queryString) async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.get(
@@ -264,18 +265,16 @@ class CounselingServiceProvider {
               'Authorization': token,
             }, sendTimeout: 10000),
           );
-      return Left(
-        UserDTO.fromJson(result.data["user"])
-      );
+      return Left(UserDTO.fromJson(result.data["user"]));
     } on DioError catch (e) {
-     return Right(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
   }
 
   ///delete group
-  Future<Either<GroupDTO, ErrorMessage>?> deleteGroup(String groupId) async {
+  Future<Either<GroupDTO, ErrorMessage>> deleteGroup(String groupId) async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.delete(
@@ -291,7 +290,7 @@ class CounselingServiceProvider {
             image: result.data['image']),
       );
     } on DioError catch (e) {
-     return Right(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -309,7 +308,7 @@ class CounselingServiceProvider {
         'sender_id': chatData.senderId,
         "receipient": chatData.reciepient,
         "reply": chatData.reply,
-        "user_type":chatData.role,
+        "user_type": chatData.role,
         "status": "0"
       });
       //send the chat to the api server
@@ -320,12 +319,11 @@ class CounselingServiceProvider {
               'Authorization': token,
             }, sendTimeout: 10000),
           );
-      print(result.data);
       return Left(
         ChatDto.fromJson(result.data),
       );
     } on DioError catch (e) {
-     return Right(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
@@ -338,7 +336,6 @@ class CounselingServiceProvider {
       ChatPayload chatData, String userId) async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
-      print(" 'message': ${chatData.message}");
       FormData formData = FormData.fromMap({
         'message': chatData.message,
         'sender_id': chatData.senderId,
@@ -355,11 +352,31 @@ class CounselingServiceProvider {
               'Authorization': token,
             }, sendTimeout: 10000),
           );
+
       return Left(
         ChatDto.fromJson(result.data),
       );
     } on DioError catch (e) {
-     return Right(
+      return Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
+    }
+  }
+
+  Future<Either<InfoMessage, ErrorMessage>> rateCounselor(
+      String counselorId, double rate) async {
+    try {
+      String token = await ServiceUtility.getAuthToken() as String;
+      final result = await this._httpClientConn.post(
+          "${this._hostUrl}/api/v1/admin/user/counsellor/rate/$counselorId",
+          options: Options(headers: {
+            'Authorization': token,
+          }, sendTimeout: 10000),
+          data: json.encode({"rate": rate}));
+      print(result.data);
+      return Left(InfoMessage("Rating sucessfuly", InfoMessage.success));
+    } on DioError catch (e) {
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }

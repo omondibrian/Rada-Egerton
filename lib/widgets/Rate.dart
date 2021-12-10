@@ -36,18 +36,18 @@ class _RatingState extends State<Rating> {
             ),
             Row(
               children: [
-                DefaultInput(
-                  controller: this._ratingController,
-                  hintText: 'Ratings',
-                  icon: Icons.star_border,
-                  validator: validator,
-                ),
+                // DefaultInput(
+                //   controller: this._ratingController,
+                //   hintText: 'Ratings',
+                //   icon: Icons.star_border,
+                //   validator: validator,
+                // ),
               ],
             ),
             Row(
               
               children: [
-                RadaButton(title: 'submite', handleClick: () {}, fill: true),
+                // RadaButton(title: 'submit', handleClick: () {}, fill: true),
               ],
             )
           ],

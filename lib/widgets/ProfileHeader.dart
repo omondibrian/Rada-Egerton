@@ -7,6 +7,7 @@ class ProfileHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
   final List<Widget>? actions;
+  final bool canEdit;
 
   const ProfileHeader(
       {Key? key,
@@ -14,7 +15,8 @@ class ProfileHeader extends StatelessWidget {
       required this.avatarUrl,
       required this.title,
       this.subtitle,
-      this.actions})
+      this.actions,
+      this.canEdit = true})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -55,6 +57,7 @@ class ProfileHeader extends StatelessWidget {
                 backgroundColor: Colors.white,
                 borderColor: Colors.grey.shade300,
                 borderWidth: 4.0,
+                canEdit:this.canEdit
               ),
               Text(
                 title,

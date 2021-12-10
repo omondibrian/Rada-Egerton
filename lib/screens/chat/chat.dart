@@ -1,10 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/screens/chat/chat.model.dart' as ChatModel;
 import 'package:rada_egerton/theme.dart';
+// ignore: unused_import
 import 'package:rada_egerton/utils/main.dart';
+import 'package:rada_egerton/widgets/animated_speech_%20bubble.dart';
 
 import '../../widgets/buildChatItem.dart';
 
@@ -12,7 +12,8 @@ import '../../widgets/buildChatItem.dart';
 class Chat<T> extends StatefulWidget {
   final String currentUserId;
   final List<T> chatList;
-  final Function(ChatPayload chat, String userId) sendMessage;
+  final Future<InfoMessage> Function(ChatPayload chat, String userId)
+      sendMessage;
   final String reciepient;
   final String? groupId;
 
@@ -31,6 +32,7 @@ class _ChatState extends State<Chat> {
   ChatModel.Chat? reply;
   FocusNode inputNode = FocusNode();
   TextEditingController _chatController = TextEditingController();
+  bool _sendingMessage = false;
   @override
   void dispose() {
     inputNode.dispose();
@@ -38,7 +40,10 @@ class _ChatState extends State<Chat> {
   }
 
   // File? imageUrl;
-  onTap() {
+  _sendMessage() async {
+    setState(() {
+      _sendingMessage = true;
+    });
     var chat = ChatPayload(
       groupsId: widget.groupId,
       id: 0,
@@ -49,10 +54,21 @@ class _ChatState extends State<Chat> {
       reply: reply?.id,
       status: "0",
     );
-
-    widget.sendMessage(chat, widget.currentUserId);
     _chatController.clear();
     inputNode.unfocus();
+
+    final _info = await widget.sendMessage(chat, widget.currentUserId);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+      _info.message,
+      style: TextStyle(color: _info.messageTypeColor),
+      
+    ),
+
+    ));
+    setState(() {
+      _sendingMessage = false;
+    });
   }
 
   @override
@@ -142,7 +158,7 @@ class _ChatState extends State<Chat> {
         children: <Widget>[
           Expanded(
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
+              borderRadius: BorderRadius.circular(25.0),
               child: Container(
                 color: Colors.white,
                 child: Column(
@@ -158,9 +174,9 @@ class _ChatState extends State<Chat> {
                           child: TextField(
                             maxLines: 10,
                             minLines: 1,
-                            // expands: true,
                             controller: this._chatController,
                             focusNode: this.inputNode,
+                            textAlign: TextAlign.center,
                             decoration: InputDecoration(
                               hintText: 'Type a message',
                               border: InputBorder.none,
@@ -188,13 +204,20 @@ class _ChatState extends State<Chat> {
             width: 5.0,
           ),
           GestureDetector(
-            onTap: onTap,
+            onTap: _sendMessage,
             child: CircleAvatar(
               backgroundColor: Palette.accent,
-              child: Icon(
-                Icons.send,
-                color: Colors.white,
-              ),
+              child: _sendingMessage
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    )
+                  : Icon(
+                      Icons.send,
+                      color: Colors.white,
+                    ),
             ),
           ),
         ],

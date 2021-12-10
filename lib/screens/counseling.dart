@@ -1,4 +1,3 @@
-
 import '../sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'CounselingTabs/CounselorsTab.dart';
@@ -14,39 +13,38 @@ class Counseling extends StatelessWidget {
     );
 
     return Scaffold(
-       
         body: DefaultTabController(
-          length: 4,
-          child: NestedScrollView(
-            headerSliverBuilder: (BuildContext ctx, bool isScrolled) {
-              return <Widget>[
-                new SliverAppBar(
-                  title: Text('Rada Counseling'),
-                  pinned: true,
-                  floating: true,
-                  bottom: TabBar(
-                    indicatorColor: Theme.of(context).primaryColor,
-                    isScrollable: true,
-                    tabs: [
-                      Tab(child: Text('Counselors', style: style)),
-                      Tab(child: Text('Peer Counselors', style: style)),
-                      Tab(child: Text('private Sessions', style: style)),
-                      Tab(child: Text('Group Sessions', style: style)),
-                    ],
-                  ),
-                ),
-              ];
-            },
-            body: TabBarView(
-              children: <Widget>[
-                CounselorsTab(),
-                PeerCounselorsTab(),
-                PrivateSessionsTab(),
-                GroupSessionsTab(),
-              ],
+      length: 4,
+      child: NestedScrollView(
+        headerSliverBuilder: (BuildContext ctx, bool isScrolled) {
+          return <Widget>[
+            new SliverAppBar(
+              title: Text('Rada Counseling'),
+              pinned: true,
+              floating: true,
+              bottom: TabBar(
+                indicatorColor: Theme.of(context).primaryColor,
+                isScrollable: true,
+                tabs: [
+                  Tab(child: Text('Counselors', style: style)),
+                  Tab(child: Text('Peer Counselors', style: style)),
+                  Tab(child: Text('Private Session', style: style)),
+                  Tab(child: Text('Group Session', style: style)),
+                ],
+              ),
             ),
-          ),
-        ));
+          ];
+        },
+        body: TabBarView(
+          children: <Widget>[
+            CounselorsTab(),
+            PeerCounselorsTab(),
+            PrivateSessionsTab(),
+            GroupSessionsTab(),
+          ],
+        ),
+      ),
+    ));
   }
 }
 //TODO : Modify SmartRefresher and use Refresh Indicator instead
