@@ -17,34 +17,44 @@ class _IssuesState extends State<Issues> {
   Future<void> init() async {
     final result = await _issueService.getIssueCategories();
     result.fold(
-        (issueCategories) => setState(() {
-              _issueCategories = issueCategories;
-            }),
-        (error) => {
-              //TODO: handle error
-              print(error)
-            });
+      (issueCategories) => setState(
+        () {
+          _issueCategories = issueCategories;
+        },
+      ),
+      (error) => {
+        //TODO: handle error
+        print(error)
+      },
+    );
   }
 
   void createIssue() async {
     if (_formKey.currentState!.validate()) {
-      final result = await _issueService.createNewIssue({
-        "issueCategoryID": _selectedIssueCategory.toString(),
-        "issue": _messageController.text,
-        "status": "3"
-      });
+      final result = await _issueService.createNewIssue(
+        {
+          "issueCategoryID": _selectedIssueCategory.toString(),
+          "issue": _messageController.text,
+          "status": "3"
+        },
+      );
       result.fold(
-          (l) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text("Issue created successfuly",
-                    style: TextStyle(color: Theme.of(context).primaryColor)),
-                duration: Duration(seconds: 10000),
-              )),
-          (r) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text("Issue created successfuly",
-                    style: TextStyle(color: Theme.of(context).errorColor)),
-                duration: Duration(seconds: 10000),
-                action: SnackBarAction(label: "retry", onPressed: createIssue),
-              )));
+        (l) => ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Issue created successfuly",
+                style: TextStyle(color: Theme.of(context).primaryColor)),
+            duration: Duration(seconds: 10000),
+          ),
+        ),
+        (r) => ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Issue created successfuly",
+                style: TextStyle(color: Theme.of(context).errorColor)),
+            duration: Duration(seconds: 10000),
+            action: SnackBarAction(label: "retry", onPressed: createIssue),
+          ),
+        ),
+      );
     }
   }
   // action: SnackBarAction(label: "retry", onPressed: fetchData),
@@ -131,9 +141,11 @@ class _IssuesState extends State<Issues> {
                     (e) => DropdownMenuItem(value: e.id, child: Text(e.name)))
               ],
               onChanged: (i) {
-                setState(() {
-                  _selectedIssueCategory = i;
-                });
+                setState(
+                  () {
+                    _selectedIssueCategory = i;
+                  },
+                );
               },
             ),
           ),

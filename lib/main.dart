@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       create: (_) => CounselorProvider(),
       child: MaterialApp(
           title: 'Rada',
-          debugShowCheckedModeBanner: false,
+          // debugShowCheckedModeBanner: false,
           theme: ThemeData(
               // This is the theme of your application.
               //TODO: Is there a better way to migrate the code on line 22 t colorScheme.secondary

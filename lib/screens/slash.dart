@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/services/utils.dart';
 import 'package:rada_egerton/theme.dart';
@@ -34,9 +35,13 @@ class SplashScreenState extends State<SplashScreen> {
             SizedBox(
               height: 20,
             ),
-            CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(Colors.white),
+
+            SpinKitFadingCircle(
+              color: Palette.primary,
             )
+            // CircularProgressIndicator(
+            //   valueColor: AlwaysStoppedAnimation(Colors.white),
+            // )
           ],
         ),
       ),
