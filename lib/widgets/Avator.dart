@@ -3,9 +3,13 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/entities/UserDTO.dart';
+import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/sizeConfig.dart';
 import 'package:rada_egerton/utils/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Avatar extends StatelessWidget {
   final String imageUrl;
@@ -26,6 +30,7 @@ class Avatar extends StatelessWidget {
   final ServiceUtility serviceUtility = ServiceUtility();
   @override
   Widget build(BuildContext context) {
+    final _appProvider = Provider.of<RadaApplicationProvider>(context);
     void _updateProfileImage() async {
       File imageFile = await ServiceUtility().uploadImage();
       try {
@@ -37,8 +42,8 @@ class Avatar extends StatelessWidget {
           },
         );
 
-        Future<String?> authToken = ServiceUtility.getAuthToken();
-        await Dio().put(
+        String authToken = await ServiceUtility.getAuthToken() as String;
+        final _profile = await Dio().put(
           '$BASE_URL/api/v1/admin/user/profile',
           data: formData,
           options: Options(
@@ -48,6 +53,10 @@ class Avatar extends StatelessWidget {
             },
           ),
         );
+        SharedPreferences _prefs = await SharedPreferences.getInstance();
+        UserDTO user = UserDTO.fromJson(_profile.data["user"]);
+
+        _prefs.setString("user", userDtoToJson(user));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -56,6 +65,7 @@ class Avatar extends StatelessWidget {
             ),
           ),
         );
+      
       } on DioError catch (e) {
         ErrorMessage err = ServiceUtility.handleDioExceptions(e);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -67,7 +77,7 @@ class Avatar extends StatelessWidget {
           ),
         );
       } catch (e) {
-        //TODO:remove error specification statement
+        print(e);
       }
     }
 

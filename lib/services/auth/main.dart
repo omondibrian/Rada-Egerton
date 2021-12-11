@@ -92,7 +92,6 @@ class AuthServiceProvider {
       String? _user = _prefs.getString("user");
 
       if (_user == null) {
-        print('usrs gfjfhfh');
         var _profile = await this._httpClientConn.get(
               "${this._hostUrl}/api/v1/admin/user/profile",
               options: Options(

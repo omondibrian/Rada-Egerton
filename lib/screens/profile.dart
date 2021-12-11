@@ -3,7 +3,6 @@ import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/widgets/ProfileHeader.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:rada_egerton/widgets/RadaButton.dart';
 
@@ -84,7 +83,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: AppBar(

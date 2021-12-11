@@ -44,8 +44,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => Help());
     case AppRoutes.information:
       return MaterialPageRoute(builder: (context) => Information());
-    case AppRoutes.informationDetails:
-      return MaterialPageRoute(builder: (context) => InformationDetail());
+   
     case AppRoutes.dashboard:
       return MaterialPageRoute(builder: (context) => Dashboard());
     case AppRoutes.forum:
