@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
+import 'package:rada_egerton/utils/main.dart';
 
 import 'RadaButton.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,19 +13,28 @@ Widget newGroupForm(
   BuildContext context,
   RadaApplicationProvider radaApplicationProvider,
 ) {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  File? imageFile;
   final grpNameController = TextEditingController();
   final descriptionController = TextEditingController();
   final _chatProvide = Provider.of<ChatProvider>(context);
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   void _handleSubmit(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       final _info = await radaApplicationProvider.createNewGroup(
-          grpNameController.text, descriptionController.text);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        grpNameController.text,
+        descriptionController.text,
+        imageFile,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
           content: Text(
-        _info.message,
-        style: TextStyle(color: _info.messageTypeColor),
-      )));
+            _info.message,
+            style: TextStyle(color: _info.messageTypeColor),
+          ),
+        ),
+      );
       _chatProvide.getConversations();
       Navigator.of(context).pop();
     }
@@ -32,6 +44,10 @@ Widget newGroupForm(
     if (value == null || value.isEmpty) {
       return 'This value is required';
     }
+  }
+
+  void _updateProfileImage() async {
+    imageFile = await ServiceUtility().uploadImage();
   }
 
   return Wrap(children: [
@@ -49,6 +65,17 @@ Widget newGroupForm(
                 "Create New Group",
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headline2,
+              ),
+            ),
+            Positioned(
+              left: 100,
+              top: 30,
+              child: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: IconButton(
+                  icon: Icon(Icons.camera_alt, color: Colors.black),
+                  onPressed: _updateProfileImage,
+                ),
               ),
             ),
             SizedBox(

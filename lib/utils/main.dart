@@ -41,6 +41,7 @@ class ServiceUtility {
   }
 
   static List<Message> combinePeerMsgs(List<ChatPayload> msgs, String userId) {
+    if (msgs.length < 1) return [];
     List<String> userIds = [];
     Message extractMsgs(String receipientId) {
       List<ChatPayload> msg = [];

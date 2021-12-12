@@ -1,6 +1,8 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/entities/GroupsDTO.dart';
 import 'package:rada_egerton/entities/CounsellorsDTO.dart';
+import 'package:rada_egerton/entities/StudentDTO.dart';
 import 'package:rada_egerton/services/counseling/main.dart';
 import 'package:rada_egerton/entities/PeerCounsellorDTO.dart';
 import 'package:rada_egerton/utils/main.dart';
@@ -14,6 +16,12 @@ class CounselorProvider with ChangeNotifier {
   bool counselorsLoading = true;
   bool peerCouselorsLoading = true;
   bool isForumLoading = true;
+
+  void clearState() {
+    this._counselors.clear();
+    this._peerCounsellors.clear();
+    this._forums = null;
+  }
 
   CounselorProvider() {
     getCounsellors();
@@ -41,6 +49,30 @@ class CounselorProvider with ChangeNotifier {
 
   List<PeerCounsellorDto> get peerCounselors {
     return [...this._peerCounsellors];
+  }
+
+  Either<CounsellorsDTO?, PeerCounsellorDto>? getReceipientBio(
+      String id, bool isCounsellor) {
+    if (isCounsellor) {
+      return Left(this.counselorById(id));
+    } else {
+      for (var i = 0; i < this._peerCounsellors.length; i++) {
+        if (this._peerCounsellors[i].id.toString() == id) {
+          return Right(this._peerCounsellors[i]);
+        }
+      }
+    }
+  }
+
+  Future<Either<StudentDto, InfoMessage>> getStudentBio(String id) async {
+    var result;
+    var student = await _service.fetchStudentData(id);
+    student!.fold(
+      (student) => result = student,
+      (error) => throw new InfoMessage(error.message, InfoMessage.error),
+    );
+
+    return result;
   }
 
   Future<InfoMessage> getForums() async {
