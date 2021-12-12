@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/entities/userRoles.dart';
@@ -38,9 +40,9 @@ class RadaApplicationProvider with ChangeNotifier {
     return _info;
   }
 
-  Future<InfoMessage> createNewGroup(String name, String desc) async {
+  Future<InfoMessage> createNewGroup(String name, String desc,File? imageFile) async {
     late InfoMessage _info;
-    final result = await _serviceProvider.createGroup(name, desc);
+    final result = await _serviceProvider.createGroup(name, desc,imageFile);
     result!.fold((group) {
       //TODO:- add group to state
       _info = InfoMessage("Created successfuly", InfoMessage.success);

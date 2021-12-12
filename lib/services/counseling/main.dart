@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
@@ -208,17 +209,24 @@ class CounselingServiceProvider {
 
   /// create new  group
   Future<Either<GroupDTO, ErrorMessage>?> createGroup(
-      String name, String desc) async {
+      String name, String desc, File? imageFile) async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
+      String imageFileName = imageFile!.path.split('/').last;
+      FormData formData = FormData.fromMap(
+        {
+          "profilePic": await MultipartFile.fromFile(imageFile.path,
+              filename: imageFileName),
+          "title": name,
+          "description": desc,
+        },
+      );
       final result = await this._httpClientConn.post(
             "${this._hostUrl}/rada/api/v1/counseling",
-            data: {
-              "title": name,
-              "description": desc,
-            },
+            data: formData,
             options: Options(headers: {
               'Authorization': token,
+              "Content-type": "multipart/form-data",
             }, sendTimeout: 10000),
           );
       return Left(
