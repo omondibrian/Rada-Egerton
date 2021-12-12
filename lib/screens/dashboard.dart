@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
+import 'package:rada_egerton/providers/counselling.provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../sizeConfig.dart';
 
@@ -15,7 +17,7 @@ class Dashboard extends StatelessWidget {
     );
     final chatProvider = Provider.of<ChatProvider>(ctx);
     // chatProvider.privateChannel();
-    
+
     return GestureDetector(
       onTap: () {
         Navigator.of(ctx).pushNamed(dashboardItems[index]['routeName']);
@@ -54,6 +56,9 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var counselorProvider = Provider.of<CounselorProvider>(context);
+    var appProvider = Provider.of<RadaApplicationProvider>(context);
+    var chatsProvider = Provider.of<ChatProvider>(context);
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -77,6 +82,9 @@ class Dashboard extends StatelessWidget {
                 onTap: () async {
                   SharedPreferences _prefs =
                       await SharedPreferences.getInstance();
+                  counselorProvider.clearState();
+                  appProvider.clearState();
+                  chatsProvider.clearState();
                   _prefs.clear();
                 },
               ),

@@ -25,6 +25,12 @@ class ChatProvider with ChangeNotifier {
   UserRole userRole = UserRole([]);
 
   CounselingServiceProvider _service = CounselingServiceProvider();
+  void clearState() {
+    this._forumMsgs.clear();
+    this._groupMsgs.clear();
+    this._userId = '';
+    this.userRole=UserRole([]);
+  }
 
   ChatProvider() {
     init();
@@ -127,7 +133,7 @@ class ChatProvider with ChangeNotifier {
         : this.userRole.isPeerCounselor
             ? 'peerCounsellor'
             : 'student';
-  
+
     final chatData = ChatPayload(
       id: chat.id,
       message: chat.message,

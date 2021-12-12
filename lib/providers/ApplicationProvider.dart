@@ -19,6 +19,10 @@ class RadaApplicationProvider with ChangeNotifier {
     this.init();
   }
 
+  void clearState(){
+    this.userRole = UserRole([]);
+  }
+
   Future<void> init() async {
     var result = await AuthServiceProvider().getProfile();
     result!.fold((user) async {

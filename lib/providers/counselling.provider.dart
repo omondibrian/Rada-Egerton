@@ -17,6 +17,12 @@ class CounselorProvider with ChangeNotifier {
   bool peerCouselorsLoading = true;
   bool isForumLoading = true;
 
+  void clearState() {
+    this._counselors.clear();
+    this._peerCounsellors.clear();
+    this._forums = null;
+  }
+
   CounselorProvider() {
     getCounsellors();
     getPeerCounsellors();
