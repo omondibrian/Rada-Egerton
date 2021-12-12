@@ -4,17 +4,19 @@ import 'package:rada_egerton/services/content.service.dart';
 import 'package:rada_egerton/utils/main.dart';
 
 class InformationProvider with ChangeNotifier {
-  late List<InformationCategory> informationCategory;
-  late List<InformationData> informationData;
-
+  List<InformationCategory>? informationCategory;
+  List<InformationData>? informationData;
   InfoMessage? _info;
+  InformationProvider() {
+    init();
+  }
   Future<InfoMessage?> init() async {
-    final _result = await ContentService.getInformationCategory();
-    _result.fold((_data) {
-      informationCategory = _data;
-    }, (error) {
-      _info = InfoMessage(error.message, InfoMessage.error);
-    });
+    // final _result = await ContentService.getInformationCategory();
+    // _result.fold((_data) {
+    //   informationCategory = _data;
+    // }, (error) {
+    //   _info = InfoMessage(error.message, InfoMessage.error);
+    // });
 
     final _dataResult = await ContentService.getInformation();
     _dataResult.fold((_data) {
@@ -22,7 +24,7 @@ class InformationProvider with ChangeNotifier {
     }, (error) {
       _info = InfoMessage(error.message, InfoMessage.error);
     });
-
+    notifyListeners();
     return _info;
   }
 }

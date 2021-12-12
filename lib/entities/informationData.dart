@@ -52,7 +52,7 @@ class InformationContent {
   });
   factory InformationContent.fromJson(Map<String, dynamic> json) {
     return InformationContent(
-        bodyContent: json["bodyContent"],
+        bodyContent: List<String>.from(json["bodyContent"]),
         type: json["type"],
         subtitle: json["subtitle"]);
   }

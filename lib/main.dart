@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:rada_egerton/providers/counselling.provider.dart';
+import 'package:rada_egerton/providers/information.content.dart';
 import 'package:rada_egerton/theme.dart';
 
 import 'app_routing.dart';
@@ -26,6 +27,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ChatProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => InformationProvider(),
         )
       ],
       child: MaterialApp(

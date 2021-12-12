@@ -13,15 +13,17 @@ class ContentService {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
       final result = await _httpClientConn.get(
-        "$_hostUrl/rada/api/v1/content",
+        "$_hostUrl/api/v1/admin/content",
         options: Options(headers: {
           'Authorization': token,
         }, sendTimeout: 10000),
       );
-      Iterable _information = result.data;
+      Iterable _information = result.data["content"];
+      print(_information);
       return Left(List<InformationData>.from(
           _information.map((data) => InformationData.fromJson(data))));
     } on DioError catch (e) {
+      print(e.response);
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );
@@ -41,8 +43,9 @@ class ContentService {
         }, sendTimeout: 10000),
       );
       Iterable _informationCategory = result.data;
-      return Left(List<InformationCategory>.from(_informationCategory
-          .map((data) => InformationCategory(data["id"], data["name"]))));
+      print(result.data);
+      return Left(List<InformationCategory>.from(_informationCategory.map(
+          (data) => InformationCategory(data["id"].toString(), data["name"]))));
     } on DioError catch (e) {
       return Right(
         ServiceUtility.handleDioExceptions(e),

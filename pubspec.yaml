@@ -93,6 +93,7 @@ flutter:
     - assets/logo.png
     - assets/android-icon-192x192.png
     - assets/message.png
+    - assets/gif.gif
     - assets/android-icon-192x192-green.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
