@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/providers/ApplicationProvider.dart';
-import 'package:rada_egerton/providers/counselors.provider.dart';
+import 'package:rada_egerton/providers/counselling.provider.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
@@ -17,57 +17,49 @@ class Forum extends StatelessWidget {
     var forums = ServiceUtility.parseForums(
         counseligProvider.forums, chatsprovider.forumMessages);
 
-    Future<void> _refreshChat() async {
+    Future<void> _refresh() async {
       counseligProvider.getForums();
     }
 
     Widget forumBuilder(BuildContext context, int index) {
       var forum = forums[index].forum;
-      print(forums);
       String imageUrl = "$BASE_URL/api/v1/uploads/${forum.image}";
 
       joinNewGroup() async {
-        var res = await radaAppProvider.joinGroup(
+        final _res = await radaAppProvider.joinGroup(
           forum.id.toString(),
         );
-        res!.fold(
-          (grp) async {
-            chatsprovider.getConversations();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChatScreen(
-                  title: forum.title,
-                  imgUrl: imageUrl,
-                  sendMessage: chatsprovider.sendGroupMessage,
-                  groupId: forum.id.toString(),
-                  reciepient: forum.id.toString(),
-                  chatIndex: index,
-                  mode: ChatModes.FORUM,
-                ),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+          _res.message,
+          style: TextStyle(color: _res.messageTypeColor),
+        )));
+        chatsprovider.getConversations();
+      }
+
+      void _navigate() {
+        if (!forums[index].isSubscribed) return;
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatScreen(
+                title: forum.title,
+                imgUrl: imageUrl,
+                sendMessage: chatsprovider.sendGroupMessage,
+                groupId: forum.id.toString(),
+                reciepient: forum.id.toString(),
+                chatIndex: index,
+                mode: ChatModes.FORUM,
               ),
-            );
-          },
-          (err) => print(err.message),
-        );
+            ));
       }
 
       return GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChatScreen(
-              title: forum.title,
-              imgUrl: imageUrl,
-              sendMessage: chatsprovider.sendGroupMessage,
-              groupId: forum.id.toString(),
-              reciepient: forum.id.toString(),
-              chatIndex: index,
-              mode: ChatModes.FORUM,
-            ),
-          ),
-        ),
+        onTap: _navigate,
         child: ListTile(
+          minVerticalPadding: 0,
+          isThreeLine: true,
+          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
           leading: CircleAvatar(
             backgroundImage: CachedNetworkImageProvider(
               imageUrl,
@@ -75,15 +67,20 @@ class Forum extends StatelessWidget {
             backgroundColor: Colors.white,
           ),
           title:
-              Text(forum.title, style: Theme.of(context).textTheme.headline1),
-          subtitle: Text("say something...",
-              style: Theme.of(context).textTheme.bodyText1),
-          trailing: forums[index].isSubscribed
+              Text(forum.title, style: Theme.of(context).textTheme.subtitle1),
+          //TODO:add forum desciption here
+          subtitle: Text(
+            "say something...",
+          ),
+          trailing: !forums[index].isSubscribed
               ? TextButton(
                   child: Text('Join'),
                   onPressed: joinNewGroup,
                 )
-              : null,
+              : TextButton(
+                  child: Text('View'),
+                  onPressed: _navigate,
+                ),
         ),
       );
     }
@@ -102,7 +99,7 @@ class Forum extends StatelessWidget {
             : forums.isEmpty
                 ? Center(child: Text("No forums"))
                 : RefreshIndicator(
-                    onRefresh: () => _refreshChat(),
+                    onRefresh: () => _refresh(),
                     backgroundColor: Theme.of(context).primaryColor,
                     color: Colors.white,
                     displacement: 20.0,

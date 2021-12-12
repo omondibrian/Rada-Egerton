@@ -15,11 +15,12 @@ class AppRoutes {
   static const splash = "/splash";
   // static const chat = "/chat";
   static const profile = "/profile";
+  static const viewProfile = "/view-profile";
   static const contributors = "/contributors";
 }
 
-
 const BASE_URL = "http://radaegerton.ddns.net";
+const IMAGE_URL = "$BASE_URL/api/v1/uploads/";
 const APP_KEY = "";
 
 class ChatEvent {
@@ -34,10 +35,8 @@ class ChatEvent {
   static const String USER = 'USER';
 }
 
-
 class ChatModes {
   static const String PRIVATE = "PRIVATE";
   static const String FORUM = "FORUM";
-  static const String GROUP = "GROUP"; 
-
+  static const String GROUP = "GROUP";
 }

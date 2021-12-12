@@ -3,6 +3,7 @@ import 'package:rada_egerton/entities/GroupsDTO.dart';
 import 'package:rada_egerton/entities/CounsellorsDTO.dart';
 import 'package:rada_egerton/services/counseling/main.dart';
 import 'package:rada_egerton/entities/PeerCounsellorDTO.dart';
+import 'package:rada_egerton/utils/main.dart';
 
 class CounselorProvider with ChangeNotifier {
   List<CounsellorsDTO> _counselors = [];
@@ -42,34 +43,58 @@ class CounselorProvider with ChangeNotifier {
     return [...this._peerCounsellors];
   }
 
-  getForums() async {
+  Future<InfoMessage> getForums() async {
+    late InfoMessage _info;
     var results = await _service.fetchStudentForums();
-    results!.fold(
-      (forums) => {this._forums = forums},
-      (error) => print('Error from fetchForums() :${error.message}'),
-    );
+    results!.fold((forums) {
+      this._forums = forums;
+      _info = InfoMessage("Fetching forums  successfull", InfoMessage.success);
+    }, (error) => {_info = InfoMessage(error.message, InfoMessage.error)});
     this.isForumLoading = false;
     notifyListeners();
+    return _info;
   }
 
-  getCounsellors() async {
+  Future<InfoMessage> deleteGroupOrForum(String id) async {
+    late InfoMessage _info;
+    var results = await _service.deleteGroup(id);
+    results.fold((_group) {
+      //TODO: update state after deleting a group
+      InfoMessage("Deleted successfuly", InfoMessage.success);
+    }, (error) => {_info = InfoMessage(error.message, InfoMessage.error)});
+    this.isForumLoading = false;
+    notifyListeners();
+    return _info;
+  }
+
+  Future<InfoMessage> getCounsellors() async {
     final results = await _service.fetchCounsellors();
+    late InfoMessage _info;
     results.fold((counsellors) {
       this._counselors = counsellors;
-    }, (error) => {});
+      _info =
+          InfoMessage("fetching counselors  successfull", InfoMessage.success);
+    }, (error) => {_info = InfoMessage(error.message, InfoMessage.error)});
     counselorsLoading = false;
     notifyListeners();
+    return _info;
   }
 
-  getPeerCounsellors() async {
+  Future<InfoMessage> getPeerCounsellors() async {
     final results = await _service.fetchPeerCounsellors();
+    late InfoMessage _info;
     results.fold(
       (peerCounselors) {
         this._peerCounsellors = peerCounselors;
+        _info = InfoMessage(
+            "fetching peer counselors  successfull", InfoMessage.success);
       },
-      (error) => {},
+      (error) {
+        _info = InfoMessage(error.message, InfoMessage.error);
+      },
     );
     peerCouselorsLoading = false;
     notifyListeners();
+    return _info;
   }
 }

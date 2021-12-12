@@ -3,18 +3,20 @@ import 'package:rada_egerton/widgets/Avator.dart';
 
 class ProfileHeader extends StatelessWidget {
   final AssetImage coverImage;
-  final ImageProvider<dynamic> avatar;
+  final String avatarUrl;
   final String title;
   final String? subtitle;
   final List<Widget>? actions;
+  final bool canEdit;
 
   const ProfileHeader(
       {Key? key,
       required this.coverImage,
-      required this.avatar,
+      required this.avatarUrl,
       required this.title,
       this.subtitle,
-      this.actions})
+      this.actions,
+      this.canEdit = true})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -50,11 +52,12 @@ class ProfileHeader extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Avatar(
-                image: avatar,
+                imageUrl: avatarUrl,
                 radius: 50,
                 backgroundColor: Colors.white,
                 borderColor: Colors.grey.shade300,
                 borderWidth: 4.0,
+                canEdit:this.canEdit
               ),
               Text(
                 title,

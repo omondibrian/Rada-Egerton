@@ -1,14 +1,10 @@
-import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/constants.dart';
-import 'package:rada_egerton/utils/main.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/widgets/ProfileHeader.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:rada_egerton/widgets/RadaButton.dart';
 
 // ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
@@ -17,99 +13,95 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late UserDTO _user;
+  UserDTO? _user;
 
-  Future<void> initializeState() async {
-    AuthServiceProvider _authService = AuthServiceProvider();
+  AuthServiceProvider _authService = AuthServiceProvider();
+  Future<void> init() async {
     final results = await _authService.getProfile();
     results!.fold((user) {
-      setState(() => _user = user);
+      _user = user;
+      _lastNameController.text = _user!.userName;
+      _phoneNumberController.text = _user!.phone;
 
-      print('user data from initializeState() ${user.userName}');
+      setState(() {});
     }, (r) => print(r));
   }
 
-  bool userInfoControllerStatus = true;
-
-  Dio _httpConnection = Dio();
-  final ImagePicker _imagePicker = ImagePicker();
-
-  void updateProfileImage() async {
-    var pickedImage = await _imagePicker.pickImage(source: ImageSource.gallery);
-    File imageFile = File(pickedImage!.path);
-    try {
-      String imageFileName = imageFile.path.split('/').last;
-      FormData formData = FormData.fromMap(
-        {
-          "profilePic": await MultipartFile.fromFile(imageFile.path,
-              filename: imageFileName),
-        },
-      );
-
-      Future<String?> authToken = ServiceUtility.getAuthToken();
-
-      await _httpConnection.put(
-        '$BASE_URL/api/v1/admin/user/profile',
-        data: formData,
-        options: Options(
-          headers: {
-            'Authorization': authToken,
-            "Content-type": "multipart/form-data",
-          },
-        ),
-      );
-    } catch (e) {
-      //TODO:remove error specification statement
-      print('Error from updateProfile : $e');
+  void _updateUserProfile() async {
+    if (profileForm.currentState!.validate()) {
+      final result = await _authService.updateProfile(UserDTO(
+          id: _user!.id,
+          name: _lastNameController.text,
+          email: _user!.email,
+          profilePic: _user!.profilePic,
+          gender: _user!.gender,
+          phone: _phoneNumberController.text,
+          dob: _user!.dob,
+          status: _user!.status,
+          accountStatus: _user!.accountStatus,
+          synced: _user!.synced,
+          joined: _user!.joined));
+      result.fold((user) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+          "Profile updated",
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        )));
+        isEditing = false;
+        setState(() {});
+      }, (error) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+          error.message,
+          style: TextStyle(color: Theme.of(context).errorColor),
+        )));
+      });
     }
   }
 
+  bool isEditing = false;
+
   @override
   void initState() {
-    initializeState();
-    initializeDetails();
+    init();
     super.initState();
   }
 
-  void initializeDetails() {
-    _lastNameController.text = _user.userName;
-    _emailController.text = _user.email;
-    _phoneNumberController.text = _user.phone;
-    _genderController.text = _user.gender;
-    _dateOfBirthController.text = _user.dob;
-
-    print(_user.userName);
-    print('Last Name controller value : ${_lastNameController.value}');
-  }
-
   GlobalKey<FormState> profileForm = GlobalKey<FormState>();
-  TextEditingController _emailController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
-  TextEditingController _genderController = TextEditingController();
-  TextEditingController _dateOfBirthController = TextEditingController();
+  FocusNode userNameFocus = FocusNode();
+  @override
+  void dispose() {
+    _lastNameController.dispose();
+    _phoneNumberController.dispose();
+    userNameFocus.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: _user.id.isEmpty
-          ? Text('loading')
+      body: _user == null
+          ? Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ),
+            )
           : SingleChildScrollView(
               child: Column(
                 children: <Widget>[
                   ProfileHeader(
-                    avatar: CachedNetworkImageProvider(
-                      'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
-                    ),
+                    avatarUrl: "$IMAGE_URL${_user!.profilePic}",
                     coverImage: AssetImage('assets/android-icon-192x192.png'),
-                    title: "${_user.userName}", //TODO: fetch username
+                    title: "${_user!.userName}", //TODO: fetch username
 
                     actions: <Widget>[
                       MaterialButton(
@@ -123,8 +115,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onPressed: () {
                           setState(
                             () {
-                              userInfoControllerStatus =
-                                  !userInfoControllerStatus;
+                              isEditing = !isEditing;
+                              if (isEditing) {
+                                userNameFocus.requestFocus();
+                              }
                             },
                           );
                           //TODO: implement edit details function
@@ -160,42 +154,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             alignment: Alignment.topLeft,
                             padding: EdgeInsets.all(15),
                             child: Form(
-                              //TODO supply form key
+                              key: profileForm,
                               child: Column(
                                 children: <Widget>[
                                   TextFormField(
                                     decoration: InputDecoration(
                                       hintText: "Enter userName",
                                     ),
-                                    enabled: !userInfoControllerStatus,
+                                    enabled: isEditing,
+                                    autofocus: true,
+                                    focusNode: userNameFocus,
                                     controller: _lastNameController,
-                                    validator: RequiredValidator(
-                                        errorText: "Required"),
-                                  ),
-                                  TextFormField(
-                                    decoration: InputDecoration(
-                                      hintText: "Enter ", //TODOS
-                                    ),
-                                    enabled: !userInfoControllerStatus,
-                                    controller: _emailController,
-                                    validator: RequiredValidator(
-                                        errorText: "Required"),
-                                  ),
-                                  TextFormField(
-                                    decoration: InputDecoration(
-                                      hintText: "Enter gender",
-                                    ),
-                                    enabled: !userInfoControllerStatus,
-                                    controller: _genderController,
-                                    validator: RequiredValidator(
-                                        errorText: "Required"),
-                                  ),
-                                  TextFormField(
-                                    decoration: InputDecoration(
-                                      hintText: "Enter date of birth",
-                                    ),
-                                    enabled: !userInfoControllerStatus,
-                                    controller: _dateOfBirthController,
                                     validator: RequiredValidator(
                                         errorText: "Required"),
                                   ),
@@ -203,7 +172,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     decoration: InputDecoration(
                                       hintText: "Enter phone number",
                                     ),
-                                    enabled: !userInfoControllerStatus,
+                                    enabled: isEditing,
                                     controller: _phoneNumberController,
                                     validator: RequiredValidator(
                                         errorText: "Required"),
@@ -212,14 +181,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     leading: Icon(Icons.account_box_outlined),
                                     title: Text("Account status"),
                                     subtitle: Text(
-                                        "${_user.email}"), //TODO fetch user account status
+                                        "${_user!.accountStatus}"), //TODO fetch user account status
+                                  ),
+                                  ListTile(
+                                    leading: Icon(Icons.email_outlined),
+                                    title: Text("Email"),
+                                    subtitle: Text(
+                                        "${_user!.email}"), //TODO fetch the date the user joined
                                   ),
                                   ListTile(
                                     leading: Icon(Icons.calendar_today),
-                                    title: Text("Date joined"),
+                                    title: Text("Date of Birth"),
                                     subtitle: Text(
-                                        "${_user.email}"), //TODO fetch the date the user joined
+                                        "${_user!.dob}"), //TODO fetch the date the user joined
                                   ),
+                                  ListTile(
+                                    leading: Icon(Icons.person),
+                                    title: Text("Gender"),
+                                    subtitle: Text(
+                                        "${_user!.gender}"), //TODO fetch the date the user joined
+                                  ),
+                                  if (isEditing)
+                                    Container(
+                                        child: Row(
+                                      children: [
+                                        Expanded(
+                                            child: RadaButton(
+                                          fill: true,
+                                          handleClick: _updateUserProfile,
+                                          title: "Save",
+                                        )),
+                                        Expanded(
+                                            child: RadaButton(
+                                          fill: false,
+                                          handleClick: () => setState(() {
+                                            isEditing = false;
+                                          }),
+                                          title: "Cancel",
+                                        ))
+                                      ],
+                                    )),
                                 ],
                               ),
                             ),

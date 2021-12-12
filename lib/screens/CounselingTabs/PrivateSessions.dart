@@ -1,16 +1,13 @@
-import 'dart:convert';
-
 import '../../sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/utils/main.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
 import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:rada_egerton/providers/counselors.provider.dart';
+import 'package:rada_egerton/providers/counselling.provider.dart';
 
 class PrivateSessionsTab extends StatelessWidget {
   PrivateSessionsTab({Key? key}) : super(key: key);
@@ -34,14 +31,13 @@ class PrivateSessionsTab extends StatelessWidget {
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
 
-    Future<void> _refreshChat() async {
+    Future<void> _refresh() async {
       chatsprovider.getConversations();
     }
 
     Widget conversationBuilder(BuildContext ctx, int index) {
       var counsellorId = conversations[index].recipient;
       var infoConversations = counselorprovider.counselorById(counsellorId);
-      print(index);
       return GestureDetector(
         onTap: () => Navigator.push(
           context,
@@ -49,7 +45,7 @@ class PrivateSessionsTab extends StatelessWidget {
             builder: (context) => ChatScreen(
               title: '${infoConversations?.name}',
               imgUrl: "$BASE_URL/api/v1/uploads/${infoConversations?.imgUrl}",
-              sendMessage: chatsprovider.sendPeerCounselingMessage,
+              sendMessage: chatsprovider.sendPrivateCounselingMessage,
               groupId: "",
               reciepient: counsellorId,
               chatIndex: index,
@@ -88,7 +84,7 @@ class PrivateSessionsTab extends StatelessWidget {
 
     return conversations.isNotEmpty
         ? RefreshIndicator(
-            onRefresh: () => _refreshChat(),
+            onRefresh: () => _refresh(),
             backgroundColor: Theme.of(context).primaryColor,
             color: Colors.white,
             displacement: 20.0,
@@ -99,12 +95,9 @@ class PrivateSessionsTab extends StatelessWidget {
             ),
           )
         : Center(
-            child: SizedBox(
-              width: 80,
-              height: 80,
-              child:
-                  SpinKitSpinningLines(color: Theme.of(context).primaryColor),
-            ),
-          );
+            child: Image.asset(
+            "assets/message.png",
+            width: 250,
+          ));
   }
 }

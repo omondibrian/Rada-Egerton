@@ -17,7 +17,7 @@ class ChatProvider with ChangeNotifier {
   late Channel channel;
   late String _userId;
   late PusherClient _pusher;
-  ChangeNotifierInfo? info;
+  InfoMessage? info;
   List<chats.ChatPayload> _privateMsgs = [];
   List<Msg> _groupMsgs = [];
   List<Msg> _forumMsgs = [];
@@ -58,7 +58,6 @@ class ChatProvider with ChangeNotifier {
           ),
         ),
       );
-      info = ChangeNotifierInfo("Connected", Colors.green);
       notifyListeners();
     });
   }
@@ -106,17 +105,20 @@ class ChatProvider with ChangeNotifier {
     channel.unbind(ChatEvent.CHAT);
   }
 
-  sendPeerCounselingMessage(ChatPayload chat, String userId) async {
+  Future<InfoMessage> sendPrivateCounselingMessage(
+      ChatPayload chat, String userId) async {
     var service = CounselingServiceProvider();
+    late InfoMessage _info;
     ChatPayload chatData = finalChatPayload(chat);
     final result = await service.peerCounseling(chatData, userId);
     result.fold((chat) {
       appendNewChat(chat);
+      _info = InfoMessage("message send", InfoMessage.success);
     }, (error) {
-      print(error);
-      info = ChangeNotifierInfo(error.message, Colors.red);
+      _info = InfoMessage(error.message, InfoMessage.error);
     });
     notifyListeners();
+    return _info;
   }
 
   ChatPayload finalChatPayload(ChatPayload chat) {
@@ -125,6 +127,7 @@ class ChatProvider with ChangeNotifier {
         : this.userRole.isPeerCounselor
             ? 'peerCounsellor'
             : 'student';
+  
     final chatData = ChatPayload(
       id: chat.id,
       message: chat.message,
@@ -156,10 +159,11 @@ class ChatProvider with ChangeNotifier {
         );
   }
 
-  sendGroupMessage(ChatPayload chat, String userId) async {
+  Future<InfoMessage> sendGroupMessage(ChatPayload chat, String userId) async {
     var service = CounselingServiceProvider();
     ChatPayload chatData = finalChatPayload(chat);
     var result = await service.groupCounseling(chatData, userId);
+    late InfoMessage _info;
     result!.fold((chat) {
       this._groupMsgs.forEach(
         (group) {
@@ -168,10 +172,12 @@ class ChatProvider with ChangeNotifier {
           }
         },
       );
+      _info = InfoMessage("message send", InfoMessage.success);
     }, (error) {
-      info = ChangeNotifierInfo(error.message, Colors.red);
+      info = InfoMessage(error.message, InfoMessage.error);
     });
     notifyListeners();
+    return _info;
   }
 
   void appendToGroupMessages(Msg group, ChatDto chat) {

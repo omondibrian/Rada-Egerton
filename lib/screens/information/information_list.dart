@@ -1,13 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/entities/informationData.dart';
+import 'package:rada_egerton/providers/information.content.dart';
+import 'package:rada_egerton/screens/information/information_detail.dart';
+import 'package:rada_egerton/sizeConfig.dart';
 
 class Information extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final List<Widget> imageSliders =
-        informationItems.map((item) => informationCard(item, context)).toList();
+    final List<Widget> imageSliders = [];
+    final _provider = Provider.of<InformationProvider>(context);
     return Scaffold(
       appBar: AppBar(
           title: Text('Rada Information',
@@ -29,9 +34,22 @@ class Information extends StatelessWidget {
               ),
             ),
             SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(children: imageSliders),
-            ),
+                scrollDirection: Axis.horizontal,
+                child: RefreshIndicator(
+                  onRefresh: () => _provider.init(),
+                  child: _provider.informationData == null
+                      ? CircularProgressIndicator()
+                      : Row(
+                          children: _provider.informationData!
+                              .map((item) => _informationCard(item, context))
+                              .toList()
+                          // itemBuilder: (_, index) => _informationCard(
+                          //   _provider.informationData![index],
+                          //   context,
+                          // ),
+                          // itemCount: _provider.informationData!.length,
+                          ),
+                )),
             SizedBox(
               height: 30,
             ),
@@ -43,12 +61,12 @@ class Information extends StatelessWidget {
                 textAlign: TextAlign.left,
               ),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                  children: imageSliders,
-                  mainAxisAlignment: MainAxisAlignment.center),
-            ),
+            // SingleChildScrollView(
+            //   scrollDirection: Axis.horizontal,
+            //   child: Row(
+            //       children: imageSliders,
+            //       mainAxisAlignment: MainAxisAlignment.center),
+            // ),
           ],
         ),
       ),
@@ -57,10 +75,15 @@ class Information extends StatelessWidget {
     );
   }
 
-  Widget informationCard(Map<String, dynamic> item, BuildContext context) {
+  Widget _informationCard(
+    InformationData informationItem,
+    BuildContext context,
+  ) {
+    double _imageHeight = SizeConfig.isTabletWidth ? 300 : 150;
+    double _imageWidth = SizeConfig.isTabletWidth ? 400 : 200;
     return InkWell(
-      onTap: () =>
-          Navigator.of(context).pushNamed(AppRoutes.informationDetails),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => InformationDetail(informationItem))),
       child: Card(
         margin: EdgeInsets.all(5.0),
         clipBehavior: Clip.antiAlias,
@@ -73,28 +96,32 @@ class Information extends StatelessWidget {
                   Radius.circular(5.0),
                 ),
                 child: CachedNetworkImage(
-                  imageUrl: item["image"],
-                  placeholder: (context, url) => SpinKitFadingCircle(
-                    color: Theme.of(context).primaryColor,
+                  imageUrl: "$IMAGE_URL${informationItem.metadata.thumbnail}",
+                  placeholder: (context, url) => Image.asset(
+                    "assets/gif.gif",
+                    height: _imageHeight,
+                    width: _imageWidth,
                   ),
                   imageBuilder: (context, imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5),
+                        ),
                       ),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                    ),
-                    height: 150,
-                    width: 200,
-                  ),
+                      constraints:
+                          BoxConstraints(minHeight: 150, minWidth: 200),
+                      height: _imageHeight,
+                      width: _imageWidth),
                 )),
+
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
               child: Text(
-                item["title"],
+                informationItem.metadata.title,
                 style: Theme.of(context).textTheme.subtitle1,
               ),
             )
@@ -104,26 +131,3 @@ class Information extends StatelessWidget {
     );
   }
 }
-
-final List<Map<String, dynamic>> informationItems = [
-  {
-    "image":
-        'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
-    "title": "Love"
-  },
-  {
-    "image":
-        'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
-    "title": "item2"
-  },
-  {
-    "image":
-        'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
-    "title": "item3"
-  },
-  {
-    "image":
-        'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
-    "title": "item3"
-  }
-];

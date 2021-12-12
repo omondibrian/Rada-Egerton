@@ -1,4 +1,3 @@
-
 class UserRole {
   List<String> roles;
   UserRole(this.roles);
@@ -8,5 +7,9 @@ class UserRole {
 
   bool get isPeerCounselor {
     return roles.contains("PEERCOUNSELLOR");
+  }
+
+  bool get isStudent {
+    return !(this.isCounselor || this.isPeerCounselor);
   }
 }

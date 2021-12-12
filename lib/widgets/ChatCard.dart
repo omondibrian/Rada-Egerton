@@ -7,7 +7,7 @@ import '../screens/chat/chat.model.dart' as Model;
 class ChatCard extends StatelessWidget {
   final Chat chat;
   final Color chatCardColor;
-  Model.Chat? replyTo;
+  final Model.Chat? replyTo;
   final CrossAxisAlignment crossAxisAlignment;
   ChatCard(
       this.chat, this.chatCardColor, this.crossAxisAlignment, this.replyTo);

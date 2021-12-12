@@ -14,6 +14,7 @@ import 'package:rada_egerton/screens/notification.dart';
 import 'package:rada_egerton/screens/profile.dart';
 import 'package:rada_egerton/screens/register.dart';
 import 'package:rada_egerton/screens/splash.dart';
+import 'package:rada_egerton/screens/view_profile.dart';
 
 import 'screens/information/information_list.dart';
 import 'screens/welcome.dart';
@@ -43,8 +44,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => Help());
     case AppRoutes.information:
       return MaterialPageRoute(builder: (context) => Information());
-    case AppRoutes.informationDetails:
-      return MaterialPageRoute(builder: (context) => InformationDetail());
+   
     case AppRoutes.dashboard:
       return MaterialPageRoute(builder: (context) => Dashboard());
     case AppRoutes.forum:
@@ -55,7 +55,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => ProfileScreen());
     case AppRoutes.contributors:
       return MaterialPageRoute(builder: (context) => ContributorScreen());
-    
+    case AppRoutes.viewProfile:
+      String userId = settings.arguments as String;
+      return MaterialPageRoute(builder: (context) => ViewProfileScreen(userId));
     default:
       return MaterialPageRoute(builder: (context) => PageNotFound());
   }

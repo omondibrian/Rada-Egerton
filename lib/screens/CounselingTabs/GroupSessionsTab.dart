@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/theme.dart';
@@ -8,7 +7,6 @@ import '../../sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
 import 'package:rada_egerton/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
@@ -24,7 +22,7 @@ class GroupSessionsTab extends StatelessWidget {
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
-    Future<void> _refreshChat() async {
+    Future<void> _refresh() async {
       chatsprovider.getConversations();
     }
 
@@ -76,36 +74,33 @@ class GroupSessionsTab extends StatelessWidget {
     }
 
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.group_add,color: Colors.white,),
-          backgroundColor: Palette.accent,
-          onPressed: () {
-            showBottomSheet(
-                context: context,
-                builder: (context) {
-                  return newGroupForm(context, radaApplicationProvider);
-                });
-          },
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(
+          Icons.group_add,
+          color: Colors.white,
         ),
-        body: conversations.isNotEmpty
-            ? RefreshIndicator(
-                onRefresh: () => _refreshChat(),
-                backgroundColor: Theme.of(context).primaryColor,
-                color: Colors.white,
-                displacement: 20.0,
-                edgeOffset: 5.0,
-                child: ListView.builder(
-                  itemBuilder: conversationBuilder,
-                  itemCount: conversations.length,
-                ),
-              )
-            : Center(
-                child: SizedBox(
-                  width: 80,
-                  height: 80,
-                  child: SpinKitSpinningLines(
-                      color: Theme.of(context).primaryColor),
-                ),
-              ));
+        backgroundColor: Palette.accent,
+        onPressed: () {
+          showBottomSheet(
+              context: context,
+              builder: (context) {
+                return newGroupForm(context, radaApplicationProvider);
+              });
+        },
+      ),
+      body: conversations.isNotEmpty
+          ? RefreshIndicator(
+              onRefresh: () => _refresh(),
+              backgroundColor: Theme.of(context).primaryColor,
+              color: Colors.white,
+              displacement: 20.0,
+              edgeOffset: 5.0,
+              child: ListView.builder(
+                itemBuilder: conversationBuilder,
+                itemCount: conversations.length,
+              ),
+            )
+          : Center(child: Image.asset("assets/message.png",width: 250,)),
+    );
   }
 }

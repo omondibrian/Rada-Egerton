@@ -1,12 +1,13 @@
+import 'package:rada_egerton/providers/ApplicationProvider.dart';
+import 'package:rada_egerton/providers/chat.provider.dart';
+
 import '../../sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
-import '../../providers/counselors.provider.dart';
-import 'package:rada_egerton/entities/ChatDto.dart';
+import '../../providers/counselling.provider.dart';
 import 'package:rada_egerton/widgets/ratingBar.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
-import 'package:rada_egerton/services/counseling/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class CounselorsTab extends StatelessWidget {
@@ -15,33 +16,35 @@ class CounselorsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final counselorprovider = Provider.of<CounselorProvider>(context);
+    final appProvider = Provider.of<RadaApplicationProvider>(context);
+    final chatProvider = Provider.of<ChatProvider>(context);
     var counselors = counselorprovider.counselors;
 
     Future<void> _refresh() async {
       counselorprovider.getCounsellors();
     }
 
-    sendMessage(ChatPayload chat, String userId) async {
-      var service = CounselingServiceProvider();
-      await service.peerCounseling(chat, userId);
-    }
-
     Widget conselorsBuilder(BuildContext cxt, int index) {
       return GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChatScreen(
-              title: counselors[index].name,
-              imgUrl: "$BASE_URL/api/v1/uploads/${counselors[index].imgUrl}",
-              sendMessage: sendMessage,
-              groupId: counselors[index].id.toString(),
-              reciepient: counselors[index].id.toString(),
-              chatIndex: index,
-              mode: ChatModes.PRIVATE,
+        onTap: () {
+          if (counselors[index].id == appProvider.user!.id) {
+            return null;
+          }
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatScreen(
+                title: counselors[index].name,
+                imgUrl: "$BASE_URL/api/v1/uploads/${counselors[index].imgUrl}",
+                sendMessage: chatProvider.sendPrivateCounselingMessage,
+                groupId: counselors[index].id.toString(),
+                reciepient: counselors[index].id.toString(),
+                chatIndex: index,
+                mode: ChatModes.PRIVATE,
+              ),
             ),
-          ),
-        ),
+          );
+        },
         child: Card(
           elevation: 0,
           margin: EdgeInsets.only(bottom: 10),
@@ -82,12 +85,17 @@ class CounselorsTab extends StatelessWidget {
                   children: [
                     Text(
                       counselors[index].name,
+                      style: Theme.of(context).textTheme.subtitle1,
                     ),
                   ],
                 ),
                 Row(
                   children: [
-                    Text('Expertise : '),
+                    Text('Expertise : ',
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle2!
+                            .copyWith(fontSize: 14)),
                     Text(
                       counselors[index].expertise,
                     ),
@@ -118,9 +126,12 @@ class CounselorsTab extends StatelessWidget {
                 color: Colors.white,
                 displacement: 20.0,
                 edgeOffset: 5.0,
-                child: ListView.builder(
-                  itemBuilder: conselorsBuilder,
-                  itemCount: counselors.length,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: ListView.builder(
+                    itemBuilder: conselorsBuilder,
+                    itemCount: counselors.length,
+                  ),
                 ),
               )
             : Padding(
