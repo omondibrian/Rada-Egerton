@@ -1,3 +1,7 @@
+import 'package:rada_egerton/entities/CounsellorsDTO.dart';
+import 'package:rada_egerton/entities/PeerCounsellorDTO.dart';
+import 'package:rada_egerton/entities/StudentDTO.dart';
+
 import '../../sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,18 +40,20 @@ class PrivateSessionsTab extends StatelessWidget {
     }
 
     Widget conversationBuilder(BuildContext ctx, int index) {
-      var counsellorId = conversations[index].recipient;
-      var infoConversations = counselorprovider.counselorById(counsellorId);
+      var recipientId = conversations[index].recipient;
+
+      Recipient user = getUser(appProvider, counselorprovider, recipientId);
+
       return GestureDetector(
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ChatScreen(
-              title: '${infoConversations?.name}',
-              imgUrl: "$BASE_URL/api/v1/uploads/${infoConversations?.imgUrl}",
+              title: '${user.name}',
+              imgUrl: "$BASE_URL/api/v1/uploads/${user.imgUrl}",
               sendMessage: chatsprovider.sendPrivateCounselingMessage,
               groupId: "",
-              reciepient: counsellorId,
+              reciepient: recipientId,
               chatIndex: index,
               mode: ChatModes.PRIVATE,
             ),
@@ -57,8 +63,7 @@ class PrivateSessionsTab extends StatelessWidget {
           leading: CircleAvatar(
             child: ClipOval(
               child: CachedNetworkImage(
-                imageUrl:
-                    "$BASE_URL/api/v1/uploads/${infoConversations?.imgUrl}",
+                imageUrl: "$BASE_URL/api/v1/uploads/${user.imgUrl}",
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -70,7 +75,7 @@ class PrivateSessionsTab extends StatelessWidget {
               ),
             ),
           ),
-          title: Text('${infoConversations?.name}', style: style),
+          title: Text('${user.name}', style: style),
           subtitle: Text(
             "say something",
             style: TextStyle(
@@ -100,4 +105,28 @@ class PrivateSessionsTab extends StatelessWidget {
             width: 250,
           ));
   }
+
+  Recipient getUser(RadaApplicationProvider appProvider,
+      CounselorProvider counselorprovider, String recipientId) {
+    Recipient user = Recipient(name: "", imgUrl: "");
+    if (!appProvider.userRole.isStudent) {
+      var infoConversations =
+          counselorprovider.getReceipientBio(recipientId, true);
+      infoConversations!.fold(
+        (counsellorData) => user = Recipient(
+            name: counsellorData!.name, imgUrl: counsellorData.imgUrl),
+        (peer) => user = Recipient(name: peer.name, imgUrl: peer.profilePic),
+      );
+    } else {
+      var std = counselorprovider.getStudentBio(recipientId) as StudentDto;
+      user = Recipient(name: std.user.name, imgUrl: std.user.profilePic);
+    }
+    return user;
+  }
+}
+
+class Recipient {
+  String name;
+  String imgUrl;
+  Recipient({required this.name, required this.imgUrl});
 }
