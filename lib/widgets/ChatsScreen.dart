@@ -66,6 +66,7 @@ class _ChatScreenState extends State<ChatScreen> {
         }
       }
     }
+
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(60),

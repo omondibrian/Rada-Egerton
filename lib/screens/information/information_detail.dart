@@ -29,77 +29,78 @@ class _InformationDetailState extends State<InformationDetail> {
         ),
       ),
       body: SafeArea(
-        child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: _provider.informationData == null
-                ? CircularProgressIndicator()
-                : ListView.builder(
-                    itemBuilder: (context, index) => informationBodyContent(
-                      widget.informationData.content[index],
-                    ),
-                    itemCount: widget.informationData.content.length,
-                  )),
-      ),
+          child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: _provider.informationData == null
+                  ? CircularProgressIndicator()
+                  : ListView(
+                      children: buildItems(widget.informationData.content),
+                    ))),
     );
   }
 
-  Widget informationBodyContent(InformationContent content) {
-    if (content.bodyContent.length < 1 && content.subtitle == null) {
-      return SizedBox(
-        height: 0,
-      );
-    }
-    if (content.bodyContent.length < 1 && content.subtitle != null) {
-      return Card(
-        child: Text("${content.subtitle}"),
-      );
+  List<Widget> buildItems(List<InformationContent> contentItems) {
+    List<Widget> _widgets = [];
+    int i = 0;
+    late Widget _widget;
+    while (i < contentItems.length) {
+      if (contentItems[i].type == InformationContent.text) {
+        List<InlineSpan> span = [];
+        //to render list items
+
+        for (int l = i; l < contentItems.length; l++) {
+          if (contentItems[l].type == InformationContent.text) {
+            if (l < contentItems.length - 1 &&
+                contentItems[l + 1].attributes.list != null) {
+              span.add(WidgetSpan(
+                  child: Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Text("\u2022 ${contentItems[l].bodyContent}",
+                    style: contentItems[l].getTextStyle),
+              )));
+            } else {
+              span.add(TextSpan(
+                  text: "${contentItems[l].bodyContent}",
+                  style: contentItems[l].getTextStyle));
+            }
+            i += 1;
+          } else {
+            break;
+          }
+        }
+        _widget = Card(child: Text.rich(TextSpan(children: span)));
+        _widgets.add(_widget);
+      } else if (contentItems[i].type == InformationContent.image) {
+        _widget = Card(
+            child: CachedNetworkImage(
+          imageUrl: "$IMAGE_URL${contentItems[i].bodyContent}",
+        ));
+        _widgets.add(_widget);
+        i += 1;
+      }
     }
 
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      
-      child: Column(
-        children: [
-          if (content.subtitle != null)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                content.subtitle!,
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-            ),
-          if (content.type == InformationContent.text)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(content.bodyContent[0],
-                  style: Theme.of(context).textTheme.bodyText1),
-            ),
-          if (content.type == InformationContent.image)
-            CachedNetworkImage(
-              imageUrl: "$IMAGE_URL${content.bodyContent[0]}",
-            ),
-          if (content.type == InformationContent.list)
-            Column(
-              children: content.bodyContent
-                  .map(
-                    (item) => Padding(
-                      padding:
-                          const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                      child: Text(
-                        "$item",
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-          if (content.type == InformationContent.title)
-            Text(
-              content.bodyContent[0],
-              style: Theme.of(context).textTheme.headline3,
-            ),
-        ],
-      ),
-    );
+    return _widgets;
+  }
+
+  Widget informationBodyContent(InformationContent content) {
+    print(content.attributes.header);
+    if (content.subtitle != null)
+      return Text(
+        content.subtitle!,
+        style: Theme.of(context).textTheme.subtitle1,
+      );
+    if (content.type == InformationContent.text)
+      return Text(content.bodyContent, style: content.getTextStyle);
+    if (content.type == InformationContent.image)
+      return Image.network(
+        "$IMAGE_URL${content.bodyContent}",
+      );
+    if (content.type == InformationContent.title)
+      return Text(
+        content.bodyContent,
+        style: Theme.of(context).textTheme.headline3,
+      );
+    return SizedBox();
   }
 }

@@ -12,6 +12,10 @@ class CounselorProvider with ChangeNotifier {
   List<PeerCounsellorDto> _peerCounsellors = [];
   CounselingServiceProvider _service = CounselingServiceProvider();
   GroupsDto? _forums;
+  Recipient? _recipient;
+  Recipient? get recipientInfo {
+    return this._recipient;
+  }
 
   bool counselorsLoading = true;
   bool peerCouselorsLoading = true;
@@ -49,19 +53,6 @@ class CounselorProvider with ChangeNotifier {
 
   List<PeerCounsellorDto> get peerCounselors {
     return [...this._peerCounsellors];
-  }
-
-  Either<CounsellorsDTO?, PeerCounsellorDto>? getReceipientBio(
-      String id, bool isCounsellor) {
-    if (isCounsellor) {
-      return Left(this.counselorById(id));
-    } else {
-      for (var i = 0; i < this._peerCounsellors.length; i++) {
-        if (this._peerCounsellors[i].id.toString() == id) {
-          return Right(this._peerCounsellors[i]);
-        }
-      }
-    }
   }
 
   Future<Either<StudentDto, InfoMessage>> getStudentBio(String id) async {
@@ -129,4 +120,35 @@ class CounselorProvider with ChangeNotifier {
     notifyListeners();
     return _info;
   }
+
+  Recipient getUser(
+      String userType, String recipientId, List<StudentDto> students) {
+    Recipient user = Recipient(name: "", imgUrl: "");
+    if (userType == 'counsellor') {
+      var res = this.counselorById(recipientId);
+      user = Recipient(name: res!.name, imgUrl: res.imgUrl);
+    } else if (userType == 'peerCounsellor') {
+      for (var i = 0; i < this._peerCounsellors.length; i++) {
+        if (this._peerCounsellors[i].id.toString() == recipientId) {
+          var res = this._peerCounsellors[i];
+          user = Recipient(name: res.name, imgUrl: res.profilePic);
+          break;
+        }
+      }
+    } else {
+      for (var i = 0; i < students.length; i++) {
+        if (students[i].user.id.toString() == recipientId) {
+          user = Recipient(
+              name: students[i].user.name, imgUrl: students[i].user.profilePic);
+        }
+      }
+    }
+    return user;
+  }
+}
+
+class Recipient {
+  String name;
+  String imgUrl;
+  Recipient({required this.name, required this.imgUrl});
 }

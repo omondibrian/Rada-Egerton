@@ -1,7 +1,3 @@
-import 'package:rada_egerton/entities/CounsellorsDTO.dart';
-import 'package:rada_egerton/entities/PeerCounsellorDTO.dart';
-import 'package:rada_egerton/entities/StudentDTO.dart';
-
 import '../../sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +26,6 @@ class PrivateSessionsTab extends StatelessWidget {
       chatsprovider.privateMessages,
       userId,
     );
-
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
@@ -41,8 +36,8 @@ class PrivateSessionsTab extends StatelessWidget {
 
     Widget conversationBuilder(BuildContext ctx, int index) {
       var recipientId = conversations[index].recipient;
-
-      Recipient user = getUser(appProvider, counselorprovider, recipientId);
+      Recipient user = counselorprovider.getUser(
+          conversations[index].userType, recipientId, chatsprovider.students);
 
       return GestureDetector(
         onTap: () => Navigator.push(
@@ -82,7 +77,7 @@ class PrivateSessionsTab extends StatelessWidget {
               color: Theme.of(ctx).primaryColor,
               fontSize: SizeConfig.isTabletWidth ? 16 : 14,
             ),
-          ), //TODO insert clickable functionality for chat
+          ),
         ),
       );
     }
@@ -105,28 +100,4 @@ class PrivateSessionsTab extends StatelessWidget {
             width: 250,
           ));
   }
-
-  Recipient getUser(RadaApplicationProvider appProvider,
-      CounselorProvider counselorprovider, String recipientId) {
-    Recipient user = Recipient(name: "", imgUrl: "");
-    if (!appProvider.userRole.isStudent) {
-      var infoConversations =
-          counselorprovider.getReceipientBio(recipientId, true);
-      infoConversations!.fold(
-        (counsellorData) => user = Recipient(
-            name: counsellorData!.name, imgUrl: counsellorData.imgUrl),
-        (peer) => user = Recipient(name: peer.name, imgUrl: peer.profilePic),
-      );
-    } else {
-      var std = counselorprovider.getStudentBio(recipientId) as StudentDto;
-      user = Recipient(name: std.user.name, imgUrl: std.user.profilePic);
-    }
-    return user;
-  }
-}
-
-class Recipient {
-  String name;
-  String imgUrl;
-  Recipient({required this.name, required this.imgUrl});
 }

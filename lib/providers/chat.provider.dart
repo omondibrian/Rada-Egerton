@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:rada_egerton/config.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
+import 'package:rada_egerton/entities/StudentDTO.dart';
 import 'package:rada_egerton/entities/userRoles.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:pusher_client/pusher_client.dart';
@@ -23,13 +24,13 @@ class ChatProvider with ChangeNotifier {
   List<Msg> _forumMsgs = [];
   String _channelName = "radaComms";
   UserRole userRole = UserRole([]);
-
+  List<StudentDto> _students = [];
   CounselingServiceProvider _service = CounselingServiceProvider();
   void clearState() {
     this._forumMsgs.clear();
     this._groupMsgs.clear();
     this._userId = '';
-    this.userRole=UserRole([]);
+    this.userRole = UserRole([]);
   }
 
   ChatProvider() {
@@ -80,12 +81,24 @@ class ChatProvider with ChangeNotifier {
     return [...this._forumMsgs];
   }
 
+  List<StudentDto> get students {
+    return [...this._students];
+  }
+
   void getConversations() async {
     var results = await _service.fetchUserMsgs();
     results!.fold(
       (userChats) {
         this._privateMsgs =
             userChats.data.payload.peerMsgs.map(convertToChatPayload).toList();
+        userChats.data.payload.peerMsgs.forEach((userChat) async {
+          if (userChat.userType == "student") {
+            var student = await _service.fetchStudentData(userChat.senderId);
+            student!.fold((std) {
+              _students.add(std);
+            }, (error) => print("error"));
+          }
+        });
         this._groupMsgs = userChats.data.payload.groupMsgs;
         this._forumMsgs = userChats.data.payload.forumMsgs;
       },
@@ -94,7 +107,8 @@ class ChatProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  ChatPayload convertToChatPayload(PeerMsg msg) => ChatPayload(
+  ChatPayload convertToChatPayload(PeerMsg msg) {
+    return ChatPayload(
       id: msg.id,
       message: msg.message,
       imageUrl: msg.imageUrl,
@@ -102,7 +116,10 @@ class ChatProvider with ChangeNotifier {
       groupsId: msg.groupsId,
       reply: msg.reply,
       status: msg.status,
-      reciepient: msg.reciepient);
+      reciepient: msg.reciepient,
+      role: msg.userType,
+    );
+  }
 
   @override
   void dispose() {
@@ -161,6 +178,7 @@ class ChatProvider with ChangeNotifier {
             reply: chat.data.payload.reply ?? "",
             status: chat.data.payload.status,
             reciepient: chat.data.payload.reciepient,
+            role: chat.data.payload.reciepient,
           ),
         );
   }
@@ -197,6 +215,7 @@ class ChatProvider with ChangeNotifier {
         reply: chat.data.payload.reply ?? "",
         status: chat.data.payload.status,
         reciepient: chat.data.payload.reciepient,
+        userType: chat.data.payload.userType,
       ),
     );
   }
