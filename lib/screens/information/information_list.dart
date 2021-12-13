@@ -11,7 +11,6 @@ import 'package:rada_egerton/sizeConfig.dart';
 class Information extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final List<Widget> imageSliders = [];
     final _provider = Provider.of<InformationProvider>(context);
     return Scaffold(
       appBar: AppBar(
@@ -22,56 +21,51 @@ class Information extends StatelessWidget {
                   ?.copyWith(color: Colors.white))),
       body: Container(
         margin: EdgeInsets.symmetric(vertical: 30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Sexual & Reproductive health",
-                style: Theme.of(context).textTheme.headline2,
-                textAlign: TextAlign.left,
+        child: _provider.informationCategory == null ||
+                _provider.informationData == null
+            ? CircularProgressIndicator(color: Theme.of(context).primaryColor)
+            : ListView.builder(
+                itemBuilder: (context, index) =>
+                    _contentListRow(context, _provider, index),
+                itemCount: _provider.informationCategory!.length,
               ),
-            ),
-            SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: RefreshIndicator(
-                  onRefresh: () => _provider.init(),
-                  child: _provider.informationData == null
-                      ? CircularProgressIndicator()
-                      : Row(
-                          children: _provider.informationData!
-                              .map((item) => _informationCard(item, context))
-                              .toList()
-                          // itemBuilder: (_, index) => _informationCard(
-                          //   _provider.informationData![index],
-                          //   context,
-                          // ),
-                          // itemCount: _provider.informationData!.length,
-                          ),
-                )),
-            SizedBox(
-              height: 30,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Substance abuse",
-                style: Theme.of(context).textTheme.headline2,
-                textAlign: TextAlign.left,
-              ),
-            ),
-            // SingleChildScrollView(
-            //   scrollDirection: Axis.horizontal,
-            //   child: Row(
-            //       children: imageSliders,
-            //       mainAxisAlignment: MainAxisAlignment.center),
-            // ),
-          ],
-        ),
       ),
 
       //
+    );
+  }
+
+  Widget _contentListRow(
+      BuildContext context, InformationProvider _provider, int index) {
+    InformationCategory _category = _provider.informationCategory![index];
+    List<InformationData> _categoryData =
+        _provider.informationData!.where((item) {
+      return item.metadata.category == _category.id;
+    }).toList();
+    if (_categoryData.length == 0) {
+      return Container();
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "${_category.name}",
+            style: Theme.of(context).textTheme.headline2,
+            textAlign: TextAlign.left,
+          ),
+        ),
+        SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+                children: _categoryData
+                    .map((item) => _informationCard(item, context))
+                    .toList())),
+        SizedBox(
+          height: 30,
+        ),
+      ],
     );
   }
 
@@ -81,7 +75,7 @@ class Information extends StatelessWidget {
   ) {
     double _imageHeight = SizeConfig.isTabletWidth ? 300 : 150;
     double _imageWidth = SizeConfig.isTabletWidth ? 400 : 200;
-    
+
     return InkWell(
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => InformationDetail(informationItem))),
@@ -118,7 +112,6 @@ class Information extends StatelessWidget {
                       height: _imageHeight,
                       width: _imageWidth),
                 )),
-
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
               child: Text(

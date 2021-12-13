@@ -50,6 +50,7 @@ class Payload {
     required this.reply,
     required this.status,
     required this.reciepient,
+    required this.userType,
   });
 
   int id;
@@ -60,6 +61,7 @@ class Payload {
   dynamic reply;
   String status;
   String reciepient;
+  String userType;
 
   factory Payload.fromJson(Map<String, dynamic> json) => Payload(
         id: json["_id"],
@@ -67,9 +69,10 @@ class Payload {
         imageUrl: json["imageUrl"],
         senderId: json["sender_id"],
         groupsId: json["Groups_id"],
-        reply: json["reply"],
+        reply: json["reply"]??"",
         status: json["status"],
         reciepient: json["reciepient"],
+        userType: json["user_type"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -81,6 +84,7 @@ class Payload {
         "reply": reply,
         "status": status,
         "reciepient": reciepient,
+        "user_type": userType,
       };
 }
 
@@ -95,6 +99,7 @@ class ChatPayload {
     required this.status,
     required this.reciepient,
     this.role,
+
   });
 
   int id;

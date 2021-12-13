@@ -30,19 +30,12 @@ class _InformationDetailState extends State<InformationDetail> {
       ),
       body: SafeArea(
           child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(10.0),
               child: _provider.informationData == null
                   ? CircularProgressIndicator()
-                  : Column(
+                  : ListView(
                       children: buildItems(widget.informationData.content),
-                    )
-              // : ListView.builder(
-              //     itemBuilder: (context, index) => informationBodyContent(
-              //       widget.informationData.content[index],
-              //     ),
-              //     itemCount: widget.informationData.content.length,
-              //   )),
-              )),
+                    ))),
     );
   }
 
@@ -53,25 +46,37 @@ class _InformationDetailState extends State<InformationDetail> {
     while (i < contentItems.length) {
       if (contentItems[i].type == InformationContent.text) {
         List<InlineSpan> span = [];
+        //to render list items
+
         for (int l = i; l < contentItems.length; l++) {
           if (contentItems[l].type == InformationContent.text) {
-            span.add(TextSpan(
-                text: contentItems[l].bodyContent,
-                style: contentItems[l].getTextStyle));
+            if (l < contentItems.length - 1 &&
+                contentItems[l + 1].attributes.list != null) {
+              span.add(WidgetSpan(
+                  child: Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Text("\u2022 ${contentItems[l].bodyContent}",
+                    style: contentItems[l].getTextStyle),
+              )));
+            } else {
+              span.add(TextSpan(
+                  text: "${contentItems[l].bodyContent}",
+                  style: contentItems[l].getTextStyle));
+            }
             i += 1;
           } else {
             break;
           }
         }
         _widget = Text.rich(TextSpan(children: span));
-      }
-      else if(contentItems[i].type == InformationContent.image) {
-        _widget = Image.network(
-          "$IMAGE_URL${contentItems[i].bodyContent}",
+        _widgets.add(_widget);
+      } else if (contentItems[i].type == InformationContent.image) {
+        _widget = CachedNetworkImage(
+          imageUrl: "$IMAGE_URL${contentItems[i].bodyContent}",
         );
+        _widgets.add(_widget);
+        i += 1;
       }
-      _widgets.add(_widget);
-      i += 1;
     }
 
     return _widgets;

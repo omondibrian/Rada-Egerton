@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 UserChatDto userChatDtoFromJson(String str) =>
@@ -133,6 +131,7 @@ class PeerMsg {
     required this.reply,
     required this.status,
     required this.reciepient,
+    required this.userType,
   });
 
   int id;
@@ -143,7 +142,7 @@ class PeerMsg {
   dynamic reply;
   String status;
   String reciepient;
-
+  String userType;
   factory PeerMsg.fromJson(Map<String, dynamic> json) => PeerMsg(
         id: json["_id"],
         message: json["message"],
@@ -153,6 +152,7 @@ class PeerMsg {
         reply: json["reply"],
         status: json["status"],
         reciepient: json["reciepient"],
+        userType: json["user_type"]??"",
       );
 
   Map<String, dynamic> toJson() => {
@@ -164,5 +164,6 @@ class PeerMsg {
         "reply": reply,
         "status": status,
         "reciepient": reciepient,
+        "user_type": userType,
       };
 }

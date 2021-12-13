@@ -45,6 +45,7 @@ class ServiceUtility {
     List<String> userIds = [];
     Message extractMsgs(String receipientId) {
       List<ChatPayload> msg = [];
+      String userType = '';
       for (var i = 0; i < msgs.length; i++) {
         //check if message belongs to the user and the current reciepient the add it to list
         if (msgs[i].senderId == userId || msgs[i].senderId == receipientId) {
@@ -52,9 +53,14 @@ class ServiceUtility {
               msgs[i].reciepient == receipientId) {
             msg.add(msgs[i]);
           }
+          if (msgs[i].reciepient == receipientId ||
+              msgs[i].senderId == receipientId) {
+            print("recipient");
+            userType = msgs[i].role as String;
+          }
         }
       }
-      return Message(recipient: receipientId, msg: msg);
+      return Message(recipient: receipientId, msg: msg, userType: userType);
     }
 
     //get a list of receipients compared to the user id
@@ -142,7 +148,8 @@ class ErrorMessage {
 class Message {
   String recipient;
   List<ChatPayload> msg;
-  Message({required this.recipient, required this.msg});
+  String userType;
+  Message({required this.recipient, required this.msg, required this.userType});
 }
 
 class ForumPayload {
