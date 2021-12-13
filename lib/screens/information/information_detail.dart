@@ -68,12 +68,13 @@ class _InformationDetailState extends State<InformationDetail> {
             break;
           }
         }
-        _widget = Text.rich(TextSpan(children: span));
+        _widget = Card(child: Text.rich(TextSpan(children: span)));
         _widgets.add(_widget);
       } else if (contentItems[i].type == InformationContent.image) {
-        _widget = CachedNetworkImage(
+        _widget = Card(
+            child: CachedNetworkImage(
           imageUrl: "$IMAGE_URL${contentItems[i].bodyContent}",
-        );
+        ));
         _widgets.add(_widget);
         i += 1;
       }
