@@ -42,7 +42,9 @@ class PrivateSessionsTab extends StatelessWidget {
     Widget conversationBuilder(BuildContext ctx, int index) {
       var recipientId = conversations[index].recipient;
 
-      Recipient user = getUser(appProvider, counselorprovider, recipientId);
+      late Recipient user;
+      getUser(appProvider, counselorprovider, recipientId)
+          .then((user_) => {user = user_});
 
       return GestureDetector(
         onTap: () => Navigator.push(
@@ -106,8 +108,8 @@ class PrivateSessionsTab extends StatelessWidget {
           ));
   }
 
-  Recipient getUser(RadaApplicationProvider appProvider,
-      CounselorProvider counselorprovider, String recipientId) {
+  Future<Recipient> getUser(RadaApplicationProvider appProvider,
+      CounselorProvider counselorprovider, String recipientId) async {
     Recipient user = Recipient(name: "", imgUrl: "");
     if (!appProvider.userRole.isStudent) {
       var infoConversations =
@@ -118,8 +120,13 @@ class PrivateSessionsTab extends StatelessWidget {
         (peer) => user = Recipient(name: peer.name, imgUrl: peer.profilePic),
       );
     } else {
-      var std = counselorprovider.getStudentBio(recipientId) as StudentDto;
-      user = Recipient(name: std.user.name, imgUrl: std.user.profilePic);
+      var std = await counselorprovider.getStudentBio(recipientId);
+      std.fold(
+          (user_) => {
+                user = Recipient(
+                    name: user_.user.name, imgUrl: user_.user.profilePic)
+              },
+          (r) => null);
     }
     return user;
   }

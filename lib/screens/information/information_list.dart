@@ -81,6 +81,7 @@ class Information extends StatelessWidget {
   ) {
     double _imageHeight = SizeConfig.isTabletWidth ? 300 : 150;
     double _imageWidth = SizeConfig.isTabletWidth ? 400 : 200;
+    
     return InkWell(
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => InformationDetail(informationItem))),
