@@ -1,26 +1,12 @@
-
 import 'dart:convert';
 
-UserDTO userDtoFromJson(String str) => UserDTO.fromJson(json.decode(str));
+User userFromJson(String str) => User.fromJson(json.decode(str));
+String userToJson(User data) => json.encode(data.toJson());
 
-String userDtoToJson(UserDTO data) => json.encode(data.toJson());
-
-class UserDTO {
-  String email = "";
-  String userName = "";
-  String phone = "";
-  String profilePic = "";
-  String dob = "";
-  String id = "";
-  String gender = "";
-  String status;
-  String accountStatus;
-  String synced;
-  String joined;
-
-  UserDTO({
+class User {
+  User({
     required this.id,
-    required name,
+    required this.name,
     required this.email,
     required this.profilePic,
     required this.gender,
@@ -30,31 +16,22 @@ class UserDTO {
     required this.accountStatus,
     required this.synced,
     required this.joined,
-  }) {
-    this.userName = name;
-  }
+  });
 
-  // factory UserDTO.defaultDTO() {
-  //   return UserDTO(
-  //     email: '',
-  //     dob: '',
-  //     id: '',
-  //     userName: '',
-  //     phone: '',
-  //     profilePic: '',
-  //     gender: '',
-  //       this.phone,
-  //    this.dob,
-  //    this.status,
-  //    this.accountStatus,
-  //    this.synced,
-  //    this.joined,
-  //   );
-  // }
+  int id;
+  String name;
+  String email;
+  String profilePic;
+  String gender;
+  String phone;
+  String dob;
+  String status;
+  String accountStatus;
+  String synced;
+  String joined;
 
-  factory UserDTO.fromJson(Map<String, dynamic> json) => UserDTO(
-       
-        id: json["_id"].toString(),
+  factory User.fromJson(Map<String, dynamic> json) => User(
+        id: json["_id"],
         name: json["name"],
         email: json["email"],
         profilePic: json["profilePic"],
@@ -69,7 +46,7 @@ class UserDTO {
 
   Map<String, dynamic> toJson() => {
         "_id": id,
-        "name": userName,
+        "name": name,
         "email": email,
         "profilePic": profilePic,
         "gender": gender,
@@ -81,5 +58,3 @@ class UserDTO {
         "joined": joined,
       };
 }
-
-

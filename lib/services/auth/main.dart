@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
 import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/entities/userRoles.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/entities/AuthDTO.dart';
-import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
@@ -44,7 +44,7 @@ class AuthServiceProvider {
     return left(null);
   }
 
-  Future<Either<UserDTO, ErrorMessage>> updateProfile(UserDTO data) async {
+  Future<Either<User, ErrorMessage>> updateProfile(User data) async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     try {
       String authToken = await ServiceUtility.getAuthToken() as String;
@@ -53,12 +53,12 @@ class AuthServiceProvider {
           options: Options(
               headers: {'Authorization': authToken}, sendTimeout: 10000),
           data: json.encode({
-            'name': data.userName,
+            'name': data.name,
             "phone": data.phone,
           }));
 
-      UserDTO user = UserDTO.fromJson(_profile.data["user"]);
-      _prefs.setString("user", userDtoToJson(user));
+      User user = User.fromJson(_profile.data["user"]);
+      _prefs.setString("user", userToJson(user));
       return Left(user);
     } on DioError catch (e) {
       return Right(
@@ -85,7 +85,7 @@ class AuthServiceProvider {
     }
   }
 
-  Future<Either<UserDTO, ErrorMessage>?> getProfile() async {
+  Future<Either<User, ErrorMessage>?> getProfile() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     try {
       final authToken = await ServiceUtility.getAuthToken();
@@ -98,11 +98,11 @@ class AuthServiceProvider {
                   headers: {'Authorization': authToken}, sendTimeout: 10000),
             );
         // print(_profile.data);
-        UserDTO user = UserDTO.fromJson(_profile.data["user"]);
-        _prefs.setString("user", userDtoToJson(user));
+        User user = User.fromJson(_profile.data["user"]);
+        _prefs.setString("user", userToJson(user));
         return Left(user);
       }
-      return Left(UserDTO.fromJson(json.decode(_user)));
+      return Left(User.fromJson(json.decode(_user)));
     } on DioError catch (e) {
       return Right(
         ServiceUtility.handleDioExceptions(e),
@@ -111,8 +111,7 @@ class AuthServiceProvider {
     // return null;
   }
 
-  Future<Either<UserDTO, ErrorMessage>?> getStudentProfile(
-      String userId) async {
+  Future<Either<User, ErrorMessage>?> getStudentProfile(String userId) async {
     try {
       final authToken = await ServiceUtility.getAuthToken();
       var _profile = await this._httpClientConn.get(
@@ -120,7 +119,7 @@ class AuthServiceProvider {
             options: Options(
                 headers: {'Authorization': authToken}, sendTimeout: 10000),
           );
-      UserDTO user = UserDTO.fromJson(_profile.data["user"]);
+      User user = User.fromJson(_profile.data["user"]);
       return Left(user);
     } on DioError catch (e) {
       return Right(

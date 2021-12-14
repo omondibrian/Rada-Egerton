@@ -4,16 +4,15 @@ import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/widgets/ProfileHeader.dart';
 
-// ignore: must_be_immutable
 class ViewProfileScreen extends StatefulWidget {
-  String userId;
+  final String userId;
   ViewProfileScreen(this.userId);
   @override
   _ViewProfileScreenState createState() => _ViewProfileScreenState();
 }
 
 class _ViewProfileScreenState extends State<ViewProfileScreen> {
-  UserDTO? _user;
+  User? _user;
 
   AuthServiceProvider _authService = AuthServiceProvider();
   Future<void> init() async {
@@ -45,13 +44,13 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   ProfileHeader(
                     avatarUrl: "$IMAGE_URL${_user!.profilePic}",
                     coverImage: AssetImage('assets/android-icon-192x192.png'),
-                    title: "${_user!.userName}",
-                    canEdit:false,
+                    title: "${_user!.name}",
+                    canEdit: false,
                   ),
                   const SizedBox(height: 10.0),
                   // UserInfo(),
 
-                  //TODO: insert userinfo stless widget
+                 
                   Container(
                     padding: EdgeInsets.all(10),
                     child: Column(
@@ -80,7 +79,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                 TextFormField(
                                   enabled: false,
                                   autofocus: true,
-                                  initialValue: _user!.userName,
+                                  initialValue: _user!.name,
                                 ),
                                 TextFormField(
                                   enabled: false,
@@ -90,25 +89,25 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                   leading: Icon(Icons.account_box_outlined),
                                   title: Text("Account status"),
                                   subtitle: Text(
-                                      "${_user!.accountStatus}"), //TODO fetch user account status
+                                      "${_user!.accountStatus}"), 
                                 ),
                                 ListTile(
                                   leading: Icon(Icons.email_outlined),
                                   title: Text("Email"),
                                   subtitle: Text(
-                                      "${_user!.email}"), //TODO fetch the date the user joined
+                                      "${_user!.email}"), 
                                 ),
                                 ListTile(
                                   leading: Icon(Icons.calendar_today),
                                   title: Text("Date of Birth"),
                                   subtitle: Text(
-                                      "${_user!.dob}"), //TODO fetch the date the user joined
+                                      "${_user!.dob}"), 
                                 ),
                                 ListTile(
                                   leading: Icon(Icons.person),
                                   title: Text("Gender"),
                                   subtitle: Text(
-                                      "${_user!.gender}"), //TODO fetch the date the user joined
+                                      "${_user!.gender}"), 
                                 ),
                               ],
                             ),

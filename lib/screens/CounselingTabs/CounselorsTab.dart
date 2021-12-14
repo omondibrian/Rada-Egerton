@@ -27,18 +27,19 @@ class CounselorsTab extends StatelessWidget {
     Widget conselorsBuilder(BuildContext cxt, int index) {
       return GestureDetector(
         onTap: () {
-          if (counselors[index].id == appProvider.user!.id) {
+          if (counselors[index].user.id == appProvider.user!.id) {
             return null;
           }
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => ChatScreen(
-                title: counselors[index].name,
-                imgUrl: "$BASE_URL/api/v1/uploads/${counselors[index].imgUrl}",
+                title: counselors[index].user.name,
+                imgUrl:
+                    "$BASE_URL/api/v1/uploads/${counselors[index].user.profilePic}",
                 sendMessage: chatProvider.sendPrivateCounselingMessage,
-                groupId: counselors[index].id.toString(),
-                reciepient: counselors[index].id.toString(),
+                groupId: counselors[index].user.id.toString(),
+                reciepient: counselors[index].user.id.toString(),
                 chatIndex: index,
                 mode: ChatModes.PRIVATE,
               ),
@@ -57,7 +58,7 @@ class CounselorsTab extends StatelessWidget {
                     child: ClipOval(
                       child: CachedNetworkImage(
                         imageUrl:
-                            "$BASE_URL/api/v1/uploads/${counselors[index].imgUrl}",
+                            "$BASE_URL/api/v1/uploads/${counselors[index].user.profilePic}",
                         imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
@@ -84,7 +85,7 @@ class CounselorsTab extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      counselors[index].name,
+                      counselors[index].user.name,
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
                   ],

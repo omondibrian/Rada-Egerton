@@ -18,7 +18,7 @@ class AddMembers extends StatefulWidget {
 class _AddMembersState extends State<AddMembers> {
   final CounselingServiceProvider _counselingServiceProvider =
       CounselingServiceProvider();
-  UserDTO? user;
+  User? user;
   @override
   Widget build(BuildContext context) {
     final _queryStringController = TextEditingController();
@@ -74,10 +74,10 @@ class _AddMembersState extends State<AddMembers> {
                     GestureDetector(
                       onTap: () async {
                         print(user!.id);
-                         print(widget.groupId);
+                        print(widget.groupId);
                         var result = await this
                             ._counselingServiceProvider
-                            .subToNewGroup(user!.id, widget.groupId);
+                            .subToNewGroup(user!.id.toString(), widget.groupId);
 
                         result!.fold(
                           (_) => Navigator.of(context).pop(),
@@ -104,7 +104,7 @@ class _AddMembersState extends State<AddMembers> {
                               ),
                             ),
                           ),
-                          title: Text('${this.user!.userName}', style: style),
+                          title: Text('${this.user!.name}', style: style),
                           subtitle: Row(
                             children: [
                               Text(
@@ -117,7 +117,7 @@ class _AddMembersState extends State<AddMembers> {
                               Text('${this.user!.email}', style: style),
                             ],
                           ),
-                         trailing: Text('Add'),
+                          trailing: Text('Add'),
                         ),
                       ),
                     ),

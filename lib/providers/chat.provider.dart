@@ -43,8 +43,8 @@ class ChatProvider with ChangeNotifier {
         Pusher(appKey: pusherApiKey, token: _autoken ?? "").getConnection();
     var result = await AuthServiceProvider().getProfile();
     result!.fold((user) async {
-      this._userId = user.id;
-      var role = await AuthServiceProvider().getUserRoles(user.id);
+      this._userId = user.id.toString();
+      var role = await AuthServiceProvider().getUserRoles(user.id.toString());
       role.fold((_userRole) => {userRole = _userRole}, (r) => {});
     }, (error) => print(error));
     privateChannel();

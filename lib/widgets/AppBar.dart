@@ -4,12 +4,10 @@ import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:rada_egerton/providers/counselling.provider.dart';
-import 'package:rada_egerton/screens/counseling.dart';
 import 'package:rada_egerton/screens/view_profile.dart';
 
 import 'package:rada_egerton/theme.dart';
 import 'package:rada_egerton/utils/main.dart';
-import 'package:rada_egerton/widgets/Rate.dart';
 import 'package:rada_egerton/widgets/rating_dialog.dart';
 
 import 'AddMembers.dart';

@@ -28,19 +28,19 @@ class PeerCounselorsTab extends StatelessWidget {
       return GestureDetector(
         onTap: () {
           //prevent
-          if (peerCounsellors.id.toString() == applicationProvider.user!.id) {
+          if (peerCounsellors.user.id == applicationProvider.user!.id) {
             return null;
           }
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => ChatScreen(
-                title: '${peerCounsellors.name}',
+                title: '${peerCounsellors.user.name}',
                 imgUrl:
-                    "$BASE_URL/api/v1/uploads/${peerCounsellors.profilePic}",
+                    "$BASE_URL/api/v1/uploads/${peerCounsellors.user.profilePic}",
                 sendMessage: chatsprovider.sendPrivateCounselingMessage,
                 groupId: "",
-                reciepient: peerCounsellors.id.toString(),
+                reciepient: peerCounsellors.user.id.toString(),
                 chatIndex: index,
                 mode: ChatModes.PRIVATE,
               ),
@@ -58,7 +58,7 @@ class PeerCounselorsTab extends StatelessWidget {
                     child: ClipOval(
                       child: CachedNetworkImage(
                         imageUrl:
-                            "$BASE_URL/api/v1/uploads/${peerCounsellors.profilePic}",
+                            "$BASE_URL/api/v1/uploads/${peerCounsellors.user.profilePic}",
                         imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
@@ -85,7 +85,7 @@ class PeerCounselorsTab extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      counselors[index].name,
+                      counselors[index].user.name,
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
                   ],

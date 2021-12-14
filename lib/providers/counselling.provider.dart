@@ -3,19 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:rada_egerton/entities/GroupsDTO.dart';
 import 'package:rada_egerton/entities/CounsellorsDTO.dart';
 import 'package:rada_egerton/entities/StudentDTO.dart';
+import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/services/counseling/main.dart';
 import 'package:rada_egerton/entities/PeerCounsellorDTO.dart';
 import 'package:rada_egerton/utils/main.dart';
 
 class CounselorProvider with ChangeNotifier {
-  List<CounsellorsDTO> _counselors = [];
+  List<Counselor> _counselors = [];
   List<PeerCounsellorDto> _peerCounsellors = [];
   CounselingServiceProvider _service = CounselingServiceProvider();
   GroupsDto? _forums;
-  Recipient? _recipient;
-  Recipient? get recipientInfo {
-    return this._recipient;
-  }
 
   bool counselorsLoading = true;
   bool peerCouselorsLoading = true;
@@ -33,7 +30,7 @@ class CounselorProvider with ChangeNotifier {
     getForums();
   }
 
-  List<CounsellorsDTO> get counselors {
+  List<Counselor> get counselors {
     return [...this._counselors];
   }
 
@@ -41,10 +38,10 @@ class CounselorProvider with ChangeNotifier {
     return this._forums;
   }
 
-  CounsellorsDTO? counselorById(String id) {
-    CounsellorsDTO? result;
+  Counselor? counselorById(int userId) {
+    Counselor? result;
     for (var i = 0; i < this._counselors.length; i++) {
-      if (this._counselors[i].id == id) {
+      if (this._counselors[i].user.id == userId) {
         result = this._counselors[i];
       }
     }
@@ -121,34 +118,23 @@ class CounselorProvider with ChangeNotifier {
     return _info;
   }
 
-  Recipient getUser(
-      String userType, String recipientId, List<StudentDto> students) {
-    Recipient user = Recipient(name: "", imgUrl: "");
+  User? getUser(String userType, int userId, List<StudentDto> students) {
     if (userType == 'counsellor') {
-      var res = this.counselorById(recipientId);
-      user = Recipient(name: res!.name, imgUrl: res.imgUrl);
-    } else if (userType == 'peerCounsellor') {
+      final res = this.counselorById(userId);
+      return res?.user;
+    }
+    if (userType == 'peerCounsellor') {
       for (var i = 0; i < this._peerCounsellors.length; i++) {
-        if (this._peerCounsellors[i].id.toString() == recipientId) {
-          var res = this._peerCounsellors[i];
-          user = Recipient(name: res.name, imgUrl: res.profilePic);
-          break;
+        if (this._peerCounsellors[i].user.id == userId) {
+          return this._peerCounsellors[i].user;
         }
       }
     } else {
       for (var i = 0; i < students.length; i++) {
-        if (students[i].user.id.toString() == recipientId) {
-          user = Recipient(
-              name: students[i].user.name, imgUrl: students[i].user.profilePic);
+        if (students[i].user.id == userId) {
+          return students[i].user;
         }
       }
     }
-    return user;
   }
-}
-
-class Recipient {
-  String name;
-  String imgUrl;
-  Recipient({required this.name, required this.imgUrl});
 }
