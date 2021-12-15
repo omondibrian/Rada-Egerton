@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
+
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/widgets/ProfileHeader.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -13,14 +14,14 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  UserDTO? _user;
+  User? _user;
 
   AuthServiceProvider _authService = AuthServiceProvider();
   Future<void> init() async {
     final results = await _authService.getProfile();
     results!.fold((user) {
       _user = user;
-      _lastNameController.text = _user!.userName;
+      _lastNameController.text = _user!.name;
       _phoneNumberController.text = _user!.phone;
 
       setState(() {});
@@ -29,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _updateUserProfile() async {
     if (profileForm.currentState!.validate()) {
-      final result = await _authService.updateProfile(UserDTO(
+      final result = await _authService.updateProfile(User(
           id: _user!.id,
           name: _lastNameController.text,
           email: _user!.email,
@@ -101,7 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ProfileHeader(
                     avatarUrl: "$IMAGE_URL${_user!.profilePic}",
                     coverImage: AssetImage('assets/android-icon-192x192.png'),
-                    title: "${_user!.userName}", //TODO: fetch username
+                    title: "${_user!.name}", 
 
                     actions: <Widget>[
                       MaterialButton(
@@ -121,15 +122,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               }
                             },
                           );
-                          //TODO: implement edit details function
+                          
                         },
                       )
                     ],
                   ),
                   const SizedBox(height: 10.0),
-                  // UserInfo(),
-
-                  //TODO: insert userinfo stless widget
+                
                   Container(
                     padding: EdgeInsets.all(10),
                     child: Column(
@@ -181,25 +180,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     leading: Icon(Icons.account_box_outlined),
                                     title: Text("Account status"),
                                     subtitle: Text(
-                                        "${_user!.accountStatus}"), //TODO fetch user account status
+                                        "${_user!.accountStatus}"), 
                                   ),
                                   ListTile(
                                     leading: Icon(Icons.email_outlined),
                                     title: Text("Email"),
                                     subtitle: Text(
-                                        "${_user!.email}"), //TODO fetch the date the user joined
+                                        "${_user!.email}"), 
                                   ),
                                   ListTile(
                                     leading: Icon(Icons.calendar_today),
                                     title: Text("Date of Birth"),
                                     subtitle: Text(
-                                        "${_user!.dob}"), //TODO fetch the date the user joined
+                                        "${_user!.dob}"), 
                                   ),
                                   ListTile(
                                     leading: Icon(Icons.person),
                                     title: Text("Gender"),
                                     subtitle: Text(
-                                        "${_user!.gender}"), //TODO fetch the date the user joined
+                                        "${_user!.gender}"), 
                                   ),
                                   if (isEditing)
                                     Container(

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
-import 'package:rada_egerton/theme.dart';
 import 'package:rada_egerton/utils/main.dart';
-import 'package:rada_egerton/widgets/AddMembers.dart';
 import 'package:rada_egerton/widgets/AppBar.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/screens/chat/chat.dart';
@@ -44,7 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (widget.mode == ChatModes.PRIVATE) {
       messages = ServiceUtility.combinePeerMsgs(
         chatsprovider.privateMessages,
-        radaProvider.user!.id,
+        radaProvider.user!.id.toString(),
       )[widget.chatIndex]
           .msg;
     } else if (widget.mode == ChatModes.GROUP) {
@@ -82,14 +80,14 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
         ),
-        body: radaProvider.user!.id.isEmpty
+        body: radaProvider.user == null
             ? Center(
                 child: CircularProgressIndicator(
                   color: Theme.of(context).primaryColor,
                 ),
               )
             : Chat<ChatPayload>(
-                currentUserId: radaProvider.user!.id,
+                currentUserId: radaProvider.user!.id.toString(),
                 chatList: messages,
                 sendMessage: this.widget.sendMessage,
                 reciepient: this.widget.reciepient,

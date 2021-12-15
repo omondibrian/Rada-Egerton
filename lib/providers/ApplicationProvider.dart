@@ -8,10 +8,10 @@ import 'package:rada_egerton/services/counseling/main.dart';
 import 'package:rada_egerton/utils/main.dart';
 
 class RadaApplicationProvider with ChangeNotifier {
-  UserDTO? _user;
+  User? _user;
   UserRole userRole = UserRole([]);
   CounselingServiceProvider _serviceProvider = CounselingServiceProvider();
-  UserDTO? get user {
+  User? get user {
     return this._user;
   }
 
@@ -19,7 +19,7 @@ class RadaApplicationProvider with ChangeNotifier {
     this.init();
   }
 
-  void clearState(){
+  void clearState() {
     this.userRole = UserRole([]);
   }
 
@@ -27,7 +27,7 @@ class RadaApplicationProvider with ChangeNotifier {
     var result = await AuthServiceProvider().getProfile();
     result!.fold((user) async {
       this._user = user;
-      var role = await AuthServiceProvider().getUserRoles(user.id);
+      var role = await AuthServiceProvider().getUserRoles(user.id.toString());
       role.fold((_userRole) => {userRole = _userRole}, (r) => {});
     }, (error) => print(error));
     notifyListeners();
@@ -44,9 +44,10 @@ class RadaApplicationProvider with ChangeNotifier {
     return _info;
   }
 
-  Future<InfoMessage> createNewGroup(String name, String desc,File? imageFile) async {
+  Future<InfoMessage> createNewGroup(
+      String name, String desc, File? imageFile) async {
     late InfoMessage _info;
-    final result = await _serviceProvider.createGroup(name, desc,imageFile);
+    final result = await _serviceProvider.createGroup(name, desc, imageFile);
     result!.fold((group) {
       //TODO:- add group to state
       _info = InfoMessage("Created successfuly", InfoMessage.success);
@@ -58,7 +59,8 @@ class RadaApplicationProvider with ChangeNotifier {
 
   Future<InfoMessage> joinGroup(String grpId) async {
     late InfoMessage _info;
-    final result = await _serviceProvider.subToNewGroup(this._user!.id, grpId);
+    final result =
+        await _serviceProvider.subToNewGroup(this._user!.id.toString(), grpId);
     result!.fold((group) {
       _info = InfoMessage("Joined successfuly", InfoMessage.success);
     }, (error) {

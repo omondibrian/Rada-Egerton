@@ -55,7 +55,6 @@ class ServiceUtility {
           }
           if (msgs[i].reciepient == receipientId ||
               msgs[i].senderId == receipientId) {
-            print("recipient");
             userType = msgs[i].role as String;
           }
         }

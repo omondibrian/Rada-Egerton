@@ -19,8 +19,7 @@ class CounselingServiceProvider {
   Dio _httpClientConn = Dio();
 
   ///fetch a  list of  counsellors with their details
-  Future<Either<List<CounsellorsDTO>, ErrorMessage>> fetchCounsellors() async {
-    List<CounsellorsDTO> counsellors = [];
+  Future<Either<List<Counselor>, ErrorMessage>> fetchCounsellors() async {
     String token = await ServiceUtility.getAuthToken() as String;
     try {
       final result = await this._httpClientConn.get(
@@ -30,26 +29,18 @@ class CounselingServiceProvider {
             }, sendTimeout: 10000),
           );
       List payload = result.data["counsellors"];
-      for (var i = 0; i < payload.length; i++) {
-        counsellors.add(
-          CounsellorsDTO(
-            name: payload[i]['name'],
-            rating: double.parse(
-              payload[i]['rating'].toString(),
-            ),
-            isOnline: payload[i]['status'] == "online",
-            expertise: payload[i]['expertise'],
-            imgUrl: payload[i]['profilePic'],
-            id: payload[i]["_id"].toString(),
+      return Left(
+        List<Counselor>.from(
+          payload.map(
+            (_counselor) => Counselor.fromJson(_counselor),
           ),
-        );
-      }
+        ),
+      );
     } on DioError catch (e) {
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
-    return Left(counsellors);
   }
 
   ///fetch a specific counsellor details
@@ -263,8 +254,7 @@ class CounselingServiceProvider {
   }
 
   /// query user data
-  Future<Either<UserDTO, ErrorMessage>?> queryUserData(
-      String queryString) async {
+  Future<Either<User, ErrorMessage>?> queryUserData(String queryString) async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.get(
@@ -273,7 +263,7 @@ class CounselingServiceProvider {
               'Authorization': token,
             }, sendTimeout: 10000),
           );
-      return Left(UserDTO.fromJson(result.data["user"]));
+      return Left(User.fromJson(result.data["user"]));
     } on DioError catch (e) {
       return Right(
         ServiceUtility.handleDioExceptions(e),

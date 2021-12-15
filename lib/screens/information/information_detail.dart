@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/informationData.dart';
-import 'package:rada_egerton/providers/information.content.dart';
 
 class InformationDetail extends StatefulWidget {
   final InformationData informationData;
@@ -17,7 +14,6 @@ class InformationDetail extends StatefulWidget {
 class _InformationDetailState extends State<InformationDetail> {
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<InformationProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -31,11 +27,9 @@ class _InformationDetailState extends State<InformationDetail> {
       body: SafeArea(
           child: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: _provider.informationData == null
-                  ? CircularProgressIndicator()
-                  : ListView(
-                      children: buildItems(widget.informationData.content),
-                    ))),
+              child: ListView(
+                children: buildItems(widget.informationData.content),
+              ))),
     );
   }
 
@@ -46,10 +40,27 @@ class _InformationDetailState extends State<InformationDetail> {
     while (i < contentItems.length) {
       if (contentItems[i].type == InformationContent.text) {
         List<InlineSpan> span = [];
-        //to render list items
-
+        /**
+         * take all consercutive text items and render them using InlineSpan element
+         * stop whenever an image  in encounterd
+         */
         for (int l = i; l < contentItems.length; l++) {
           if (contentItems[l].type == InformationContent.text) {
+            //to render list items - item is a list item if the item preceding it has an atribute list
+            /**
+             * eg [
+             * {
+                "insert": "item 1"
+               },
+              {
+                "attributes": {
+                "list": "ordered"
+              },
+              "insert": "\n"
+              }
+              ]
+             * ---- item 1 is a list item
+             */
             if (l < contentItems.length - 1 &&
                 contentItems[l + 1].attributes.list != null) {
               span.add(WidgetSpan(
@@ -68,9 +79,19 @@ class _InformationDetailState extends State<InformationDetail> {
             break;
           }
         }
-        _widget = Card(child: Text.rich(TextSpan(children: span)));
+        _widget = Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: Text.rich(
+              TextSpan(children: span),
+            ),
+          ),
+        );
         _widgets.add(_widget);
-      } else if (contentItems[i].type == InformationContent.image) {
+      } /**
+         stop when an image is encountered
+       */
+      else if (contentItems[i].type == InformationContent.image) {
         _widget = Card(
             child: CachedNetworkImage(
           imageUrl: "$IMAGE_URL${contentItems[i].bodyContent}",
@@ -81,26 +102,5 @@ class _InformationDetailState extends State<InformationDetail> {
     }
 
     return _widgets;
-  }
-
-  Widget informationBodyContent(InformationContent content) {
-    print(content.attributes.header);
-    if (content.subtitle != null)
-      return Text(
-        content.subtitle!,
-        style: Theme.of(context).textTheme.subtitle1,
-      );
-    if (content.type == InformationContent.text)
-      return Text(content.bodyContent, style: content.getTextStyle);
-    if (content.type == InformationContent.image)
-      return Image.network(
-        "$IMAGE_URL${content.bodyContent}",
-      );
-    if (content.type == InformationContent.title)
-      return Text(
-        content.bodyContent,
-        style: Theme.of(context).textTheme.headline3,
-      );
-    return SizedBox();
   }
 }

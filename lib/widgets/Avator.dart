@@ -30,7 +30,6 @@ class Avatar extends StatelessWidget {
   final ServiceUtility serviceUtility = ServiceUtility();
   @override
   Widget build(BuildContext context) {
-    final _appProvider = Provider.of<RadaApplicationProvider>(context);
     void _updateProfileImage() async {
       File imageFile = await ServiceUtility().uploadImage();
       try {
@@ -54,9 +53,9 @@ class Avatar extends StatelessWidget {
           ),
         );
         SharedPreferences _prefs = await SharedPreferences.getInstance();
-        UserDTO user = UserDTO.fromJson(_profile.data["user"]);
+        User user = User.fromJson(_profile.data["user"]);
 
-        _prefs.setString("user", userDtoToJson(user));
+        _prefs.setString("user", userToJson(user));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -65,7 +64,6 @@ class Avatar extends StatelessWidget {
             ),
           ),
         );
-      
       } on DioError catch (e) {
         ErrorMessage err = ServiceUtility.handleDioExceptions(e);
         ScaffoldMessenger.of(context).showSnackBar(

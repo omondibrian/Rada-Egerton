@@ -1,3 +1,5 @@
+import 'package:rada_egerton/entities/UserDTO.dart';
+
 import '../../sizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +21,7 @@ class PrivateSessionsTab extends StatelessWidget {
     final appProvider = Provider.of<RadaApplicationProvider>(context);
     String userId = "";
     if (appProvider.user != null) {
-      userId = appProvider.user!.id;
+      userId = appProvider.user!.id.toString();
     }
 
     var conversations = ServiceUtility.combinePeerMsgs(
@@ -36,16 +38,16 @@ class PrivateSessionsTab extends StatelessWidget {
 
     Widget conversationBuilder(BuildContext ctx, int index) {
       var recipientId = conversations[index].recipient;
-      Recipient user = counselorprovider.getUser(
-          conversations[index].userType, recipientId, chatsprovider.students);
+      User? user = counselorprovider.getUser(conversations[index].userType,
+          int.parse(recipientId), chatsprovider.students);
 
       return GestureDetector(
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ChatScreen(
-              title: '${user.name}',
-              imgUrl: "$BASE_URL/api/v1/uploads/${user.imgUrl}",
+              title: '${user?.name}',
+              imgUrl: "$BASE_URL/api/v1/uploads/${user!.profilePic}",
               sendMessage: chatsprovider.sendPrivateCounselingMessage,
               groupId: "",
               reciepient: recipientId,
@@ -58,7 +60,7 @@ class PrivateSessionsTab extends StatelessWidget {
           leading: CircleAvatar(
             child: ClipOval(
               child: CachedNetworkImage(
-                imageUrl: "$BASE_URL/api/v1/uploads/${user.imgUrl}",
+                imageUrl: "$BASE_URL/api/v1/uploads/${user?.profilePic}",
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -70,7 +72,7 @@ class PrivateSessionsTab extends StatelessWidget {
               ),
             ),
           ),
-          title: Text('${user.name}', style: style),
+          title: Text('${user?.name}', style: style),
           subtitle: Text(
             "say something",
             style: TextStyle(

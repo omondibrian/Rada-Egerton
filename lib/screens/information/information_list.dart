@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/informationData.dart';
+import 'package:rada_egerton/loading_effect/shimmer_loading.dart';
 import 'package:rada_egerton/providers/information.content.dart';
 import 'package:rada_egerton/screens/information/information_detail.dart';
+import 'package:rada_egerton/screens/information/information_loading_placeholder.dart';
 import 'package:rada_egerton/sizeConfig.dart';
 
 class Information extends StatelessWidget {
@@ -20,10 +21,10 @@ class Information extends StatelessWidget {
                   .headline1
                   ?.copyWith(color: Colors.white))),
       body: Container(
-        margin: EdgeInsets.symmetric(vertical: 30),
+        // margin: EdgeInsets.symmetric(vertical: 30),
         child: _provider.informationCategory == null ||
                 _provider.informationData == null
-            ? CircularProgressIndicator(color: Theme.of(context).primaryColor)
+            ? InformationListPlaceholder()
             : ListView.builder(
                 itemBuilder: (context, index) =>
                     _contentListRow(context, _provider, index),
