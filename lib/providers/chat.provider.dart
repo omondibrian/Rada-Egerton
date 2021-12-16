@@ -145,9 +145,9 @@ class ChatProvider with ChangeNotifier {
   }
 
   ChatPayload finalChatPayload(ChatPayload chat) {
-    var role = this.userRole.isCounselor
+    var role = this.userRole.isCounsellor
         ? "counsellor"
-        : this.userRole.isPeerCounselor
+        : this.userRole.isPeerCounsellor
             ? 'peerCounsellor'
             : 'student';
 

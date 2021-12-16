@@ -10,36 +10,36 @@ import 'package:rada_egerton/widgets/ratingBar.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class CounselorsTab extends StatelessWidget {
-  const CounselorsTab({Key? key}) : super(key: key);
+class CounsellorsTab extends StatelessWidget {
+  const CounsellorsTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final counselorprovider = Provider.of<CounselorProvider>(context);
+    final counsellorprovider = Provider.of<CounsellorProvider>(context);
     final appProvider = Provider.of<RadaApplicationProvider>(context);
     final chatProvider = Provider.of<ChatProvider>(context);
-    var counselors = counselorprovider.counselors;
+    var counsellors = counsellorprovider.counsellors;
 
     Future<void> _refresh() async {
-      counselorprovider.getCounsellors();
+      counsellorprovider.getCounsellors();
     }
 
     Widget conselorsBuilder(BuildContext cxt, int index) {
       return GestureDetector(
         onTap: () {
-          if (counselors[index].user.id == appProvider.user!.id) {
+          if (counsellors[index].user.id == appProvider.user!.id) {
             return null;
           }
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => ChatScreen(
-                title: counselors[index].user.name,
+                title: counsellors[index].user.name,
                 imgUrl:
-                    "$BASE_URL/api/v1/uploads/${counselors[index].user.profilePic}",
+                    "$BASE_URL/api/v1/uploads/${counsellors[index].user.profilePic}",
                 sendMessage: chatProvider.sendPrivateCounselingMessage,
-                groupId: counselors[index].user.id.toString(),
-                reciepient: counselors[index].user.id.toString(),
+                groupId: counsellors[index].user.id.toString(),
+                reciepient: counsellors[index].user.id.toString(),
                 chatIndex: index,
                 mode: ChatModes.PRIVATE,
               ),
@@ -58,7 +58,7 @@ class CounselorsTab extends StatelessWidget {
                     child: ClipOval(
                       child: CachedNetworkImage(
                         imageUrl:
-                            "$BASE_URL/api/v1/uploads/${counselors[index].user.profilePic}",
+                            "$BASE_URL/api/v1/uploads/${counsellors[index].user.profilePic}",
                         imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
@@ -85,7 +85,7 @@ class CounselorsTab extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      counselors[index].user.name,
+                      counsellors[index].user.name,
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
                   ],
@@ -98,13 +98,13 @@ class CounselorsTab extends StatelessWidget {
                             .subtitle2!
                             .copyWith(fontSize: 14)),
                     Text(
-                      counselors[index].expertise,
+                      counsellors[index].expertise,
                     ),
                   ],
                 ),
                 Row(
                   children: [
-                    ratingBar(rating: counselors[index].rating, size: 20),
+                    ratingBar(rating: counsellors[index].rating, size: 20),
                   ],
                 ),
               ])
@@ -114,30 +114,24 @@ class CounselorsTab extends StatelessWidget {
       );
     }
 
-    return counselorprovider.counselorsLoading
-        ? Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor,
+    return counsellors.isNotEmpty
+        ? RefreshIndicator(
+            onRefresh: () => _refresh(),
+            backgroundColor: Theme.of(context).primaryColor,
+            color: Colors.white,
+            displacement: 20.0,
+            edgeOffset: 5.0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: ListView.builder(
+                itemBuilder: conselorsBuilder,
+                itemCount: counsellors.length,
+              ),
             ),
           )
-        : counselors.isNotEmpty
-            ? RefreshIndicator(
-                onRefresh: () => _refresh(),
-                backgroundColor: Theme.of(context).primaryColor,
-                color: Colors.white,
-                displacement: 20.0,
-                edgeOffset: 5.0,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: ListView.builder(
-                    itemBuilder: conselorsBuilder,
-                    itemCount: counselors.length,
-                  ),
-                ),
-              )
-            : Padding(
-                padding: EdgeInsets.all(8),
-                child: Text("No counselors available"),
-              );
+        : Padding(
+            padding: EdgeInsets.all(8),
+            child: Text("No counsellors available"),
+          );
   }
 }

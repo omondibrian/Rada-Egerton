@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/theme.dart';
+import 'package:rada_egerton/utils/sqlite.dart';
 
 class InformationCategory {
   String name;
@@ -7,14 +10,23 @@ class InformationCategory {
   InformationCategory(this.id, this.name);
 }
 
-class InformationData {
+class InformationData extends Model {
   InformationMetadata metadata;
   List<InformationContent> content;
+  int id;
+  static String tableName_ = "InformationData";
+  InformationData(
+      {required this.metadata, required this.content, required this.id});
 
-  InformationData({
-    required this.metadata,
-    required this.content,
-  });
+  @override
+  int get getId {
+    return this.id;
+  }
+
+  @override
+  get tableName {
+    return InformationData.tableName_;
+  }
 
   factory InformationData.fromJson(Map<String, dynamic> json) {
     Iterable content = json["content"];
@@ -23,9 +35,18 @@ class InformationData {
     InformationMetadata metadata =
         InformationMetadata.fromJson(json["metadata"]);
     return InformationData(
-      metadata: metadata,
-      content: informationContent,
-    );
+        metadata: metadata,
+        content: informationContent,
+        id: json["_id"] is int ? json["_id"] : int.parse(json["_id"]));
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      "_id": this.id,
+      "content": jsonEncode(List<Map<String, dynamic>>.from(this.content.map(
+            (item) => item.toMap(),
+          ))),
+      "metadata": json.encode(this.metadata.toMap()),
+    };
   }
 }
 
@@ -43,6 +64,13 @@ class InformationMetadata {
         title: json["title"],
         category: json["category"].toString(),
         thumbnail: json["thumbnail"]);
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      "category": this.category,
+      "title": this.title,
+      "thumbnail": this.thumbnail
+    };
   }
 }
 
@@ -68,6 +96,9 @@ class InformationContent {
           ? ContentAttributes()
           : ContentAttributes.fromJson(json["attributes"]),
     );
+  }
+  Map<String, dynamic> toMap() {
+    return {"insert": this.bodyContent, "attributes": this.attributes};
   }
 
   //generate text style from attributes based on available attributes such as bold,color

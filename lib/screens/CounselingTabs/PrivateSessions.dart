@@ -16,7 +16,7 @@ class PrivateSessionsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final counselorprovider = Provider.of<CounselorProvider>(context);
+    final counsellorprovider = Provider.of<CounsellorProvider>(context);
     final chatsprovider = Provider.of<ChatProvider>(context);
     final appProvider = Provider.of<RadaApplicationProvider>(context);
     String userId = "";
@@ -38,7 +38,7 @@ class PrivateSessionsTab extends StatelessWidget {
 
     Widget conversationBuilder(BuildContext ctx, int index) {
       var recipientId = conversations[index].recipient;
-      User? user = counselorprovider.getUser(conversations[index].userType,
+      User? user = counsellorprovider.getUser(conversations[index].userType,
           int.parse(recipientId), chatsprovider.students);
 
       return GestureDetector(

@@ -1,30 +1,35 @@
 import 'dart:convert';
 
 import 'package:rada_egerton/entities/UserDTO.dart';
-
+import 'package:rada_egerton/utils/sqlite.dart';
 
 PeerCounsellorDto peerCounsellorDtoFromJson(String str) =>
     PeerCounsellorDto.fromJson(json.decode(str));
 
-String peerCounsellorDtoToJson(PeerCounsellorDto data) =>
-    json.encode(data.toJson());
-
-class PeerCounsellorDto {
+class PeerCounsellorDto extends Model {
   PeerCounsellorDto({
     required this.user,
     required this.regNo,
-    required this.studentId,
     required this.peerCounsellorId,
     required this.expertise,
-    required this.campusesId,
   });
-
-  String regNo;
-  int studentId;
+  static String tableName_ = "PeerCounsellor";
+  String? regNo;
+  int? studentId;
   int peerCounsellorId;
   String expertise;
-  int campusesId;
+  int? campusesId;
   User user;
+  @override
+  int get getId {
+    return this.peerCounsellorId;
+  }
+
+  @override
+  String get tableName {
+    return PeerCounsellorDto.tableName_;
+  }
+
   factory PeerCounsellorDto.fromJson(Map<String, dynamic> json) {
     User _user = User(
       id: json["_id"],
@@ -39,28 +44,21 @@ class PeerCounsellorDto {
       synced: json["synced"],
       joined: json["joined"],
     );
+    print(json);
+    print("\n\n\n");
     return PeerCounsellorDto(
       user: _user,
       regNo: json["regNo"],
-      studentId: json["student_id"],
-      peerCounsellorId: json["peer_counsellorId"],
+      peerCounsellorId: json["peer_counsellorId"] is int
+          ? json["peer_counsellorId"]
+          : int.parse(json["peer_counsellorId"]),
       expertise: json["expertise"],
-      campusesId: json["Campuses_id"],
     );
   }
 
-  Map<String, dynamic> toJson() => {
+  @override
+  Map<String, dynamic> toMap() => {
         "_id": user.id,
-        "name": this.user.name,
-        "email": this.user.email,
-        "profilePic": this.user.profilePic,
-        "gender": this.user.gender,
-        "phone": this.user.phone,
-        "dob": this.user.dob,
-        "status": this.user.status,
-        "account_status": this.user.accountStatus,
-        "synced": this.user.synced,
-        "joined": this.user.joined,
         "regNo": regNo,
         "student_id": studentId,
         "peer_counsellorId": peerCounsellorId,

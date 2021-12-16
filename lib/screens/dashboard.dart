@@ -56,7 +56,7 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var counselorProvider = Provider.of<CounselorProvider>(context);
+    var counsellorProvider = Provider.of<CounsellorProvider>(context);
     var appProvider = Provider.of<RadaApplicationProvider>(context);
     var chatsProvider = Provider.of<ChatProvider>(context);
     return Scaffold(
@@ -82,10 +82,9 @@ class Dashboard extends StatelessWidget {
                 onTap: () async {
                   SharedPreferences _prefs =
                       await SharedPreferences.getInstance();
-                  counselorProvider.clearState();
-                  appProvider.clearState();
-                  chatsProvider.clearState();
                   _prefs.clear();
+                  Navigator.of(context).popUntil(
+                      (route) => route.settings.name == AppRoutes.splash);
                 },
               ),
               PopupMenuItem(

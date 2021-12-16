@@ -5,7 +5,7 @@ import 'package:rada_egerton/entities/UserDTO.dart';
 StudentDto studentDtoFromJson(String str) =>
     StudentDto.fromJson(json.decode(str));
 
-String studentDtoToJson(StudentDto data) => json.encode(data.toJson());
+String studentDtotoJson(StudentDto data) => json.encode(data.toMap());
 
 class StudentDto {
   StudentDto({
@@ -18,8 +18,7 @@ class StudentDto {
         user: User.fromJson(json["user"]),
       );
 
-  Map<String, dynamic> toJson() => {
-        "user": user.toJson(),
+  Map<String, dynamic> toMap() => {
+        "user": user.toMap(),
       };
 }
-

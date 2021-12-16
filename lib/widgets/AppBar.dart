@@ -31,7 +31,7 @@ class CustomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<RadaApplicationProvider>(context);
     final _chatProvider = Provider.of<ChatProvider>(context);
-    final _counselingProvider = Provider.of<CounselorProvider>(context);
+    final _counselingProvider = Provider.of<CounsellorProvider>(context);
     void _leaveGroup() async {
       InfoMessage _info = await provider.leaveGroup(groupId!);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -100,7 +100,7 @@ class CustomAppBar extends StatelessWidget {
             Icons.more_vert,
           ),
           itemBuilder: (_) => [
-            if (provider.userRole.isCounselor &&
+            if (provider.userRole.isCounsellor &&
                 conversationMode == ChatModes.GROUP)
               PopupMenuItem(
                 child: Text('Add Member'),
@@ -115,7 +115,7 @@ class CustomAppBar extends StatelessWidget {
                           maxWidth: MediaQuery.of(context).size.width));
                 },
               ),
-            if (provider.userRole.isCounselor &&
+            if (provider.userRole.isCounsellor &&
                 conversationMode == ChatModes.PRIVATE)
               PopupMenuItem(
                 onTap: () {
@@ -129,7 +129,7 @@ class CustomAppBar extends StatelessWidget {
                 ),
               ),
             if (provider.userRole.isStudent ||
-                provider.userRole.isCounselor &&
+                provider.userRole.isCounsellor &&
                     conversationMode == ChatModes.PRIVATE)
               PopupMenuItem(
                 onTap: () => showBottomSheet(
@@ -141,7 +141,7 @@ class CustomAppBar extends StatelessWidget {
                 ),
               ),
             if (conversationMode != ChatModes.PRIVATE)
-              provider.userRole.isCounselor
+              provider.userRole.isCounsellor
                   ? PopupMenuItem(
                       onTap: _delete,
                       child: Text(

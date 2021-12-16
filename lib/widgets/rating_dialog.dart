@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rada_egerton/services/counseling/main.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 
-Widget ratingDialog(String counselorId) {
+Widget ratingDialog(String counsellorId) {
   return RatingDialog(
     enableComment: false,
     initialRating: 1.0,
@@ -28,7 +28,7 @@ Widget ratingDialog(String counselorId) {
     ),
     submitButtonText: 'Submit',
     onSubmitted: (response) {
-      CounselingServiceProvider().rateCounselor(counselorId, response.rating);
+      CounselingServiceProvider().rateCounsellor(counsellorId, response.rating);
     },
   );
 }

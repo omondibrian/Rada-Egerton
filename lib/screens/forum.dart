@@ -12,7 +12,7 @@ class Forum extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final chatsprovider = Provider.of<ChatProvider>(context);
-    final counseligProvider = Provider.of<CounselorProvider>(context);
+    final counseligProvider = Provider.of<CounsellorProvider>(context);
     final radaAppProvider = Provider.of<RadaApplicationProvider>(context);
     var forums = ServiceUtility.parseForums(
         counseligProvider.forums, chatsprovider.forumMessages);
