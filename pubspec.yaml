@@ -95,6 +95,8 @@ flutter:
     - assets/android-icon-192x192.png
     - assets/message.png
     - assets/gif.gif
+    - assets/user.png
+    - assets/users.png
     - assets/android-icon-192x192-green.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

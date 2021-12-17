@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/providers/counselling.provider.dart';
+import 'package:rada_egerton/sizeConfig.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/widgets/ChatsScreen.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
@@ -61,11 +62,23 @@ class Forum extends StatelessWidget {
           isThreeLine: true,
           contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
           leading: CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(
-              imageUrl,
+            child: CachedNetworkImage(
+              color: Colors.white,
+              imageUrl: imageUrl,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                width: SizeConfig.isTabletWidth ? 120 : 90,
+                height: SizeConfig.isTabletWidth ? 120 : 90,
+              ),
+              placeholder: (context, url) => Image.asset("assets/users.png"),
             ),
-            backgroundColor: Colors.white,
           ),
+
           title:
               Text(forum.title, style: Theme.of(context).textTheme.subtitle1),
           //TODO:add forum desciption here

@@ -20,17 +20,15 @@ class CounsellorProvider with ChangeNotifier {
   bool isForumLoading = true;
 
   CounsellorProvider() {
-    getCounsellors();
-    getCounsellors();
+    getPeerCounsellors();
     getForums();
   }
 
-  List<Counsellor> get counsellors {
+  List<Counsellor>? get counsellors {
     if (this._counsellors == null) {
       getCounsellors();
-      return [];
     }
-    return [...this._counsellors!];
+    return this._counsellors;
   }
 
   GroupsDto? get forums {
@@ -47,12 +45,11 @@ class CounsellorProvider with ChangeNotifier {
     return result;
   }
 
-  List<PeerCounsellorDto> get peerCounsellors {
+  List<PeerCounsellorDto>? get peerCounsellors {
     if (this._peerCounsellors == null) {
       getPeerCounsellors();
-      return [];
     }
-    return [...this._peerCounsellors!];
+    return this._peerCounsellors;
   }
 
   Future<Either<StudentDto, InfoMessage>> getStudentBio(String id) async {
@@ -92,54 +89,41 @@ class CounsellorProvider with ChangeNotifier {
 
   Future<InfoMessage?> getCounsellors() async {
     InfoMessage? message;
-    await dbManager.db.then((db) async {
-      final _res = await db.rawQuery("""
-          SELECT * FROM  ${Counsellor.tableName_} 
-          INNER JOIN  ${User.tableName_} 
-          ON ${Counsellor.tableName_}._id = ${User.tableName_}._id""", []);
-
-      this._counsellors =
-          List<Counsellor>.from(_res.map((item) => Counsellor.fromJson(item)));
-      notifyListeners();
-    });
-    _service.fetchCounsellors().then((res) {
-      res.fold((counsellors) {
+    await _service.fetchCounsellors().then((res) {
+      res.fold((counsellors) async {
         //update counsellors with data from the server
-
         this._counsellors = counsellors;
-        //update the database
-        counsellors.map((counsellor) => dbManager.insertItem(counsellor));
+        //update the database - store user and counselloe
+        for (int i = 0; i < this._counsellors!.length; ++i) {
+          dbManager.insertItem(counsellors[i].user);
+          dbManager.insertItem(counsellors[i]);
+        }
+
         notifyListeners();
+        message =
+            InfoMessage("Fetch counsellors successful", InfoMessage.success);
       }, (error) => {message = InfoMessage(error.message, InfoMessage.error)});
     });
     return message;
   }
 
-  Future<InfoMessage?> getPeerCounsellors() async {
-    InfoMessage? message;
-    await dbManager.db.then((db) async {
-      final _res = await db.rawQuery("""
-          SELECT * FROM  ${PeerCounsellorDto.tableName_} 
-          INNER JOIN  ${User.tableName_} 
-          ON ${PeerCounsellorDto.tableName_}._id = ${User.tableName_}._id""",
-          []);
-
-      this._peerCounsellors = List<PeerCounsellorDto>.from(
-          _res.map((item) => PeerCounsellorDto.fromJson(item)));
-      notifyListeners();
-    });
-    _service.fetchPeerCounsellors().then((res) {
+  Future<InfoMessage> getPeerCounsellors() async {
+    late InfoMessage message;
+    await _service.fetchPeerCounsellors().then((res) {
       res.fold((peercounsellors) {
         //update peer counsellors with data from the server
 
         this._peerCounsellors = peercounsellors;
         //update the database
-        peercounsellors.map((counsellor_) {
-          dbManager.insertItem(counsellor_);
-          dbManager.insertItem(counsellor_.user);
-          dbManager.insertItem(counsellor_.user);
-        });
+        for (int i = 0; i < this._counsellors!.length; ++i) {
+          dbManager.insertItem(peercounsellors[i].user);
+          dbManager.insertItem(peercounsellors[i]);
+        }
         notifyListeners();
+        message = InfoMessage(
+          "Fetch counsellors successful",
+          InfoMessage.success,
+        );
       }, (error) => {message = InfoMessage(error.message, InfoMessage.error)});
     });
     return message;
@@ -151,9 +135,9 @@ class CounsellorProvider with ChangeNotifier {
       return res?.user;
     }
     if (userType == 'peerCounsellor') {
-      for (var i = 0; i < this.peerCounsellors.length; i++) {
-        if (this.peerCounsellors[i].user.id == userId) {
-          return this.peerCounsellors[i].user;
+      for (var i = 0; i < this.peerCounsellors!.length; i++) {
+        if (this.peerCounsellors![i].user.id == userId) {
+          return this.peerCounsellors![i].user;
         }
       }
     } else {

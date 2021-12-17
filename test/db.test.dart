@@ -164,22 +164,63 @@ void main() {
       expect(res is Model, true);
     });
   });
-  //create information item
-  testWidgets("create chat item", (WidgetTester tester) async {
+  //create private chat item
+  testWidgets("create private chat item", (WidgetTester tester) async {
     await sqlTest.sql
         .insertItem(
-      ChatPayload(
-          reply: null,
-          groupsId: null,
-          id: 11,
-          message: "message",
-          imageUrl: "imageUrl",
-          senderId: sqlTest.user2.id.toString(),
-          status: "status",
-          reciepient: sqlTest.user.id.toString()),
-    )
+            ChatPayload(
+                reply: null,
+                groupsId: null,
+                id: 11,
+                message: "message",
+                imageUrl: "imageUrl",
+                senderId: sqlTest.user2.id.toString(),
+                status: "status",
+                reciepient: sqlTest.user.id.toString()),
+            tableName: ChatPayload.tableName_ + "Private")
         .then((res) {
       expect(res is Model, true);
     });
   });
+  //create forum message
+  testWidgets("create forum chat item", (WidgetTester tester) async {
+    await sqlTest.sql
+        .insertItem(
+            ChatPayload(
+                reply: null,
+                groupsId: 1,
+                id: 11,
+                message: "forum message",
+                imageUrl: "imageUrl",
+                senderId: sqlTest.user2.id.toString(),
+                status: "status",
+                reciepient: ""),
+            tableName: ChatPayload.tableName_ + "Forum")
+        .then((res) {
+      expect(res is Model, true);
+    });
+  });
+  //create group message
+  testWidgets("Create group chat item", (WidgetTester tester) async {
+    await sqlTest.sql
+        .insertItem(
+            ChatPayload(
+                reply: null,
+                groupsId: 2,
+                id: 11,
+                message: "forum message",
+                imageUrl: "imageUrl",
+                senderId: sqlTest.user2.id.toString(),
+                status: "status",
+                reciepient: ""),
+            tableName: ChatPayload.tableName_ + "Group")
+        .then((res) {
+      expect(res is Model, true);
+    });
+  });
+  //detete database after tests have completed
+ testWidgets("Deleting database", (WidgetTester tester) async {
+    sqlTest.deleteDB();
+  });
+
 }

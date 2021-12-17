@@ -26,7 +26,7 @@ class PeerCounsellorsTab extends StatelessWidget {
     }
 
     Widget peerCounsellorBuilder(BuildContext cxt, int index) {
-      var peerCounsellors = counsellors[index];
+      var peerCounsellors = counsellors![index];
       return GestureDetector(
         onTap: () {
           //prevent
@@ -59,6 +59,7 @@ class PeerCounsellorsTab extends StatelessWidget {
                   CircleAvatar(
                     child: ClipOval(
                       child: CachedNetworkImage(
+                        color: Colors.white,
                         imageUrl:
                             "$BASE_URL/api/v1/uploads/${peerCounsellors.user.profilePic}",
                         imageBuilder: (context, imageProvider) => Container(
@@ -72,9 +73,7 @@ class PeerCounsellorsTab extends StatelessWidget {
                           height: SizeConfig.isTabletWidth ? 120 : 90,
                         ),
                         placeholder: (context, url) =>
-                            CircularProgressIndicator(
-                          color: Theme.of(context).primaryColor,
-                        ),
+                            Image.asset("assets/user.png"),
                       ),
                     ),
                   ),
@@ -112,27 +111,28 @@ class PeerCounsellorsTab extends StatelessWidget {
     }
 
     return RefreshIndicator(
-        onRefresh: () => _refresh(),
-        backgroundColor: Theme.of(context).primaryColor,
-        color: Colors.white,
-        displacement: 20.0,
-        edgeOffset: 5.0,
-        child: counsellors.isNotEmpty
-            ? Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: ListView.builder(
-                  itemBuilder: peerCounsellorBuilder,
-                  itemCount: counsellors.length,
-                ),
+      onRefresh: () => _refresh(),
+      backgroundColor: Theme.of(context).primaryColor,
+      color: Colors.white,
+      displacement: 20.0,
+      edgeOffset: 5.0,
+      child: counsellors == null
+          ? Shimmer(
+              child: ListView(
+                children:
+                    List.generate(4, (index) => placeHolderListTile(context)),
+              ),
+            )
+          : counsellors.isEmpty
+              ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("No peer counsellors available"),
               )
-            : Shimmer(
-                child: ListView(
-                  children:
-                      List.generate(4, (index) => placeHolderListTile(context)),
-                ),
-              )
-    
-        );
+              : ListView.builder(
+                itemBuilder: peerCounsellorBuilder,
+                itemCount: counsellors.length,
+              ),
+    );
   }
 }
 
@@ -154,8 +154,8 @@ Widget placeHolderListTile(BuildContext context) => Card(
             ),
           ),
           SizedBox(
-                width: 20,
-              ),
+            width: 20,
+          ),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(
               children: [
@@ -165,7 +165,7 @@ Widget placeHolderListTile(BuildContext context) => Card(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      width: MediaQuery.of(context).size.width * .7,
+                      width: MediaQuery.of(context).size.width * .6,
                       height: 30),
                 ),
               ],
@@ -181,7 +181,7 @@ Widget placeHolderListTile(BuildContext context) => Card(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      width: MediaQuery.of(context).size.width * .6,
+                      width: MediaQuery.of(context).size.width * .4,
                       height: 24),
                 ),
               ],

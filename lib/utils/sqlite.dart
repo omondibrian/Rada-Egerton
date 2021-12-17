@@ -9,7 +9,6 @@ import 'package:sqflite/sqflite.dart';
 
 class DBManager {
   Database? _db;
-
   Future<Database> get db async {
     if (_db != null) {
       return _db!;
@@ -68,13 +67,44 @@ class DBManager {
         content TEXT,
         metadata TEXT
        )""");
+    // store forum messages
     await db.execute("""
-       CREATE TABLE ${ChatPayload.tableName_}(
+       CREATE TABLE ${ChatPayload.tableName_ + "Forum"}(
         _id int PRIMARY KEY,
         imageUrl TEXT,
         message TEXT,
         sender_id TEXT,
+        Groups_id TEXT NOT NULL,
+        reply TEXT,
+        status TEXT,
+        reciepient TEXT,
+        user_type TEXT,
+        FOREIGN KEY(sender_id) REFERENCES User(_id),
+        FOREIGN KEY(reciepient) REFERENCES User(_id)
+       )""");
+    // store private messages
+    await db.execute("""
+       CREATE TABLE ${ChatPayload.tableName_ + "Private"}(
+        _id int PRIMARY KEY,
+        imageUrl TEXT,
+        message TEXT,
+        sender_id TEXT NOT NULL,
         Groups_id TEXT,
+        reply TEXT,
+        status TEXT,
+        reciepient TEXT,
+        user_type TEXT,
+        FOREIGN KEY(sender_id) REFERENCES User(_id),
+        FOREIGN KEY(reciepient) REFERENCES User(_id)
+       )""");
+    // store group messages
+    await db.execute("""
+       CREATE TABLE ${ChatPayload.tableName_ + "Group"}(
+        _id int PRIMARY KEY,
+        imageUrl TEXT,
+        message TEXT,
+        sender_id TEXT,
+        Groups_id TEXT NOT NULL,
         reply TEXT,
         status TEXT,
         reciepient TEXT,
@@ -84,9 +114,9 @@ class DBManager {
        )""");
   }
 
-  Future<Model> insertItem(Model item) async {
+  Future<Model> insertItem(Model item, {String? tableName}) async {
     db.then((_db) => _db.insert(
-          item.tableName,
+          tableName ?? item.tableName,
           item.toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace,
         ));
@@ -97,6 +127,14 @@ class DBManager {
     db.then((_db) =>
         _db.delete(item.tableName, where: "_id = ?", whereArgs: [item.getId]));
     return item;
+  }
+
+  Future<Map<String, dynamic>?> getItem(String tableName, int id) async {
+    List<Map<String, dynamic>> query = await db
+        .then((_db) => _db.query(tableName, where: "_id = ?", whereArgs: [id]));
+    if (query.length > 0) {
+      return query[0];
+    }
   }
 
   Future<List<Map<String, dynamic>>> getItems(String tableName) async {

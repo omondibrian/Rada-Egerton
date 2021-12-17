@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
@@ -5,6 +6,7 @@ import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:rada_egerton/providers/counselling.provider.dart';
 import 'package:rada_egerton/screens/view_profile.dart';
+import 'package:rada_egerton/sizeConfig.dart';
 
 import 'package:rada_egerton/theme.dart';
 import 'package:rada_egerton/utils/main.dart';
@@ -69,8 +71,24 @@ class CustomAppBar extends StatelessWidget {
             },
             icon: Icon(Icons.arrow_back)),
         CircleAvatar(
-          backgroundImage: NetworkImage(this.imgUrl),
-          backgroundColor: Colors.white,
+          child: ClipOval(
+            child: CachedNetworkImage(
+              color: Colors.white,
+              imageUrl: this.imgUrl,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                width: SizeConfig.isTabletWidth ? 120 : 90,
+                height: SizeConfig.isTabletWidth ? 120 : 90,
+              ),
+              placeholder: (context, url) => Image.asset(
+                  this.groupId == null ? "assets/user.png" : "assets/users.png"),
+            ),
+          ),
         ),
         SizedBox(
           width: 10,
