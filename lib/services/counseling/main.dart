@@ -19,7 +19,7 @@ class CounselingServiceProvider {
   Dio _httpClientConn = Dio();
 
   ///fetch a  list of  counsellors with their details
-  Future<Either<List<Counselor>, ErrorMessage>> fetchCounsellors() async {
+  Future<Either<List<Counsellor>, ErrorMessage>> fetchCounsellors() async {
     String token = await ServiceUtility.getAuthToken() as String;
     try {
       final result = await this._httpClientConn.get(
@@ -30,9 +30,9 @@ class CounselingServiceProvider {
           );
       List payload = result.data["counsellors"];
       return Left(
-        List<Counselor>.from(
+        List<Counsellor>.from(
           payload.map(
-            (_counselor) => Counselor.fromJson(_counselor),
+            (_counsellor) => Counsellor.fromJson(_counsellor),
           ),
         ),
       );
@@ -44,8 +44,7 @@ class CounselingServiceProvider {
   }
 
   ///fetch a specific counsellor details
-  Future<Either<CounsellorsDTO, ErrorMessage>> fetchCounsellor(
-      String id) async {
+  Future<Either<Counsellor, ErrorMessage>> fetchCounsellor(String id) async {
     dynamic payload;
     try {
       String token = await ServiceUtility.getAuthToken() as String;
@@ -62,16 +61,7 @@ class CounselingServiceProvider {
       );
     }
 
-    return Left(
-      CounsellorsDTO(
-        name: payload['name'],
-        rating: double.parse(payload['rating'].toString()),
-        isOnline: payload['status'] == "online",
-        expertise: payload['expertise'],
-        imgUrl: payload['profilePic'],
-        id: payload["_id"],
-      ),
-    );
+    return Left(Counsellor.fromJson(payload));
   }
 
   ///fetch peer counsellors
@@ -361,12 +351,12 @@ class CounselingServiceProvider {
     }
   }
 
-  Future<Either<InfoMessage, ErrorMessage>> rateCounselor(
-      String counselorId, double rate) async {
+  Future<Either<InfoMessage, ErrorMessage>> rateCounsellor(
+      String counsellorId, double rate) async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
       final result = await this._httpClientConn.post(
-          "${this._hostUrl}/api/v1/admin/user/counsellor/rate/$counselorId",
+          "${this._hostUrl}/api/v1/admin/user/counsellor/rate/$counsellorId",
           options: Options(headers: {
             'Authorization': token,
           }, sendTimeout: 10000),

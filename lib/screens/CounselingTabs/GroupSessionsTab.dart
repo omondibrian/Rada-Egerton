@@ -49,6 +49,7 @@ class GroupSessionsTab extends StatelessWidget {
           leading: CircleAvatar(
             child: ClipOval(
               child: CachedNetworkImage(
+                color: Colors.white,
                 imageUrl: "$BASE_URL/api/v1/uploads/${infoConversations.image}",
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
@@ -56,8 +57,13 @@ class GroupSessionsTab extends StatelessWidget {
                       image: imageProvider,
                       fit: BoxFit.cover,
                     ),
+
                   ),
+
                 ),
+               placeholder: (context, url) =>
+                            Image.asset("assets/user.png"),
+                        
               ),
             ),
           ),

@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:rada_egerton/config.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
+import 'package:rada_egerton/entities/CounsellorsDTO.dart';
 import 'package:rada_egerton/entities/StudentDTO.dart';
+import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/entities/userRoles.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:pusher_client/pusher_client.dart';
@@ -13,25 +15,21 @@ import 'package:rada_egerton/entities/ChatDto.dart' as chats;
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/services/counseling/main.dart';
+import 'package:rada_egerton/utils/sqlite.dart';
 
 class ChatProvider with ChangeNotifier {
   late Channel channel;
   late String _userId;
   late PusherClient _pusher;
   InfoMessage? info;
-  List<chats.ChatPayload> _privateMsgs = [];
+  List<chats.ChatPayload>? _privateMsgs;
   List<Msg> _groupMsgs = [];
   List<Msg> _forumMsgs = [];
   String _channelName = "radaComms";
   UserRole userRole = UserRole([]);
   List<StudentDto> _students = [];
   CounselingServiceProvider _service = CounselingServiceProvider();
-  void clearState() {
-    this._forumMsgs.clear();
-    this._groupMsgs.clear();
-    this._userId = '';
-    this.userRole = UserRole([]);
-  }
+  DBManager dbManager = DBManager();
 
   ChatProvider() {
     init();
@@ -53,7 +51,7 @@ class ChatProvider with ChangeNotifier {
   void privateChannel() {
     this.channel = _pusher.subscribe("$_channelName$_userId");
     channel.bind(ChatEvent.CHAT, (PusherEvent? event) {
-      appendNewChat(
+      addNewPrivateChat(
         chats.ChatDto(
           data: chats.Data(
             msg: "",
@@ -69,8 +67,19 @@ class ChatProvider with ChangeNotifier {
     });
   }
 
-  List<ChatPayload> get privateMessages {
-    return [...this._privateMsgs];
+  List<ChatPayload>? get privateMessages {
+    //get chatpayload from local database
+    if (_privateMsgs == null) {
+      dbManager.getItems(ChatPayload.tableName_ + "Private").then(
+        (result) {
+          this._privateMsgs = List<ChatPayload>.from(
+            result.map((item) => ChatPayload.fromJson(item)),
+          );
+          notifyListeners();
+        },
+      );
+    }
+    return this._privateMsgs;
   }
 
   List<Msg> get groupMessages {
@@ -86,12 +95,14 @@ class ChatProvider with ChangeNotifier {
   }
 
   void getConversations() async {
-    var results = await _service.fetchUserMsgs();
+    final results = await _service.fetchUserMsgs();
     results!.fold(
       (userChats) {
         this._privateMsgs =
             userChats.data.payload.peerMsgs.map(convertToChatPayload).toList();
         userChats.data.payload.peerMsgs.forEach((userChat) async {
+          //check if the user profile exist in the database, if not then fetch it from api
+          // for(int i = 0;i<_pri)
           if (userChat.userType == "student") {
             var student = await _service.fetchStudentData(userChat.senderId);
             student!.fold((std) {
@@ -99,7 +110,14 @@ class ChatProvider with ChangeNotifier {
             }, (error) => print("error"));
           }
         });
+        //store privateMessages
+        _privateMsgs!.map(
+          (message) => dbManager.insertItem(message,
+              tableName: ChatPayload.tableName_ + "Private"),
+        );
         this._groupMsgs = userChats.data.payload.groupMsgs;
+        //TODO  store group Messages,forum messages
+
         this._forumMsgs = userChats.data.payload.forumMsgs;
       },
       (error) => print('Error from fetchChats() :${error.message}'),
@@ -135,8 +153,8 @@ class ChatProvider with ChangeNotifier {
     ChatPayload chatData = finalChatPayload(chat);
     final result = await service.peerCounseling(chatData, userId);
     result.fold((chat) {
-      appendNewChat(chat);
-      _info = InfoMessage("message send", InfoMessage.success);
+      addNewPrivateChat(chat);
+      _info = InfoMessage("message sent", InfoMessage.success);
     }, (error) {
       _info = InfoMessage(error.message, InfoMessage.error);
     });
@@ -145,9 +163,9 @@ class ChatProvider with ChangeNotifier {
   }
 
   ChatPayload finalChatPayload(ChatPayload chat) {
-    var role = this.userRole.isCounselor
+    var role = this.userRole.isCounsellor
         ? "counsellor"
-        : this.userRole.isPeerCounselor
+        : this.userRole.isPeerCounsellor
             ? 'peerCounsellor'
             : 'student';
 
@@ -165,22 +183,27 @@ class ChatProvider with ChangeNotifier {
     return chatData;
   }
 
-  void appendNewChat(
+  void addNewPrivateChat(
     ChatDto chat,
   ) {
-    this._privateMsgs.add(
-          ChatPayload(
-            id: chat.data.payload.id,
-            message: chat.data.payload.message,
-            imageUrl: chat.data.payload.imageUrl,
-            senderId: chat.data.payload.senderId,
-            groupsId: chat.data.payload.groupsId ?? "",
-            reply: chat.data.payload.reply ?? "",
-            status: chat.data.payload.status,
-            reciepient: chat.data.payload.reciepient,
-            role: chat.data.payload.reciepient,
-          ),
-        );
+    if (this.privateMessages == null) {
+      this._privateMsgs = [];
+    }
+    ChatPayload _privateChat = ChatPayload(
+      id: chat.data.payload.id,
+      message: chat.data.payload.message,
+      imageUrl: chat.data.payload.imageUrl,
+      senderId: chat.data.payload.senderId,
+      groupsId: chat.data.payload.groupsId ?? "",
+      reply: chat.data.payload.reply ?? "",
+      status: chat.data.payload.status,
+      reciepient: chat.data.payload.reciepient,
+      role: chat.data.payload.reciepient,
+    );
+    this._privateMsgs!.add(_privateChat);
+    //store the chat to local database
+    dbManager.insertItem(_privateChat,
+        tableName: ChatPayload.tableName_ + "Private");
   }
 
   Future<InfoMessage> sendGroupMessage(ChatPayload chat, String userId) async {
@@ -196,7 +219,7 @@ class ChatProvider with ChangeNotifier {
           }
         },
       );
-      _info = InfoMessage("message send", InfoMessage.success);
+      _info = InfoMessage("message sent", InfoMessage.success);
     }, (error) {
       info = InfoMessage(error.message, InfoMessage.error);
     });
@@ -218,5 +241,27 @@ class ChatProvider with ChangeNotifier {
         userType: chat.data.payload.userType,
       ),
     );
+  }
+
+  Future<User?> getUserProfile(String userType, int userId) async {
+    //check if user exist in database
+    final query = await dbManager.getItem(User.tableName_, userId);
+    if (query != null) {
+      return User.fromJson(query);
+    }
+    //check if user is counsellor and fetch his/her profile details from server
+    if (userType == 'counsellor') {
+      final res = await _service.fetchCounsellor(userId.toString());
+      Counsellor? _counsellor;
+      res.fold((l) {
+        _counsellor = l;
+        //save user to local database
+        dbManager.insertItem(l.user);
+        dbManager.insertItem(l);
+      }, (r) => null);
+      return _counsellor?.user;
+    }
+    //Else fetch the profile from student
+    else {}
   }
 }

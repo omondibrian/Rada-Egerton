@@ -1,9 +1,12 @@
 import 'dart:convert';
 
-User userFromJson(String str) => User.fromJson(json.decode(str));
-String userToJson(User data) => json.encode(data.toJson());
+import 'package:rada_egerton/utils/sqlite.dart';
 
-class User {
+User userFromJson(String str) => User.fromJson(json.decode(str));
+String userToJson(User data) => json.encode(data.toMap());
+
+class User extends Model {
+  static String tableName_ = "user";
   User({
     required this.id,
     required this.name,
@@ -17,6 +20,15 @@ class User {
     required this.synced,
     required this.joined,
   });
+  @override
+  int get getId {
+    return this.id;
+  }
+
+  @override
+  String get tableName {
+    return User.tableName_;
+  }
 
   int id;
   String name;
@@ -31,7 +43,7 @@ class User {
   String joined;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json["_id"],
+        id: json["_id"] is int ? json["_id"] : int.parse(json["_id"]),
         name: json["name"],
         email: json["email"],
         profilePic: json["profilePic"],
@@ -44,7 +56,7 @@ class User {
         joined: json["joined"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         "_id": id,
         "name": name,
         "email": email,
@@ -57,4 +69,8 @@ class User {
         "synced": synced,
         "joined": joined,
       };
+}
+
+User userfromMap(Map<String, dynamic> _user) {
+  return User.fromJson(_user);
 }

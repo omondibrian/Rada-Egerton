@@ -1,36 +1,30 @@
-import 'package:rada_egerton/entities/StudentDTO.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
+import 'package:rada_egerton/utils/sqlite.dart';
 
-class CounsellorsDTO {
-  final String name;
-  final double rating;
-  final bool isOnline;
-  final String expertise;
-  final String imgUrl;
-  final String? id;
-
-  CounsellorsDTO({
-    required this.name,
-    required this.rating,
-    required this.isOnline,
-    required this.expertise,
-    required this.imgUrl,
-    this.id,
-  });
-}
-
-class Counselor {
+class Counsellor extends Model {
   User user;
   final double rating;
   final bool isOnline;
   final String expertise;
-  Counselor({
-    required this.user,
-    required this.rating,
-    required this.isOnline,
-    required this.expertise,
-  });
-  factory Counselor.fromJson(Map<String, dynamic> json) {
+  final int counsellorId;
+  static String tableName_ = "Counsellor";
+  Counsellor(
+      {required this.user,
+      required this.rating,
+      required this.isOnline,
+      required this.expertise,
+      required this.counsellorId});
+  @override
+  int get getId {
+    return this.counsellorId;
+  }
+
+  @override
+  String get tableName {
+    return Counsellor.tableName_;
+  }
+
+  factory Counsellor.fromJson(Map<String, dynamic> json) {
     User _user = User(
       id: json["_id"],
       name: json["name"],
@@ -44,12 +38,24 @@ class Counselor {
       synced: json["synced"],
       joined: json["joined"],
     );
-    return Counselor(
+    return Counsellor(
+        counsellorId: json['counsellorId'] is int
+            ? json['counsellorId']
+            : int.parse(json['counsellorId']),
         user: _user,
         isOnline: json['status'] == "online",
         expertise: json['expertise'],
         rating: double.parse(
           json['rating'].toString(),
         ));
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      "counsellorId": this.counsellorId,
+      "rating": this.rating,
+      "expertise": this.expertise,
+      "_id": this.user.id,
+      "status": isOnline
+    };
   }
 }

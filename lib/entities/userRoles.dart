@@ -1,15 +1,15 @@
 class UserRole {
   List<String> roles;
   UserRole(this.roles);
-  bool get isCounselor {
-    return roles.contains("COUNSELLOR");
+  bool get isCounsellor {
+    return roles.contains("Counsellor");
   }
 
-  bool get isPeerCounselor {
-    return roles.contains("PEERCOUNSELLOR");
+  bool get isPeerCounsellor {
+    return roles.contains("PEERCounsellor");
   }
 
   bool get isStudent {
-    return !(this.isCounselor || this.isPeerCounselor);
+    return !(this.isCounsellor || this.isPeerCounsellor);
   }
 }

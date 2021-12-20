@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => CounselorProvider(),
+          create: (_) => CounsellorProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => RadaApplicationProvider(),

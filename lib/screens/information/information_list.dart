@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/informationData.dart';
-import 'package:rada_egerton/loading_effect/shimmer_loading.dart';
 import 'package:rada_egerton/providers/information.content.dart';
 import 'package:rada_egerton/screens/information/information_detail.dart';
 import 'package:rada_egerton/screens/information/information_loading_placeholder.dart';

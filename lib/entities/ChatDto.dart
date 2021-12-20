@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:rada_egerton/utils/sqlite.dart';
+
 ChatDto chatDtoFromJson(String str) => ChatDto.fromJson(json.decode(str));
 
 String chatDtoToJson(ChatDto data) => json.encode(data.toJson());
@@ -69,7 +71,7 @@ class Payload {
         imageUrl: json["imageUrl"],
         senderId: json["sender_id"],
         groupsId: json["Groups_id"],
-        reply: json["reply"]??"",
+        reply: json["reply"] ?? "",
         status: json["status"],
         reciepient: json["reciepient"],
         userType: json["user_type"],
@@ -88,7 +90,7 @@ class Payload {
       };
 }
 
-class ChatPayload {
+class ChatPayload extends Model {
   ChatPayload({
     required this.id,
     required this.message,
@@ -99,7 +101,6 @@ class ChatPayload {
     required this.status,
     required this.reciepient,
     this.role,
-
   });
 
   int id;
@@ -111,6 +112,16 @@ class ChatPayload {
   String status;
   String reciepient;
   String? role;
+  static String tableName_ = "Chat";
+  int get getId {
+    return this.id;
+  }
+
+  @override
+  String get tableName {
+    return ChatPayload.tableName_;
+  }
+
   factory ChatPayload.fromJson(Map<String, dynamic> json) => ChatPayload(
         id: json["_id"],
         message: json["message"],
@@ -123,7 +134,7 @@ class ChatPayload {
         role: json["user_type"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         "_id": id,
         "message": message,
         "imageUrl": imageUrl,
@@ -132,6 +143,6 @@ class ChatPayload {
         "reply": reply,
         "status": status,
         "reciepient": reciepient,
-        "user_type":role,
+        "user_type": role,
       };
 }

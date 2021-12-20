@@ -1,9 +1,10 @@
+import 'package:rada_egerton/screens/CounselingTabs/CounselorsTab.dart';
+import 'package:rada_egerton/screens/CounselingTabs/PeerCounselorsTab.dart';
+
 import '../sizeConfig.dart';
 import 'package:flutter/material.dart';
-import 'CounselingTabs/CounselorsTab.dart';
 import 'CounselingTabs/PrivateSessions.dart';
 import 'CounselingTabs/GroupSessionsTab.dart';
-import 'CounselingTabs/PeerCounselorsTab.dart';
 
 class Counseling extends StatelessWidget {
   @override
@@ -26,8 +27,8 @@ class Counseling extends StatelessWidget {
                 indicatorColor: Theme.of(context).primaryColor,
                 isScrollable: true,
                 tabs: [
-                  Tab(child: Text('Counselors', style: style)),
-                  Tab(child: Text('Peer Counselors', style: style)),
+                  Tab(child: Text('Counsellors', style: style)),
+                  Tab(child: Text('Peer Counsellors', style: style)),
                   Tab(child: Text('Private Session', style: style)),
                   Tab(child: Text('Group Session', style: style)),
                 ],
@@ -37,8 +38,8 @@ class Counseling extends StatelessWidget {
         },
         body: TabBarView(
           children: <Widget>[
-            CounselorsTab(),
-            PeerCounselorsTab(),
+            CounsellorsTab(),
+            PeerCounsellorsTab(),
             PrivateSessionsTab(),
             GroupSessionsTab(),
           ],

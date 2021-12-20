@@ -1,55 +1,55 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/entities/GroupsDTO.dart';
 import 'package:rada_egerton/entities/CounsellorsDTO.dart';
+import 'package:rada_egerton/entities/GroupsDTO.dart';
 import 'package:rada_egerton/entities/StudentDTO.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/services/counseling/main.dart';
 import 'package:rada_egerton/entities/PeerCounsellorDTO.dart';
 import 'package:rada_egerton/utils/main.dart';
+import 'package:rada_egerton/utils/sqlite.dart';
 
-class CounselorProvider with ChangeNotifier {
-  List<Counselor> _counselors = [];
-  List<PeerCounsellorDto> _peerCounsellors = [];
+class CounsellorProvider with ChangeNotifier {
+  List<Counsellor>? _counsellors;
+  List<PeerCounsellorDto>? _peerCounsellors;
   CounselingServiceProvider _service = CounselingServiceProvider();
   GroupsDto? _forums;
-
-  bool counselorsLoading = true;
+  DBManager dbManager = DBManager();
+  bool counsellorsLoading = true;
   bool peerCouselorsLoading = true;
   bool isForumLoading = true;
 
-  void clearState() {
-    this._counselors.clear();
-    this._peerCounsellors.clear();
-    this._forums = null;
-  }
-
-  CounselorProvider() {
-    getCounsellors();
+  CounsellorProvider() {
     getPeerCounsellors();
     getForums();
   }
 
-  List<Counselor> get counselors {
-    return [...this._counselors];
+  List<Counsellor>? get counsellors {
+    if (this._counsellors == null) {
+      getCounsellors();
+    }
+    return this._counsellors;
   }
 
   GroupsDto? get forums {
     return this._forums;
   }
 
-  Counselor? counselorById(int userId) {
-    Counselor? result;
-    for (var i = 0; i < this._counselors.length; i++) {
-      if (this._counselors[i].user.id == userId) {
-        result = this._counselors[i];
+  Counsellor? counsellorById(int userId) {
+    Counsellor? result;
+    for (var i = 0; i < this._counsellors!.length; i++) {
+      if (this._counsellors![i].user.id == userId) {
+        result = this._counsellors![i];
       }
     }
     return result;
   }
 
-  List<PeerCounsellorDto> get peerCounselors {
-    return [...this._peerCounsellors];
+  List<PeerCounsellorDto>? get peerCounsellors {
+    if (this._peerCounsellors == null) {
+      getPeerCounsellors();
+    }
+    return this._peerCounsellors;
   }
 
   Future<Either<StudentDto, InfoMessage>> getStudentBio(String id) async {
@@ -63,7 +63,7 @@ class CounselorProvider with ChangeNotifier {
     return result;
   }
 
-  Future<InfoMessage> getForums() async {
+  Future<InfoMessage>? getForums() async {
     late InfoMessage _info;
     var results = await _service.fetchStudentForums();
     results!.fold((forums) {
@@ -87,46 +87,57 @@ class CounselorProvider with ChangeNotifier {
     return _info;
   }
 
-  Future<InfoMessage> getCounsellors() async {
-    final results = await _service.fetchCounsellors();
-    late InfoMessage _info;
-    results.fold((counsellors) {
-      this._counselors = counsellors;
-      _info =
-          InfoMessage("fetching counselors  successfull", InfoMessage.success);
-    }, (error) => {_info = InfoMessage(error.message, InfoMessage.error)});
-    counselorsLoading = false;
-    notifyListeners();
-    return _info;
+  Future<InfoMessage?> getCounsellors() async {
+    InfoMessage? message;
+    await _service.fetchCounsellors().then((res) {
+      res.fold((counsellors) async {
+        //update counsellors with data from the server
+        this._counsellors = counsellors;
+        //update the database - store user and counselloe
+        for (int i = 0; i < this._counsellors!.length; ++i) {
+          dbManager.insertItem(counsellors[i].user);
+          dbManager.insertItem(counsellors[i]);
+        }
+
+        notifyListeners();
+        message =
+            InfoMessage("Fetch counsellors successful", InfoMessage.success);
+      }, (error) => {message = InfoMessage(error.message, InfoMessage.error)});
+    });
+    return message;
   }
 
   Future<InfoMessage> getPeerCounsellors() async {
-    final results = await _service.fetchPeerCounsellors();
-    late InfoMessage _info;
-    results.fold(
-      (peerCounselors) {
-        this._peerCounsellors = peerCounselors;
-        _info = InfoMessage(
-            "fetching peer counselors  successfull", InfoMessage.success);
-      },
-      (error) {
-        _info = InfoMessage(error.message, InfoMessage.error);
-      },
-    );
-    peerCouselorsLoading = false;
-    notifyListeners();
-    return _info;
+    late InfoMessage message;
+    await _service.fetchPeerCounsellors().then((res) {
+      res.fold((peercounsellors) {
+        //update peer counsellors with data from the server
+
+        this._peerCounsellors = peercounsellors;
+        //update the database
+        for (int i = 0; i < this._counsellors!.length; ++i) {
+          dbManager.insertItem(peercounsellors[i].user);
+          dbManager.insertItem(peercounsellors[i]);
+        }
+        notifyListeners();
+        message = InfoMessage(
+          "Fetch counsellors successful",
+          InfoMessage.success,
+        );
+      }, (error) => {message = InfoMessage(error.message, InfoMessage.error)});
+    });
+    return message;
   }
 
   User? getUser(String userType, int userId, List<StudentDto> students) {
     if (userType == 'counsellor') {
-      final res = this.counselorById(userId);
+      final res = this.counsellorById(userId);
       return res?.user;
     }
     if (userType == 'peerCounsellor') {
-      for (var i = 0; i < this._peerCounsellors.length; i++) {
-        if (this._peerCounsellors[i].user.id == userId) {
-          return this._peerCounsellors[i].user;
+      for (var i = 0; i < this.peerCounsellors!.length; i++) {
+        if (this.peerCounsellors![i].user.id == userId) {
+          return this.peerCounsellors![i].user;
         }
       }
     } else {

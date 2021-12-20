@@ -41,7 +41,7 @@ class _ChatScreenState extends State<ChatScreen> {
     List<ChatPayload> messages = [];
     if (widget.mode == ChatModes.PRIVATE) {
       messages = ServiceUtility.combinePeerMsgs(
-        chatsprovider.privateMessages,
+        chatsprovider.privateMessages ?? [],
         radaProvider.user!.id.toString(),
       )[widget.chatIndex]
           .msg;

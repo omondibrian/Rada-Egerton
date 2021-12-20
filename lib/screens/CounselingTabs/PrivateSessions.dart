@@ -1,4 +1,7 @@
+import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
+import 'package:rada_egerton/loading_effect/shimmer.dart';
+import 'package:rada_egerton/screens/CounselingTabs/PeerCounselorsTab.dart';
 
 import '../../sizeConfig.dart';
 import 'package:flutter/material.dart';
@@ -16,18 +19,21 @@ class PrivateSessionsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final counselorprovider = Provider.of<CounselorProvider>(context);
+    final counsellorprovider = Provider.of<CounsellorProvider>(context);
     final chatsprovider = Provider.of<ChatProvider>(context);
     final appProvider = Provider.of<RadaApplicationProvider>(context);
+    List<Message> _conversations = [];
     String userId = "";
     if (appProvider.user != null) {
       userId = appProvider.user!.id.toString();
     }
+    if (chatsprovider.privateMessages != null) {
+      _conversations = ServiceUtility.combinePeerMsgs(
+        chatsprovider.privateMessages!,
+        userId,
+      );
+    }
 
-    var conversations = ServiceUtility.combinePeerMsgs(
-      chatsprovider.privateMessages,
-      userId,
-    );
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
@@ -37,8 +43,8 @@ class PrivateSessionsTab extends StatelessWidget {
     }
 
     Widget conversationBuilder(BuildContext ctx, int index) {
-      var recipientId = conversations[index].recipient;
-      User? user = counselorprovider.getUser(conversations[index].userType,
+      var recipientId = _conversations[index].recipient;
+      User? user = counsellorprovider.getUser(_conversations[index].userType,
           int.parse(recipientId), chatsprovider.students);
 
       return GestureDetector(
@@ -60,6 +66,7 @@ class PrivateSessionsTab extends StatelessWidget {
           leading: CircleAvatar(
             child: ClipOval(
               child: CachedNetworkImage(
+                color: Colors.white, 
                 imageUrl: "$BASE_URL/api/v1/uploads/${user?.profilePic}",
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
@@ -84,22 +91,31 @@ class PrivateSessionsTab extends StatelessWidget {
       );
     }
 
-    return conversations.isNotEmpty
-        ? RefreshIndicator(
-            onRefresh: () => _refresh(),
-            backgroundColor: Theme.of(context).primaryColor,
-            color: Colors.white,
-            displacement: 20.0,
-            edgeOffset: 5.0,
-            child: ListView.builder(
-              itemBuilder: conversationBuilder,
-              itemCount: conversations.length,
-            ),
-          )
-        : Center(
-            child: Image.asset(
-            "assets/message.png",
-            width: 250,
-          ));
+    return RefreshIndicator(
+      onRefresh: () => _refresh(),
+      backgroundColor: Theme.of(context).primaryColor,
+      color: Colors.white,
+      displacement: 20.0,
+      edgeOffset: 5.0,
+      child: chatsprovider.privateMessages == null
+          //show skeleton if private messages have not been initialized
+          ? Shimmer(
+              child: ListView(
+                children:
+                    List.generate(4, (index) => placeHolderListTile(context)),
+              ),
+            )
+          : _conversations.isNotEmpty
+              ? ListView.builder(
+                  itemBuilder: conversationBuilder,
+                  itemCount: _conversations.length,
+                )
+              : Center(
+                  child: Image.asset(
+                    "assets/message.png",
+                    width: 250,
+                  ),
+                ),
+    );
   }
 }
