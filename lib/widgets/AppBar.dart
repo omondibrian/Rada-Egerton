@@ -25,7 +25,6 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<RadaApplicationProvider>(context);
-    final _chatProvider = Provider.of<ChatProvider>(context);
     final _counselingProvider = Provider.of<CounsellorProvider>(context);
     String recepientId = context.read<ChatBloc>().state.recepient.toString();
     void _leaveGroup() async {
@@ -38,7 +37,6 @@ class CustomAppBar extends StatelessWidget {
           ),
         ),
       );
-      _chatProvider.getConversations();
       context.pop();
     }
 
@@ -53,7 +51,6 @@ class CustomAppBar extends StatelessWidget {
           ),
         ),
       );
-      _chatProvider.getConversations();
       context.pop();
     }
 

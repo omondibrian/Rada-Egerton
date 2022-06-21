@@ -34,7 +34,6 @@ Widget newGroupForm(
           ),
         ),
       );
-      _chatProvide.getConversations();
       context.pop();
     }
   }

@@ -302,4 +302,6 @@ class CounselingServiceProvider {
       );
     }
   }
+
+  peerCounseling(ChatPayload chatData, String userId) {}
 }

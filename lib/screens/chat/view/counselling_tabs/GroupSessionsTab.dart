@@ -23,7 +23,6 @@ class GroupSessionsTab extends StatelessWidget {
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
     Future<void> _refresh() async {
-      chatsprovider.getConversations();
     }
 
     var radaApplicationProvider = Provider.of<RadaApplicationProvider>(context);
