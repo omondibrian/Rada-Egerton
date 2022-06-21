@@ -8,7 +8,6 @@ import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/screens/chat/bloc/bloc.dart';
 import 'package:rada_egerton/sizeConfig.dart';
 import 'package:rada_egerton/utils/main.dart';
-import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ForumPage extends StatelessWidget {
@@ -16,11 +15,9 @@ class ForumPage extends StatelessWidget {
   Widget build(BuildContext context) {
     context.read<ChatBloc>().add(ChatModeChanged(ChatModes.FORUM));
 
-    final chatsprovider = Provider.of<ChatProvider>(context);
     final counseligProvider = Provider.of<CounsellorProvider>(context);
     final radaAppProvider = Provider.of<RadaApplicationProvider>(context);
-    var forums = ServiceUtility.parseForums(
-        counseligProvider.forums, chatsprovider.forumMessages);
+    var forums = [];
 
     Future<void> _refresh() async {
       counseligProvider.getForums();

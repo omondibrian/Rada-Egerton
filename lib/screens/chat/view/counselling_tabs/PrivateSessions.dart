@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/loading_effect/shimmer.dart';
 import 'package:rada_egerton/resources/config.dart';
@@ -23,30 +24,17 @@ class PrivateSessionsTab extends StatelessWidget {
     final counsellorprovider = Provider.of<CounsellorProvider>(context);
     final chatsprovider = Provider.of<ChatProvider>(context);
     final appProvider = Provider.of<RadaApplicationProvider>(context);
-    List<Message> _conversations = [];
-    String userId = "";
-    if (appProvider.user != null) {
-      userId = appProvider.user!.id.toString();
-    }
-    if (chatsprovider.privateMessages != null) {
-      _conversations = ServiceUtility.combinePeerMsgs(
-        chatsprovider.privateMessages!,
-        userId,
-      );
-    }
+    List<ChatPayload> _conversations = [];
 
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
 
-    Future<void> _refresh() async {
-      chatsprovider.getConversations();
-    }
+    Future<void> _refresh() async {}
 
     Widget conversationBuilder(BuildContext ctx, int index) {
-      String recipientId = _conversations[index].recipient;
-      User? user = counsellorprovider.getUser(_conversations[index].userType,
-          int.parse(recipientId), chatsprovider.students);
+      String recipientId = _conversations[index].reciepient.toString();
+      User? user;
 
       void _openChat() {
         if (GlobalConfig.instance.user?.id == recipientId) return;
@@ -99,7 +87,7 @@ class PrivateSessionsTab extends StatelessWidget {
       color: Colors.white,
       displacement: 20.0,
       edgeOffset: 5.0,
-      child: chatsprovider.privateMessages == null
+      child: chatsprovider == null
           //show skeleton if private messages have not been initialized
           ? Shimmer(
               child: ListView(
