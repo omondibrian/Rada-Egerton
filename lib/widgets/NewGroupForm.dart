@@ -1,11 +1,11 @@
 import 'dart:io';
 
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:rada_egerton/utils/main.dart';
 
 import 'RadaButton.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/providers/ApplicationProvider.dart';
 
@@ -13,7 +13,6 @@ Widget newGroupForm(
   BuildContext context,
   RadaApplicationProvider radaApplicationProvider,
 ) {
-
   File? imageFile;
   final grpNameController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -36,7 +35,7 @@ Widget newGroupForm(
         ),
       );
       _chatProvide.getConversations();
-      Navigator.of(context).pop();
+      context.pop();
     }
   }
 
@@ -129,7 +128,7 @@ Widget newGroupForm(
               Expanded(
                 child: RadaButton(
                   title: 'close',
-                  handleClick: () => Navigator.of(context).pop(),
+                  handleClick: () => context.pop(),
                   fill: false,
                 ),
               ),

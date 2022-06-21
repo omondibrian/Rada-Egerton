@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
+import 'package:rada_egerton/resources/config.dart';
+import 'package:rada_egerton/resources/constants.dart';
 
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/widgets/ProfileHeader.dart';
@@ -100,7 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: <Widget>[
                   ProfileHeader(
-                    avatarUrl: "$IMAGE_URL${_user!.profilePic}",
+                    avatarUrl: GlobalConfig.imageUrl(_user!.profilePic),
                     coverImage: AssetImage('assets/android-icon-192x192.png'),
                     title: "${_user!.name}", 
 

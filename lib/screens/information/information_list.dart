@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/informationData.dart';
 import 'package:rada_egerton/providers/information.content.dart';
+import 'package:rada_egerton/resources/config.dart';
+import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/screens/information/information_detail.dart';
 import 'package:rada_egerton/screens/information/information_loading_placeholder.dart';
 import 'package:rada_egerton/sizeConfig.dart';
@@ -91,7 +92,9 @@ class Information extends StatelessWidget {
                   Radius.circular(5.0),
                 ),
                 child: CachedNetworkImage(
-                  imageUrl: "$IMAGE_URL${informationItem.metadata.thumbnail}",
+                  imageUrl: GlobalConfig.imageUrl(
+                    informationItem.metadata.thumbnail,
+                  ),
                   placeholder: (context, url) => Image.asset(
                     "assets/gif.gif",
                     height: _imageHeight,

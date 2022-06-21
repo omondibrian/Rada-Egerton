@@ -1,19 +1,18 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/theme.dart';
+import 'package:rada_egerton/resources/theme.dart';
 
 class TypingIndicator extends StatefulWidget {
   const TypingIndicator({
     Key? key,
     this.showIndicator = false,
-   
     this.flashingCircleDarkColor = const Color(0xFF333333),
     this.flashingCircleBrightColor = const Color(0xFFaec1dd),
   }) : super(key: key);
 
   final bool showIndicator;
-  
+
   final Color flashingCircleDarkColor;
   final Color flashingCircleBrightColor;
 

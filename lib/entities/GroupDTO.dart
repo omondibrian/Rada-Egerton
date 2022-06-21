@@ -1,7 +1,10 @@
-class GroupDTO {
+import 'package:rada_egerton/utils/sqlite.dart';
+
+class GroupDTO extends Model {
   String id = "";
   String title = "";
   String image = "";
+  static String get tableName_ => "Forum";
   GroupDTO({id, title, image}) {
     this.id = id;
     this.title = title;
@@ -13,9 +16,17 @@ class GroupDTO {
         image: json["image"],
       );
 
-  Map<String, dynamic> toJson() => {
+  @override
+  Map<String, dynamic> toMap() => {
         "id": id,
         "title": title,
         "image": image,
       };
+
+  @override
+  // TODO: implement getId
+  int get getId => throw UnimplementedError();
+
+  @override
+  String get tableName => "Forum";
 }

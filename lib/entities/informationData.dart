@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/theme.dart';
+import 'package:rada_egerton/resources/theme.dart';
 import 'package:rada_egerton/utils/sqlite.dart';
 
 class InformationCategory {

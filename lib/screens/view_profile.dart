@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
+import 'package:rada_egerton/resources/config.dart';
+import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/widgets/ProfileHeader.dart';
 
@@ -42,7 +43,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
               child: Column(
                 children: <Widget>[
                   ProfileHeader(
-                    avatarUrl: "$IMAGE_URL${_user!.profilePic}",
+                    avatarUrl: GlobalConfig.imageUrl(_user!.profilePic),
                     coverImage: AssetImage('assets/android-icon-192x192.png'),
                     title: "${_user!.name}",
                     canEdit: false,
@@ -50,7 +51,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   const SizedBox(height: 10.0),
                   // UserInfo(),
 
-                 
                   Container(
                     padding: EdgeInsets.all(10),
                     child: Column(
@@ -88,26 +88,22 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                 ListTile(
                                   leading: Icon(Icons.account_box_outlined),
                                   title: Text("Account status"),
-                                  subtitle: Text(
-                                      "${_user!.accountStatus}"), 
+                                  subtitle: Text("${_user!.accountStatus}"),
                                 ),
                                 ListTile(
                                   leading: Icon(Icons.email_outlined),
                                   title: Text("Email"),
-                                  subtitle: Text(
-                                      "${_user!.email}"), 
+                                  subtitle: Text("${_user!.email}"),
                                 ),
                                 ListTile(
                                   leading: Icon(Icons.calendar_today),
                                   title: Text("Date of Birth"),
-                                  subtitle: Text(
-                                      "${_user!.dob}"), 
+                                  subtitle: Text("${_user!.dob}"),
                                 ),
                                 ListTile(
                                   leading: Icon(Icons.person),
                                   title: Text("Gender"),
-                                  subtitle: Text(
-                                      "${_user!.gender}"), 
+                                  subtitle: Text("${_user!.gender}"),
                                 ),
                               ],
                             ),

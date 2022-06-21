@@ -1,126 +1,37 @@
-import 'dart:convert';
+import 'dart:io';
 
-import 'package:rada_egerton/utils/sqlite.dart';
+import 'package:equatable/equatable.dart';
 
-ChatDto chatDtoFromJson(String str) => ChatDto.fromJson(json.decode(str));
+enum ChatType { peer, group, forumn }
 
-String chatDtoToJson(ChatDto data) => json.encode(data.toJson());
-
-class ChatDto {
-  ChatDto({
-    required this.data,
-  });
-
-  Data data;
-
-  factory ChatDto.fromJson(Map<String, dynamic> json) => ChatDto(
-        data: Data.fromJson(json["data"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "data": data.toJson(),
-      };
-}
-
-class Data {
-  Data({
-    required this.payload,
-    required this.msg,
-  });
-
-  Payload payload;
-  String msg;
-
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-        payload: Payload.fromJson(json["payload"]),
-        msg: json["msg"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "payload": payload.toJson(),
-        "msg": msg,
-      };
-}
-
-class Payload {
-  Payload({
-    required this.id,
+class ChatPayload extends Equatable {
+  const ChatPayload({
+    this.id,
     required this.message,
-    required this.imageUrl,
+    this.imageUrl,
     required this.senderId,
-    required this.groupsId,
-    required this.reply,
-    required this.status,
-    required this.reciepient,
-    required this.userType,
-  });
-
-  int id;
-  String message;
-  String imageUrl;
-  String senderId;
-  dynamic groupsId;
-  dynamic reply;
-  String status;
-  String reciepient;
-  String userType;
-
-  factory Payload.fromJson(Map<String, dynamic> json) => Payload(
-        id: json["_id"],
-        message: json["message"],
-        imageUrl: json["imageUrl"],
-        senderId: json["sender_id"],
-        groupsId: json["Groups_id"],
-        reply: json["reply"] ?? "",
-        status: json["status"],
-        reciepient: json["reciepient"],
-        userType: json["user_type"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "_id": id,
-        "message": message,
-        "imageUrl": imageUrl,
-        "sender_id": senderId,
-        "Groups_id": groupsId,
-        "reply": reply,
-        "status": status,
-        "reciepient": reciepient,
-        "user_type": userType,
-      };
-}
-
-class ChatPayload extends Model {
-  ChatPayload({
-    required this.id,
-    required this.message,
-    required this.imageUrl,
-    required this.senderId,
-    required this.groupsId,
-    required this.reply,
-    required this.status,
-    required this.reciepient,
+    this.groupsId,
+    this.reply,
+    this.status = "",
+    this.reciepient,
     this.role,
+    this.picture,
+    this.video,
   });
 
-  int id;
-  String message;
-  String imageUrl;
-  String senderId;
-  dynamic groupsId;
-  String? reply;
-  String status;
-  String reciepient;
-  String? role;
-  static String tableName_ = "Chat";
-  int get getId {
-    return this.id;
-  }
-
-  @override
-  String get tableName {
-    return ChatPayload.tableName_;
-  }
+  final int? id;
+  final String message;
+  final String? imageUrl;
+  final String? senderId;
+  final dynamic groupsId;
+  final String? reply;
+  final String status;
+  final String? reciepient;
+  final String? role;
+  // final String? media;
+  //formdata
+  final File? picture;
+  final File? video;
 
   factory ChatPayload.fromJson(Map<String, dynamic> json) => ChatPayload(
         id: json["_id"],
@@ -133,6 +44,29 @@ class ChatPayload extends Model {
         reciepient: json["reciepient"],
         role: json["user_type"],
       );
+  ChatPayload copyWith(
+      {int? id,
+      String? message,
+      String? imageUrl,
+      String? senderId,
+      dynamic? groupsId,
+      String? reply,
+      String? status,
+      String? reciepient,
+      String? role,
+      File? video,
+      File? picture}) {
+    return ChatPayload(
+      id: id ?? this.id,
+      message: message ?? this.message,
+      imageUrl: imageUrl ?? this.imageUrl,
+      senderId: senderId ?? this.senderId,
+      groupsId: groupsId,
+      reply: reply ?? this.reply,
+      status: status ?? this.status,
+      reciepient: reciepient ?? this.reciepient,
+    );
+  }
 
   Map<String, dynamic> toMap() => {
         "_id": id,
@@ -145,4 +79,43 @@ class ChatPayload extends Model {
         "reciepient": reciepient,
         "user_type": role,
       };
+
+  @override
+  List<Object?> get props => [
+        id,
+        message,
+        imageUrl,
+        senderId,
+        groupsId,
+        reciepient,
+        role,
+        reply,
+        status
+      ];
+}
+
+class Chats extends Equatable {
+  final List<ChatPayload> peerMsgs;
+  final List<ChatPayload> forumMsgs;
+  final List<ChatPayload> groupMsgs;
+  @override
+  List<Object?> get props => [peerMsgs, forumMsgs, groupMsgs];
+
+  const Chats({
+    this.peerMsgs = const [],
+    this.groupMsgs = const [],
+    this.forumMsgs = const [],
+  });
+
+  Chats copyWith({
+    List<ChatPayload>? peerMsgs,
+    List<ChatPayload>? forumMsgs,
+    List<ChatPayload>? groupMsgs,
+  }) {
+    return Chats(
+      forumMsgs: forumMsgs ?? this.forumMsgs,
+      peerMsgs: peerMsgs ?? this.peerMsgs,
+      groupMsgs: groupMsgs ?? this.peerMsgs,
+    );
+  }
 }

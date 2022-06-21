@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/constants.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
+import 'package:rada_egerton/resources/config.dart';
+import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/services/counseling/main.dart';
 import 'package:rada_egerton/sizeConfig.dart';
 import 'package:rada_egerton/widgets/RadaButton.dart';
@@ -80,7 +82,7 @@ class _AddMembersState extends State<AddMembers> {
                             .subToNewGroup(user!.id.toString(), widget.groupId);
 
                         result!.fold(
-                          (_) => Navigator.of(context).pop(),
+                          (_) => context.pop(),
                           (err) => print(err),
                         );
                       },
@@ -90,8 +92,8 @@ class _AddMembersState extends State<AddMembers> {
                           leading: CircleAvatar(
                             child: ClipOval(
                               child: CachedNetworkImage(
-                                imageUrl:
-                                    "$BASE_URL/api/v1/uploads/${this.user!.profilePic}",
+                                imageUrl: GlobalConfig.imageUrl(
+                                    this.user!.profilePic),
                                 imageBuilder: (context, imageProvider) =>
                                     Container(
                                   decoration: BoxDecoration(

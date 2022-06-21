@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
-import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/resources/config.dart';
+import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/entities/ComplaintDto.dart';
 
 class IssueServiceProvider {
-  String _hostUrl = BASE_URL;
-  Dio _httpClientConn = Dio();
+  String _hostUrl = GlobalConfig.baseUrl;
+  Dio _httpClientConn = GlobalConfig.httpClient;
   final _timeOut = 10000;
   // issues/category
   Future<Either<ComplaintDto, ErrorMessage>> createNewIssue(
@@ -20,7 +21,7 @@ class IssueServiceProvider {
               headers: {'Authorization': authToken},
               sendTimeout: this._timeOut),
           data: json.encode(data));
-      
+
       return Left(ComplaintDto.fromJson(result.data));
     } on DioError catch (e) {
       var errMsg = ServiceUtility.handleDioExceptions(e);

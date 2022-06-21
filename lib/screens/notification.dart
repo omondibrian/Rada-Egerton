@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rada_egerton/entities/NewsDTO.dart';
 import 'package:rada_egerton/services/NewsAndLocation/main.dart';
-import 'package:rada_egerton/utils/timeAgo.dart';
 
 class UserNotification extends StatefulWidget {
   @override

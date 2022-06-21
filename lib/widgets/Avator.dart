@@ -3,10 +3,9 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
-import 'package:rada_egerton/providers/ApplicationProvider.dart';
+import 'package:rada_egerton/resources/config.dart';
+import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/sizeConfig.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,7 +42,7 @@ class Avatar extends StatelessWidget {
 
         String authToken = await ServiceUtility.getAuthToken() as String;
         final _profile = await Dio().put(
-          '$BASE_URL/api/v1/admin/user/profile',
+          GlobalConfig.url(url: "/api/v1/admin/user/profile"),
           data: formData,
           options: Options(
             headers: {
