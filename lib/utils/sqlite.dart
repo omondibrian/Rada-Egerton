@@ -2,6 +2,7 @@ import 'dart:async';
 import "package:path/path.dart";
 import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/entities/CounsellorsDTO.dart';
+import 'package:rada_egerton/entities/GroupDTO.dart';
 import 'package:rada_egerton/entities/PeerCounsellorDTO.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/entities/informationData.dart';
@@ -67,50 +68,73 @@ class DBManager {
         content TEXT,
         metadata TEXT
        )""");
-    // store forum messages
-    await db.execute("""
-       CREATE TABLE ${ChatPayload.tableName_ + "Forum"}(
-        _id int PRIMARY KEY,
-        imageUrl TEXT,
-        message TEXT,
-        sender_id TEXT,
-        Groups_id TEXT NOT NULL,
-        reply TEXT,
-        status TEXT,
-        reciepient TEXT,
-        user_type TEXT,
-        FOREIGN KEY(sender_id) REFERENCES User(_id),
-        FOREIGN KEY(reciepient) REFERENCES User(_id)
-       )""");
+    // // store forum messages
+    // await db.execute("""
+    //    CREATE TABLE ${ChatPayload.tableName_ + "Forum"}(
+    //     _id int PRIMARY KEY,
+    //     imageUrl TEXT,
+    //     message TEXT,
+    //     sender_id TEXT,
+    //     Groups_id TEXT NOT NULL,
+    //     reply TEXT,
+    //     status TEXT,
+    //     reciepient TEXT,
+    //     user_type TEXT,
+    //     FOREIGN KEY(sender_id) REFERENCES User(_id),
+    //     FOREIGN KEY(reciepient) REFERENCES User(_id)
+    //    )""");
     // store private messages
-    await db.execute("""
-       CREATE TABLE ${ChatPayload.tableName_ + "Private"}(
-        _id int PRIMARY KEY,
-        imageUrl TEXT,
-        message TEXT,
-        sender_id TEXT NOT NULL,
-        Groups_id TEXT,
-        reply TEXT,
-        status TEXT,
-        reciepient TEXT,
-        user_type TEXT,
-        FOREIGN KEY(sender_id) REFERENCES User(_id),
-        FOREIGN KEY(reciepient) REFERENCES User(_id)
-       )""");
+    // await db.execute("""
+    //    CREATE TABLE ${ChatPayload.tableName_ + "Private"}(
+    //     _id int PRIMARY KEY,
+    //     imageUrl TEXT,
+    //     message TEXT,
+    //     sender_id TEXT NOT NULL,
+    //     Groups_id TEXT,
+    //     reply TEXT,
+    //     status TEXT,
+    //     reciepient TEXT,
+    //     user_type TEXT,
+    //     FOREIGN KEY(sender_id) REFERENCES User(_id),
+    //     FOREIGN KEY(reciepient) REFERENCES User(_id)
+    //    )""");
     // store group messages
+    // await db.execute("""
+    //    CREATE TABLE ${ChatPayload.tableName_ + "Group"}(
+    //     _id int PRIMARY KEY,
+    //     imageUrl TEXT,
+    //     message TEXT,
+    //     sender_id TEXT,
+    //     Groups_id TEXT NOT NULL,
+    //     reply TEXT,
+    //     status TEXT,
+    //     reciepient TEXT,
+    //     user_type TEXT,
+    //     FOREIGN KEY(sender_id) REFERENCES User(_id),
+    //     FOREIGN KEY(reciepient) REFERENCES User(_id)
+    //    )""");
+
+    // Groups
     await db.execute("""
-       CREATE TABLE ${ChatPayload.tableName_ + "Group"}(
-        _id int PRIMARY KEY,
-        imageUrl TEXT,
-        message TEXT,
-        sender_id TEXT,
-        Groups_id TEXT NOT NULL,
-        reply TEXT,
-        status TEXT,
-        reciepient TEXT,
-        user_type TEXT,
-        FOREIGN KEY(sender_id) REFERENCES User(_id),
-        FOREIGN KEY(reciepient) REFERENCES User(_id)
+       CREATE TABLE Group(
+        id int PRIMARY KEY,
+        image TEXT,
+        title TEXT
+       )""");
+
+    // Groups
+    await db.execute("""
+       CREATE TABLE ${GroupDTO.tableName_}(
+        id int PRIMARY KEY,
+        image TEXT,
+        title TEXT
+       )""");
+    //forums
+    await db.execute("""
+       CREATE TABLE Forum(
+        id int PRIMARY KEY,
+        image TEXT,
+        title TEXT
        )""");
   }
 

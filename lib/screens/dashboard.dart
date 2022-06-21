@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/providers/ApplicationProvider.dart';
 import 'package:rada_egerton/providers/chat.provider.dart';
 import 'package:rada_egerton/providers/counselling.provider.dart';
+import 'package:rada_egerton/resources/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../sizeConfig.dart';
 
@@ -20,7 +21,7 @@ class Dashboard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(ctx).pushNamed(dashboardItems[index]['routeName']);
+        ctx.push(dashboardItems[index]['routeName']);
       },
       child: Card(
         elevation: 5.0,
@@ -47,7 +48,7 @@ class Dashboard extends StatelessWidget {
               color: Theme.of(ctx).primaryColor,
               icon: Icon(Icons.arrow_forward_ios),
               onPressed: () {
-                Navigator.of(ctx).pushNamed(dashboardItems[index]['routeName']);
+                ctx.push(dashboardItems[index]['routeName']);
               }),
         ),
       ),
@@ -65,11 +66,11 @@ class Dashboard extends StatelessWidget {
           PopupMenuButton(
             onSelected: (FilterOptions selectedValue) {
               if (selectedValue == FilterOptions.Profile) {
-                Navigator.of(context).pushNamed(AppRoutes.profile);
+                context.push(AppRoutes.profile);
               } else if (selectedValue == FilterOptions.LogOut) {
-                Navigator.of(context).pushNamed(AppRoutes.welcome);
+                context.push(AppRoutes.welcome);
               } else {
-                Navigator.pushNamed(context, AppRoutes.contributors);
+                context.push(AppRoutes.contributors);
               }
             },
             icon: Icon(
@@ -83,8 +84,7 @@ class Dashboard extends StatelessWidget {
                   SharedPreferences _prefs =
                       await SharedPreferences.getInstance();
                   _prefs.clear();
-                  Navigator.of(context).popUntil(
-                      (route) => route.settings.name == AppRoutes.splash);
+                  context.go(AppRoutes.splash);
                 },
               ),
               PopupMenuItem(

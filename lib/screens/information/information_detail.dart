@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/informationData.dart';
+import 'package:rada_egerton/resources/config.dart';
 
 class InformationDetail extends StatefulWidget {
   final InformationData informationData;
@@ -94,7 +93,7 @@ class _InformationDetailState extends State<InformationDetail> {
       else if (contentItems[i].type == InformationContent.image) {
         _widget = Card(
             child: CachedNetworkImage(
-          imageUrl: "$IMAGE_URL${contentItems[i].bodyContent}",
+          imageUrl: GlobalConfig.imageUrl(contentItems[i].bodyContent),
         ));
         _widgets.add(_widget);
         i += 1;

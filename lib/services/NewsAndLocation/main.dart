@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
-import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/entities/NewsDTO.dart';
 import 'package:rada_egerton/entities/locationDto.dart';
 import 'package:rada_egerton/entities/ContactsDto.dart';
 
 class NewsAndLocationServiceProvider {
-  String _hostUrl = BASE_URL;
+  String _hostUrl = GlobalConfig.baseUrl;
   Dio _httpClientConn = Dio();
   final _timeOut = 10000;
 

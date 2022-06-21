@@ -2,13 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/config.dart';
-import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/entities/CounsellorsDTO.dart';
 import 'package:rada_egerton/entities/StudentDTO.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/entities/userRoles.dart';
+import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:pusher_client/pusher_client.dart';
 import 'package:rada_egerton/entities/ChatDto.dart' as chats;
@@ -35,6 +34,8 @@ class ChatProvider with ChangeNotifier {
     init();
     getConversations();
   }
+  
+  get pusherApiKey => null;
   void init() async {
     String? _autoken = await ServiceUtility.getAuthToken();
     _pusher =

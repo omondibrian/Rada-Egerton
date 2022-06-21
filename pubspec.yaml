@@ -48,6 +48,10 @@ dependencies:
   rating_dialog: ^2.0.3
   sqflite:
   path:
+  go_router: ^4.0.0
+  bloc: ^8.0.3
+  flutter_bloc: ^8.0.1
+  equatable: ^2.0.3
 
 dev_dependencies:
   flutter_test:

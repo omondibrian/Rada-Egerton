@@ -1,14 +1,15 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/informationData.dart';
+import 'package:rada_egerton/resources/config.dart';
+import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/utils/main.dart';
 
 class ContentService {
   //information data
+  static String _hostUrl = GlobalConfig.baseUrl;
   static Future<Either<List<InformationData>, ErrorMessage>>
       getInformation() async {
-    String _hostUrl = BASE_URL;
     Dio _httpClientConn = Dio();
     try {
       String token = await ServiceUtility.getAuthToken() as String;
@@ -32,7 +33,6 @@ class ContentService {
 
   static Future<Either<List<InformationCategory>, ErrorMessage>>
       getInformationCategory() async {
-    String _hostUrl = BASE_URL;
     Dio _httpClientConn = Dio();
     try {
       String token = await ServiceUtility.getAuthToken() as String;
@@ -45,7 +45,8 @@ class ContentService {
       print(result.data["contentCategories"]);
       Iterable _informationCategory = result.data["contentCategories"];
       return Left(List<InformationCategory>.from(_informationCategory.map(
-          (data) => InformationCategory(data["_id"].toString(), data["name"]))));
+          (data) =>
+              InformationCategory(data["_id"].toString(), data["name"]))));
     } on DioError catch (e) {
       return Right(
         ServiceUtility.handleDioExceptions(e),

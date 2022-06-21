@@ -2,14 +2,13 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pusher_client/pusher_client.dart';
-import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/ChatDto.dart';
 import 'package:rada_egerton/entities/GroupsDTO.dart' as Groups;
 import 'package:rada_egerton/entities/UserChatsDTO.dart';
-import 'package:rada_egerton/theme.dart';
+import 'package:rada_egerton/resources/config.dart';
+import 'package:rada_egerton/resources/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ServiceUtility {
@@ -63,10 +62,10 @@ class ServiceUtility {
     }
 
     //get a list of receipients compared to the user id
-    for (var i = 0; i < msgs.length; i++) {
-      userIds.add(
-          userId == msgs[i].senderId ? msgs[i].reciepient : msgs[i].senderId);
-    }
+    // for (var i = 0; i < msgs.length; i++) {
+    //   userIds.add(
+    //       userId == msgs[i].senderId ? msgs[i].reciepient : msgs[i].senderId);
+    // }
 
     return userIds.toSet().toList().map(extractMsgs).toList();
   }
@@ -118,7 +117,7 @@ class Pusher {
 
       encrypted: false,
       auth: PusherAuth(
-        "$BASE_URL/rada/api/v1/pusher/auth",
+        "${GlobalConfig.baseUrl}/rada/api/v1/pusher/auth",
         headers: {
           'Authorization': "$token",
         },

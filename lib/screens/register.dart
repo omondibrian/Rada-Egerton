@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/entities/AuthDTO.dart';
+import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/sizeConfig.dart';
 import 'package:rada_egerton/widgets/RadaButton.dart';
 import 'package:rada_egerton/widgets/defaultInput.dart';
 import 'package:logger/logger.dart';
 
-import '../constants.dart';
 
 class Register extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -33,14 +34,13 @@ class Register extends StatelessWidget {
         print(passwordController.text);
 
         final AuthDTO user = AuthDTO(
-          
             email: userController.text,
             password: passwordController.text,
             userName: userController.text,
             university: 'Egerton');
-
+        //TODO fix register
         await this._authService.registerNewUser(user);
-       Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+        context.push(AppRoutes.login);
       }
     } catch (e) {
       // print(e);
@@ -113,7 +113,7 @@ class Register extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
-                                Navigator.pushNamed(context, AppRoutes.login);
+                                context.push(AppRoutes.login);
                               },
                               child: Text(
                                 ' Login',

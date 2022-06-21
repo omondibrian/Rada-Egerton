@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
-import 'package:rada_egerton/constants.dart';
 import 'package:rada_egerton/entities/UserDTO.dart';
 import 'package:rada_egerton/entities/userRoles.dart';
+import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/utils/main.dart';
 import 'package:rada_egerton/entities/AuthDTO.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class AuthServiceProvider {
-  String _hostUrl = BASE_URL;
-  Dio _httpClientConn = Dio();
+  String _hostUrl = GlobalConfig.baseUrl;
+  Dio _httpClientConn = GlobalConfig.httpClient;
 
   Future<bool> isConnected() => InternetConnectionChecker().hasConnection;
 

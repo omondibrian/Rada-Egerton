@@ -1,5 +1,4 @@
-
-import 'package:rada_egerton/constants.dart';
+import 'package:rada_egerton/resources/config.dart';
 
 class News {
   News({
@@ -32,9 +31,8 @@ class News {
         status: json["status"],
         universityId: json["University_id"],
       );
-  String get imageUrl {
-    return "$BASE_URL/api/v1/uploads/$imageName";
-  }
+
+  String get imageUrl => GlobalConfig.imageUrl(imageName);
 
   Map<String, dynamic> toJson() => {
         "_id": id,

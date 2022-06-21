@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:rada_egerton/theme.dart';
+import 'package:rada_egerton/resources/theme.dart';
 import '../sizeConfig.dart';
 
 class RadaButton extends StatelessWidget {

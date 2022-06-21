@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:rada_egerton/constants.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/services/auth/main.dart';
 import 'package:rada_egerton/widgets/RadaButton.dart';
 import 'package:rada_egerton/widgets/defaultInput.dart';
@@ -29,20 +30,15 @@ class Login extends StatelessWidget {
   void _handleSubmit(BuildContext context) async {
     try {
       if (_formKey.currentState!.validate()) {
-        print(userController.text);
-        print(passwordController.text);
-        //TODO Remove backward navigation and connect to backend
         await this
             ._authService
             .logInUser(userController.text, passwordController.text);
-        Navigator.of(context).popAndPushNamed(AppRoutes.dashboard);
+        context.go(AppRoutes.dashboard);
       }
     } catch (e) {
       print(e);
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -122,8 +118,7 @@ class Login extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
-                                Navigator.pushNamed(
-                                    context, AppRoutes.register);
+                                context.push(AppRoutes.register);
                               },
                               child: Text(
                                 ' Register',

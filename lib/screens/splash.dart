@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/constants.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rada_egerton/resources/constants.dart';
+import 'package:rada_egerton/resources/theme.dart';
 import 'package:rada_egerton/utils/main.dart';
-import 'package:rada_egerton/theme.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -47,9 +48,9 @@ class SplashScreenState extends State<SplashScreen> {
     String? _authToken = await ServiceUtility.getAuthToken();
     //inialize app data
     if (_authToken == null) {
-      Navigator.of(context).pushReplacementNamed(AppRoutes.welcome);
+      context.go(AppRoutes.welcome);
     } else {
-      Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
+      context.go(AppRoutes.dashboard);
     }
   }
 }
