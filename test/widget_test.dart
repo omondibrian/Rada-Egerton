@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rada_egerton/app.dart';
+import 'package:rada_egerton/presentation/app/app.dart';
 
 
 void main() {
