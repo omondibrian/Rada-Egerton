@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
+import 'package:rada_egerton/data/services/auth/auth_service.dart';
 import 'package:rada_egerton/data/status.dart';
 
 class AuthenticationProvider with ChangeNotifier {
@@ -16,6 +17,14 @@ class AuthenticationProvider with ChangeNotifier {
     this.user = user;
     this.authToken = authToken;
     this.status = AuthenticationStatus.authenticated;
+    notifyListeners();
+  }
+
+  void logout() async {
+    status = AuthenticationStatus.unAuthenticated;
+    user = User.empty();
+    authToken = "";
+    await AuthService.logout();
     notifyListeners();
   }
 }

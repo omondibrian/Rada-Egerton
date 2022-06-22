@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rada_egerton/data/providers/application_provider.dart';
-import 'package:rada_egerton/data/providers/chat.provider.dart';
-import 'package:rada_egerton/data/providers/counselling.provider.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/sizeConfig.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 enum FilterOptions { Profile, Contributors, LogOut }
 
@@ -17,8 +14,6 @@ class Dashboard extends StatelessWidget {
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
-    final chatProvider = Provider.of<ChatProvider>(ctx);
-    // chatProvider.privateChannel();
 
     return GestureDetector(
       onTap: () {
@@ -58,9 +53,6 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var counsellorProvider = Provider.of<CounsellorProvider>(context);
-    var appProvider = Provider.of<RadaApplicationProvider>(context);
-    var chatsProvider = Provider.of<ChatProvider>(context);
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -81,12 +73,7 @@ class Dashboard extends StatelessWidget {
               PopupMenuItem(
                 child: Text('Logout'),
                 value: FilterOptions.LogOut,
-                onTap: () async {
-                  SharedPreferences _prefs =
-                      await SharedPreferences.getInstance();
-                  _prefs.clear();
-                  context.go(AppRoutes.splash);
-                },
+                onTap: () => context.read<AuthenticationProvider>().logout(),
               ),
               PopupMenuItem(
                 child: Text('Profile'),

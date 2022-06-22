@@ -49,7 +49,7 @@ class ChatPayload extends Equatable {
       String? message,
       String? imageUrl,
       String? senderId,
-      dynamic? groupsId,
+      dynamic groupsId,
       String? reply,
       String? status,
       String? reciepient,

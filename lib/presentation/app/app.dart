@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/presentation/features/auth/login.dart';
-import 'package:rada_egerton/presentation/features/auth/register.dart';
+import 'package:rada_egerton/presentation/features/auth/login_page.dart';
+import 'package:rada_egerton/presentation/features/auth/register_page.dart';
 import 'package:rada_egerton/presentation/features/chat/view/forum_chats_page.dart';
 import 'package:rada_egerton/presentation/features/chat/view/forum_page.dart';
 import 'package:rada_egerton/presentation/features/chat/view/peer_counseling_chats.dart';
@@ -34,7 +34,7 @@ class RadaApp extends StatelessWidget {
         String location = state.location;
         AuthenticationStatus status =
             context.read<AuthenticationProvider>().status;
-            
+
         //Redirect authenticated trying to access the app to login
         if (location.startsWith("/app") &&
             status != AuthenticationStatus.authenticated) {

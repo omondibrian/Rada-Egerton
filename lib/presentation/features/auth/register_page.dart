@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rada_egerton/data/entities/AuthDTO.dart';
+import 'package:rada_egerton/data/entities/auth_dto.dart';
 import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
 import 'package:rada_egerton/presentation/widgets/defaultInput.dart';
 import 'package:rada_egerton/resources/constants.dart';
-import 'package:rada_egerton/data/services/auth/main.dart';
+import 'package:rada_egerton/data/services/auth/auth_service.dart';
 import 'package:rada_egerton/resources/sizeConfig.dart';
 
 class Register extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final userController = TextEditingController();
   final passwordController = TextEditingController();
-  final _authService = AuthServiceProvider();
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
       return 'This value is required';
@@ -37,7 +36,7 @@ class Register extends StatelessWidget {
             userName: userController.text,
             university: 'Egerton');
         //TODO fix register
-        await this._authService.registerNewUser(user);
+        await AuthService.registerNewUser(user);
         context.push(AppRoutes.login);
       }
     } catch (e) {

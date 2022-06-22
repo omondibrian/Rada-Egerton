@@ -24,11 +24,13 @@ class _InformationDetailState extends State<InformationDetail> {
         ),
       ),
       body: SafeArea(
-          child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ListView(
-                children: buildItems(widget.informationData.content),
-              ))),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: ListView(
+            children: buildItems(widget.informationData.content),
+          ),
+        ),
+      ),
     );
   }
 
@@ -39,27 +41,16 @@ class _InformationDetailState extends State<InformationDetail> {
     while (i < contentItems.length) {
       if (contentItems[i].type == InformationContent.text) {
         List<InlineSpan> span = [];
+        //----------------------------------------------------//
+        //Render rich text created with Quil.js WYSIWYG editor//
+        //----------------------------------------------------//
+
         /**
          * take all consercutive text items and render them using InlineSpan element
          * stop whenever an image  in encounterd
          */
         for (int l = i; l < contentItems.length; l++) {
           if (contentItems[l].type == InformationContent.text) {
-            //to render list items - item is a list item if the item preceding it has an atribute list
-            /**
-             * eg [
-             * {
-                "insert": "item 1"
-               },
-              {
-                "attributes": {
-                "list": "ordered"
-              },
-              "insert": "\n"
-              }
-              ]
-             * ---- item 1 is a list item
-             */
             if (l < contentItems.length - 1 &&
                 contentItems[l + 1].attributes.list != null) {
               span.add(WidgetSpan(

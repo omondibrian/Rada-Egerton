@@ -4,7 +4,7 @@ import 'package:rada_egerton/presentation/widgets/ProfileHeader.dart';
 import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
 import 'package:rada_egerton/resources/config.dart';
 
-import 'package:rada_egerton/data/services/auth/main.dart';
+import 'package:rada_egerton/data/services/auth/auth_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 // ignore: must_be_immutable
@@ -16,9 +16,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   User? _user;
 
-  AuthServiceProvider _authService = AuthServiceProvider();
   Future<void> init() async {
-    final results = await _authService.getProfile();
+    final results = await AuthService.getProfile();
     results!.fold((user) {
       _user = user;
       _lastNameController.text = _user!.name;
@@ -30,7 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _updateUserProfile() async {
     if (profileForm.currentState!.validate()) {
-      final result = await _authService.updateProfile(User(
+      final result = await AuthService.updateProfile(User(
           id: _user!.id,
           name: _lastNameController.text,
           email: _user!.email,

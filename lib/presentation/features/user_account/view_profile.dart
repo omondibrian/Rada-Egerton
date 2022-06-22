@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
 import 'package:rada_egerton/presentation/widgets/ProfileHeader.dart';
 import 'package:rada_egerton/resources/config.dart';
-import 'package:rada_egerton/data/services/auth/main.dart';
+import 'package:rada_egerton/data/services/auth/auth_service.dart';
 
 class ViewProfileScreen extends StatefulWidget {
   final String userId;
@@ -14,9 +14,8 @@ class ViewProfileScreen extends StatefulWidget {
 class _ViewProfileScreenState extends State<ViewProfileScreen> {
   User? _user;
 
-  AuthServiceProvider _authService = AuthServiceProvider();
   Future<void> init() async {
-    final results = await _authService.getStudentProfile(widget.userId);
+    final results = await AuthService.getStudentProfile(widget.userId);
     results!.fold((user) {
       _user = user;
       setState(() {});

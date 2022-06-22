@@ -5,34 +5,21 @@ import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
 import 'package:rada_egerton/presentation/widgets/defaultInput.dart';
 import 'package:rada_egerton/presentation/widgets/password_field.dart';
 import 'package:rada_egerton/resources/constants.dart';
-import 'package:rada_egerton/data/services/auth/main.dart';
+import 'package:rada_egerton/data/services/auth/auth_service.dart';
 import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/utils/validators.dart';
 
 class Login extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final userController = TextEditingController();
   final passwordController = TextEditingController();
 
-  final _authService = AuthServiceProvider();
-
-  String? emailValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'This value is required';
-    } else if (!RegExp(
-            r'^.+@[a-zA-Z0-9]+\.{1}[a-zA-Z0-9]+(\.{0,1}[a-zA-Z0-9]+)+$')
-        .hasMatch(value)) {
-      return 'Please enter a valid email address';
-    }
-    return null;
-  }
-
   void _handleSubmit(BuildContext context) async {
     try {
       if (_formKey.currentState!.validate()) {
-        await this
-            ._authService
-            .logInUser(userController.text, passwordController.text);
-        context.go(AppRoutes.dashboard);
+        await AuthService.logInUser(
+            userController.text, passwordController.text);
+        // context.go(AppRoutes.dashboard);
       }
     } catch (e) {
       print(e);
