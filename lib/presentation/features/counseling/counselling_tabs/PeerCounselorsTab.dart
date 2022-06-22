@@ -29,7 +29,8 @@ class PeerCounsellorsTab extends StatelessWidget {
       var peerCounsellors = counsellors![index];
       void _openChat() {
         if (peerCounsellors.user.id == GlobalConfig.instance.user.id) return;
-        context.push("${AppRoutes.peerChat}?id=${counsellors[index].getId}");
+        context.pushNamed(AppRoutes.peerChat,
+            queryParams: {"id": counsellors[index].getId.toString()});
         context.read<ChatBloc>().add(
               ChatRecepientChanged(
                 Recepient(

@@ -9,6 +9,9 @@ import 'package:rada_egerton/data/entities/informationData.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBManager {
+  DBManager._();
+  static DBManager instance = DBManager._();
+
   Database? _db;
   Future<Database> get db async {
     if (_db != null) {
@@ -148,8 +151,8 @@ class DBManager {
   }
 
   Future<Model> deleteModel(Model item) async {
-    db.then((_db) =>
-        _db.delete(item.tableName, where: "_id = ?", whereArgs: [item.getId]));
+    db.then((db) =>
+        db.delete(item.tableName, where: "_id = ?", whereArgs: [item.getId]));
     return item;
   }
 
@@ -163,8 +166,8 @@ class DBManager {
 
   Future<List<Map<String, dynamic>>> getItems(String tableName) async {
     Database database = await db;
-    List<Map<String, dynamic>> _query = await database.query(tableName);
-    return _query;
+    List<Map<String, dynamic>> query = await database.query(tableName);
+    return query;
   }
 }
 

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:rada_egerton/data/entities/UserDTO.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
 import 'package:rada_egerton/presentation/widgets/defaultInput.dart';
 import 'package:rada_egerton/presentation/widgets/password_field.dart';
@@ -18,14 +21,23 @@ class Login extends StatelessWidget {
     try {
       if (_formKey.currentState!.validate()) {
         await AuthService.logInUser(
-            userController.text, passwordController.text);
+          userController.text,
+          passwordController.text,
+        );
+        // context.read<AuthenticationProvider>().loginUser(
+        //       user: User(
+        //           profilePic: "",
+        //           email: "test@gmail.com",
+        //           id: 100,
+        //           name: "test"),
+        //       AuthToken: "iUUUS",
+        //     );
         // context.go(AppRoutes.dashboard);
       }
     } catch (e) {
       print(e);
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,7 +116,7 @@ class Login extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
-                                context.push(AppRoutes.register);
+                                context.pushNamed(AppRoutes.register);
                               },
                               child: Text(
                                 ' Register',

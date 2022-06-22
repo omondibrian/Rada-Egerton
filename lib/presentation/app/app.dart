@@ -20,6 +20,7 @@ import 'package:rada_egerton/presentation/features/splash.dart';
 import 'package:rada_egerton/presentation/features/user_account/profile.dart';
 import 'package:rada_egerton/presentation/features/user_account/view_profile.dart';
 import 'package:rada_egerton/presentation/features/welcome.dart';
+import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/theme.dart';
 
@@ -51,97 +52,97 @@ class RadaApp extends StatelessWidget {
       },
       routes: [
         GoRoute(
-          name: "splash",
           path: AppRoutes.splash,
+          name: AppRoutes.splash,
           builder: (context, state) => SplashScreen(),
         ),
         GoRoute(
-          name: "welcome",
           path: AppRoutes.welcome,
+          name: AppRoutes.welcome,
           builder: (context, state) => Welcome(),
         ),
         GoRoute(
-          name: "login",
           path: AppRoutes.login,
+          name: AppRoutes.login,
           builder: (context, state) => Login(),
         ),
         GoRoute(
-          name: "register",
           path: AppRoutes.register,
+          name: AppRoutes.register,
           builder: (context, state) => Register(),
         ),
         //------------------------------------------------------------//
         // User must be authenticted to access this pages
         //------------------------------------------------------------//
         GoRoute(
-          name: "dashboard",
           path: AppRoutes.dashboard,
+          name: AppRoutes.dashboard,
           builder: (contex, state) => Dashboard(),
           routes: [
             GoRoute(
-              name: "counseling",
               path: AppRoutes.counseling,
+              name: AppRoutes.counseling,
               builder: (context, state) => Counseling(),
             ),
             GoRoute(
-              name: "mentorship",
               path: AppRoutes.mentorship,
+              name: AppRoutes.mentorship,
               builder: (context, state) => Mentorship(),
             ),
             GoRoute(
-              name: "help",
               path: AppRoutes.help,
+              name: AppRoutes.help,
               builder: (context, state) => Help(),
             ),
             GoRoute(
-              name: "information",
               path: AppRoutes.information,
+              name: AppRoutes.information,
               builder: (context, state) => Information(),
             ),
             GoRoute(
-              name: "forumn",
               path: AppRoutes.forum,
+              name: AppRoutes.forum,
               builder: (context, _) => ForumPage(),
             ),
             GoRoute(
-              name: "forumnMessages",
               path: AppRoutes.forumMessages,
+              name: AppRoutes.forumMessages,
               builder: (context, state) => ForumChats(
                 forumnId: state.queryParams["id"]!,
               ),
             ),
             GoRoute(
-              name: "peerChat",
               path: AppRoutes.peerChat,
+              name: AppRoutes.peerChat,
               builder: (context, state) => PeerCounsellingChats(
                 id: state.queryParams["id"]!,
               ),
             ),
             GoRoute(
-              name: "privateChat",
               path: AppRoutes.privateChat,
+              name: AppRoutes.privateChat,
               builder: (context, state) => PrivateChats(
                 receipientId: state.queryParams["id"]!,
               ),
             ),
             GoRoute(
-              name: "notification",
               path: AppRoutes.notification,
+              name: AppRoutes.notification,
               builder: (context, state) => UserNotification(),
             ),
             GoRoute(
-              name: "profile",
               path: AppRoutes.profile,
+              name: AppRoutes.profile,
               builder: (context, state) => ProfileScreen(),
             ),
             GoRoute(
-              name: "contributors",
               path: AppRoutes.contributors,
+              name: AppRoutes.contributors,
               builder: (context, state) => ContributorScreen(),
             ),
             GoRoute(
-              name: "viewProfile",
               path: AppRoutes.viewProfile,
+              name: AppRoutes.viewProfile,
               builder: (context, state) => ViewProfileScreen("1"),
             ),
           ],
@@ -149,6 +150,15 @@ class RadaApp extends StatelessWidget {
         //-------------------------------------------------------//
         //-------------------------------------------------------//
       ],
+    );
+    context.read<AuthenticationProvider>().addListener(
+      () {
+        GlobalConfig.instance.inialize(
+          authToken: context.read<AuthenticationProvider>().authToken,
+          user: context.read<AuthenticationProvider>().user,
+        );
+        print(GlobalConfig.instance.user.toMap());
+      },
     );
     return MaterialApp.router(
       routeInformationProvider: router.routeInformationProvider,

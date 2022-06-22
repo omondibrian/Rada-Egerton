@@ -37,7 +37,7 @@ class Register extends StatelessWidget {
             university: 'Egerton');
         //TODO fix register
         await AuthService.registerNewUser(user);
-        context.push(AppRoutes.login);
+        context.pushNamed(AppRoutes.login);
       }
     } catch (e) {
       // print(e);

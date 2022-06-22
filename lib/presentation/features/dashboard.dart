@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
+import 'package:rada_egerton/resources/config.dart';
 
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/sizeConfig.dart';
@@ -17,7 +18,7 @@ class Dashboard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        ctx.push(dashboardItems[index]['routeName']);
+        ctx.pushNamed(dashboardItems[index]['routeName']);
       },
       child: Card(
         elevation: 5.0,
@@ -44,7 +45,7 @@ class Dashboard extends StatelessWidget {
               color: Theme.of(ctx).primaryColor,
               icon: Icon(Icons.arrow_forward_ios),
               onPressed: () {
-                ctx.push(dashboardItems[index]['routeName']);
+                ctx.pushNamed(dashboardItems[index]['routeName']);
               }),
         ),
       ),
@@ -59,11 +60,11 @@ class Dashboard extends StatelessWidget {
           PopupMenuButton(
             onSelected: (FilterOptions selectedValue) {
               if (selectedValue == FilterOptions.Profile) {
-                context.push(AppRoutes.profile);
+                context.pushNamed(AppRoutes.profile);
               } else if (selectedValue == FilterOptions.LogOut) {
-                context.push(AppRoutes.welcome);
+                context.read<AuthenticationProvider>().logout();
               } else {
-                context.push(AppRoutes.contributors);
+                context.pushNamed(AppRoutes.contributors);
               }
             },
             icon: Icon(

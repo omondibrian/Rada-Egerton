@@ -1,25 +1,26 @@
 class AppRoutes {
-  static const dashboard = "/app";
   static const welcome = "/welcome";
-  static const help = "/help";
   static const login = "/login";
   static const register = "/signup";
-  static const counseling = "/counseling";
-  static const counselingMessages = "/counseling/messages";
-  static const information = "/information";
-  static const informationDetails = "/information/details";
-  static const notification = "/notification";
-  static const mentorship = "/mentorship";
-  static const forum = "/forum";
-  static const forumMessages = "/forum/messages";
-  static const connectionError = "/connectionError";
   static const terms = "/terms";
   static const splash = "/";
-  static const peerChat = "/peer/chat";
-  static const privateChat = "/private/chat";
-  static const profile = "/profile";
-  static const viewProfile = "/view-profile";
-  static const contributors = "/contributors";
+  
+  static const dashboard = "/app";
+  static const help = "help";
+  static const counseling = "counseling";
+  static const counselingMessages = "counseling-messages";
+  static const information = "information";
+  static const informationDetails = "information-details";
+  static const notification = "notification";
+  static const mentorship = "mentorship";
+  static const forum = "forum";
+  static const forumMessages = "forum-messages";
+  static const connectionError = "connectionError";
+  static const peerChat = "peer-chat";
+  static const privateChat = "private-chat";
+  static const profile = "profile";
+  static const viewProfile = "view-profile";
+  static const contributors = "contributors";
 }
 
 class ChatEvent {

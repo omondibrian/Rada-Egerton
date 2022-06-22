@@ -12,8 +12,8 @@ class GlobalConfig {
     String? authToken,
     User? user,
   }) {
-    user = user ?? this.user;
-    authToken = authToken ?? this.authToken;
+    this.user = user ?? this.user;
+    this.authToken = authToken ?? this.authToken;
   }
 
   GlobalConfig._();

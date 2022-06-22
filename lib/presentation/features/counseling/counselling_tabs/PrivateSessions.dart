@@ -37,7 +37,10 @@ class PrivateSessionsTab extends StatelessWidget {
 
       void _openChat() {
         if (GlobalConfig.instance.user.id == recipientId) return;
-        context.push("${AppRoutes.peerChat}?id=${recipientId}");
+        context.pushNamed(
+          AppRoutes.peerChat,
+          queryParams: {"id": recipientId},
+        );
         context.read<ChatBloc>().add(
               ChatRecepientChanged(
                 Recepient(

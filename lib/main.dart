@@ -12,20 +12,11 @@ import 'package:rada_egerton/resources/config.dart';
 import 'presentation/app/app.dart';
 
 void main() {
-  AuthenticationProvider authProvider = AuthenticationProvider();
-  authProvider.addListener(
-    () {
-      GlobalConfig.instance.inialize(
-        authToken: authProvider.authToken,
-        user: authProvider.user,
-      );
-    },
-  );
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(
-          value: authProvider,
+        ChangeNotifierProvider(
+          create: (_) => AuthenticationProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => CounsellorProvider(),

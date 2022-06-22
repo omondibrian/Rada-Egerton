@@ -48,9 +48,9 @@ class SplashScreenState extends State<SplashScreen> {
     String? _authToken = await ServiceUtility.getAuthToken();
     //inialize app data
     if (_authToken == null) {
-      context.go(AppRoutes.welcome);
+      context.goNamed(AppRoutes.welcome);
     } else {
-      context.go(AppRoutes.dashboard);
+      context.goNamed(AppRoutes.dashboard);
     }
   }
 }

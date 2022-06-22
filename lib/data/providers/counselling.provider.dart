@@ -15,7 +15,7 @@ class CounsellorProvider with ChangeNotifier {
   List<PeerCounsellorDto>? _peerCounsellors;
   CounselingServiceProvider _service = CounselingServiceProvider();
   GroupsDto? _forums;
-  DBManager dbManager = DBManager();
+  DBManager dbManager = DBManager.instance;
   bool counsellorsLoading = true;
   bool peerCouselorsLoading = true;
   bool isForumLoading = true;

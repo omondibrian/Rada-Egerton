@@ -38,7 +38,11 @@ class ForumPage extends StatelessWidget {
 
       void _openForumn() {
         if (!forum.isSubscribed) return;
-        context.push("${AppRoutes.forumMessages}?id=${forum.forum.id}");
+        context.pushNamed(
+          AppRoutes.forumMessages,
+          queryParams: {"id": forum.forum.id.toString()},
+        
+        );
         context.read<ChatBloc>().add(
               ChatRecepientChanged(
                 Recepient(

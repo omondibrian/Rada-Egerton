@@ -29,13 +29,16 @@ class Welcome extends StatelessWidget {
           ),
           Center(
             heightFactor: SizeConfig.isTabletWidth ? 2 : 3,
-            child: Text('Welcome to Egerton University \n  rada Application',
-                style: Theme.of(context).textTheme.subtitle1),
+            child: Text(
+              'Welcome to Egerton University \n  rada Application',
+              style: Theme.of(context).textTheme.subtitle1,
+              textAlign: TextAlign.center,
+            ),
           ),
           Center(
             child: RadaButton(
                 handleClick: () {
-                  context.push(AppRoutes.login);
+                  context.pushNamed(AppRoutes.login);
                 },
                 title: 'Login',
                 fill: true),
@@ -43,7 +46,7 @@ class Welcome extends StatelessWidget {
           Center(
             child: RadaButton(
                 handleClick: () {
-                  context.push(AppRoutes.register);
+                  context.pushNamed(AppRoutes.register);
                 },
                 title: 'Register',
                 fill: false),

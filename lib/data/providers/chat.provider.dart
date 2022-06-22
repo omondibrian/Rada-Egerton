@@ -25,7 +25,7 @@ class ChatProvider with ChangeNotifier {
   UserRole userRole = UserRole([]);
   List<StudentDto> _students = [];
   CounselingServiceProvider _service = CounselingServiceProvider();
-  DBManager dbManager = DBManager();
+  DBManager dbManager = DBManager.instance;
 
   ChatProvider() {}
 
