@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/providers/counselling.provider.dart';
 import 'package:rada_egerton/presentation/features/chat/bloc/bloc.dart';
 
@@ -12,10 +11,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 class ForumPage extends StatelessWidget {
+  const ForumPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final counseligProvider = Provider.of<CounsellorProvider>(context);
-    final radaAppProvider = Provider.of<RadaApplicationProvider>(context);
     var forums = [];
 
     Future<void> _refresh() async {

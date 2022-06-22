@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 //password field
 class PasswordField extends StatefulWidget {
   final TextEditingController controller;
 
-  const PasswordField(this.controller);
+  const PasswordField(this.controller, {Key? key}) : super(key: key);
 
   @override
   _PasswordFieldState createState() => _PasswordFieldState();
@@ -20,14 +19,14 @@ class _PasswordFieldState extends State<PasswordField> {
         child: TextFormField(
           obscureText: hidePassword,
           decoration: InputDecoration(
-            border: OutlineInputBorder(
+            border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(5)),
-              borderSide:
-                  const BorderSide(color: Color(0X55CED0D2), width: 0.0),
+              borderSide: BorderSide(color: Color(0X55CED0D2), width: 0.0),
             ),
-            prefixIcon: Icon(Icons.lock),
+            prefixIcon: const Icon(Icons.lock),
             hintText: "Password",
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             suffix: InkWell(
                 onTap: () {
                   setState(() {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rada_egerton/data/entities/ChatDto.dart';
+import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/presentation/features/chat/bloc/bloc.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/theme.dart';

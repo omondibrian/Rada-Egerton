@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:rada_egerton/data/entities/ChatDto.dart';
+import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 class ChatRepository {
-  static Dio _httpClientConn = httpClient;
-  static String _hostUrl = GlobalConfig.baseUrl;
+  static final Dio _httpClientConn = httpClient;
+  static final String _hostUrl = GlobalConfig.baseUrl;
 
   ///@description sends chat messages between two users i.e from counsellor to client
   ///@params { Chat }  chatData contains the message payload to be deliverd to the  reciepient

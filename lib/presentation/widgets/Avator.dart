@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
 import 'package:rada_egerton/resources/config.dart';
-import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/sizeConfig.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,7 +40,7 @@ class Avatar extends StatelessWidget {
         );
 
         String authToken = await ServiceUtility.getAuthToken() as String;
-        final _profile = await Dio().put(
+        final profile = await Dio().put(
           url(url: "/api/v1/admin/user/profile"),
           data: formData,
           options: Options(
@@ -51,10 +50,10 @@ class Avatar extends StatelessWidget {
             },
           ),
         );
-        SharedPreferences _prefs = await SharedPreferences.getInstance();
-        User user = User.fromJson(_profile.data["user"]);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        User user = User.fromJson(profile.data["user"]);
 
-        _prefs.setString("user", userToJson(user));
+        prefs.setString("user", userToJson(user));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -97,7 +96,7 @@ class Avatar extends StatelessWidget {
             child: CircleAvatar(
               backgroundColor: Colors.white,
               child: IconButton(
-                icon: Icon(Icons.camera_alt, color: Colors.black),
+                icon: const Icon(Icons.camera_alt, color: Colors.black),
                 onPressed: _updateProfileImage,
               ),
             ),

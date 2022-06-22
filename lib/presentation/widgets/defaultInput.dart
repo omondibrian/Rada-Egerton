@@ -20,20 +20,20 @@ class DefaultInput extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
-        obscureText: this.isPassword,
+        obscureText: isPassword,
         textAlign: TextAlign.start,
         decoration: InputDecoration(
-          prefixIcon: Icon(this.icon),
-          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          hintText: this.hintText,
-          border: OutlineInputBorder(
+          prefixIcon: Icon(icon),
+          contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          hintText: hintText,
+          border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(5)),
-            borderSide: const BorderSide(color: Color(0X55CED0D2), width: 0.0),
+            borderSide: BorderSide(color: Color(0X55CED0D2), width: 0.0),
           ),
           
         ),
-        controller: this.controller,
-        validator: this.validator,
+        controller: controller,
+        validator: validator,
         
       ),
     );

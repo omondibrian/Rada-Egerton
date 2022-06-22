@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/data/entities/ChatDto.dart';
+import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/theme.dart';
 
@@ -15,7 +15,7 @@ class ChatCard extends StatelessWidget {
     return Container(
         constraints:
             BoxConstraints(maxWidth: MediaQuery.of(context).size.width * .7),
-        padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+        padding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
         decoration: BoxDecoration(
             color: chatCardColor, borderRadius: BorderRadius.circular(8.0)),
         child: Column(
@@ -23,13 +23,13 @@ class ChatCard extends StatelessWidget {
           children: [
             if (replyTo != null)
               Container(
-                child: Text(replyTo!.message),
-                padding: EdgeInsets.symmetric(vertical: 3, horizontal: 3),
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
+                decoration: const BoxDecoration(
                   border: Border(
                     left: BorderSide(width: 5.0, color: Palette.accent),
                   ),
                 ),
+                child: Text(replyTo!.message),
               ),
             chat.picture == null
                 // Text
@@ -37,7 +37,7 @@ class ChatCard extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       chat.message,
-                      style: TextStyle(color: Colors.black),
+                      style: const TextStyle(color: Colors.black),
                     ),
                   )
                 :
@@ -46,18 +46,20 @@ class ChatCard extends StatelessWidget {
                     crossAxisAlignment: crossAxisAlignment,
                     children: [
                       Material(
+                        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                        clipBehavior: Clip.hardEdge,
                         child: Image.network(
                           imageUrl(chat.imageUrl!),
                           loadingBuilder: (BuildContext context, Widget child,
                               ImageChunkEvent? loadingProgress) {
                             if (loadingProgress == null) return child;
                             return Container(
-                              margin: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(
                                 horizontal: 15.0,
                               ),
                               decoration: BoxDecoration(
                                 color: chatCardColor,
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(8.0),
                                 ),
                               ),
@@ -82,13 +84,11 @@ class ChatCard extends StatelessWidget {
                           height: 200.0,
                           fit: BoxFit.cover,
                         ),
-                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        clipBehavior: Clip.hardEdge,
                       ),
                       Container(
                         child: Text(
                           chat.message,
-                          style: TextStyle(color: Colors.black),
+                          style: const TextStyle(color: Colors.black),
                         ),
                       )
                     ],

@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pusher_client/pusher_client.dart';
-import 'package:rada_egerton/data/entities/ChatDto.dart';
+import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/GroupsDTO.dart' as Groups;
 import 'package:rada_egerton/data/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/resources/config.dart';
@@ -15,8 +15,8 @@ class ServiceUtility {
   // late final DataConnectionChecker connection;
   final ImagePicker _imagePicker = ImagePicker();
   static Future<String?> getAuthToken() async {
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    final token = _prefs.getString("TOKEN");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("TOKEN");
     return token;
   }
 
@@ -40,7 +40,7 @@ class ServiceUtility {
   }
 
   static List<Message> combinePeerMsgs(List<ChatPayload> msgs, String userId) {
-    if (msgs.length < 1) return [];
+    if (msgs.isEmpty) return [];
     List<String> userIds = [];
     Message extractMsgs(String receipientId) {
       List<ChatPayload> msg = [];
@@ -124,16 +124,16 @@ class Pusher {
       ),
     );
 
-    this._pusher =
+    _pusher =
         PusherClient(appKey, options, autoConnect: true, enableLogging: false);
   }
 
   PusherClient getConnection() {
-    return this._pusher;
+    return _pusher;
   }
 
   disconnect() {
-    this._pusher.disconnect();
+    _pusher.disconnect();
   }
 }
 

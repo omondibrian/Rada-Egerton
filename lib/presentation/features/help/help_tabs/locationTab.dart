@@ -9,43 +9,45 @@ void main() {
   if (defaultTargetPlatform == TargetPlatform.android) {
     AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
   }
-  runApp(LocationTab());
+  runApp(const LocationTab());
 }
 
 class LocationTab extends StatefulWidget {
+  const LocationTab({Key? key}) : super(key: key);
+
   @override
   State<LocationTab> createState() => MapSampleState();
 }
 
 class MapSampleState extends State<LocationTab> {
-  Completer<GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
 
-  static final CameraPosition _initialCameraPosition = CameraPosition(
+  static const CameraPosition _initialCameraPosition = CameraPosition(
     tilt: 45,
     target: LatLng(-0.36932651926935073, 35.9313568419356),
     zoom: 20.0,
   );
 
-  static final CameraPosition _egertonntcc = CameraPosition(
+  static const CameraPosition _egertonntcc = CameraPosition(
     bearing: 90,
-    target: const LatLng(-0.28896128588051473, 36.05793424851361),
+    target: LatLng(-0.28896128588051473, 36.05793424851361),
     tilt: 45,
     zoom: 20.0,
   );
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       body: GoogleMap(
         mapType: MapType.normal,
         zoomGesturesEnabled: true,
         tiltGesturesEnabled: true,
         buildingsEnabled: true,
-        gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-          new Factory<OneSequenceGestureRecognizer>(
-            () => new EagerGestureRecognizer(),
+        gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+          Factory<OneSequenceGestureRecognizer>(
+            () => EagerGestureRecognizer(),
           ),
-        ].toSet(),
+        },
         initialCameraPosition: _initialCameraPosition,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
@@ -53,8 +55,8 @@ class MapSampleState extends State<LocationTab> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _gotoNTCC,
-        label: Text('NTCC'),
-        icon: Icon(Icons.school_outlined),
+        label: const Text('NTCC'),
+        icon: const Icon(Icons.school_outlined),
       ),
     );
   }

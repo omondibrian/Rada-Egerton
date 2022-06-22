@@ -7,6 +7,8 @@ import 'package:rada_egerton/resources/sizeConfig.dart';
 import '../widgets/RadaButton.dart';
 
 class Welcome extends StatelessWidget {
+  const Welcome({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);

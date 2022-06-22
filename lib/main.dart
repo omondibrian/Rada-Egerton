@@ -7,7 +7,6 @@ import 'package:rada_egerton/data/providers/chat.provider.dart';
 import 'package:rada_egerton/data/providers/counselling.provider.dart';
 import 'package:rada_egerton/data/providers/information.content.dart';
 import 'package:rada_egerton/presentation/features/chat/bloc/bloc.dart';
-import 'package:rada_egerton/resources/config.dart';
 
 import 'presentation/app/app.dart';
 

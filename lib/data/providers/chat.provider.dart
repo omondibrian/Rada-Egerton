@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/database/sqlite.dart';
-import 'package:rada_egerton/data/entities/ChatDto.dart';
+import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/CounsellorsDTO.dart';
 import 'package:rada_egerton/data/entities/StudentDTO.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
@@ -9,7 +9,7 @@ import 'package:rada_egerton/data/entities/userRoles.dart';
 import 'package:rada_egerton/data/services/counseling/main.dart';
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:pusher_client/pusher_client.dart';
-import 'package:rada_egerton/data/entities/ChatDto.dart' as chats;
+import 'package:rada_egerton/data/entities/chat_dto.dart' as chats;
 import 'package:rada_egerton/data/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
@@ -19,26 +19,25 @@ class ChatProvider with ChangeNotifier {
   late PusherClient _pusher;
   InfoMessage? info;
   List<chats.ChatPayload>? _privateMsgs;
-  List<Msg> _groupMsgs = [];
-  List<Msg> _forumMsgs = [];
-  String _channelName = "radaComms";
+  final List<Msg> _groupMsgs = [];
+  final List<Msg> _forumMsgs = [];
   UserRole userRole = UserRole([]);
-  List<StudentDto> _students = [];
-  CounselingServiceProvider _service = CounselingServiceProvider();
+  final List<StudentDto> _students = [];
+  final CounselingServiceProvider _service = CounselingServiceProvider();
   DBManager dbManager = DBManager.instance;
 
-  ChatProvider() {}
+  ChatProvider();
 
   List<Msg> get groupMessages {
-    return [...this._groupMsgs];
+    return [..._groupMsgs];
   }
 
   List<Msg> get forumMessages {
-    return [...this._forumMsgs];
+    return [..._forumMsgs];
   }
 
   List<StudentDto> get students {
-    return [...this._students];
+    return [..._students];
   }
 
   @override
@@ -64,9 +63,9 @@ class ChatProvider with ChangeNotifier {
   }
 
   ChatPayload finalChatPayload(ChatPayload chat) {
-    var role = this.userRole.isCounsellor
+    var role = userRole.isCounsellor
         ? "counsellor"
-        : this.userRole.isPeerCounsellor
+        : userRole.isPeerCounsellor
             ? 'peerCounsellor'
             : 'student';
 

@@ -54,12 +54,12 @@ class RadaApp extends StatelessWidget {
         GoRoute(
           path: AppRoutes.splash,
           name: AppRoutes.splash,
-          builder: (context, state) => SplashScreen(),
+          builder: (context, state) => const SplashScreen(),
         ),
         GoRoute(
           path: AppRoutes.welcome,
           name: AppRoutes.welcome,
-          builder: (context, state) => Welcome(),
+          builder: (context, state) => const Welcome(),
         ),
         GoRoute(
           path: AppRoutes.login,
@@ -87,22 +87,22 @@ class RadaApp extends StatelessWidget {
             GoRoute(
               path: AppRoutes.mentorship,
               name: AppRoutes.mentorship,
-              builder: (context, state) => Mentorship(),
+              builder: (context, state) => const Mentorship(),
             ),
             GoRoute(
               path: AppRoutes.help,
               name: AppRoutes.help,
-              builder: (context, state) => Help(),
+              builder: (context, state) => const Help(),
             ),
             GoRoute(
               path: AppRoutes.information,
               name: AppRoutes.information,
-              builder: (context, state) => Information(),
+              builder: (context, state) => const Information(),
             ),
             GoRoute(
               path: AppRoutes.forum,
               name: AppRoutes.forum,
-              builder: (context, _) => ForumPage(),
+              builder: (context, _) => const ForumPage(),
             ),
             GoRoute(
               path: AppRoutes.forumMessages,
@@ -133,17 +133,17 @@ class RadaApp extends StatelessWidget {
             GoRoute(
               path: AppRoutes.profile,
               name: AppRoutes.profile,
-              builder: (context, state) => ProfileScreen(),
+              builder: (context, state) => const ProfileScreen(),
             ),
             GoRoute(
               path: AppRoutes.contributors,
               name: AppRoutes.contributors,
-              builder: (context, state) => ContributorScreen(),
+              builder: (context, state) => const ContributorScreen(),
             ),
             GoRoute(
               path: AppRoutes.viewProfile,
               name: AppRoutes.viewProfile,
-              builder: (context, state) => ViewProfileScreen("1"),
+              builder: (context, state) => const ViewProfileScreen("1"),
             ),
           ],
         ),
@@ -171,7 +171,7 @@ class RadaApp extends StatelessWidget {
         primaryColor: Palette.primary,
         cardColor: Palette.backgroundColor,
         canvasColor: Colors.white,
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           headline1: TextStyle(
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
@@ -195,7 +195,7 @@ class RadaApp extends StatelessWidget {
           bodyText1: TextStyle(fontSize: 14.0, color: Palette.lightTextColor),
           bodyText2: TextStyle(fontSize: 14.0, color: Color(0xff9e9e9e)),
         ),
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           color: Palette.primary,
           iconTheme: IconThemeData(color: Colors.white),
         ),

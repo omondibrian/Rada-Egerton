@@ -25,8 +25,8 @@ class Dashboard extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: ListTile(
           contentPadding: SizeConfig.isTabletWidth
-              ? EdgeInsets.all(20)
-              : EdgeInsets.only(left: 10, top: 2.0, right: 2.0, bottom: 2.0),
+              ? const EdgeInsets.all(20)
+              : const EdgeInsets.only(left: 10, top: 2.0, right: 2.0, bottom: 2.0),
           leading: SvgPicture.asset(
             dashboardItems[index]['leadingIcon'],
             width: SizeConfig.isTabletWidth ? 90 : 60,
@@ -43,7 +43,7 @@ class Dashboard extends StatelessWidget {
           trailing: IconButton(
               iconSize: 30,
               color: Theme.of(ctx).primaryColor,
-              icon: Icon(Icons.arrow_forward_ios),
+              icon: const Icon(Icons.arrow_forward_ios),
               onPressed: () {
                 ctx.pushNamed(dashboardItems[index]['routeName']);
               }),
@@ -67,27 +67,27 @@ class Dashboard extends StatelessWidget {
                 context.pushNamed(AppRoutes.contributors);
               }
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.more_vert,
             ),
             itemBuilder: (_) => [
               PopupMenuItem(
-                child: Text('Logout'),
                 value: FilterOptions.LogOut,
                 onTap: () => context.read<AuthenticationProvider>().logout(),
+                child: const Text('Logout'),
               ),
-              PopupMenuItem(
-                child: Text('Profile'),
+              const PopupMenuItem(
                 value: FilterOptions.Profile,
+                child: Text('Profile'),
               ),
-              PopupMenuItem(
-                child: Text('Contributors'),
+              const PopupMenuItem(
                 value: FilterOptions.Contributors,
+                child: Text('Contributors'),
               ),
             ],
           ),
         ],
-        title: Text('Rada DashBoard'),
+        title: const Text('Rada DashBoard'),
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),

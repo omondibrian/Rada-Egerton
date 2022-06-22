@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
-import 'package:rada_egerton/data/providers/chat.provider.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 import 'RadaButton.dart';
@@ -16,12 +14,11 @@ Widget newGroupForm(
   File? imageFile;
   final grpNameController = TextEditingController();
   final descriptionController = TextEditingController();
-  final _chatProvide = Provider.of<ChatProvider>(context);
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void _handleSubmit(BuildContext context) async {
-    if (_formKey.currentState!.validate()) {
-      final _info = await radaApplicationProvider.createNewGroup(
+    if (formKey.currentState!.validate()) {
+      final info = await radaApplicationProvider.createNewGroup(
         grpNameController.text,
         descriptionController.text,
         imageFile,
@@ -29,8 +26,8 @@ Widget newGroupForm(
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            _info.message,
-            style: TextStyle(color: _info.messageTypeColor),
+            info.message,
+            style: TextStyle(color: info.messageTypeColor),
           ),
         ),
       );
@@ -50,11 +47,11 @@ Widget newGroupForm(
 
   return Wrap(children: [
     Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
           border: Border(top: BorderSide(color: Colors.grey.shade200))),
       child: Form(
-        key: _formKey,
+        key: formKey,
         child: Column(
           children: [
             Padding(
@@ -71,7 +68,7 @@ Widget newGroupForm(
               child: CircleAvatar(
                 backgroundColor: Colors.white,
                 child: IconButton(
-                  icon: Icon(Icons.camera_alt, color: Colors.black),
+                  icon: const Icon(Icons.camera_alt, color: Colors.black),
                   onPressed: _updateProfileImage,
                 ),
               ),
@@ -79,41 +76,41 @@ Widget newGroupForm(
             SizedBox(
               child: TextFormField(
                 textAlign: TextAlign.start,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                   hintText: "GroupName",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                     borderSide:
-                        const BorderSide(color: Color(0X55CED0D2), width: 0.0),
+                        BorderSide(color: Color(0X55CED0D2), width: 0.0),
                   ),
                 ),
                 controller: grpNameController,
                 validator: validator,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             TextFormField(
               textAlign: TextAlign.start,
               maxLines: 10,
               minLines: 4,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                 hintText: "Description ...",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                   borderSide:
-                      const BorderSide(color: Color(0X55CED0D2), width: 0.0),
+                      BorderSide(color: Color(0X55CED0D2), width: 0.0),
                 ),
               ),
               controller: descriptionController,
               validator: validator,
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Row(children: [

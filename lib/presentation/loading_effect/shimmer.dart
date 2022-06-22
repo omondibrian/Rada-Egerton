@@ -5,12 +5,12 @@ class Shimmer extends StatefulWidget {
     return context.findAncestorStateOfType<ShimmerState>();
   }
 
-  Shimmer({
+  const Shimmer({
     Key? key,
     this.child,
   }) : super(key: key);
 
-  final LinearGradient linearGradient = LinearGradient(
+  final LinearGradient linearGradient = const LinearGradient(
     colors: [
       Color(0xFFEBEBF4),
       Color(0xFFF4F4F4),

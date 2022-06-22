@@ -1,7 +1,5 @@
-import 'package:rada_egerton/data/providers/application_provider.dart';
-import 'package:rada_egerton/data/providers/chat.provider.dart';
 import 'package:rada_egerton/data/providers/counselling.provider.dart';
-import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/PeerCounselorsTab.dart';
+import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
 import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
 import 'package:rada_egerton/presentation/widgets/ratingBar.dart';
 import 'package:rada_egerton/resources/config.dart';
@@ -27,14 +25,14 @@ class CounsellorsTab extends StatelessWidget {
       return GestureDetector(
         onTap: () {
           if (counsellors![index].user.id == GlobalConfig.instance.user.id) {
-            return null;
+            return;
           }
           //TODO: route user
           // context.
         },
         child: Card(
           elevation: 0,
-          margin: EdgeInsets.only(bottom: 10),
+          margin: const EdgeInsets.only(bottom: 10),
           child: Row(
             children: [
               Column(
@@ -62,7 +60,7 @@ class CounsellorsTab extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -114,7 +112,7 @@ class CounsellorsTab extends StatelessWidget {
                 ),
               )
             : counsellors.isEmpty
-                ? Padding(
+                ? const Padding(
                     padding: EdgeInsets.all(8),
                     child: Text("No counsellors available"),
                   )

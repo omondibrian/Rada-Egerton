@@ -6,7 +6,7 @@ class RadaButton extends StatelessWidget {
   final String title;
   final void Function() handleClick;
   final bool fill;
-  RadaButton(
+  const RadaButton(
       {Key? key,
       required this.title,
       required this.handleClick,
@@ -18,8 +18,8 @@ class RadaButton extends StatelessWidget {
     return Container(
       width: SizeConfig.isTabletWidth ? 600 : 290.0,
       height: SizeConfig.isTabletWidth ? 50 : 40.0,
-      padding: EdgeInsets.all(0.0),
-      margin: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(0.0),
+      margin: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -36,10 +36,10 @@ class RadaButton extends StatelessWidget {
       child: TextButton(
         style: ButtonStyle(
           minimumSize: MaterialStateProperty.all<Size>(
-            Size(290.0, 50.0),
+            const Size(290.0, 50.0),
           ),
           textStyle: MaterialStateProperty.all<TextStyle>(
-            TextStyle(color: Colors.white),
+            const TextStyle(color: Colors.white),
           ),
           backgroundColor: fill
               ? MaterialStateProperty.all<Color>(Colors.transparent)
@@ -50,9 +50,9 @@ class RadaButton extends StatelessWidget {
             ),
           ),
         ),
-        onPressed: this.handleClick,
+        onPressed: handleClick,
         child: Text(
-          this.title,
+          title,
           style: fill
               ? TextStyle(
                   color: Colors.white,

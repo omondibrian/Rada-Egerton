@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class ContributorScreen extends StatelessWidget {
+  const ContributorScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        title: Text('Contributors'),
+        title: const Text('Contributors'),
         // impliment the revert button to prev screen
-        leading: IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
+        leading: IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
       ),
       body: Column(
         children: [
@@ -25,8 +27,8 @@ class ContributorScreen extends StatelessWidget {
           Expanded(
               child: ListView(
             children: ListTile.divideTiles(context: context, tiles: [
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+              const Padding(
+                padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
                 child: Expanded(
                   child: ListTile(
                     title: Text('Name: Brian'),
@@ -35,8 +37,8 @@ class ContributorScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+              const Padding(
+                padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
                 child: Expanded(
                   child: ListTile(
                     title: Text('Name: Moses'),
@@ -45,8 +47,8 @@ class ContributorScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+              const Padding(
+                padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
                 child: Expanded(
                   child: ListTile(
                     title: Text('Name: Jonathan'),
@@ -55,8 +57,8 @@ class ContributorScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+              const Padding(
+                padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
                 child: Expanded(
                   child: ListTile(
                     title: Text('Name: Onesmus'),
@@ -65,8 +67,8 @@ class ContributorScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
+              const Padding(
+                padding: EdgeInsets.only(top: 16.0),
                 child: Expanded(
                   child: ListTile(
                     title: Text('Name: Said'),

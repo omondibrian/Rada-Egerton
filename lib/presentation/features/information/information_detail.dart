@@ -5,7 +5,7 @@ import 'package:rada_egerton/resources/config.dart';
 
 class InformationDetail extends StatefulWidget {
   final InformationData informationData;
-  InformationDetail(this.informationData);
+   const InformationDetail(this.informationData, {Key?key}):super(key: key);
   @override
   _InformationDetailState createState() => _InformationDetailState();
 }
@@ -35,9 +35,9 @@ class _InformationDetailState extends State<InformationDetail> {
   }
 
   List<Widget> buildItems(List<InformationContent> contentItems) {
-    List<Widget> _widgets = [];
+    List<Widget> widgets = [];
     int i = 0;
-    late Widget _widget;
+    late Widget widget;
     while (i < contentItems.length) {
       if (contentItems[i].type == InformationContent.text) {
         List<InlineSpan> span = [];
@@ -55,13 +55,13 @@ class _InformationDetailState extends State<InformationDetail> {
                 contentItems[l + 1].attributes.list != null) {
               span.add(WidgetSpan(
                   child: Padding(
-                padding: EdgeInsets.only(left: 20),
+                padding: const EdgeInsets.only(left: 20),
                 child: Text("\u2022 ${contentItems[l].bodyContent}",
                     style: contentItems[l].getTextStyle),
               )));
             } else {
               span.add(TextSpan(
-                  text: "${contentItems[l].bodyContent}",
+                  text: contentItems[l].bodyContent,
                   style: contentItems[l].getTextStyle));
             }
             i += 1;
@@ -69,7 +69,7 @@ class _InformationDetailState extends State<InformationDetail> {
             break;
           }
         }
-        _widget = Card(
+        widget = Card(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: Text.rich(
@@ -77,20 +77,20 @@ class _InformationDetailState extends State<InformationDetail> {
             ),
           ),
         );
-        _widgets.add(_widget);
+        widgets.add(widget);
       } /**
          stop when an image is encountered
        */
       else if (contentItems[i].type == InformationContent.image) {
-        _widget = Card(
+        widget = Card(
             child: CachedNetworkImage(
           imageUrl: imageUrl(contentItems[i].bodyContent),
         ));
-        _widgets.add(_widget);
+        widgets.add(widget);
         i += 1;
       }
     }
 
-    return _widgets;
+    return widgets;
   }
 }

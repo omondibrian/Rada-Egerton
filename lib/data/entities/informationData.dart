@@ -20,7 +20,7 @@ class InformationData with Model {
 
   @override
   int get getId {
-    return this.id;
+    return id;
   }
 
   @override
@@ -41,11 +41,11 @@ class InformationData with Model {
   }
   Map<String, dynamic> toMap() {
     return {
-      "_id": this.id,
-      "content": jsonEncode(List<Map<String, dynamic>>.from(this.content.map(
+      "_id": id,
+      "content": jsonEncode(List<Map<String, dynamic>>.from(content.map(
             (item) => item.toMap(),
           ))),
-      "metadata": json.encode(this.metadata.toMap()),
+      "metadata": json.encode(metadata.toMap()),
     };
   }
 }
@@ -67,9 +67,9 @@ class InformationMetadata {
   }
   Map<String, dynamic> toMap() {
     return {
-      "category": this.category,
-      "title": this.title,
-      "thumbnail": this.thumbnail
+      "category": category,
+      "title": title,
+      "thumbnail": thumbnail
     };
   }
 }
@@ -98,40 +98,40 @@ class InformationContent {
     );
   }
   Map<String, dynamic> toMap() {
-    return {"insert": this.bodyContent, "attributes": this.attributes};
+    return {"insert": bodyContent, "attributes": attributes};
   }
 
   //generate text style from attributes based on available attributes such as bold,color
   //check out quill.js delta format documetation for more details
   TextStyle get getTextStyle {
     TextStyle style = TextStyle(fontSize: 14.0, color: Palette.lightTextColor);
-    if (this.attributes.bold != null) {
+    if (attributes.bold != null) {
       style = style.copyWith(fontWeight: FontWeight.bold);
     }
-    if (this.attributes.italic != null) {
+    if (attributes.italic != null) {
       style = style.copyWith(fontStyle: FontStyle.italic);
     }
-    if (this.attributes.color != null) {
-      style = style.copyWith(color: HexColor(this.attributes.color!));
+    if (attributes.color != null) {
+      style = style.copyWith(color: HexColor(attributes.color!));
     }
 
-    if (this.attributes.header == 1) {
+    if (attributes.header == 1) {
       style = style.copyWith(
         fontSize: 20.0,
         fontWeight: FontWeight.bold,
       );
     }
-    if (this.attributes.header == 2) {
+    if (attributes.header == 2) {
       style = style.copyWith(
         fontSize: 18.0,
         fontWeight: FontWeight.bold,
       );
     }
 
-    if (this.attributes.strike != null) {
+    if (attributes.strike != null) {
       style = style.copyWith(decoration: TextDecoration.lineThrough);
     }
-    if (this.attributes.underline != null) {
+    if (attributes.underline != null) {
       style = style.copyWith(decoration: TextDecoration.underline);
     }
 

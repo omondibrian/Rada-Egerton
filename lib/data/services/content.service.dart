@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:rada_egerton/data/entities/informationData.dart';
 import 'package:rada_egerton/resources/config.dart';
-import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 class ContentService {

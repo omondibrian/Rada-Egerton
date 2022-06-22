@@ -31,7 +31,7 @@ class ProfileHeader extends StatelessWidget {
         ),
         Ink(
           height: 200,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.black38,
           ),
         ),
@@ -57,7 +57,7 @@ class ProfileHeader extends StatelessWidget {
                 backgroundColor: Colors.white,
                 borderColor: Colors.grey.shade300,
                 borderWidth: 4.0,
-                canEdit:this.canEdit
+                canEdit:canEdit
               ),
               Text(
                 title,

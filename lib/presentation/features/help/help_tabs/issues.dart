@@ -9,11 +9,11 @@ class Issues extends StatefulWidget {
 }
 
 class _IssuesState extends State<Issues> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int? _selectedIssueCategory = 0;
-  TextEditingController _messageController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
   List<IssueCategory> _issueCategories = [];
-  IssueServiceProvider _issueService = new IssueServiceProvider();
+  final IssueServiceProvider _issueService = IssueServiceProvider();
   Future<void> init() async {
     final result = await _issueService.getIssueCategories();
     result.fold(
@@ -37,12 +37,12 @@ class _IssuesState extends State<Issues> {
           (l) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text("Issue created successfuly",
                     style: TextStyle(color: Theme.of(context).primaryColor)),
-                duration: Duration(seconds: 10),
+                duration: const Duration(seconds: 10),
               )),
           (r) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text("Issue created successfuly",
                     style: TextStyle(color: Theme.of(context).errorColor)),
-                duration: Duration(seconds: 10),
+                duration: const Duration(seconds: 10),
                 action: SnackBarAction(label: "retry", onPressed: createIssue),
               )));
     }
@@ -72,7 +72,7 @@ class _IssuesState extends State<Issues> {
         child: Column(
           children: [
             _dropDown(),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             TextFormField(
@@ -80,17 +80,17 @@ class _IssuesState extends State<Issues> {
               controller: _messageController,
               minLines: 10,
               validator: valid,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                     borderSide:
-                        const BorderSide(color: Color(0X55CED0D2), width: 0.0),
+                        BorderSide(color: Color(0X55CED0D2), width: 0.0),
                   ),
                   hintText: "Write your issue here"),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             RadaButton(
@@ -108,12 +108,12 @@ class _IssuesState extends State<Issues> {
     return FormField<String>(
       builder: (FormFieldState<String> state) {
         return InputDecorator(
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             contentPadding: EdgeInsets.all(10),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(5)),
               borderSide:
-                  const BorderSide(color: Color(0X55CED0D2), width: 0.0),
+                  BorderSide(color: Color(0X55CED0D2), width: 0.0),
             ),
             // hintText: 'Select issue category',
           ),
@@ -123,7 +123,7 @@ class _IssuesState extends State<Issues> {
               value: _selectedIssueCategory,
               isDense: true,
               items: [
-                DropdownMenuItem(
+                const DropdownMenuItem(
                   value: 0,
                   child: Text("Select issue category"),
                 ),

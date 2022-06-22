@@ -7,6 +7,7 @@ import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/providers/counselling.provider.dart';
 import 'package:rada_egerton/presentation/features/chat/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/features/user_account/view_profile.dart';
+import 'package:rada_egerton/presentation/widgets/add_members.dart';
 import 'package:rada_egerton/presentation/widgets/rating_dialog.dart';
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/theme.dart';
@@ -14,25 +15,24 @@ import 'package:rada_egerton/resources/sizeConfig.dart';
 
 import 'package:rada_egerton/resources/utils/main.dart';
 
-import 'AddMembers.dart';
 
 class CustomAppBar extends StatelessWidget {
-  CustomAppBar({
+  const CustomAppBar({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<RadaApplicationProvider>(context);
-    final _counselingProvider = Provider.of<CounsellorProvider>(context);
+    final counselingProvider = Provider.of<CounsellorProvider>(context);
     String recepientId = context.read<ChatBloc>().state.recepient.toString();
     void _leaveGroup() async {
-      InfoMessage _info = await provider.leaveGroup(recepientId);
+      InfoMessage info = await provider.leaveGroup(recepientId);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            _info.message,
-            style: TextStyle(color: _info.messageTypeColor),
+            info.message,
+            style: TextStyle(color: info.messageTypeColor),
           ),
         ),
       );
@@ -40,13 +40,13 @@ class CustomAppBar extends StatelessWidget {
     }
 
     void _delete() async {
-      InfoMessage _info =
-          await _counselingProvider.deleteGroupOrForum(recepientId);
+      InfoMessage info =
+          await counselingProvider.deleteGroupOrForum(recepientId);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            _info.message,
-            style: TextStyle(color: _info.messageTypeColor),
+            info.message,
+            style: TextStyle(color: info.messageTypeColor),
           ),
         ),
       );
@@ -62,7 +62,7 @@ class CustomAppBar extends StatelessWidget {
               onPressed: () {
                 context.pop();
               },
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
             ),
             CircleAvatar(
               child: ClipOval(
@@ -87,11 +87,11 @@ class CustomAppBar extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Expanded(
-              child: Container(
+              child: SizedBox(
                 height: 50,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,14 +112,14 @@ class CustomAppBar extends StatelessWidget {
               ),
             ),
             PopupMenuButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.more_vert,
               ),
               itemBuilder: (_) => [
                 if (provider.userRole.isCounsellor &&
                     state.chatType == ChatModes.GROUP)
                   PopupMenuItem(
-                    child: Text('Add Member'),
+                    child: const Text('Add Member'),
                     onTap: () {
                       showBottomSheet(
                           context: context,
@@ -141,7 +141,7 @@ class CustomAppBar extends StatelessWidget {
                         builder: (ctx) => ViewProfileScreen(recepientId),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'View Profile',
                     ),
                   ),
@@ -153,7 +153,7 @@ class CustomAppBar extends StatelessWidget {
                       context: context,
                       builder: (context) => ratingDialog(recepientId),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Rate',
                     ),
                   ),

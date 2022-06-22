@@ -54,7 +54,7 @@ class Login extends StatelessWidget {
                   fit: BoxFit.fill,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               Text(
@@ -81,7 +81,7 @@ class Login extends StatelessWidget {
                         width: SizeConfig.isTabletWidth ? 600 : 290.0,
                         child: PasswordField(passwordController),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       RadaButton(

@@ -47,7 +47,7 @@ class PeerCounsellorsTab extends StatelessWidget {
         onTap: _openChat,
         child: Card(
           elevation: 0,
-          margin: EdgeInsets.only(bottom: 10),
+          margin: const EdgeInsets.only(bottom: 10),
           child: Row(
             children: [
               Column(
@@ -74,7 +74,7 @@ class PeerCounsellorsTab extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -119,8 +119,8 @@ class PeerCounsellorsTab extends StatelessWidget {
               ),
             )
           : counsellors.isEmpty
-              ? Padding(
-                  padding: const EdgeInsets.all(8.0),
+              ? const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Text("No peer counsellors available"),
                 )
               : ListView.builder(
@@ -133,7 +133,7 @@ class PeerCounsellorsTab extends StatelessWidget {
 
 Widget placeHolderListTile(BuildContext context) => Card(
       elevation: 0,
-      margin: EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
           ShimmerLoading(
@@ -148,7 +148,7 @@ Widget placeHolderListTile(BuildContext context) => Card(
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 20,
           ),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -165,7 +165,7 @@ Widget placeHolderListTile(BuildContext context) => Card(
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Row(

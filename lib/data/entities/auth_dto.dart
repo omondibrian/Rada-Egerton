@@ -5,10 +5,10 @@ class AuthDTO {
   String _university = "";
 
   AuthDTO({email, password, userName, university}) {
-    this._email = email;
-    this._password = password;
-    this._userName = userName;
-    this._university = university;
+    _email = email;
+    _password = password;
+    _userName = userName;
+    _university = university;
   }
 
   ///
@@ -17,14 +17,14 @@ class AuthDTO {
 
   toJson() {
     return {
-      "email": this.getEmail(),
-      "password": this.getPassword(),
-      "university": this.getUniversity()
+      "email": getEmail(),
+      "password": getPassword(),
+      "university": getUniversity()
     };
   }
 
-  String getEmail() => this._email;
-  String getPassword() => this._password;
-  String getUsername() => this._userName;
-  String getUniversity() => this._university;
+  String getEmail() => _email;
+  String getPassword() => _password;
+  String getUsername() => _userName;
+  String getUniversity() => _university;
 }

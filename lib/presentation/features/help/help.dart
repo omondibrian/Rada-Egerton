@@ -6,6 +6,8 @@ import 'package:rada_egerton/resources/sizeConfig.dart';
 
 
 class Help extends StatelessWidget {
+  const Help({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final style = TextStyle(
@@ -17,8 +19,8 @@ class Help extends StatelessWidget {
       child: NestedScrollView(
         headerSliverBuilder: (BuildContext ctx, bool isScrolled) {
           return <Widget>[
-            new SliverAppBar(
-              title: Text('Location and Contact'),
+            SliverAppBar(
+              title: const Text('Location and Contact'),
               pinned: true,
               floating: true,
               bottom: TabBar(
@@ -34,7 +36,7 @@ class Help extends StatelessWidget {
         },
         body: TabBarView(
           children: [
-            LocationTab(),
+            const LocationTab(),
             ContactTab(),
             Issues(),
           ],

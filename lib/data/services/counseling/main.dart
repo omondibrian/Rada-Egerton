@@ -6,7 +6,7 @@ import 'package:dartz/dartz.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
-import 'package:rada_egerton/data/entities/ChatDto.dart';
+import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/GroupDTO.dart';
 import 'package:rada_egerton/data/entities/GroupsDTO.dart';
 import 'package:rada_egerton/data/entities/StudentDTO.dart';
@@ -15,15 +15,15 @@ import 'package:rada_egerton/data/entities/CounsellorsDTO.dart';
 import 'package:rada_egerton/data/entities/PeerCounsellorDTO.dart';
 
 class CounselingServiceProvider {
-  String _hostUrl = GlobalConfig.baseUrl;
-  Dio _httpClientConn = httpClient;
+  final String _hostUrl = GlobalConfig.baseUrl;
+  final Dio _httpClientConn = httpClient;
 
   ///fetch a  list of  counsellors with their details
   Future<Either<List<Counsellor>, ErrorMessage>> fetchCounsellors() async {
     String token = await ServiceUtility.getAuthToken() as String;
     try {
-      final result = await this._httpClientConn.get(
-            "${this._hostUrl}/api/v1/admin/user/counsellors",
+      final result = await _httpClientConn.get(
+            "$_hostUrl/api/v1/admin/user/counsellors",
             options: Options(headers: {
               'Authorization': token,
             }, sendTimeout: 10000),
@@ -32,7 +32,7 @@ class CounselingServiceProvider {
       return Left(
         List<Counsellor>.from(
           payload.map(
-            (_counsellor) => Counsellor.fromJson(_counsellor),
+            (counsellor) => Counsellor.fromJson(counsellor),
           ),
         ),
       );
@@ -48,8 +48,8 @@ class CounselingServiceProvider {
     dynamic payload;
     try {
       String token = await ServiceUtility.getAuthToken() as String;
-      final result = await this._httpClientConn.get(
-            "${this._hostUrl}/api/v1/admin/user/counsellor/$id",
+      final result = await _httpClientConn.get(
+            "$_hostUrl/api/v1/admin/user/counsellor/$id",
             options: Options(headers: {
               'Authorization': token,
             }, sendTimeout: 10000),
@@ -70,8 +70,8 @@ class CounselingServiceProvider {
     List<PeerCounsellorDto> peerCounsellors = [];
     try {
       String token = await ServiceUtility.getAuthToken() as String;
-      final result = await this._httpClientConn.get(
-            "${this._hostUrl}/api/v1/admin/user/peercounsellors",
+      final result = await _httpClientConn.get(
+            "$_hostUrl/api/v1/admin/user/peercounsellors",
             options: Options(headers: {
               'Authorization': token,
             }, sendTimeout: 10000),
@@ -95,8 +95,8 @@ class CounselingServiceProvider {
       String studentId) async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
-      final result = await this._httpClientConn.get(
-            "${this._hostUrl}/api/v1/admin/user/studentprofile/$studentId",
+      final result = await _httpClientConn.get(
+            "$_hostUrl/api/v1/admin/user/studentprofile/$studentId",
             options: Options(headers: {
               'Authorization': token,
             }, sendTimeout: 10000),
@@ -106,14 +106,15 @@ class CounselingServiceProvider {
     } on DioError catch (e) {
       Right(ServiceUtility.handleDioExceptions(e));
     }
+    return null;
   }
 
   ///fetch student forums
   Future<Either<GroupsDto, ErrorMessage>?> fetchStudentForums() async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
-      final result = await this._httpClientConn.get(
-            "${this._hostUrl}/rada/api/v1/counseling/forums",
+      final result = await _httpClientConn.get(
+            "$_hostUrl/rada/api/v1/counseling/forums",
             options: Options(headers: {
               'Authorization': token,
             }, sendTimeout: 10000),
@@ -131,8 +132,8 @@ class CounselingServiceProvider {
   Future<Either<GroupsDto, ErrorMessage>?> fetchStudentGroups() async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
-      final result = await this._httpClientConn.get(
-            "${this._hostUrl}/rada/api/v1/counseling/grps",
+      final result = await _httpClientConn.get(
+            "$_hostUrl/rada/api/v1/counseling/grps",
             options: Options(headers: {
               'Authorization': token,
             }, sendTimeout: 10000),
@@ -150,8 +151,8 @@ class CounselingServiceProvider {
       String userId, String groupId) async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
-      final result = await this._httpClientConn.get(
-            "${this._hostUrl}/rada/api/v1/counseling/subscribe/$userId/$groupId",
+      final result = await _httpClientConn.get(
+            "$_hostUrl/rada/api/v1/counseling/subscribe/$userId/$groupId",
             options: Options(headers: {
               'Authorization': token,
             }, sendTimeout: 10000),
@@ -172,8 +173,8 @@ class CounselingServiceProvider {
   Future<Either<UserChatDto, ErrorMessage>?> fetchUserMsgs() async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
-      final result = await this._httpClientConn.get(
-            "${this._hostUrl}/rada/api/v1/counseling",
+      final result = await _httpClientConn.get(
+            "$_hostUrl/rada/api/v1/counseling",
             options: Options(headers: {
               'Authorization': token,
             }, sendTimeout: 10000),
@@ -202,8 +203,8 @@ class CounselingServiceProvider {
           "description": desc,
         },
       );
-      final result = await this._httpClientConn.post(
-            "${this._hostUrl}/rada/api/v1/counseling",
+      final result = await _httpClientConn.post(
+            "$_hostUrl/rada/api/v1/counseling",
             data: formData,
             options: Options(headers: {
               'Authorization': token,
@@ -224,8 +225,8 @@ class CounselingServiceProvider {
   Future<Either<GroupDTO, ErrorMessage>?> exitGroup(String groupId) async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
-      final result = await this._httpClientConn.put(
-            "${this._hostUrl}/rada/api/v1/counseling/$groupId",
+      final result = await _httpClientConn.put(
+            "$_hostUrl/rada/api/v1/counseling/$groupId",
             options: Options(headers: {
               'Authorization': token,
             }, sendTimeout: 10000),
@@ -247,8 +248,8 @@ class CounselingServiceProvider {
   Future<Either<User, ErrorMessage>?> queryUserData(String queryString) async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
-      final result = await this._httpClientConn.get(
-            "${this._hostUrl}/api/v1/admin/user/queryUserInfo/$queryString",
+      final result = await _httpClientConn.get(
+            "$_hostUrl/api/v1/admin/user/queryUserInfo/$queryString",
             options: Options(headers: {
               'Authorization': token,
             }, sendTimeout: 10000),
@@ -265,8 +266,8 @@ class CounselingServiceProvider {
   Future<Either<GroupDTO, ErrorMessage>> deleteGroup(String groupId) async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
-      final result = await this._httpClientConn.delete(
-            "${this._hostUrl}/rada/api/v1/counseling/$groupId",
+      final result = await _httpClientConn.delete(
+            "$_hostUrl/rada/api/v1/counseling/$groupId",
             options: Options(headers: {
               'Authorization': token,
             }, sendTimeout: 10000),

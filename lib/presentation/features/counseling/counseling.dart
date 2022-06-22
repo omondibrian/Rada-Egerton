@@ -1,7 +1,7 @@
-import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/CounselorsTab.dart';
-import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/GroupSessionsTab.dart';
-import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/PeerCounselorsTab.dart';
-import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/PrivateSessions.dart';
+import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/counselors_tab.dart';
+import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/group_sessions_tab.dart';
+import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
+import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/private_sessions.dart';
 import 'package:rada_egerton/resources/sizeConfig.dart';
 
 import 'package:flutter/material.dart';
@@ -19,8 +19,8 @@ class Counseling extends StatelessWidget {
       child: NestedScrollView(
         headerSliverBuilder: (BuildContext ctx, bool isScrolled) {
           return <Widget>[
-            new SliverAppBar(
-              title: Text('Rada Counseling'),
+            SliverAppBar(
+              title: const Text('Rada Counseling'),
               pinned: true,
               floating: true,
               bottom: TabBar(
@@ -38,9 +38,9 @@ class Counseling extends StatelessWidget {
         },
         body: TabBarView(
           children: <Widget>[
-            CounsellorsTab(),
-            PeerCounsellorsTab(),
-            PrivateSessionsTab(),
+            const CounsellorsTab(),
+            const PeerCounsellorsTab(),
+            const PrivateSessionsTab(),
             GroupSessionsTab(),
           ],
         ),

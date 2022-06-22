@@ -52,12 +52,12 @@ class _UserNotificationState extends State<UserNotification> {
         displacement: 20.0,
         edgeOffset: 5.0,
         child: _news == null
-            ? Center(
+            ? const Center(
                 child: CircularProgressIndicator(),
               )
             : _news!.isEmpty
-                ? Padding(
-                    padding: const EdgeInsets.all(8.0),
+                ? const Padding(
+                    padding: EdgeInsets.all(8.0),
                     child: Text("No notification available"),
                   )
                 : ListView(
@@ -71,7 +71,7 @@ class _UserNotificationState extends State<UserNotification> {
   Widget notificationCard(News notification) {
     return Card(
       clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -88,7 +88,7 @@ class _UserNotificationState extends State<UserNotification> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                           image: imageProvider, fit: BoxFit.cover),
-                      borderRadius: BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(5),
                       ),
                     ),
@@ -96,7 +96,7 @@ class _UserNotificationState extends State<UserNotification> {
                     width: 50,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 20,
                 ),
                 Column(

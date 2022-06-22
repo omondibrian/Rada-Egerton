@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rada_egerton/data/entities/ChatDto.dart';
+import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/presentation/features/chat/bloc/bloc.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/theme.dart';
@@ -16,7 +16,7 @@ class ChatView extends StatelessWidget {
     // List userChats =
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
               'assets/background_pattern.png',
@@ -27,7 +27,7 @@ class ChatView extends StatelessWidget {
         child: Stack(
           children: [
             Container(
-              padding: EdgeInsets.only(top: 10.0, bottom: 50),
+              padding: const EdgeInsets.only(top: 10.0, bottom: 50),
               child: ListView.builder(
                 itemCount: chats.length,
                 itemBuilder: (BuildContext ctx, index) => BuildChatItem(
@@ -58,8 +58,8 @@ class _SelectedChat extends StatelessWidget {
       builder: (context, state) {
         if (state.selectedChat != null)
           Container(
-            margin: EdgeInsets.only(left: 3),
-            decoration: BoxDecoration(
+            margin: const EdgeInsets.only(left: 3),
+            decoration: const BoxDecoration(
               border: Border(
                 left: BorderSide(width: 5.0, color: Palette.accent),
               ),
@@ -68,7 +68,7 @@ class _SelectedChat extends StatelessWidget {
             // margin: EdgeInsets.only(bottom: 2),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.reply,
                 ),
                 Expanded(child: Text(state.selectedChat!.message)),
@@ -76,7 +76,7 @@ class _SelectedChat extends StatelessWidget {
                   onPressed: () => context.read<ChatBloc>().add(
                         ChatUnselected(),
                       ),
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                 )
               ],
             ),
@@ -98,7 +98,7 @@ class _ChatInput extends StatelessWidget {
           previous.selectedChat != current.selectedChat,
       builder: (context, state) {
         return Padding(
-          padding: EdgeInsets.only(left: 8, bottom: 3, right: 8, top: 2),
+          padding: const EdgeInsets.only(left: 8, bottom: 3, right: 8, top: 2),
           child: Row(
             children: <Widget>[
               Expanded(
@@ -111,7 +111,7 @@ class _ChatInput extends StatelessWidget {
                         _SelectedChat(),
                         Row(
                           children: <Widget>[
-                            SizedBox(width: 8.0),
+                            const SizedBox(width: 8.0),
                             // Icon(Icons.insert_emoticon,
                             //     size: 30.0, color: Theme.of(context).hintColor),
                             // SizedBox(width: 8.0),
@@ -119,16 +119,16 @@ class _ChatInput extends StatelessWidget {
                               child: TextField(
                                 maxLines: 10,
                                 minLines: 1,
-                                controller: this._chatController,
-                                focusNode: this.inputNode,
+                                controller: _chatController,
+                                focusNode: inputNode,
                                 textAlign: TextAlign.center,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   hintText: 'Type a message',
                                   border: InputBorder.none,
                                 ),
                               ),
                             ),
-                            SizedBox(width: 8.0),
+                            const SizedBox(width: 8.0),
                           ],
                         ),
                       ],
@@ -136,7 +136,7 @@ class _ChatInput extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 5.0,
               ),
               GestureDetector(
@@ -149,7 +149,7 @@ class _ChatInput extends StatelessWidget {
                           ),
                           state.chatType!),
                     ),
-                child: CircleAvatar(
+                child: const CircleAvatar(
                   backgroundColor: Palette.accent,
                   child: Icon(
                     Icons.send,

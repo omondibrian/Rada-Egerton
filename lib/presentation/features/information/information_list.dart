@@ -9,9 +9,11 @@ import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/sizeConfig.dart';
 
 class Information extends StatelessWidget {
+  const Information({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<InformationProvider>(context);
+    final provider = Provider.of<InformationProvider>(context);
     return Scaffold(
       appBar: AppBar(
           title: Text('Rada Information',
@@ -21,13 +23,13 @@ class Information extends StatelessWidget {
                   ?.copyWith(color: Colors.white))),
       body: Container(
         // margin: EdgeInsets.symmetric(vertical: 30),
-        child: _provider.informationCategory == null ||
-                _provider.informationData == null
+        child: provider.informationCategory == null ||
+                provider.informationData == null
             ? InformationListPlaceholder()
             : ListView.builder(
                 itemBuilder: (context, index) =>
-                    _contentListRow(context, _provider, index),
-                itemCount: _provider.informationCategory!.length,
+                    _contentListRow(context, provider, index),
+                itemCount: provider.informationCategory!.length,
               ),
       ),
 

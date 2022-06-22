@@ -6,7 +6,7 @@ import 'package:rada_egerton/data/services/auth/auth_service.dart';
 
 class ViewProfileScreen extends StatefulWidget {
   final String userId;
-  ViewProfileScreen(this.userId);
+  const ViewProfileScreen(this.userId,{Key? key}):super(key: key);
   @override
   _ViewProfileScreenState createState() => _ViewProfileScreenState();
 }
@@ -42,15 +42,15 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                 children: <Widget>[
                   ProfileHeader(
                     avatarUrl: imageUrl(_user!.profilePic),
-                    coverImage: AssetImage('assets/android-icon-192x192.png'),
-                    title: "${_user!.name}",
+                    coverImage: const AssetImage('assets/android-icon-192x192.png'),
+                    title: _user!.name,
                     canEdit: false,
                   ),
                   const SizedBox(height: 10.0),
                   // UserInfo(),
 
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Column(
                       children: <Widget>[
                         Container(
@@ -58,7 +58,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                             left: 8.0,
                           ),
                           alignment: Alignment.topLeft,
-                          child: Text(
+                          child: const Text(
                             "Profile Information",
                             style: TextStyle(
                               color: Colors.black87,
@@ -71,7 +71,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                         Card(
                           child: Container(
                             alignment: Alignment.topLeft,
-                            padding: EdgeInsets.all(15),
+                            padding: const EdgeInsets.all(15),
                             child: Column(
                               children: <Widget>[
                                 TextFormField(
@@ -84,23 +84,23 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                   initialValue: _user!.phone,
                                 ),
                                 ListTile(
-                                  leading: Icon(Icons.account_box_outlined),
-                                  title: Text("Account status"),
+                                  leading: const Icon(Icons.account_box_outlined),
+                                  title: const Text("Account status"),
                                   subtitle: Text("${_user!.accountStatus}"),
                                 ),
                                 ListTile(
-                                  leading: Icon(Icons.email_outlined),
-                                  title: Text("Email"),
-                                  subtitle: Text("${_user!.email}"),
+                                  leading: const Icon(Icons.email_outlined),
+                                  title: const Text("Email"),
+                                  subtitle: Text(_user!.email),
                                 ),
                                 ListTile(
-                                  leading: Icon(Icons.calendar_today),
-                                  title: Text("Date of Birth"),
+                                  leading: const Icon(Icons.calendar_today),
+                                  title: const Text("Date of Birth"),
                                   subtitle: Text("${_user!.dob}"),
                                 ),
                                 ListTile(
-                                  leading: Icon(Icons.person),
-                                  title: Text("Gender"),
+                                  leading: const Icon(Icons.person),
+                                  title: const Text("Gender"),
                                   subtitle: Text("${_user!.gender}"),
                                 ),
                               ],

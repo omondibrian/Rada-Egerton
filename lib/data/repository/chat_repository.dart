@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:rada_egerton/data/entities/ChatDto.dart';
+import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 class ChatRepository {
@@ -12,7 +12,7 @@ class ChatRepository {
     }
     try {
       //TODO get chats
-      return Left(
+      return const Left(
         Chats(),
       );
     } on DioError catch (e) {

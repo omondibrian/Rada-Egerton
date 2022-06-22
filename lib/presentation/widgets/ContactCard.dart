@@ -5,7 +5,7 @@ class ContactCard extends StatelessWidget {
   final String phoneNumber;
   final String email;
   final String location;
-  ContactCard(
+  const ContactCard(
       {Key? key,
       required this.title,
       required this.phoneNumber,
@@ -16,7 +16,7 @@ class ContactCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8.0),
       clipBehavior: Clip.antiAlias,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -26,52 +26,52 @@ class ContactCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(this.title, style: Theme.of(context).textTheme.subtitle1),
+                Text(title, style: Theme.of(context).textTheme.subtitle1),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 20,
                 ),
                 Icon(
                   Icons.phone,
                   color: Theme.of(context).primaryColorLight,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
-                Text(this.phoneNumber,
+                Text(phoneNumber,
                     style: Theme.of(context).textTheme.subtitle2)
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Icon(
                   Icons.email,
                   color: Theme.of(context).primaryColorLight,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
-                Text(this.email, style: Theme.of(context).textTheme.subtitle2),
+                Text(email, style: Theme.of(context).textTheme.subtitle2),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Icon(
                   Icons.location_on,
                   color: Theme.of(context).primaryColorLight,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
-                Text(this.location,
+                Text(location,
                     style: Theme.of(context).textTheme.subtitle2),
               ],
             ),

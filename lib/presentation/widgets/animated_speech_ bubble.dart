@@ -181,7 +181,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
         color: Palette.sendMessage,
       ),

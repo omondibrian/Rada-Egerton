@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pusher_client/pusher_client.dart';
-import 'package:rada_egerton/data/entities/ChatDto.dart';
+import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart' as chat;
@@ -15,9 +15,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatRepository chatRepo = ChatRepository();
   late Channel channel;
   late PusherClient _pusher;
-  String _channelName = "radaComms";
+  final String _channelName = "radaComms";
 
-  ChatBloc() : super(ChatState()) {
+  ChatBloc() : super(const ChatState()) {
     on<ChatStarted>((event, emit) => chatRepo.getChats().then((value) => null));
     on<ChatSelected>(
       (event, emit) => emit(
@@ -40,7 +40,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       appKey: GlobalConfig.instance.pusherApiKey,
       token: GlobalConfig.instance.authToken,
     ).getConnection();
-    this.channel = _pusher.subscribe(
+    channel = _pusher.subscribe(
       "$_channelName${GlobalConfig.instance.user.id}",
     );
 

@@ -26,31 +26,31 @@ class CounsellorProvider with ChangeNotifier {
   }
 
   List<Counsellor>? get counsellors {
-    if (this._counsellors == null) {
+    if (_counsellors == null) {
       getCounsellors();
     }
-    return this._counsellors;
+    return _counsellors;
   }
 
   GroupsDto? get forums {
-    return this._forums;
+    return _forums;
   }
 
   Counsellor? counsellorById(int userId) {
     Counsellor? result;
-    for (var i = 0; i < this._counsellors!.length; i++) {
-      if (this._counsellors![i].user.id == userId) {
-        result = this._counsellors![i];
+    for (var i = 0; i < _counsellors!.length; i++) {
+      if (_counsellors![i].user.id == userId) {
+        result = _counsellors![i];
       }
     }
     return result;
   }
 
   List<PeerCounsellorDto>? get peerCounsellors {
-    if (this._peerCounsellors == null) {
+    if (_peerCounsellors == null) {
       getPeerCounsellors();
     }
-    return this._peerCounsellors;
+    return _peerCounsellors;
   }
 
   Future<Either<StudentDto, InfoMessage>> getStudentBio(String id) async {
@@ -58,34 +58,34 @@ class CounsellorProvider with ChangeNotifier {
     var student = await _service.fetchStudentData(id);
     student!.fold(
       (student) => result = student,
-      (error) => throw new InfoMessage(error.message, InfoMessage.error),
+      (error) => throw InfoMessage(error.message, InfoMessage.error),
     );
 
     return result;
   }
 
   Future<InfoMessage>? getForums() async {
-    late InfoMessage _info;
+    late InfoMessage info;
     var results = await _service.fetchStudentForums();
     results!.fold((forums) {
-      this._forums = forums;
-      _info = InfoMessage("Fetching forums  successfull", InfoMessage.success);
-    }, (error) => {_info = InfoMessage(error.message, InfoMessage.error)});
-    this.isForumLoading = false;
+      _forums = forums;
+      info = InfoMessage("Fetching forums  successfull", InfoMessage.success);
+    }, (error) => {info = InfoMessage(error.message, InfoMessage.error)});
+    isForumLoading = false;
     notifyListeners();
-    return _info;
+    return info;
   }
 
   Future<InfoMessage> deleteGroupOrForum(String id) async {
-    late InfoMessage _info;
+    late InfoMessage info;
     var results = await _service.deleteGroup(id);
-    results.fold((_group) {
+    results.fold((group) {
       //TODO: update state after deleting a group
       InfoMessage("Deleted successfuly", InfoMessage.success);
-    }, (error) => {_info = InfoMessage(error.message, InfoMessage.error)});
-    this.isForumLoading = false;
+    }, (error) => {info = InfoMessage(error.message, InfoMessage.error)});
+    isForumLoading = false;
     notifyListeners();
-    return _info;
+    return info;
   }
 
   Future<InfoMessage?> getCounsellors() async {
@@ -93,9 +93,9 @@ class CounsellorProvider with ChangeNotifier {
     await _service.fetchCounsellors().then((res) {
       res.fold((counsellors) async {
         //update counsellors with data from the server
-        this._counsellors = counsellors;
+        _counsellors = counsellors;
         //update the database - store user and counselloe
-        for (int i = 0; i < this._counsellors!.length; ++i) {
+        for (int i = 0; i < _counsellors!.length; ++i) {
           dbManager.insertItem(counsellors[i].user);
           dbManager.insertItem(counsellors[i]);
         }
@@ -114,9 +114,9 @@ class CounsellorProvider with ChangeNotifier {
       res.fold((peercounsellors) {
         //update peer counsellors with data from the server
 
-        this._peerCounsellors = peercounsellors;
+        _peerCounsellors = peercounsellors;
         //update the database
-        for (int i = 0; i < this._counsellors!.length; ++i) {
+        for (int i = 0; i < _counsellors!.length; ++i) {
           dbManager.insertItem(peercounsellors[i].user);
           dbManager.insertItem(peercounsellors[i]);
         }
@@ -132,13 +132,13 @@ class CounsellorProvider with ChangeNotifier {
 
   User? getUser(String userType, int userId, List<StudentDto> students) {
     if (userType == 'counsellor') {
-      final res = this.counsellorById(userId);
+      final res = counsellorById(userId);
       return res?.user;
     }
     if (userType == 'peerCounsellor') {
-      for (var i = 0; i < this.peerCounsellors!.length; i++) {
-        if (this.peerCounsellors![i].user.id == userId) {
-          return this.peerCounsellors![i].user;
+      for (var i = 0; i < peerCounsellors!.length; i++) {
+        if (peerCounsellors![i].user.id == userId) {
+          return peerCounsellors![i].user;
         }
       }
     } else {
@@ -148,5 +148,6 @@ class CounsellorProvider with ChangeNotifier {
         }
       }
     }
+    return null;
   }
 }

@@ -9,7 +9,6 @@ class Rating extends StatefulWidget {
 }
 
 class _RatingState extends State<Rating> {
-  final _ratingController = TextEditingController();
 
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
@@ -21,35 +20,28 @@ class _RatingState extends State<Rating> {
   final double _currentRating = 0.0;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Card(
-        elevation: 8,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ratingBar(rating: this._currentRating),
-              ],
-            ),
-            Row(
-              children: [
-                // DefaultInput(
-                //   controller: this._ratingController,
-                //   hintText: 'Ratings',
-                //   icon: Icons.star_border,
-                //   validator: validator,
-                // ),
-              ],
-            ),
-            Row(
-              
-              children: [
-                // RadaButton(title: 'submit', handleClick: () {}, fill: true),
-              ],
-            )
-          ],
-        ),
+    return Card(
+      elevation: 8,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ratingBar(rating: _currentRating),
+            ],
+          ),
+          Row(
+            children: const [
+           
+            ],
+          ),
+          Row(
+            
+            children: const [
+              // RadaButton(title: 'submit', handleClick: () {}, fill: true),
+            ],
+          )
+        ],
       ),
     );
   }

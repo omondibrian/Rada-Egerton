@@ -1,11 +1,9 @@
 import 'package:go_router/go_router.dart';
-import 'package:rada_egerton/data/entities/ChatDto.dart';
+import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
-import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/providers/chat.provider.dart';
-import 'package:rada_egerton/data/providers/counselling.provider.dart';
 import 'package:rada_egerton/presentation/features/chat/bloc/bloc.dart';
-import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/PeerCounselorsTab.dart';
+import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
 import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
@@ -16,13 +14,11 @@ import 'package:rada_egerton/resources/sizeConfig.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class PrivateSessionsTab extends StatelessWidget {
-  PrivateSessionsTab({Key? key}) : super(key: key);
+  const PrivateSessionsTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final counsellorprovider = Provider.of<CounsellorProvider>(context);
     final chatsprovider = Provider.of<ChatProvider>(context);
-    final appProvider = Provider.of<RadaApplicationProvider>(context);
     List<ChatPayload> _conversations = [];
 
     final style = TextStyle(
@@ -36,7 +32,7 @@ class PrivateSessionsTab extends StatelessWidget {
       User? user;
 
       void _openChat() {
-        if (GlobalConfig.instance.user.id == recipientId) return;
+        if (GlobalConfig.instance.user.id.toString() == recipientId) return;
         context.pushNamed(
           AppRoutes.peerChat,
           queryParams: {"id": recipientId},

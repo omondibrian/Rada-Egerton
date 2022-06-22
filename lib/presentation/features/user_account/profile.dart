@@ -9,6 +9,8 @@ import 'package:form_field_validator/form_field_validator.dart';
 
 // ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -68,8 +70,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   GlobalKey<FormState> profileForm = GlobalKey<FormState>();
-  TextEditingController _lastNameController = TextEditingController();
-  TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
   FocusNode userNameFocus = FocusNode();
   @override
   void dispose() {
@@ -100,12 +102,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: <Widget>[
                   ProfileHeader(
                     avatarUrl: imageUrl(_user!.profilePic),
-                    coverImage: AssetImage('assets/android-icon-192x192.png'),
-                    title: "${_user!.name}",
+                    coverImage: const AssetImage('assets/android-icon-192x192.png'),
+                    title: _user!.name,
                     actions: <Widget>[
                       MaterialButton(
                         color: Colors.white,
-                        shape: CircleBorder(side: BorderSide.none),
+                        shape: const CircleBorder(side: BorderSide.none),
                         elevation: 0,
                         child: Icon(
                           Icons.edit,
@@ -126,7 +128,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 10.0),
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Column(
                       children: <Widget>[
                         Container(
@@ -134,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             left: 8.0,
                           ),
                           alignment: Alignment.topLeft,
-                          child: Text(
+                          child: const Text(
                             "Profile Information",
                             style: TextStyle(
                               color: Colors.black87,
@@ -147,13 +149,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Card(
                           child: Container(
                             alignment: Alignment.topLeft,
-                            padding: EdgeInsets.all(15),
+                            padding: const EdgeInsets.all(15),
                             child: Form(
                               key: profileForm,
                               child: Column(
                                 children: <Widget>[
                                   TextFormField(
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       hintText: "Enter userName",
                                     ),
                                     enabled: isEditing,
@@ -164,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         errorText: "Required"),
                                   ),
                                   TextFormField(
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       hintText: "Enter phone number",
                                     ),
                                     enabled: isEditing,
@@ -173,45 +175,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         errorText: "Required"),
                                   ),
                                   ListTile(
-                                    leading: Icon(Icons.account_box_outlined),
-                                    title: Text("Account status"),
+                                    leading: const Icon(Icons.account_box_outlined),
+                                    title: const Text("Account status"),
                                     subtitle: Text("${_user!.accountStatus}"),
                                   ),
                                   ListTile(
-                                    leading: Icon(Icons.email_outlined),
-                                    title: Text("Email"),
-                                    subtitle: Text("${_user!.email}"),
+                                    leading: const Icon(Icons.email_outlined),
+                                    title: const Text("Email"),
+                                    subtitle: Text(_user!.email),
                                   ),
                                   ListTile(
-                                    leading: Icon(Icons.calendar_today),
-                                    title: Text("Date of Birth"),
+                                    leading: const Icon(Icons.calendar_today),
+                                    title: const Text("Date of Birth"),
                                     subtitle: Text("${_user!.dob}"),
                                   ),
                                   ListTile(
-                                    leading: Icon(Icons.person),
-                                    title: Text("Gender"),
+                                    leading: const Icon(Icons.person),
+                                    title: const Text("Gender"),
                                     subtitle: Text("${_user!.gender}"),
                                   ),
                                   if (isEditing)
-                                    Container(
-                                        child: Row(
+                                    Row(
                                       children: [
-                                        Expanded(
-                                            child: RadaButton(
-                                          fill: true,
-                                          handleClick: _updateUserProfile,
-                                          title: "Save",
-                                        )),
-                                        Expanded(
-                                            child: RadaButton(
-                                          fill: false,
-                                          handleClick: () => setState(() {
-                                            isEditing = false;
-                                          }),
-                                          title: "Cancel",
-                                        ))
-                                      ],
+                                    Expanded(
+                                        child: RadaButton(
+                                      fill: true,
+                                      handleClick: _updateUserProfile,
+                                      title: "Save",
                                     )),
+                                    Expanded(
+                                        child: RadaButton(
+                                      fill: false,
+                                      handleClick: () => setState(() {
+                                        isEditing = false;
+                                      }),
+                                      title: "Cancel",
+                                    ))
+                                      ],
+                                    ),
                                 ],
                               ),
                             ),

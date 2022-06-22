@@ -36,7 +36,7 @@ class _ContactTabState extends State<ContactTab> {
 
   Widget contactCard(Contact contact) {
     return Card(
-      margin: EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8.0),
       clipBehavior: Clip.antiAlias,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -53,14 +53,14 @@ class _ContactTabState extends State<ContactTab> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 20,
                 ),
                 Icon(
                   Icons.phone,
                   color: Theme.of(context).primaryColorLight,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Text(contact.phone,
@@ -70,12 +70,12 @@ class _ContactTabState extends State<ContactTab> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Icon(
                   Icons.email,
                   color: Theme.of(context).primaryColorLight,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Text(contact.email,

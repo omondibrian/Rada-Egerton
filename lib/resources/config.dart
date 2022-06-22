@@ -27,6 +27,7 @@ Dio httpClient = Dio(
   ),
 );
 
+
 String imageUrl(String path) {
   if (path.startsWith("/")) {
     return "${GlobalConfig.baseUrl}/api/v1/uploads$path";
