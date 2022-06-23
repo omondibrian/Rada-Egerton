@@ -53,7 +53,12 @@ class ContentService {
       return Left(List<InformationCategory>.from(informationCategory.map(
           (data) =>
               InformationCategory(data["_id"].toString(), data["name"]))));
-    } on DioError catch (e) {
+    } on DioError catch (e, stackTrace) {
+      _firebaseCrashlytics.recordError(
+        e,
+        stackTrace,
+        reason: 'Error while fetching categories of the content data',
+      );
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );
