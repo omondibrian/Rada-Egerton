@@ -10,7 +10,6 @@ import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/GroupDTO.dart';
 import 'package:rada_egerton/data/entities/GroupsDTO.dart';
 import 'package:rada_egerton/data/entities/StudentDTO.dart';
-import 'package:rada_egerton/data/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/data/entities/CounsellorsDTO.dart';
 import 'package:rada_egerton/data/entities/PeerCounsellorDTO.dart';
 
@@ -170,7 +169,7 @@ class CounselingServiceProvider {
     }
   }
 
-  Future<Either<UserChatDto, ErrorMessage>?> fetchUserMsgs() async {
+  Future<Either<ChatPayload, ErrorMessage>?> fetchUserMsgs() async {
     try {
       String token = await ServiceUtility.getAuthToken() as String;
       final result = await _httpClientConn.get(
@@ -180,7 +179,7 @@ class CounselingServiceProvider {
             }, sendTimeout: 10000),
           );
       return Left(
-        UserChatDto.fromJson(result.data),
+        ChatPayload.fromJson(result.data),
       );
     } on DioError catch (e) {
       return Right(

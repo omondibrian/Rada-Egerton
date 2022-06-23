@@ -23,11 +23,6 @@ class InformationData with Model {
     return id;
   }
 
-  @override
-  get tableName {
-    return InformationData.tableName_;
-  }
-
   factory InformationData.fromJson(Map<String, dynamic> json) {
     Iterable content = json["content"];
     List<InformationContent> informationContent = List<InformationContent>.from(
@@ -39,12 +34,13 @@ class InformationData with Model {
         content: informationContent,
         id: json["_id"] is int ? json["_id"] : int.parse(json["_id"]));
   }
+  @override
   Map<String, dynamic> toMap() {
     return {
       "_id": id,
       "content": jsonEncode(List<Map<String, dynamic>>.from(content.map(
-            (item) => item.toMap(),
-          ))),
+        (item) => item.toMap(),
+      ))),
       "metadata": json.encode(metadata.toMap()),
     };
   }
@@ -66,11 +62,7 @@ class InformationMetadata {
         thumbnail: json["thumbnail"]);
   }
   Map<String, dynamic> toMap() {
-    return {
-      "category": category,
-      "title": title,
-      "thumbnail": thumbnail
-    };
+    return {"category": category, "title": title, "thumbnail": thumbnail};
   }
 }
 
@@ -99,43 +91,6 @@ class InformationContent {
   }
   Map<String, dynamic> toMap() {
     return {"insert": bodyContent, "attributes": attributes};
-  }
-
-  //generate text style from attributes based on available attributes such as bold,color
-  //check out quill.js delta format documetation for more details
-  TextStyle get getTextStyle {
-    TextStyle style = TextStyle(fontSize: 14.0, color: Palette.lightTextColor);
-    if (attributes.bold != null) {
-      style = style.copyWith(fontWeight: FontWeight.bold);
-    }
-    if (attributes.italic != null) {
-      style = style.copyWith(fontStyle: FontStyle.italic);
-    }
-    if (attributes.color != null) {
-      style = style.copyWith(color: HexColor(attributes.color!));
-    }
-
-    if (attributes.header == 1) {
-      style = style.copyWith(
-        fontSize: 20.0,
-        fontWeight: FontWeight.bold,
-      );
-    }
-    if (attributes.header == 2) {
-      style = style.copyWith(
-        fontSize: 18.0,
-        fontWeight: FontWeight.bold,
-      );
-    }
-
-    if (attributes.strike != null) {
-      style = style.copyWith(decoration: TextDecoration.lineThrough);
-    }
-    if (attributes.underline != null) {
-      style = style.copyWith(decoration: TextDecoration.underline);
-    }
-
-    return style;
   }
 
   //information type
@@ -190,10 +145,52 @@ class HexColor extends Color {
   static int _getColorFromHex(String hexColor) {
     hexColor = hexColor.toUpperCase().replaceAll("#", "");
     if (hexColor.length == 6) {
-      hexColor = "FF" + hexColor;
+      hexColor = "FF$hexColor";
     }
     return int.parse(hexColor, radix: 16);
   }
 
   HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
+}
+
+extension X on InformationContent {
+  //generate text style from attributes based on available attributes such as bold,color
+  //check out quill.js delta format documetation for more details
+  TextStyle get getTextStyle {
+    TextStyle style = const TextStyle(
+      fontSize: 14.0,
+      color: Palette.lightTextColor,
+    );
+    if (attributes.bold != null) {
+      style = style.copyWith(fontWeight: FontWeight.bold);
+    }
+    if (attributes.italic != null) {
+      style = style.copyWith(fontStyle: FontStyle.italic);
+    }
+    if (attributes.color != null) {
+      style = style.copyWith(color: HexColor(attributes.color!));
+    }
+
+    if (attributes.header == 1) {
+      style = style.copyWith(
+        fontSize: 20.0,
+        fontWeight: FontWeight.bold,
+      );
+    }
+    if (attributes.header == 2) {
+      style = style.copyWith(
+        fontSize: 18.0,
+        fontWeight: FontWeight.bold,
+      );
+    }
+
+    if (attributes.strike != null) {
+      style = style.copyWith(decoration: TextDecoration.lineThrough);
+    }
+    if (attributes.underline != null) {
+      style = style.copyWith(decoration: TextDecoration.underline);
+    }
+
+    return style;
+  }
 }

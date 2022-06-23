@@ -13,7 +13,6 @@ class PeerCounsellorDto with Model {
     required this.peerCounsellorId,
     required this.expertise,
   });
-  static String tableName_ = "PeerCounsellor";
   String? regNo;
   int? studentId;
   int peerCounsellorId;
@@ -22,16 +21,11 @@ class PeerCounsellorDto with Model {
   User user;
   @override
   int get getId {
-    return this.peerCounsellorId;
-  }
-
-  @override
-  String get tableName {
-    return PeerCounsellorDto.tableName_;
+    return peerCounsellorId;
   }
 
   factory PeerCounsellorDto.fromJson(Map<String, dynamic> json) {
-    User _user = User(
+    User user = User(
       id: json["_id"],
       name: json["name"],
       email: json["email"],
@@ -44,10 +38,9 @@ class PeerCounsellorDto with Model {
       synced: json["synced"],
       joined: json["joined"],
     );
-    print(json);
-    print("\n\n\n");
+
     return PeerCounsellorDto(
-      user: _user,
+      user: user,
       regNo: json["regNo"],
       peerCounsellorId: json["peer_counsellorId"] is int
           ? json["peer_counsellorId"]

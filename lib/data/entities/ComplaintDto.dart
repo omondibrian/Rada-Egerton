@@ -1,9 +1,3 @@
-import 'dart:convert';
-
-// ComplaintDto complaintDtoFromJson(String str) =>
-//     ComplaintDto.fromJson(json.decode(str));
-
-// String complaintDtoToJson(ComplaintDto data) => json.encode(data.toJson());
 
 class ComplaintDto {
   ComplaintDto({

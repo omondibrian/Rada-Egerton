@@ -25,7 +25,7 @@ class Information extends StatelessWidget {
         // margin: EdgeInsets.symmetric(vertical: 30),
         child: provider.informationCategory == null ||
                 provider.informationData == null
-            ? InformationListPlaceholder()
+            ? const InformationListPlaceholder()
             : ListView.builder(
                 itemBuilder: (context, index) =>
                     _contentListRow(context, provider, index),
@@ -38,13 +38,13 @@ class Information extends StatelessWidget {
   }
 
   Widget _contentListRow(
-      BuildContext context, InformationProvider _provider, int index) {
-    InformationCategory _category = _provider.informationCategory![index];
-    List<InformationData> _categoryData =
-        _provider.informationData!.where((item) {
-      return item.metadata.category == _category.id;
+      BuildContext context, InformationProvider provider, int index) {
+    InformationCategory category = provider.informationCategory![index];
+    List<InformationData> categoryData =
+        provider.informationData!.where((item) {
+      return item.metadata.category == category.id;
     }).toList();
-    if (_categoryData.length == 0) {
+    if (categoryData.length == 0) {
       return Container();
     }
     return Column(
@@ -53,7 +53,7 @@ class Information extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            "${_category.name}",
+            category.name,
             style: Theme.of(context).textTheme.headline2,
             textAlign: TextAlign.left,
           ),
@@ -61,10 +61,10 @@ class Information extends StatelessWidget {
         SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-                children: _categoryData
+                children: categoryData
                     .map((item) => _informationCard(item, context))
                     .toList())),
-        SizedBox(
+        const SizedBox(
           height: 30,
         ),
       ],
@@ -75,21 +75,21 @@ class Information extends StatelessWidget {
     InformationData informationItem,
     BuildContext context,
   ) {
-    double _imageHeight = SizeConfig.isTabletWidth ? 300 : 150;
-    double _imageWidth = SizeConfig.isTabletWidth ? 400 : 200;
+    double imageHeight = SizeConfig.isTabletWidth ? 300 : 150;
+    double imageWidth = SizeConfig.isTabletWidth ? 400 : 200;
 
     return InkWell(
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => InformationDetail(informationItem))),
       child: Card(
-        margin: EdgeInsets.all(5.0),
+        margin: const EdgeInsets.all(5.0),
         clipBehavior: Clip.antiAlias,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-                borderRadius: BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(5.0),
                 ),
                 child: CachedNetworkImage(
@@ -98,8 +98,8 @@ class Information extends StatelessWidget {
                   ),
                   placeholder: (context, url) => Image.asset(
                     "assets/gif.gif",
-                    height: _imageHeight,
-                    width: _imageWidth,
+                    height: imageHeight,
+                    width: imageWidth,
                   ),
                   imageBuilder: (context, imageProvider) => Container(
                       decoration: BoxDecoration(
@@ -107,14 +107,14 @@ class Information extends StatelessWidget {
                           image: imageProvider,
                           fit: BoxFit.cover,
                         ),
-                        borderRadius: BorderRadius.all(
+                        borderRadius: const BorderRadius.all(
                           Radius.circular(5),
                         ),
                       ),
                       constraints:
-                          BoxConstraints(minHeight: 150, minWidth: 200),
-                      height: _imageHeight,
-                      width: _imageWidth),
+                          const BoxConstraints(minHeight: 150, minWidth: 200),
+                      height: imageHeight,
+                      width: imageWidth),
                 )),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),

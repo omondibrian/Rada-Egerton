@@ -4,7 +4,7 @@ import 'package:rada_egerton/presentation/widgets/ProfileHeader.dart';
 import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
 import 'package:rada_egerton/resources/config.dart';
 
-import 'package:rada_egerton/data/services/auth/auth_service.dart';
+import 'package:rada_egerton/data/services/auth_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 // ignore: must_be_immutable

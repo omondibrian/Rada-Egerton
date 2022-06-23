@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
 import 'package:rada_egerton/presentation/widgets/ProfileHeader.dart';
 import 'package:rada_egerton/resources/config.dart';
-import 'package:rada_egerton/data/services/auth/auth_service.dart';
+import 'package:rada_egerton/data/services/auth_service.dart';
 
 class ViewProfileScreen extends StatefulWidget {
   final String userId;

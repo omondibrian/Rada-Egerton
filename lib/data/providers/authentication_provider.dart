@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
-import 'package:rada_egerton/data/services/auth/auth_service.dart';
+import 'package:rada_egerton/data/services/auth_service.dart';
 import 'package:rada_egerton/data/status.dart';
 
 class AuthenticationProvider with ChangeNotifier {

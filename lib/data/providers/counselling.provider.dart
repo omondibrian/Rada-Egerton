@@ -6,7 +6,7 @@ import 'package:rada_egerton/data/entities/CounsellorsDTO.dart';
 import 'package:rada_egerton/data/entities/GroupsDTO.dart';
 import 'package:rada_egerton/data/entities/StudentDTO.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
-import 'package:rada_egerton/data/services/counseling/main.dart';
+import 'package:rada_egerton/data/services/counseling_service.dart';
 import 'package:rada_egerton/data/entities/PeerCounsellorDTO.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
@@ -96,8 +96,9 @@ class CounsellorProvider with ChangeNotifier {
         _counsellors = counsellors;
         //update the database - store user and counselloe
         for (int i = 0; i < _counsellors!.length; ++i) {
-          dbManager.insertItem(counsellors[i].user);
-          dbManager.insertItem(counsellors[i]);
+          dbManager.insertItem(counsellors[i].user, tableName: TableNames.user);
+          dbManager.insertItem(counsellors[i],
+              tableName: TableNames.counsellor);
         }
 
         notifyListeners();
@@ -117,8 +118,10 @@ class CounsellorProvider with ChangeNotifier {
         _peerCounsellors = peercounsellors;
         //update the database
         for (int i = 0; i < _counsellors!.length; ++i) {
-          dbManager.insertItem(peercounsellors[i].user);
-          dbManager.insertItem(peercounsellors[i]);
+          dbManager.insertItem(peercounsellors[i].user,
+              tableName: TableNames.user);
+          dbManager.insertItem(peercounsellors[i],
+              tableName: TableNames.peerCounsellor);
         }
         notifyListeners();
         message = InfoMessage(

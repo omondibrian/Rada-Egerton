@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/ComplaintDto.dart';
-import 'package:rada_egerton/data/services/Issues/main.dart';
+import 'package:rada_egerton/data/services/issues.dart';
 import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
 
 class Issues extends StatefulWidget {
