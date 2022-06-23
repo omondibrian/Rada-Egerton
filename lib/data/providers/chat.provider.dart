@@ -9,15 +9,11 @@ import 'package:rada_egerton/data/entities/userRoles.dart';
 import 'package:rada_egerton/data/services/counseling_service.dart';
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:pusher_client/pusher_client.dart';
-import 'package:rada_egerton/data/entities/chat_dto.dart' as chats;
 import 'package:rada_egerton/resources/utils/main.dart';
 
 class ChatProvider with ChangeNotifier {
   late Channel channel;
-  late String _userId;
-  late PusherClient _pusher;
   InfoMessage? info;
-  List<chats.ChatPayload>? _privateMsgs;
   final List<ChatPayload> _groupMsgs = [];
   final List<ChatPayload> _forumMsgs = [];
   UserRole userRole = UserRole([]);
@@ -53,9 +49,9 @@ class ChatProvider with ChangeNotifier {
     ChatPayload chatData = finalChatPayload(chat);
     final result = await service.peerCounseling(chatData, userId);
     result.fold((chat) {
-      _info = InfoMessage("message sent", InfoMessage.success);
+      _info = InfoMessage("message sent", MessageType.success);
     }, (error) {
-      _info = InfoMessage(error.message, InfoMessage.error);
+      _info = InfoMessage(error.message, MessageType.error);
     });
     notifyListeners();
     return _info;

@@ -10,6 +10,6 @@ class UserRole {
   }
 
   bool get isStudent {
-    return !(this.isCounsellor || this.isPeerCounsellor);
+    return !(isCounsellor || isPeerCounsellor);
   }
 }

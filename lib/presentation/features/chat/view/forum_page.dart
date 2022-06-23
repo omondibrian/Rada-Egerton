@@ -60,7 +60,7 @@ class ForumPage extends StatelessWidget {
         child: ListTile(
           minVerticalPadding: 0,
           isThreeLine: true,
-          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
           leading: CircleAvatar(
             child: CachedNetworkImage(
               color: Colors.white,
@@ -82,18 +82,18 @@ class ForumPage extends StatelessWidget {
           title: Text(forum.forum.title,
               style: Theme.of(context).textTheme.subtitle1),
           //TODO:add forum desciption here
-          subtitle: Text(
+          subtitle: const Text(
             "say something...",
           ),
           trailing: !forum.isSubscribed
               ? TextButton(
-                  child: Text('Join'),
+                  child: const Text('Join'),
                   onPressed: () => {
                     //TODO join forum
                   },
                 )
               : TextButton(
-                  child: Text('View'),
+                  child: const Text('View'),
                   onPressed: _openForumn,
                 ),
         ),
@@ -102,7 +102,7 @@ class ForumPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Forums'),
+        title: const Text('Forums'),
       ),
       body: SafeArea(
         child: counseligProvider.isForumLoading
@@ -112,7 +112,7 @@ class ForumPage extends StatelessWidget {
                 ),
               )
             : forums.isEmpty
-                ? Center(child: Text("No forums"))
+                ? const Center(child: Text("No forums"))
                 : RefreshIndicator(
                     onRefresh: () => _refresh(),
                     backgroundColor: Theme.of(context).primaryColor,

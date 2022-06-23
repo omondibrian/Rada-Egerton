@@ -15,14 +15,14 @@ class InformationProvider with ChangeNotifier {
     result.fold((data) {
       informationCategory = data;
     }, (error) {
-      _info = InfoMessage(error.message, InfoMessage.error);
+      _info = InfoMessage(error.message, MessageType.error);
     });
 
     final dataResult = await ContentService.getInformation();
     dataResult.fold((data) {
       informationData = data;
     }, (error) {
-      _info = InfoMessage(error.message, InfoMessage.error);
+      _info = InfoMessage(error.message, MessageType.error);
     });
     notifyListeners();
     return _info;

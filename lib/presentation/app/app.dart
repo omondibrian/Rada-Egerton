@@ -3,8 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/presentation/features/auth/login_page.dart';
-import 'package:rada_egerton/presentation/features/auth/register_page.dart';
 import 'package:rada_egerton/presentation/features/chat/view/forum_chats_page.dart';
 import 'package:rada_egerton/presentation/features/chat/view/forum_page.dart';
 import 'package:rada_egerton/presentation/features/chat/view/peer_counseling_chats.dart';
@@ -15,7 +13,9 @@ import 'package:rada_egerton/presentation/features/dashboard.dart';
 import 'package:rada_egerton/presentation/features/help/help.dart';
 import 'package:rada_egerton/presentation/features/information/information_list.dart';
 import 'package:rada_egerton/presentation/features/information/notification.dart';
+import 'package:rada_egerton/presentation/features/login/view/login_page.dart';
 import 'package:rada_egerton/presentation/features/mentorship/mentorship.dart';
+import 'package:rada_egerton/presentation/features/register/view/register_page.dart';
 import 'package:rada_egerton/presentation/features/splash.dart';
 import 'package:rada_egerton/presentation/features/user_account/profile.dart';
 import 'package:rada_egerton/presentation/features/user_account/view_profile.dart';
@@ -25,6 +25,8 @@ import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/theme.dart';
 
 class RadaApp extends StatelessWidget {
+  const RadaApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final GoRouter router = GoRouter(
@@ -64,7 +66,7 @@ class RadaApp extends StatelessWidget {
         GoRoute(
           path: AppRoutes.login,
           name: AppRoutes.login,
-          builder: (context, state) => Login(),
+          builder: (context, state) => LoginPage(),
         ),
         GoRoute(
           path: AppRoutes.register,
@@ -128,7 +130,7 @@ class RadaApp extends StatelessWidget {
             GoRoute(
               path: AppRoutes.notification,
               name: AppRoutes.notification,
-              builder: (context, state) => UserNotification(),
+              builder: (context, state) => const UserNotification(),
             ),
             GoRoute(
               path: AppRoutes.profile,
@@ -157,7 +159,6 @@ class RadaApp extends StatelessWidget {
           authToken: context.read<AuthenticationProvider>().authToken,
           user: context.read<AuthenticationProvider>().user,
         );
-        print(GlobalConfig.instance.user.toMap());
       },
     );
     return MaterialApp.router(

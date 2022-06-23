@@ -88,7 +88,7 @@ class ChatRepository {
           }, sendTimeout: 10000),
           data: json.encode({"rate": rate}));
       print(result.data);
-      return Left(InfoMessage("Rating sucessfuly", InfoMessage.success));
+      return Left(InfoMessage("Rating sucessfuly", MessageType.success));
     } on DioError catch (e) {
       return Right(
         ServiceUtility.handleDioExceptions(e),

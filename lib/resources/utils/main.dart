@@ -4,10 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pusher_client/pusher_client.dart';
-import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/GroupsDTO.dart' as Groups;
 import 'package:rada_egerton/resources/config.dart';
-import 'package:rada_egerton/resources/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ServiceUtility {
@@ -82,23 +80,27 @@ class ErrorMessage {
   ErrorMessage({required this.message, required this.status});
 }
 
-class Message {
-  String recipient;
-  List<ChatPayload> msg;
-  String userType;
-  Message({required this.recipient, required this.msg, required this.userType});
-}
-
 class ForumPayload {
   bool isSubscribed;
   Groups.Payload forum;
   ForumPayload({required this.isSubscribed, required this.forum});
 }
 
+enum MessageType { error, info, success }
+
 class InfoMessage {
   String message;
-  Color messageTypeColor;
-  static Color success = Palette.primary;
-  static Color error = Colors.red;
-  InfoMessage(this.message, this.messageTypeColor);
+  MessageType messageType;
+
+  InfoMessage(this.message, this.messageType);
+}
+
+extension X on InfoMessage {
+  Color get messageTypeColor {
+    if (messageType == MessageType.success) {
+      return Colors.greenAccent;
+    }
+
+    return Colors.red[700] ?? Colors.red;
+  }
 }

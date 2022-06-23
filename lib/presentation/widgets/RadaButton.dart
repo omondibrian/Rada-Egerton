@@ -6,12 +6,12 @@ class RadaButton extends StatelessWidget {
   final String title;
   final void Function() handleClick;
   final bool fill;
-  const RadaButton(
-      {Key? key,
-      required this.title,
-      required this.handleClick,
-      required this.fill})
-      : super(key: key);
+  const RadaButton({
+    Key? key,
+    required this.title,
+    required this.handleClick,
+    required this.fill,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +38,6 @@ class RadaButton extends StatelessWidget {
           minimumSize: MaterialStateProperty.all<Size>(
             const Size(290.0, 50.0),
           ),
-          textStyle: MaterialStateProperty.all<TextStyle>(
-            const TextStyle(color: Colors.white),
-          ),
           backgroundColor: fill
               ? MaterialStateProperty.all<Color>(Colors.transparent)
               : MaterialStateProperty.all<Color>(Colors.white),
@@ -54,15 +51,98 @@ class RadaButton extends StatelessWidget {
         child: Text(
           title,
           style: fill
-              ? TextStyle(
+              ? const TextStyle(
                   color: Colors.white,
-                  fontSize: SizeConfig.isTabletWidth ? 18 : 16,
+                  fontSize: 18,
                 )
-              : TextStyle(
+              : const TextStyle(
                   color: Colors.black,
-                  fontSize: SizeConfig.isTabletWidth ? 18 : 16,
+                  fontSize: 18,
                 ),
         ),
+      ),
+    );
+  }
+}
+
+class RadaButtonProgress extends StatelessWidget {
+  final String title;
+  final bool fill;
+  const RadaButtonProgress({
+    Key? key,
+    required this.title,
+    this.fill = false,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: SizeConfig.isTabletWidth ? 600 : 290.0,
+      height: SizeConfig.isTabletWidth ? 50 : 40.0,
+      padding: const EdgeInsets.all(0.0),
+      margin: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Palette.accent,
+              Theme.of(context).primaryColor,
+            ],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(5),
+          border: fill
+              ? Border.all(color: Colors.transparent)
+              : Border.all(color: Theme.of(context).primaryColor)),
+      child: TextButton(
+        onPressed: () {},
+        style: ButtonStyle(
+          minimumSize: MaterialStateProperty.all<Size>(
+            const Size(290.0, 50.0),
+          ),
+          backgroundColor: fill
+              ? MaterialStateProperty.all<Color>(Colors.transparent)
+              : MaterialStateProperty.all<Color>(Colors.white),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+          ),
+        ),
+        child: fill
+            ? Row(
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  const CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+                ],
+              )
+            : Row(
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  const CircularProgressIndicator(
+                    color: Colors.black,
+                  )
+                ],
+              ),
       ),
     );
   }

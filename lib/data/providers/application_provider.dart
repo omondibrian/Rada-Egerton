@@ -8,21 +8,18 @@ import 'package:rada_egerton/resources/utils/main.dart';
 //TODO: organize this file
 
 class RadaApplicationProvider with ChangeNotifier {
-  UserRole userRole = UserRole([]);
   final CounselingServiceProvider _serviceProvider = CounselingServiceProvider();
 
 
-  void clearState() {
-    userRole = UserRole([]);
-  }
+ 
 
   Future<InfoMessage> leaveGroup(String grpId) async {
     final result = await _serviceProvider.exitGroup(grpId);
     late InfoMessage info;
     result!.fold((l) {
-      info = InfoMessage("You have left the group", InfoMessage.success);
+      info = InfoMessage("You have left the group", MessageType.success);
     }, (error) {
-      info = InfoMessage(error.message, InfoMessage.error);
+      info = InfoMessage(error.message, MessageType.error);
     });
     return info;
   }
@@ -33,9 +30,9 @@ class RadaApplicationProvider with ChangeNotifier {
     final result = await _serviceProvider.createGroup(name, desc, imageFile);
     result!.fold((group) {
       //TODO:- add group to state
-      info = InfoMessage("Created successfuly", InfoMessage.success);
+      info = InfoMessage("Created successfuly", MessageType.success);
     }, (error) {
-      info = InfoMessage(error.message, InfoMessage.error);
+      info = InfoMessage(error.message, MessageType.error);
     });
     return info;
   }
@@ -49,10 +46,10 @@ class RadaApplicationProvider with ChangeNotifier {
     result!.fold((group) {
       info = InfoMessage(
         "Joined successfuly",
-        InfoMessage.success,
+        MessageType.success,
       );
     }, (error) {
-      info = InfoMessage(error.message, InfoMessage.error);
+      info = InfoMessage(error.message, MessageType.error);
     });
     return info;
   }

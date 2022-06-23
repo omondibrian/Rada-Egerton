@@ -58,7 +58,7 @@ class CounsellorProvider with ChangeNotifier {
     var student = await _service.fetchStudentData(id);
     student!.fold(
       (student) => result = student,
-      (error) => throw InfoMessage(error.message, InfoMessage.error),
+      (error) => throw InfoMessage(error.message, MessageType.error),
     );
 
     return result;
@@ -69,8 +69,8 @@ class CounsellorProvider with ChangeNotifier {
     var results = await _service.fetchStudentForums();
     results!.fold((forums) {
       _forums = forums;
-      info = InfoMessage("Fetching forums  successfull", InfoMessage.success);
-    }, (error) => {info = InfoMessage(error.message, InfoMessage.error)});
+      info = InfoMessage("Fetching forums  successfull", MessageType.success);
+    }, (error) => {info = InfoMessage(error.message, MessageType.error)});
     isForumLoading = false;
     notifyListeners();
     return info;
@@ -81,8 +81,8 @@ class CounsellorProvider with ChangeNotifier {
     var results = await _service.deleteGroup(id);
     results.fold((group) {
       //TODO: update state after deleting a group
-      InfoMessage("Deleted successfuly", InfoMessage.success);
-    }, (error) => {info = InfoMessage(error.message, InfoMessage.error)});
+      InfoMessage("Deleted successfuly", MessageType.success);
+    }, (error) => {info = InfoMessage(error.message, MessageType.error)});
     isForumLoading = false;
     notifyListeners();
     return info;
@@ -103,8 +103,8 @@ class CounsellorProvider with ChangeNotifier {
 
         notifyListeners();
         message =
-            InfoMessage("Fetch counsellors successful", InfoMessage.success);
-      }, (error) => {message = InfoMessage(error.message, InfoMessage.error)});
+            InfoMessage("Fetch counsellors successful", MessageType.success);
+      }, (error) => {message = InfoMessage(error.message, MessageType.error)});
     });
     return message;
   }
@@ -126,9 +126,9 @@ class CounsellorProvider with ChangeNotifier {
         notifyListeners();
         message = InfoMessage(
           "Fetch counsellors successful",
-          InfoMessage.success,
+          MessageType.success,
         );
-      }, (error) => {message = InfoMessage(error.message, InfoMessage.error)});
+      }, (error) => {message = InfoMessage(error.message, MessageType.error)});
     });
     return message;
   }

@@ -13,10 +13,10 @@ class AuthenticationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void loginUser({required User user, required String AuthToken}) {
+  void loginUser({required User user, required String authToken}) {
     this.user = user;
     this.authToken = authToken;
-    this.status = AuthenticationStatus.authenticated;
+    status = AuthenticationStatus.authenticated;
     notifyListeners();
   }
 

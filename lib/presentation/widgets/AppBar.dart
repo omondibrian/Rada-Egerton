@@ -3,18 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:rada_egerton/data/entities/userRoles.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/providers/counselling.provider.dart';
 import 'package:rada_egerton/presentation/features/chat/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/features/user_account/view_profile.dart';
 import 'package:rada_egerton/presentation/widgets/add_members.dart';
 import 'package:rada_egerton/presentation/widgets/rating_dialog.dart';
+import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/theme.dart';
 import 'package:rada_egerton/resources/sizeConfig.dart';
 
 import 'package:rada_egerton/resources/utils/main.dart';
-
 
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({
@@ -111,73 +112,89 @@ class CustomAppBar extends StatelessWidget {
                 ),
               ),
             ),
-            PopupMenuButton(
-              icon: const Icon(
-                Icons.more_vert,
-              ),
-              itemBuilder: (_) => [
-                if (provider.userRole.isCounsellor &&
-                    state.chatType == ChatModes.GROUP)
-                  PopupMenuItem(
-                    child: const Text('Add Member'),
-                    onTap: () {
-                      showBottomSheet(
-                          context: context,
-                          builder: (ctx) => AddMembers(
-                                groupId: recepientId,
-                              ),
-                          constraints: BoxConstraints(
-                              maxHeight:
-                                  MediaQuery.of(context).size.height * 0.5,
-                              maxWidth: MediaQuery.of(context).size.width));
-                    },
-                  ),
-                if (provider.userRole.isCounsellor &&
-                    state.chatType == ChatModes.PRIVATE)
-                  PopupMenuItem(
-                    onTap: () {
-                      showBottomSheet(
-                        context: context,
-                        builder: (ctx) => ViewProfileScreen(recepientId),
-                      );
-                    },
-                    child: const Text(
-                      'View Profile',
+            FutureBuilder(
+              future: GlobalConfig.instance.userRoles,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                }
+                if (snapshot.hasData) {
+                  UserRole roles = snapshot.data as UserRole;
+                  return PopupMenuButton(
+                    icon: const Icon(
+                      Icons.more_vert,
                     ),
-                  ),
-                if (provider.userRole.isStudent ||
-                    provider.userRole.isCounsellor &&
-                        state.chatType == ChatModes.PRIVATE)
-                  PopupMenuItem(
-                    onTap: () => showBottomSheet(
-                      context: context,
-                      builder: (context) => ratingDialog(recepientId),
-                    ),
-                    child: const Text(
-                      'Rate',
-                    ),
-                  ),
-                if (state.chatType != ChatModes.PRIVATE)
-                  provider.userRole.isCounsellor
-                      ? PopupMenuItem(
-                          onTap: _delete,
-                          child: Text(
-                            'Delete',
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.error),
-                          ),
-                          // onTap: _openBottomSheet
-                        )
-                      : PopupMenuItem(
-                          onTap: _leaveGroup,
-                          child: Text(
-                            'Leave ',
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.error),
-                          ),
-                          // onTap: _openBottomSheet
+                    itemBuilder: (_) => [
+                      if (roles.isCounsellor &&
+                          state.chatType == ChatModes.GROUP)
+                        PopupMenuItem(
+                          child: const Text('Add Member'),
+                          onTap: () {
+                            showBottomSheet(
+                                context: context,
+                                builder: (ctx) => AddMembers(
+                                      groupId: recepientId,
+                                    ),
+                                constraints: BoxConstraints(
+                                    maxHeight:
+                                        MediaQuery.of(context).size.height *
+                                            0.5,
+                                    maxWidth:
+                                        MediaQuery.of(context).size.width));
+                          },
                         ),
-              ],
+                      if (roles.isCounsellor &&
+                          state.chatType == ChatModes.PRIVATE)
+                        PopupMenuItem(
+                          onTap: () {
+                            showBottomSheet(
+                              context: context,
+                              builder: (ctx) => ViewProfileScreen(recepientId),
+                            );
+                          },
+                          child: const Text(
+                            'View Profile',
+                          ),
+                        ),
+                      if (roles.isStudent ||
+                          roles.isCounsellor &&
+                              state.chatType == ChatModes.PRIVATE)
+                        PopupMenuItem(
+                          onTap: () => showBottomSheet(
+                            context: context,
+                            builder: (context) => ratingDialog(recepientId),
+                          ),
+                          child: const Text(
+                            'Rate',
+                          ),
+                        ),
+                      if (state.chatType != ChatModes.PRIVATE)
+                        roles.isCounsellor
+                            ? PopupMenuItem(
+                                onTap: _delete,
+                                child: Text(
+                                  'Delete',
+                                  style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.error),
+                                ),
+                                // onTap: _openBottomSheet
+                              )
+                            : PopupMenuItem(
+                                onTap: _leaveGroup,
+                                child: Text(
+                                  'Leave ',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                ),
+                                // onTap: _openBottomSheet
+                              ),
+                    ],
+                  );
+                }
+                return const Center(child: CircularProgressIndicator());
+              },
             )
           ],
         );

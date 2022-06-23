@@ -76,7 +76,8 @@ class AuthService {
     }
   }
 
-  static Future<Either<UserRole, ErrorMessage>> getUserRoles(String userId) async {
+  static Future<Either<UserRole, ErrorMessage>> getUserRoles(
+      String userId) async {
     try {
       String authToken = await ServiceUtility.getAuthToken() as String;
       var result = await _httpClientConn.get(
@@ -85,8 +86,7 @@ class AuthService {
             Options(headers: {'Authorization': authToken}, sendTimeout: 10000),
       );
       Iterable userRoles = result.data["userRole"]["role"];
-      return Left(
-          UserRole(List<String>.from(userRoles.map((r) => r["name"]))));
+      return Left(UserRole(List<String>.from(userRoles.map((r) => r["name"]))));
     } on DioError catch (e) {
       return Right(
         ServiceUtility.handleDioExceptions(e),
@@ -94,7 +94,7 @@ class AuthService {
     }
   }
 
-static  Future<Either<User, ErrorMessage>?> getProfile() async {
+  static Future<Either<User, ErrorMessage>?> getProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       final authToken = await ServiceUtility.getAuthToken();
@@ -118,7 +118,8 @@ static  Future<Either<User, ErrorMessage>?> getProfile() async {
     }
   }
 
-  static Future<Either<User, ErrorMessage>?> getStudentProfile(String userId) async {
+  static Future<Either<User, ErrorMessage>?> getStudentProfile(
+      String userId) async {
     try {
       final authToken = await ServiceUtility.getAuthToken();
       var profile = await _httpClientConn.get(

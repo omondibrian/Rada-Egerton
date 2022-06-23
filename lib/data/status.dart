@@ -1,3 +1,3 @@
-enum DataFetchStatus { initial, loading, success, failure }
+enum ServiceStatus { initial, loading, submiting, success, failure }
 
 enum AuthenticationStatus { unkown, authenticated, unAuthenticated }

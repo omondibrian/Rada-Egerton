@@ -17,7 +17,6 @@ Widget newGroupForm(
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void _handleSubmit(BuildContext context) async {
-    
     if (formKey.currentState!.validate()) {
       final info = await radaApplicationProvider.createNewGroup(
         grpNameController.text,
@@ -104,8 +103,7 @@ Widget newGroupForm(
                 hintText: "Description ...",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  borderSide:
-                      BorderSide(color: Color(0X55CED0D2), width: 0.0),
+                  borderSide: BorderSide(color: Color(0X55CED0D2), width: 0.0),
                 ),
               ),
               controller: descriptionController,
