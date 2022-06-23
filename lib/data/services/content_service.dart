@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:rada_egerton/data/entities/informationData.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
@@ -9,6 +10,8 @@ import 'package:rada_egerton/resources/utils/main.dart';
 class ContentService {
   //information data
   static final String _hostUrl = GlobalConfig.baseUrl;
+  static final FirebaseCrashlytics _firebaseCrashlytics =
+      FirebaseCrashlytics.instance;
   static Future<Either<List<InformationData>, ErrorMessage>>
       getInformation() async {
     try {
@@ -22,7 +25,12 @@ class ContentService {
       Iterable information = result.data["content"];
       return Left(List<InformationData>.from(
           information.map((data) => InformationData.fromJson(data))));
-    } on DioError catch (e) {
+    } on DioError catch (e, stackTrace) {
+      _firebaseCrashlytics.recordError(
+        e,
+        stackTrace,
+        reason: 'Error while fetching content data',
+      );
       log(e.response.toString());
       return Right(
         ServiceUtility.handleDioExceptions(e),
@@ -45,7 +53,12 @@ class ContentService {
       return Left(List<InformationCategory>.from(informationCategory.map(
           (data) =>
               InformationCategory(data["_id"].toString(), data["name"]))));
-    } on DioError catch (e) {
+    } on DioError catch (e, stackTrace) {
+      _firebaseCrashlytics.recordError(
+        e,
+        stackTrace,
+        reason: 'Error while fetching categories of the content data',
+      );
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );

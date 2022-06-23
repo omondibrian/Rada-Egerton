@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
@@ -9,6 +10,8 @@ import 'package:rada_egerton/resources/utils/main.dart';
 class ChatRepository {
   static final Dio _httpClientConn = httpClient;
   static final String _hostUrl = GlobalConfig.baseUrl;
+  static final FirebaseCrashlytics _firebaseCrashlytics =
+      FirebaseCrashlytics.instance;
 
   ///@description sends chat messages between two users i.e from counsellor to client
   ///@params { Chat }  chatData contains the message payload to be deliverd to the  reciepient
@@ -36,7 +39,12 @@ class ChatRepository {
       return Left(
         ChatPayload.fromJson(result.data),
       );
-    } on DioError catch (e) {
+    } on DioError catch (e, stackTrace) {
+      _firebaseCrashlytics.recordError(
+        e,
+        stackTrace,
+        reason: 'Error while fetching peer counselling chatpayload',
+      );
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );
@@ -70,7 +78,12 @@ class ChatRepository {
       return Left(
         ChatPayload.fromJson(result.data),
       );
-    } on DioError catch (e) {
+    } on DioError catch (e, stackTrace) {
+      _firebaseCrashlytics.recordError(
+        e,
+        stackTrace,
+        reason: 'Error while fetching group counselling chat data',
+      );
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );
@@ -89,7 +102,13 @@ class ChatRepository {
           data: json.encode({"rate": rate}));
       print(result.data);
       return Left(InfoMessage("Rating sucessfuly", MessageType.success));
-    } on DioError catch (e) {
+    } on DioError catch (e, stackTrace) {
+      _firebaseCrashlytics.recordError(
+        e,
+        stackTrace,
+        reason:
+            'Error while trying to rate counsellor from ChatServiceProvider',
+      );
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );
