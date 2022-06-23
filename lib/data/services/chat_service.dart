@@ -106,7 +106,8 @@ class ChatRepository {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
-        reason: 'Error while trying to rate counsellor from chat_service.dart',
+        reason:
+            'Error while trying to rate counsellor from ChatServiceProvider',
       );
       return Right(
         ServiceUtility.handleDioExceptions(e),

@@ -359,7 +359,7 @@ class CounselingServiceProvider {
         e,
         stackTrace,
         reason:
-            'Error while atempting to rate a counsellor from the counselling_service.dart',
+            'Error while atempting to rate a counsellor from CounsellingServiceProvider',
       );
       return Right(
         ServiceUtility.handleDioExceptions(e),
