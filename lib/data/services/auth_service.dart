@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
 import 'package:rada_egerton/data/entities/userRoles.dart';
 import 'package:rada_egerton/resources/config.dart';
@@ -12,6 +13,8 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 class AuthService {
   static final String _hostUrl = GlobalConfig.baseUrl;
   static final Dio _httpClientConn = httpClient;
+  static final FirebaseCrashlytics _firebaseCrashlytics =
+      FirebaseCrashlytics.instance;
 
   static Future<bool> isConnected() =>
       InternetConnectionChecker().hasConnection;
@@ -21,7 +24,12 @@ class AuthService {
     try {
       await _httpClientConn.post("$_hostUrl/api/v1/admin/user/register",
           data: user.toJson());
-    } on DioError catch (e) {
+    } on DioError catch (e, stackTrace) {
+      _firebaseCrashlytics.recordError(
+        e,
+        stackTrace,
+        reason: 'Error while registrering new user',
+      );
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );
@@ -45,7 +53,12 @@ class AuthService {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       prefs.setString('TOKEN', result.data["payload"]["token"]);
-    } on DioError catch (e) {
+    } on DioError catch (e, stackTrace) {
+      _firebaseCrashlytics.recordError(
+        e,
+        stackTrace,
+        reason: 'Error while logging in a user',
+      );
       Right(
         ServiceUtility.handleDioExceptions(e),
       );
@@ -69,14 +82,20 @@ class AuthService {
       User user = User.fromJson(profile.data["user"]);
       prefs.setString("user", userToJson(user));
       return Left(user);
-    } on DioError catch (e) {
+    } on DioError catch (e, stackTrace) {
+      _firebaseCrashlytics.recordError(
+        e,
+        stackTrace,
+        reason: 'Error while updating user profile',
+      );
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
   }
 
-  static Future<Either<UserRole, ErrorMessage>> getUserRoles(String userId) async {
+  static Future<Either<UserRole, ErrorMessage>> getUserRoles(
+      String userId) async {
     try {
       String authToken = await ServiceUtility.getAuthToken() as String;
       var result = await _httpClientConn.get(
@@ -85,16 +104,20 @@ class AuthService {
             Options(headers: {'Authorization': authToken}, sendTimeout: 10000),
       );
       Iterable userRoles = result.data["userRole"]["role"];
-      return Left(
-          UserRole(List<String>.from(userRoles.map((r) => r["name"]))));
-    } on DioError catch (e) {
+      return Left(UserRole(List<String>.from(userRoles.map((r) => r["name"]))));
+    } on DioError catch (e, stackTrace) {
+      _firebaseCrashlytics.recordError(
+        e,
+        stackTrace,
+        reason: 'Error while acquiring a user\'s roles',
+      );
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
   }
 
-static  Future<Either<User, ErrorMessage>?> getProfile() async {
+  static Future<Either<User, ErrorMessage>?> getProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       final authToken = await ServiceUtility.getAuthToken();
@@ -111,14 +134,20 @@ static  Future<Either<User, ErrorMessage>?> getProfile() async {
         return Left(user);
       }
       return Left(User.fromJson(json.decode(user)));
-    } on DioError catch (e) {
+    } on DioError catch (e, stackTrace) {
+      _firebaseCrashlytics.recordError(
+        e,
+        stackTrace,
+        reason: 'Error while acquiring a user\'s profile',
+      );
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
   }
 
-  static Future<Either<User, ErrorMessage>?> getStudentProfile(String userId) async {
+  static Future<Either<User, ErrorMessage>?> getStudentProfile(
+      String userId) async {
     try {
       final authToken = await ServiceUtility.getAuthToken();
       var profile = await _httpClientConn.get(
@@ -128,7 +157,12 @@ static  Future<Either<User, ErrorMessage>?> getProfile() async {
       );
       User user = User.fromJson(profile.data["user"]);
       return Left(user);
-    } on DioError catch (e) {
+    } on DioError catch (e, stackTrace) {
+      _firebaseCrashlytics.recordError(
+        e,
+        stackTrace,
+        reason: 'Error while acquiring a student\'s profile details',
+      );
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );
