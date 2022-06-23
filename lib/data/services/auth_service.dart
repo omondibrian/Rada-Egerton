@@ -29,6 +29,7 @@ class AuthService {
         e,
         stackTrace,
         reason: 'Error while registrering new user',
+        fatal: true,
       );
       return Right(
         ServiceUtility.handleDioExceptions(e),
@@ -58,6 +59,7 @@ class AuthService {
         e,
         stackTrace,
         reason: 'Error while logging in a user',
+        fatal: true,
       );
       Right(
         ServiceUtility.handleDioExceptions(e),
@@ -87,6 +89,7 @@ class AuthService {
         e,
         stackTrace,
         reason: 'Error while updating user profile',
+        fatal: true,
       );
       return Right(
         ServiceUtility.handleDioExceptions(e),
@@ -110,6 +113,7 @@ class AuthService {
         e,
         stackTrace,
         reason: 'Error while acquiring a user\'s roles',
+        fatal: true,
       );
       return Right(
         ServiceUtility.handleDioExceptions(e),
@@ -139,6 +143,7 @@ class AuthService {
         e,
         stackTrace,
         reason: 'Error while acquiring a user\'s profile',
+        fatal: true,
       );
       return Right(
         ServiceUtility.handleDioExceptions(e),
@@ -162,6 +167,7 @@ class AuthService {
         e,
         stackTrace,
         reason: 'Error while acquiring a student\'s profile details',
+        fatal: true,
       );
       return Right(
         ServiceUtility.handleDioExceptions(e),
