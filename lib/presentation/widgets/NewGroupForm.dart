@@ -17,6 +17,7 @@ Widget newGroupForm(
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void _handleSubmit(BuildContext context) async {
+    
     if (formKey.currentState!.validate()) {
       final info = await radaApplicationProvider.createNewGroup(
         grpNameController.text,

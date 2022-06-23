@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:rada_egerton/data/entities/informationData.dart';
-import 'package:rada_egerton/data/services/content.service.dart';
+import 'package:rada_egerton/data/services/content_service.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 class InformationProvider with ChangeNotifier {

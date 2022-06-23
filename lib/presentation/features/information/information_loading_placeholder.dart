@@ -40,7 +40,7 @@ class InformationListPlaceholder extends StatelessWidget {
                     (index) =>
                         _informationCard(context, _imageHeight, _imageWidth),
                   ))),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
             ],
@@ -54,20 +54,20 @@ class InformationListPlaceholder extends StatelessWidget {
       BuildContext context, double _imageHeight, double _imageWidth) {
     return ShimmerLoading(
       child: Card(
-        margin: EdgeInsets.all(5.0),
+        margin: const EdgeInsets.all(5.0),
         clipBehavior: Clip.antiAlias,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(5.0),
               ),
               child: Container(
                 height: _imageHeight,
                 width: _imageWidth,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.black,
                 ),
               ),

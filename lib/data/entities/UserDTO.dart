@@ -6,7 +6,7 @@ User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toMap());
 
 class User with Model {
-  static String tableName_ = "user";
+  
   User({
     required this.id,
     required this.name,
@@ -23,11 +23,6 @@ class User with Model {
   @override
   int get getId {
     return this.id;
-  }
-
-  @override
-  String get tableName {
-    return User.tableName_;
   }
 
   int id;
@@ -73,6 +68,6 @@ class User with Model {
       };
 }
 
-User userfromMap(Map<String, dynamic> _user) {
-  return User.fromJson(_user);
+User userfromMap(Map<String, dynamic> user) {
+  return User.fromJson(user);
 }

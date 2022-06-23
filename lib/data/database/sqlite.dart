@@ -1,10 +1,5 @@
 import 'dart:async';
 import "package:path/path.dart";
-import 'package:rada_egerton/data/entities/CounsellorsDTO.dart';
-import 'package:rada_egerton/data/entities/GroupDTO.dart';
-import 'package:rada_egerton/data/entities/PeerCounsellorDTO.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
-import 'package:rada_egerton/data/entities/informationData.dart';
 
 import 'package:sqflite/sqflite.dart';
 
@@ -31,7 +26,7 @@ class DBManager {
   FutureOr<void> createDb(Database db, int version) async {
     //create user table
     await db.execute("""
-      CREATE TABLE ${User.tableName_}(
+      CREATE TABLE ${TableNames.user.name}(
         _id int PRIMARY KEY,
         name TEXT,
         email TEXT,
@@ -46,7 +41,7 @@ class DBManager {
       )""");
     // counsellor table
     await db.execute("""
-      CREATE TABLE ${Counsellor.tableName_}(
+      CREATE TABLE ${TableNames.counsellor.name}(
         counsellorId int PRIMARY KEY, 
         rating float,
         expertise TEXT,
@@ -56,7 +51,7 @@ class DBManager {
       )""");
     // create peerCounsellor table
     await db.execute("""
-      CREATE TABLE ${PeerCounsellorDto.tableName_}(
+      CREATE TABLE ${TableNames.peerCounsellor.name}(
         peer_counsellorId int PRIMARY KEY, 
         regNo TEXT,
         campuses_id int,
@@ -66,7 +61,7 @@ class DBManager {
         FOREIGN KEY(_id) REFERENCES User(_id)
       )""");
     await db.execute("""
-       CREATE TABLE ${InformationData.tableName_}(
+       CREATE TABLE ${TableNames.informationData.name}(
         _id int PRIMARY KEY,
         content TEXT,
         metadata TEXT
@@ -119,54 +114,56 @@ class DBManager {
 
     // Groups
     await db.execute("""
-       CREATE TABLE Group(
+       CREATE TABLE ${TableNames.group.name}(
         id int PRIMARY KEY,
         image TEXT,
         title TEXT
        )""");
 
-    // Groups
-    await db.execute("""
-       CREATE TABLE ${GroupDTO.tableName_}(
-        id int PRIMARY KEY,
-        image TEXT,
-        title TEXT
-       )""");
     //forums
     await db.execute("""
-       CREATE TABLE Forum(
+       CREATE TABLE ${TableNames.forumn.name}(
         id int PRIMARY KEY,
         image TEXT,
         title TEXT
        )""");
   }
 
-  Future<Model> insertItem(Model item, {String? tableName}) async {
-    db.then((_db) => _db.insert(
-          tableName ?? item.tableName,
-          item.toMap(),
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        ));
+  Future<Model> insertItem(Model item, {required TableNames tableName}) async {
+    db.then(
+      (db) => db.insert(
+        tableName.name,
+        item.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      ),
+    );
     return item;
   }
 
-  Future<Model> deleteModel(Model item) async {
-    db.then((db) =>
-        db.delete(item.tableName, where: "_id = ?", whereArgs: [item.getId]));
+  Future<Model> delete(
+      {required Model item, required TableNames tableName}) async {
+    db.then(
+      (db) => db.delete(
+        tableName.toString(),
+        where: "_id = ?",
+        whereArgs: [item.getId],
+      ),
+    );
     return item;
   }
 
-  Future<Map<String, dynamic>?> getItem(String tableName, int id) async {
-    List<Map<String, dynamic>> query = await db
-        .then((_db) => _db.query(tableName, where: "_id = ?", whereArgs: [id]));
-    if (query.length > 0) {
+  Future<Map<String, dynamic>?> getItem(TableNames tableName, int id) async {
+    List<Map<String, dynamic>> query = await db.then(
+        (db) => db.query(tableName.name, where: "_id = ?", whereArgs: [id]));
+    if (query.isNotEmpty) {
       return query[0];
     }
+    return null;
   }
 
-  Future<List<Map<String, dynamic>>> getItems(String tableName) async {
+  Future<List<Map<String, dynamic>>> getItems(TableNames tableName) async {
     Database database = await db;
-    List<Map<String, dynamic>> query = await database.query(tableName);
+    List<Map<String, dynamic>> query = await database.query(tableName.name);
     return query;
   }
 }
@@ -177,5 +174,17 @@ abstract class Model {
   }
   Map<String, dynamic> toMap();
   int get getId;
-  String get tableName => runtimeType.toString();
+}
+
+enum TableNames {
+  user,
+  counsellor,
+  informationData,
+  peerCounsellor,
+  group,
+  forumn,
+}
+
+extension X on TableNames {
+  String get name => toString();
 }

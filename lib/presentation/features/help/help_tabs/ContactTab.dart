@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/ContactsDto.dart';
-import 'package:rada_egerton/data/entities/locationDto.dart';
-import 'package:rada_egerton/data/services/NewsAndLocation/main.dart';
+import 'package:rada_egerton/data/services/news_location_service.dart';
 
 class ContactTab extends StatefulWidget {
+  const ContactTab({Key? key}) : super(key: key);
+
   @override
   _ContactTabState createState() => _ContactTabState();
 }
@@ -29,9 +30,9 @@ class _ContactTabState extends State<ContactTab> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: this._contactList.length,
+        itemCount: _contactList.length,
         itemBuilder: (BuildContext ctx, int index) =>
-            contactCard(this._contactList[index]));
+            contactCard(_contactList[index]));
   }
 
   Widget contactCard(Contact contact) {

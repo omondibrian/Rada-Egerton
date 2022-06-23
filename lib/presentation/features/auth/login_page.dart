@@ -8,7 +8,7 @@ import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
 import 'package:rada_egerton/presentation/widgets/defaultInput.dart';
 import 'package:rada_egerton/presentation/widgets/password_field.dart';
 import 'package:rada_egerton/resources/constants.dart';
-import 'package:rada_egerton/data/services/auth/auth_service.dart';
+import 'package:rada_egerton/data/services/auth_service.dart';
 import 'package:rada_egerton/resources/sizeConfig.dart';
 import 'package:rada_egerton/resources/utils/validators.dart';
 

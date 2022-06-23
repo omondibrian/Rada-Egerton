@@ -1,3 +1,4 @@
+import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/providers/chat.provider.dart';
 import 'package:rada_egerton/presentation/widgets/NewGroupForm.dart';
@@ -7,11 +8,10 @@ import 'package:rada_egerton/resources/sizeConfig.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rada_egerton/data/entities/UserChatsDTO.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class GroupSessionsTab extends StatelessWidget {
-  GroupSessionsTab({Key? key}) : super(key: key);
+  const GroupSessionsTab({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final chatsprovider = Provider.of<ChatProvider>(context);
@@ -20,17 +20,14 @@ class GroupSessionsTab extends StatelessWidget {
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
-    Future<void> _refresh() async {
-    }
+    Future<void> _refresh() async {}
 
     var radaApplicationProvider = Provider.of<RadaApplicationProvider>(context);
 
     Widget conversationBuilder(BuildContext ctx, int index) {
-      Info infoConversations = conversations[index].info;
-      
-      _openGroup(){
-        
-      }
+      ChatPayload Conversations = conversations[index];
+
+      _openGroup() {}
       return GestureDetector(
         // onTap: () => context.go("${AppRoutes.counselingMessages}?id=${conversations[index].messages}")
         child: ListTile(
@@ -38,7 +35,7 @@ class GroupSessionsTab extends StatelessWidget {
             child: ClipOval(
               child: CachedNetworkImage(
                 color: Colors.white,
-                imageUrl: imageUrl(infoConversations.image),
+                imageUrl: imageUrl("infoConversations.image"),
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -51,7 +48,7 @@ class GroupSessionsTab extends StatelessWidget {
               ),
             ),
           ),
-          title: Text(infoConversations.title, style: style),
+          title: Text("infoConversations.title", style: style),
           subtitle: Text(
             "say something",
             style: TextStyle(
@@ -65,18 +62,19 @@ class GroupSessionsTab extends StatelessWidget {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Palette.accent,
+        onPressed: () {
+          showBottomSheet(
+            context: context,
+            builder: (context) {
+              return newGroupForm(context, radaApplicationProvider);
+            },
+          );
+        },
         child: const Icon(
           Icons.group_add,
           color: Colors.white,
         ),
-        backgroundColor: Palette.accent,
-        onPressed: () {
-          showBottomSheet(
-              context: context,
-              builder: (context) {
-                return newGroupForm(context, radaApplicationProvider);
-              });
-        },
       ),
       body: conversations.isNotEmpty
           ? RefreshIndicator(
@@ -92,9 +90,10 @@ class GroupSessionsTab extends StatelessWidget {
             )
           : Center(
               child: Image.asset(
-              "assets/message.png",
-              width: 250,
-            )),
+                "assets/message.png",
+                width: 250,
+              ),
+            ),
     );
   }
 }

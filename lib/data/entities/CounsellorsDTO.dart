@@ -7,8 +7,7 @@ class Counsellor with Model {
   final bool isOnline;
   final String expertise;
   final int counsellorId;
-  static String tableName_ = "Counsellor";
- 
+
   Counsellor(
       {required this.user,
       required this.rating,
@@ -17,12 +16,11 @@ class Counsellor with Model {
       required this.counsellorId});
   @override
   int get getId {
-    return this.counsellorId;
+    return counsellorId;
   }
 
- 
   factory Counsellor.fromJson(Map<String, dynamic> json) {
-    User _user = User(
+    User user = User(
       id: json["_id"],
       name: json["name"],
       email: json["email"],
@@ -39,19 +37,20 @@ class Counsellor with Model {
         counsellorId: json['counsellorId'] is int
             ? json['counsellorId']
             : int.parse(json['counsellorId']),
-        user: _user,
+        user: user,
         isOnline: json['status'] == "online",
         expertise: json['expertise'],
         rating: double.parse(
           json['rating'].toString(),
         ));
   }
+  @override
   Map<String, dynamic> toMap() {
     return {
-      "counsellorId": this.counsellorId,
-      "rating": this.rating,
-      "expertise": this.expertise,
-      "_id": this.user.id,
+      "counsellorId": counsellorId,
+      "rating": rating,
+      "expertise": expertise,
+      "_id": user.id,
       "status": isOnline
     };
   }

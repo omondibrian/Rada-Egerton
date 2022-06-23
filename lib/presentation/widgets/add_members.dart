@@ -5,7 +5,7 @@ import 'package:rada_egerton/data/entities/UserDTO.dart';
 import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
 import 'package:rada_egerton/presentation/widgets/defaultInput.dart';
 import 'package:rada_egerton/resources/config.dart';
-import 'package:rada_egerton/data/services/counseling/main.dart';
+import 'package:rada_egerton/data/services/counseling_service.dart';
 import 'package:rada_egerton/resources/sizeConfig.dart';
 
 
@@ -74,8 +74,7 @@ class _AddMembersState extends State<AddMembers> {
                   if (user != null)
                     GestureDetector(
                       onTap: () async {
-                        print(user!.id);
-                        print(widget.groupId);
+                       
                         var result = await _counselingServiceProvider
                             .subToNewGroup(user!.id.toString(), widget.groupId);
 

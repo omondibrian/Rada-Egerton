@@ -6,11 +6,10 @@ import 'package:rada_egerton/data/entities/CounsellorsDTO.dart';
 import 'package:rada_egerton/data/entities/StudentDTO.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
 import 'package:rada_egerton/data/entities/userRoles.dart';
-import 'package:rada_egerton/data/services/counseling/main.dart';
+import 'package:rada_egerton/data/services/counseling_service.dart';
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:pusher_client/pusher_client.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart' as chats;
-import 'package:rada_egerton/data/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 class ChatProvider with ChangeNotifier {
@@ -19,8 +18,8 @@ class ChatProvider with ChangeNotifier {
   late PusherClient _pusher;
   InfoMessage? info;
   List<chats.ChatPayload>? _privateMsgs;
-  final List<Msg> _groupMsgs = [];
-  final List<Msg> _forumMsgs = [];
+  final List<ChatPayload> _groupMsgs = [];
+  final List<ChatPayload> _forumMsgs = [];
   UserRole userRole = UserRole([]);
   final List<StudentDto> _students = [];
   final CounselingServiceProvider _service = CounselingServiceProvider();
@@ -28,11 +27,11 @@ class ChatProvider with ChangeNotifier {
 
   ChatProvider();
 
-  List<Msg> get groupMessages {
+  List<ChatPayload> get groupMessages {
     return [..._groupMsgs];
   }
 
-  List<Msg> get forumMessages {
+  List<ChatPayload> get forumMessages {
     return [..._forumMsgs];
   }
 
@@ -85,23 +84,24 @@ class ChatProvider with ChangeNotifier {
 
   Future<User?> getUserProfile(String userType, int userId) async {
     //check if user exist in database
-    final query = await dbManager.getItem(User.tableName_, userId);
+    final query = await dbManager.getItem(TableNames.user, userId);
     if (query != null) {
       return User.fromJson(query);
     }
     //check if user is counsellor and fetch his/her profile details from server
     if (userType == 'counsellor') {
       final res = await _service.fetchCounsellor(userId.toString());
-      Counsellor? _counsellor;
+      Counsellor? counsellor;
       res.fold((l) {
-        _counsellor = l;
+        counsellor = l;
         //save user to local database
-        dbManager.insertItem(l.user);
-        dbManager.insertItem(l);
+        dbManager.insertItem(l.user, tableName: TableNames.user);
+        dbManager.insertItem(l, tableName: TableNames.counsellor);
       }, (r) => null);
-      return _counsellor?.user;
+      return counsellor?.user;
     }
     //Else fetch the profile from student
     else {}
+    return null;
   }
 }

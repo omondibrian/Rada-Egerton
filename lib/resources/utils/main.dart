@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pusher_client/pusher_client.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/GroupsDTO.dart' as Groups;
-import 'package:rada_egerton/data/entities/UserChatsDTO.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,66 +38,6 @@ class ServiceUtility {
     return ErrorMessage(message: e.message, status: "400");
   }
 
-  static List<Message> combinePeerMsgs(List<ChatPayload> msgs, String userId) {
-    if (msgs.isEmpty) return [];
-    List<String> userIds = [];
-    Message extractMsgs(String receipientId) {
-      List<ChatPayload> msg = [];
-      String userType = '';
-      for (var i = 0; i < msgs.length; i++) {
-        //check if message belongs to the user and the current reciepient the add it to list
-        if (msgs[i].senderId == userId || msgs[i].senderId == receipientId) {
-          if (msgs[i].reciepient == userId ||
-              msgs[i].reciepient == receipientId) {
-            msg.add(msgs[i]);
-          }
-          if (msgs[i].reciepient == receipientId ||
-              msgs[i].senderId == receipientId) {
-            userType = msgs[i].role as String;
-          }
-        }
-      }
-      return Message(recipient: receipientId, msg: msg, userType: userType);
-    }
-
-    //get a list of receipients compared to the user id
-    // for (var i = 0; i < msgs.length; i++) {
-    //   userIds.add(
-    //       userId == msgs[i].senderId ? msgs[i].reciepient : msgs[i].senderId);
-    // }
-
-    return userIds.toSet().toList().map(extractMsgs).toList();
-  }
-
-  static List<ForumPayload> parseForums(
-      Groups.GroupsDto? forums, List<Msg> forumMsgs) {
-    if (forums == null) return [];
-    List<ForumPayload> finalForumList = [];
-    print("messages $forumMsgs");
-    for (var i = 0; i < forums.data.payload.length; i++) {
-      int subForumIndex = forumMsgs
-          .indexWhere((msg) => msg.info.id == forums.data.payload[i].id);
-      print(subForumIndex);
-      if (subForumIndex != -1) {
-        finalForumList.insert(
-          0,
-          ForumPayload(
-            isSubscribed: true,
-            forum: forums.data.payload[i],
-          ),
-        );
-      } else {
-        finalForumList.add(
-          ForumPayload(
-            isSubscribed: false,
-            forum: forums.data.payload[i],
-          ),
-        );
-      }
-    }
-    return finalForumList;
-  }
-
   Future<File> uploadImage() async {
     var pickedImage = await _imagePicker.pickImage(source: ImageSource.gallery);
     File imageFile = File(pickedImage!.path);
@@ -119,7 +58,7 @@ class Pusher {
       auth: PusherAuth(
         "${GlobalConfig.baseUrl}/rada/api/v1/pusher/auth",
         headers: {
-          'Authorization': "$token",
+          'Authorization': token,
         },
       ),
     );
