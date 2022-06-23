@@ -6,7 +6,7 @@ class AppRoutes {
   static const register = "/signup";
   static const terms = "/terms";
   static const splash = "/";
-  
+
   static const dashboard = "/app";
   static const help = "help";
   static const counseling = "counseling";
@@ -38,3 +38,5 @@ class ChatEvent {
 }
 
 enum ChatModes { PRIVATE, FORUM, GROUP }
+
+const String MAPS_API_KEY = 'AIzaSyDeBoReX3POxzn5Ynsr-AIrWRP9Ot2Lzgs';
