@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
+import 'package:rada_egerton/presentation/features/help/help.dart';
+import 'package:rada_egerton/presentation/features/help/help_tabs/locationTab.dart';
 import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
 import 'package:rada_egerton/presentation/widgets/defaultInput.dart';
 import 'package:rada_egerton/presentation/widgets/password_field.dart';
@@ -24,6 +26,12 @@ class Login extends StatelessWidget {
           userController.text,
           passwordController.text,
         );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: ((context) => Help()),
+          ),
+        );
         // context.read<AuthenticationProvider>().loginUser(
         //       user: User(
         //           profilePic: "",
@@ -38,6 +46,7 @@ class Login extends StatelessWidget {
       print(e);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
