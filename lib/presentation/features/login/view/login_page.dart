@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/login/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
@@ -22,7 +23,10 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: BlocProvider(
-          create: (_) => LoginCubit(_formKey),
+          create: (_) => LoginCubit(
+            _formKey,
+            context.read<AuthenticationProvider>(),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

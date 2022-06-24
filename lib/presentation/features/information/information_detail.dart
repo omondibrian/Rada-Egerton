@@ -1,36 +1,63 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/entities/informationData.dart';
+import 'package:rada_egerton/data/providers/information.content.dart';
+import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/resources/config.dart';
 
-class InformationDetail extends StatefulWidget {
-  final InformationData informationData;
-   const InformationDetail(this.informationData, {Key?key}):super(key: key);
-  @override
-  _InformationDetailState createState() => _InformationDetailState();
-}
+class InformationDetailPage extends StatelessWidget {
+  final String infoId;
+  const InformationDetailPage(this.infoId, {Key? key}) : super(key: key);
 
-class _InformationDetailState extends State<InformationDetail> {
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<InformationProvider>(context);
+    InformationData? getData() {
+      InformationData? informationData;
+      if (provider.status == ServiceStatus.loadingSuccess) {
+        informationData = provider.informationData!
+            .where(
+              (value) => value.id.toString() == infoId,
+            )
+            .first;
+      }
+      return informationData;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.informationData.metadata.title,
+          getData()?.metadata.title ?? "Loading",
           style: Theme.of(context)
               .textTheme
               .headline2!
               .copyWith(color: Colors.white),
         ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: ListView(
-            children: buildItems(widget.informationData.content),
-          ),
-        ),
-      ),
+      body: FutureBuilder(
+          future: context.read<InformationProvider>().init(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            }
+            if (provider.status == ServiceStatus.loadingSuccess) {
+              return SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ListView(
+                    children: buildItems(
+                      getData()!.content,
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }),
     );
   }
 

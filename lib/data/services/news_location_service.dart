@@ -16,7 +16,7 @@ class NewsAndLocationServiceProvider {
 
   Future<Either<List<News>, ErrorMessage>> fetchNews() async {
     try {
-      String token = await ServiceUtility.getAuthToken() as String;
+      String token = GlobalConfig.instance.authToken;
       final result = await _httpClientConn.get(
         "$_hostUrl/api/v1/admin/news",
         options: Options(
@@ -28,7 +28,7 @@ class NewsAndLocationServiceProvider {
       );
       Iterable l = result.data["news"];
       return Left(List<News>.from(l.map((j) => News.fromJson(j))));
-    } on DioError catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -41,7 +41,7 @@ class NewsAndLocationServiceProvider {
   }
 
   Future<Either<LocationsDto, ErrorMessage>> fetchLocationPins() async {
-    String? authtoken = await ServiceUtility.getAuthToken();
+    String? authtoken = GlobalConfig.instance.authToken;
     try {
       final result = await _httpClientConn.get(
         "$_hostUrl/api/v1/admin/location",
@@ -53,7 +53,7 @@ class NewsAndLocationServiceProvider {
           result.data,
         ),
       );
-    } on DioError catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -66,7 +66,7 @@ class NewsAndLocationServiceProvider {
   }
 
   Future<Either<List<Contact>, ErrorMessage>> getContacts() async {
-    String? authtoken = await ServiceUtility.getAuthToken();
+    String? authtoken = GlobalConfig.instance.authToken;
     try {
       final result = await _httpClientConn.get(
         "$_hostUrl/api/v1/admin/contact",
@@ -75,7 +75,7 @@ class NewsAndLocationServiceProvider {
       );
       Iterable l = result.data["contacts"];
       return Left(List<Contact>.from(l.map((j) => Contact.fromJson(j))));
-    } on DioError catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,

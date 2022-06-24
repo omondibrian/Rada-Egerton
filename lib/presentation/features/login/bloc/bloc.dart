@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/services/auth_service.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
@@ -9,7 +10,13 @@ part 'state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final GlobalKey<FormState> loginFormKey;
-  LoginCubit(this.loginFormKey) : super(const LoginState());
+  final AuthenticationProvider authenticationProvider;
+  LoginCubit(
+    this.loginFormKey,
+    this.authenticationProvider,
+  ) : super(
+          const LoginState(),
+        );
 
   emailChanged(String value) {
     emit(
@@ -26,34 +33,39 @@ class LoginCubit extends Cubit<LoginState> {
   submit() async {
     if (state.submissionStatus != ServiceStatus.submiting &&
         loginFormKey.currentState?.validate() == true) {
-      emit(state.copyWith(
-        status: ServiceStatus.submiting,
-        message: InfoMessage(
-          "Submiting please wait ...",
-          MessageType.success,
+      emit(
+        state.copyWith(
+          status: ServiceStatus.submiting,
+          message: InfoMessage(
+            "Submiting please wait ...",
+            MessageType.success,
+          ),
         ),
-      ));
+      );
       final res = await AuthService.logInUser(
         state.email,
         state.password,
       );
       res.fold(
-        (l) {
-          //TODO: set authentication state
+        (data) {
           emit(
             state.copyWith(
-              status: ServiceStatus.success,
+              status: ServiceStatus.submissionSucess,
               message: InfoMessage(
                 "Login success",
                 MessageType.success,
               ),
             ),
           );
+          authenticationProvider.loginUser(
+            user: data.user,
+            authToken: data.authToken,
+          );
         },
         (r) {
           emit(
             state.copyWith(
-              status: ServiceStatus.failure,
+              status: ServiceStatus.submissionFailure,
               message: InfoMessage(r.message, MessageType.error),
             ),
           );

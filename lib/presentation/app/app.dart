@@ -3,14 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/presentation/features/chat/view/forum_chats_page.dart';
-import 'package:rada_egerton/presentation/features/chat/view/forum_page.dart';
-import 'package:rada_egerton/presentation/features/chat/view/peer_counseling_chats.dart';
-import 'package:rada_egerton/presentation/features/chat/view/private_chats.dart';
+import 'package:rada_egerton/presentation/features/chat/forum_chat/view/forumn_chats_page.dart';
+import 'package:rada_egerton/presentation/features/chat/private_chat/view/private_chats_page.dart';
 import 'package:rada_egerton/presentation/features/contributors.dart';
 import 'package:rada_egerton/presentation/features/counseling/counseling.dart';
 import 'package:rada_egerton/presentation/features/dashboard.dart';
+import 'package:rada_egerton/presentation/features/forum_page.dart';
 import 'package:rada_egerton/presentation/features/help/help.dart';
+import 'package:rada_egerton/presentation/features/information/information_detail.dart';
 import 'package:rada_egerton/presentation/features/information/information_list.dart';
 import 'package:rada_egerton/presentation/features/information/notification.dart';
 import 'package:rada_egerton/presentation/features/login/view/login_page.dart';
@@ -31,7 +31,7 @@ class RadaApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final GoRouter router = GoRouter(
       debugLogDiagnostics: true,
-      initialLocation: AppRoutes.splash,
+      initialLocation: "/",
       refreshListenable: context.read<AuthenticationProvider>(),
       redirect: (state) {
         String location = state.location;
@@ -55,7 +55,7 @@ class RadaApp extends StatelessWidget {
       routes: [
         GoRoute(
           path: AppRoutes.splash,
-          name: AppRoutes.splash,
+          name: "/",
           builder: (context, state) => const SplashScreen(),
         ),
         GoRoute(
@@ -100,31 +100,32 @@ class RadaApp extends StatelessWidget {
               path: AppRoutes.information,
               name: AppRoutes.information,
               builder: (context, state) => const Information(),
+              routes: [
+                GoRoute(
+                  path: AppRoutes.informationDetails,
+                  builder: (context, state) => InformationDetailPage(
+                    state.params["id"]!,
+                  ),
+                ),
+              ],
             ),
             GoRoute(
               path: AppRoutes.forum,
               name: AppRoutes.forum,
               builder: (context, _) => const ForumPage(),
-            ),
-            GoRoute(
-              path: AppRoutes.forumMessages,
-              name: AppRoutes.forumMessages,
-              builder: (context, state) => ForumChats(
-                forumnId: state.queryParams["id"]!,
-              ),
-            ),
-            GoRoute(
-              path: AppRoutes.peerChat,
-              name: AppRoutes.peerChat,
-              builder: (context, state) => PeerCounsellingChats(
-                id: state.queryParams["id"]!,
-              ),
+              routes: [
+                GoRoute(
+                  path: AppRoutes.forumChats,
+                  builder: (context, state) =>
+                      ForumnChatPage(state.params["forumnId"]!),
+                )
+              ],
             ),
             GoRoute(
               path: AppRoutes.privateChat,
               name: AppRoutes.privateChat,
-              builder: (context, state) => PrivateChats(
-                receipientId: state.queryParams["id"]!,
+              builder: (context, state) => PrivateChatPage(
+                state.queryParams["recepientId"]!,
               ),
             ),
             GoRoute(

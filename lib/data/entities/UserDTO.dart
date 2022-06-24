@@ -22,7 +22,7 @@ class User with Model {
   });
   @override
   int get getId {
-    return this.id;
+    return id;
   }
 
   int id;

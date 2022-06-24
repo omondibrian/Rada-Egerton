@@ -39,7 +39,7 @@ class Avatar extends StatelessWidget {
           },
         );
 
-        String authToken = await ServiceUtility.getAuthToken() as String;
+        String authToken = GlobalConfig.instance.authToken;
         final profile = await Dio().put(
           url(url: "/api/v1/admin/user/profile"),
           data: formData,
@@ -52,7 +52,6 @@ class Avatar extends StatelessWidget {
         );
         SharedPreferences prefs = await SharedPreferences.getInstance();
         User user = User.fromJson(profile.data["user"]);
-
         prefs.setString("user", userToJson(user));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -62,7 +61,7 @@ class Avatar extends StatelessWidget {
             ),
           ),
         );
-      } on DioError catch (e) {
+      } on Exception catch (e) {
         ErrorMessage err = ServiceUtility.handleDioExceptions(e);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

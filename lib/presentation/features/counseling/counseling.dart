@@ -1,7 +1,7 @@
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/counselors_tab.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/group_sessions_tab.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
-import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/private_sessions.dart';
+import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/private_chats_tab/view/private_chat_tab.dart';
 import 'package:rada_egerton/resources/sizeConfig.dart';
 
 import 'package:flutter/material.dart';
@@ -36,11 +36,11 @@ class Counseling extends StatelessWidget {
             ),
           ];
         },
-        body: TabBarView(
+        body: const TabBarView(
           children: <Widget>[
-            const CounsellorsTab(),
-            const PeerCounsellorsTab(),
-            const PrivateSessionsTab(),
+            CounsellorsTab(),
+            PeerCounsellorsTab(),
+            PrivateSessionsTab(),
             GroupSessionsTab(),
           ],
         ),

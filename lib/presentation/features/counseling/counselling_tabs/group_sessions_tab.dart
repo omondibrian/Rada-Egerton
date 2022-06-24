@@ -1,8 +1,12 @@
+import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
+import 'package:rada_egerton/data/entities/group_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
-import 'package:rada_egerton/data/providers/chat.provider.dart';
+import 'package:rada_egerton/data/providers/counseling_provider.dart';
+import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/widgets/NewGroupForm.dart';
 import 'package:rada_egerton/resources/config.dart';
+import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/theme.dart';
 import 'package:rada_egerton/resources/sizeConfig.dart';
 
@@ -14,22 +18,24 @@ class GroupSessionsTab extends StatelessWidget {
   const GroupSessionsTab({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final chatsprovider = Provider.of<ChatProvider>(context);
+    final appProvider = Provider.of<RadaApplicationProvider>(context);
+    final groups = appProvider.groups;
 
-    var conversations = chatsprovider.groupMessages;
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
     Future<void> _refresh() async {}
 
-    var radaApplicationProvider = Provider.of<RadaApplicationProvider>(context);
-
     Widget conversationBuilder(BuildContext ctx, int index) {
-      ChatPayload Conversations = conversations[index];
+      GroupDTO group = groups[index];
 
-      _openGroup() {}
       return GestureDetector(
-        // onTap: () => context.go("${AppRoutes.counselingMessages}?id=${conversations[index].messages}")
+        onTap: () => {
+          context.goNamed(
+            AppRoutes.goupChat,
+            params: {"goupId": group.id},
+          )
+        },
         child: ListTile(
           leading: CircleAvatar(
             child: ClipOval(
@@ -67,7 +73,7 @@ class GroupSessionsTab extends StatelessWidget {
           showBottomSheet(
             context: context,
             builder: (context) {
-              return newGroupForm(context, radaApplicationProvider);
+              return newGroupForm(context, appProvider);
             },
           );
         },
@@ -76,24 +82,47 @@ class GroupSessionsTab extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      body: conversations.isNotEmpty
-          ? RefreshIndicator(
-              onRefresh: () => _refresh(),
-              backgroundColor: Theme.of(context).primaryColor,
-              color: Colors.white,
-              displacement: 20.0,
-              edgeOffset: 5.0,
-              child: ListView.builder(
-                itemBuilder: conversationBuilder,
-                itemCount: conversations.length,
-              ),
-            )
-          : Center(
-              child: Image.asset(
-                "assets/message.png",
-                width: 250,
-              ),
-            ),
+      body: RefreshIndicator(
+        onRefresh: () => _refresh(),
+        backgroundColor: Theme.of(context).primaryColor,
+        color: Colors.white,
+        displacement: 20.0,
+        edgeOffset: 5.0,
+        child: Builder(
+          builder: (context) {
+            if (appProvider.groupStatus == ServiceStatus.loading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (appProvider.groupStatus == ServiceStatus.loadingFailure) {
+              return Center(
+                child: Row(
+                  children: [
+                    const Text("Ann error occured"),
+                    TextButton(
+                      onPressed: () => _refresh(),
+                      child: const Text("Retry"),
+                    )
+                  ],
+                ),
+              );
+            }
+            if (groups.isEmpty) {
+              Center(
+                child: Image.asset(
+                  "assets/message.png",
+                  width: 250,
+                ),
+              );
+            }
+            return ListView.builder(
+              itemBuilder: conversationBuilder,
+              itemCount: groups.length,
+            );
+          },
+        ),
+      ),
     );
   }
 }

@@ -15,7 +15,7 @@ class ContentService {
   static Future<Either<List<InformationData>, ErrorMessage>>
       getInformation() async {
     try {
-      String token = await ServiceUtility.getAuthToken() as String;
+      String token = GlobalConfig.instance.authToken;
       final result = await httpClient.get(
         "$_hostUrl/api/v1/admin/content",
         options: Options(headers: {
@@ -25,13 +25,12 @@ class ContentService {
       Iterable information = result.data["content"];
       return Left(List<InformationData>.from(
           information.map((data) => InformationData.fromJson(data))));
-    } on DioError catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
         reason: 'Error while fetching content data',
       );
-      log(e.response.toString());
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );
@@ -41,7 +40,7 @@ class ContentService {
   static Future<Either<List<InformationCategory>, ErrorMessage>>
       getInformationCategory() async {
     try {
-      String token = await ServiceUtility.getAuthToken() as String;
+      String token = GlobalConfig.instance.authToken;
       final result = await httpClient.get(
         "$_hostUrl/api/v1/admin/content/category",
         options: Options(headers: {
@@ -53,7 +52,7 @@ class ContentService {
       return Left(List<InformationCategory>.from(informationCategory.map(
           (data) =>
               InformationCategory(data["_id"].toString(), data["name"]))));
-    } on DioError catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,

@@ -65,7 +65,7 @@ class _LoginForm extends StatelessWidget {
             ),
           );
         }
-        if (state.submissionStatus == ServiceStatus.success) {
+        if (state.submissionStatus == ServiceStatus.submissionSucess) {
           context.goNamed(AppRoutes.login);
         }
       },

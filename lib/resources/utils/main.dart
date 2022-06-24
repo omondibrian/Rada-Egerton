@@ -1,39 +1,67 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pusher_client/pusher_client.dart';
-import 'package:rada_egerton/data/entities/GroupsDTO.dart' as Groups;
 import 'package:rada_egerton/resources/config.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ServiceUtility {
-  // late final DataConnectionChecker connection;
   final ImagePicker _imagePicker = ImagePicker();
-  static Future<String?> getAuthToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString("TOKEN");
-    return token;
-  }
 
-  static Future<bool> isAuthenticated() async {
-    var token = await getAuthToken();
-    return token!.isNotEmpty;
-  }
+  static ErrorMessage handleDioExceptions(error) {
+    if (error is Exception) {
+      if (error is SocketException) {
+        return const ErrorMessage(
+            message: "SocketException",
+            status: "Please check your internet connection");
+      }
+      if (error is DioError) {
+        switch (error.type) {
+          case DioErrorType.cancel:
+            return const ErrorMessage(
+                message: "Request cancelled", status: "Request cancelled");
+          case DioErrorType.connectTimeout:
+            return const ErrorMessage(
+                message: "Timeout", status: "Connection timeout exceeded");
+          case DioErrorType.response:
+            switch (error.response!.statusCode) {
+              case 400:
+                return const ErrorMessage(
+                    message: "Client error", status: "Bad Request");
+              case 401:
+                return const ErrorMessage(
+                    message: "Client error", status: "Unauthorized");
+              case 403:
+                return const ErrorMessage(
+                    message: "Client error", status: "Forbidden");
+              case 404:
+                return const ErrorMessage(
+                    message: "Client error",
+                    status: "Server resource not found");
+              case 500:
+                return const ErrorMessage(
+                    message: "Server error", status: "Internal sever error");
+            }
+            break;
+          case DioErrorType.sendTimeout:
+            return const ErrorMessage(
+                message: "Request timeout", status: "Request timeout");
 
-  static ErrorMessage handleDioExceptions(DioError e) {
-    // The request was made and the server responded with a status code
-    // that falls out of the range of 2xx and is also not 304.
-    if (e.response != null) {
-      return ErrorMessage(
-          message: e.response!.data["message"] ?? "An error occured",
-          status: e.response!.statusCode.toString());
-    } else {
-      // Something happened in setting up or sending the request that triggered an Error
-
+          case DioErrorType.receiveTimeout:
+            return const ErrorMessage(
+                message: "Request timeout", status: "Request timeout");
+          case DioErrorType.other:
+            return const ErrorMessage(
+                message: "Error", status: "Unexpected error occured");
+        }
+      }
     }
-    return ErrorMessage(message: e.message, status: "400");
+    return ErrorMessage(
+      message: error.toString(),
+      status: "Unexpected error",
+    );
   }
 
   Future<File> uploadImage() async {
@@ -74,16 +102,14 @@ class Pusher {
   }
 }
 
-class ErrorMessage {
-  String message;
-  String status;
-  ErrorMessage({required this.message, required this.status});
-}
-
-class ForumPayload {
-  bool isSubscribed;
-  Groups.Payload forum;
-  ForumPayload({required this.isSubscribed, required this.forum});
+class ErrorMessage extends Equatable {
+  @override
+  List<Object?> get props => [message, status];
+  final String message;
+  final String status;
+  const ErrorMessage({required this.message, required this.status});
+  @override
+  String toString() => "ErrorMessage(message: $message, status:$status ) ";
 }
 
 enum MessageType { error, info, success }

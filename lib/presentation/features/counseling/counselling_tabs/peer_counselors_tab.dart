@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:rada_egerton/data/providers/application_provider.dart';
-import 'package:rada_egerton/data/providers/counselling.provider.dart';
-import 'package:rada_egerton/presentation/features/chat/bloc/bloc.dart';
+import 'package:rada_egerton/data/providers/counseling_provider.dart';
+import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
 import 'package:rada_egerton/presentation/loading_effect/shimmer_loading.dart';
 import 'package:rada_egerton/resources/config.dart';
@@ -16,35 +15,27 @@ class PeerCounsellorsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final counsellorprovider = Provider.of<CounsellorProvider>(context);
-    final applicationProvider = Provider.of<RadaApplicationProvider>(context);
-    // final chatsprovider = Provider.of<ChatProvider>(context);
+    final counsellorprovider = Provider.of<CounsellingProvider>(context);
     var counsellors = counsellorprovider.peerCounsellors;
 
     Future<void> _refresh() async {
-      counsellorprovider.getPeerCounsellors();
+      counsellorprovider.initPeerCounsellors();
     }
 
     Widget peerCounsellorBuilder(BuildContext cxt, int index) {
-      var peerCounsellors = counsellors![index];
-      void _openChat() {
+      final peerCounsellors = counsellors[index];
+      void _openPrivateChat() {
         if (peerCounsellors.user.id == GlobalConfig.instance.user.id) return;
-        context.pushNamed(AppRoutes.peerChat,
-            queryParams: {"id": counsellors[index].getId.toString()});
-        context.read<ChatBloc>().add(
-              ChatRecepientChanged(
-                Recepient(
-                  imgUrl: counsellors[index].user.profilePic,
-                  reciepient: counsellors[index].user.id,
-                  title: counsellors[index].user.name,
-                ),
-                ChatModes.PRIVATE,
-              ),
-            );
+        context.pushNamed(
+          AppRoutes.privateChat,
+          params: {
+            "recepientId": peerCounsellors.user.id.toString(),
+          },
+        );
       }
 
       return GestureDetector(
-        onTap: _openChat,
+        onTap: _openPrivateChat,
         child: Card(
           elevation: 0,
           margin: const EdgeInsets.only(bottom: 10),
@@ -77,28 +68,31 @@ class PeerCounsellorsTab extends StatelessWidget {
               const SizedBox(
                 width: 20,
               ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(
-                  children: [
-                    Text(
-                      counsellors[index].user.name,
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text('Expertise : ',
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2!
-                            .copyWith(fontSize: 14)),
-                    Text(
-                      peerCounsellors.expertise,
-                    ),
-                  ],
-                ),
-              ])
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        counsellors[index].user.name,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Expertise : ',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle2!
+                              .copyWith(fontSize: 14)),
+                      Text(
+                        peerCounsellors.expertise,
+                      ),
+                    ],
+                  ),
+                ],
+              )
             ],
           ),
         ),
@@ -111,22 +105,42 @@ class PeerCounsellorsTab extends StatelessWidget {
       color: Colors.white,
       displacement: 20.0,
       edgeOffset: 5.0,
-      child: counsellors == null
-          ? Shimmer(
+      child: Builder(
+        builder: (context) {
+          if (counsellorprovider.peerStatus == ServiceStatus.loading) {
+            return Shimmer(
               child: ListView(
                 children:
                     List.generate(4, (index) => placeHolderListTile(context)),
               ),
-            )
-          : counsellors.isEmpty
-              ? const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text("No peer counsellors available"),
-                )
-              : ListView.builder(
-                  itemBuilder: peerCounsellorBuilder,
-                  itemCount: counsellors.length,
-                ),
+            );
+          }
+          if (counsellorprovider.peerStatus == ServiceStatus.loadingFailure) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  const Text("An error occurred"),
+                  TextButton(
+                    onPressed: () => _refresh(),
+                    child: const Text("Retry"),
+                  )
+                ],
+              ),
+            );
+          }
+          if (counsellors.isEmpty) {
+            return const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text("No peer counsellors available"),
+            );
+          }
+          return ListView.builder(
+            itemBuilder: peerCounsellorBuilder,
+            itemCount: counsellors.length,
+          );
+        },
+      ),
     );
   }
 }

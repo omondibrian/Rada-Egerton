@@ -53,7 +53,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         (l) {
           emit(
             state.copyWith(
-              status: ServiceStatus.success,
+              status: ServiceStatus.submissionSucess,
               message: InfoMessage(
                 "Registration success",
                 MessageType.success,
@@ -64,7 +64,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         (r) {
           emit(
             state.copyWith(
-              status: ServiceStatus.failure,
+              status: ServiceStatus.submissionFailure,
               message: InfoMessage(r.message, MessageType.error),
             ),
           );

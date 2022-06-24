@@ -1,28 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
-import 'package:rada_egerton/presentation/features/chat/bloc/bloc.dart';
+import 'package:rada_egerton/presentation/features/chat/forum_chat/bloc/bloc.dart';
+import 'package:rada_egerton/presentation/widgets/ChatCard.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/theme.dart';
 import 'package:swipeable_tile/swipeable_tile.dart';
 
-import 'ChatCard.dart';
-
-class BuildChatItem extends StatelessWidget {
+class ForumnChatItem extends StatelessWidget {
   final ChatPayload chat;
-  final ChatPayload? replyTo;
-  const BuildChatItem({required this.chat, required this.replyTo});
+  const ForumnChatItem({required this.chat, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    ChatPayload? replyTo = context.read<ForumnBloc>().state.chats.firstWhere(
+          (element) => element.id == chat.id,
+        );
     return SwipeableTile(
       behavior: HitTestBehavior.translucent,
       color: Colors.transparent,
       swipeThreshold: 0.2,
-      direction: chat.reciepient == GlobalConfig.instance.user.id
-          ? SwipeDirection.endToStart
-          : SwipeDirection.startToEnd,
-      onSwiped: (_) => context.read<ChatBloc>().add(ChatUnselected()),
+      // direction: chat.reciepient == GlobalConfig.instance.user.id
+      //     ? SwipeDirection.endToStart
+      //     : SwipeDirection.startToEnd,
+      onSwiped: (_) => context.read<ForumnBloc>().add(
+            ForumnChatSelected(chat),
+          ),
       key: UniqueKey(),
       backgroundBuilder: (context, direction, progress) {
         bool vibrated = false;
@@ -48,7 +51,8 @@ class BuildChatItem extends StatelessWidget {
                       .animate(
                         CurvedAnimation(
                           parent: progress,
-                          curve: Interval(0.4, 1.0, curve: Curves.elasticOut),
+                          curve: const Interval(0.4, 1.0,
+                              curve: Curves.elasticOut),
                         ),
                       )
                       .value,
@@ -67,17 +71,26 @@ class BuildChatItem extends StatelessWidget {
           // onReply(chat);
         },
         child: Row(
-          mainAxisAlignment: chat.senderId == GlobalConfig.instance.user.id
+          mainAxisAlignment: chat.senderId.toString() ==
+                  GlobalConfig.instance.user.id.toString()
               ? MainAxisAlignment.end
               : MainAxisAlignment.start,
           children: [
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-              child: chat.senderId == GlobalConfig.instance.user.id
-                  ? ChatCard(chat, Palette.sendMessage, CrossAxisAlignment.end,
-                      replyTo)
-                  : ChatCard(chat, Palette.receivedMessage,
-                      CrossAxisAlignment.start, replyTo),
+              margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+              child: chat.senderId == GlobalConfig.instance.user.id.toString()
+                  ? ChatCard(
+                      chat,
+                      Palette.sendMessage,
+                      CrossAxisAlignment.end,
+                      replyTo,
+                    )
+                  : ChatCard(
+                      chat,
+                      Palette.receivedMessage,
+                      CrossAxisAlignment.start,
+                      replyTo,
+                    ),
             ),
           ],
         ),
