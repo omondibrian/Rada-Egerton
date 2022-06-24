@@ -3,7 +3,7 @@ import 'package:rada_egerton/data/entities/UserDTO.dart';
 
 class GlobalConfig {
   String pusherApiKey = "8da328d2097b06731d0a";
-  static String baseUrl = "http://192.168.90.100";
+  static String baseUrl = "http://radaegerton.ddns.net";
   String appKey = "";
   String authToken = "";
   User user = User.empty();
