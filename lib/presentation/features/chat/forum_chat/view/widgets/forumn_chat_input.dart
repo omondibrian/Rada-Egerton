@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
+import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/chat/forum_chat/bloc/bloc.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/theme.dart';
@@ -13,7 +14,13 @@ class ForumnChatInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ForumnBloc, ForumnState>(
+    return BlocConsumer<ForumnBloc, ForumnState>(
+      listenWhen: (previous, current) => previous.status != current.status,
+      listener: (context, state) {
+        if (state.status == ServiceStatus.submissionSucess) {
+          _chatController.clear();
+        }
+      },
       buildWhen: (previous, current) =>
           previous.selectedChat != current.selectedChat,
       builder: (context, state) {
@@ -69,11 +76,25 @@ class ForumnChatInput extends StatelessWidget {
                         ),
                       ),
                     ),
-                child: const CircleAvatar(
+                child: CircleAvatar(
                   backgroundColor: Palette.accent,
-                  child: Icon(
-                    Icons.send,
-                    color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: BlocBuilder<ForumnBloc, ForumnState>(
+                      buildWhen: (previous, current) =>
+                          current.status != previous.status,
+                      builder: (context, state) {
+                        if (state.status == ServiceStatus.submiting) {
+                          return const CircularProgressIndicator(
+                            color: Colors.white,
+                          );
+                        }
+                        return const Icon(
+                          Icons.send,
+                          color: Colors.white,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),

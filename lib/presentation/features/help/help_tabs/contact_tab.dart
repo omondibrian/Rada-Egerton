@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/data/entities/ContactsDto.dart';
+import 'package:rada_egerton/data/entities/contacts_dto.dart';
 import 'package:rada_egerton/data/services/news_location_service.dart';
 
 class ContactTab extends StatefulWidget {
   const ContactTab({Key? key}) : super(key: key);
 
   @override
-  _ContactTabState createState() => _ContactTabState();
+  State<ContactTab> createState() => _ContactTabState();
 }
 
 class _ContactTabState extends State<ContactTab> {

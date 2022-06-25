@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:rada_egerton/data/database/sqlite.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
 
 class Counsellor extends Equatable with Model {
   @override

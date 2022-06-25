@@ -5,6 +5,7 @@ import 'package:rada_egerton/data/entities/auth_dto.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/services/auth_service.dart';
 import 'package:rada_egerton/resources/constants.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 import 'package:rada_egerton/resources/theme.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,6 +24,8 @@ class SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //init size config file
+    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: Palette.primary,
       body: Center(

@@ -1,14 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rada_egerton/data/entities/informationData.dart';
+import 'package:rada_egerton/data/entities/information_data.dart';
 import 'package:rada_egerton/data/providers/information.content.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/presentation/features/information/information_detail.dart';
 import 'package:rada_egerton/presentation/features/information/information_loading_placeholder.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 import 'package:go_router/go_router.dart';
 
 class Information extends StatelessWidget {
@@ -18,41 +17,54 @@ class Information extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<InformationProvider>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Rada Information',
-          style: Theme.of(context)
-              .textTheme
-              .headline1
-              ?.copyWith(color: Colors.white),
+        appBar: AppBar(
+          title: Text(
+            'Rada Information',
+            style: Theme.of(context)
+                .textTheme
+                .headline1
+                ?.copyWith(color: Colors.white),
+          ),
         ),
-      ),
-      body: FutureBuilder(
-        future: context.read<InformationProvider>().init(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
-          if (provider.status == ServiceStatus.loadingSuccess) {
-            return Container(
-              child: provider.informationCategory == null ||
-                      provider.informationData == null
-                  ? const InformationListPlaceholder()
-                  : ListView.builder(
-                      itemBuilder: (context, index) =>
-                          _contentListRow(context, provider, index),
-                      itemCount: provider.informationCategory!.length,
+        body: RefreshIndicator(
+          onRefresh: () => context.read<InformationProvider>().init(),
+          child: Builder(
+            builder: (context) {
+              if (provider.status == ServiceStatus.loadingFailure) {
+                return Row(
+                  children: [
+                    const Text("An error occurred"),
+                    const SizedBox(
+                      width: 20,
                     ),
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      ),
-
-      //
-    );
+                    TextButton(
+                      onPressed: () =>
+                          context.read<InformationProvider>().init(),
+                      child: const Text("Retry"),
+                    )
+                  ],
+                );
+              }
+              if (provider.status == ServiceStatus.loadingSuccess) {
+                return Container(
+                  child: provider.informationCategory == null ||
+                          provider.informationData == null
+                      ? const InformationListPlaceholder()
+                      : ListView.builder(
+                          itemBuilder: (context, index) =>
+                              _contentListRow(context, provider, index),
+                          itemCount: provider.informationCategory!.length,
+                        ),
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
+        )
+        //
+        );
   }
 
   Widget _contentListRow(
@@ -99,9 +111,14 @@ class Information extends StatelessWidget {
     double imageWidth = SizeConfig.isTabletWidth ? 400 : 200;
 
     return InkWell(
-      onTap: () => context.pushNamed(AppRoutes.informationDetails, params: {
-        "id": informationItem.id.toString(),
-      }),
+      onTap: () => context.push(
+        context.namedLocation(
+          AppRoutes.informationDetails,
+          params: {
+            "id": informationItem.id.toString(),
+          },
+        ),
+      ),
       child: Card(
         margin: const EdgeInsets.all(5.0),
         clipBehavior: Clip.antiAlias,

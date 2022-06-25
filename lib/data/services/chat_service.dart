@@ -24,7 +24,7 @@ class ChatService {
       return Left(
         ChatPayload.fromJson(result.data),
       );
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -62,7 +62,7 @@ class ChatService {
       return Left(
         ChatPayload.fromJson(result.data),
       );
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -101,7 +101,7 @@ class ChatService {
       return Left(
         ChatPayload.fromJson(result.data),
       );
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,

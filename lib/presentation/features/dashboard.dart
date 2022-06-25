@@ -3,14 +3,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
-import 'package:rada_egerton/resources/config.dart';
 
 import 'package:rada_egerton/resources/constants.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 
+// ignore: constant_identifier_names
 enum FilterOptions { Profile, Contributors, LogOut }
 
 class Dashboard extends StatelessWidget {
+  const Dashboard({Key? key}) : super(key: key);
+
   Widget dashBoardBuilder(BuildContext ctx, int index) {
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,

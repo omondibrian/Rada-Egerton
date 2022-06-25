@@ -4,10 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/register/bloc/bloc.dart';
-import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
-import 'package:rada_egerton/presentation/widgets/defaultInput.dart';
+import 'package:rada_egerton/presentation/widgets/button.dart';
+import 'package:rada_egerton/presentation/widgets/input.dart';
 import 'package:rada_egerton/resources/constants.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 class Register extends StatelessWidget {
@@ -55,6 +55,7 @@ class _LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<RegisterCubit, RegisterState>(
       listener: (context, state) {
+        
         if (state.message != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

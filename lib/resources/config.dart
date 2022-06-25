@@ -1,19 +1,21 @@
 import 'package:dio/dio.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
-import 'package:rada_egerton/data/entities/userRoles.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
+import 'package:rada_egerton/data/entities/user_roles.dart';
 import 'package:rada_egerton/data/services/auth_service.dart';
 
 class GlobalConfig {
   String pusherApiKey = "8da328d2097b06731d0a";
-  static String baseUrl = "http://radaegerton.ddns.net/";
+  static String baseUrl = "https://radaegerton.ddns.net";
   String appKey = "";
   String authToken = "";
   User user = User.empty();
   UserRole? _userRoles;
-  //TODO provide cdn urls for placeholder images
+  
   //placeholder avatar images
-  static String userAvi = "";
-  static String usersApi = "";
+  static String userAvi =
+      "https://img.icons8.com/ios-glyphs/90/000000/user--v1.png";
+  static String usersApi =
+      "https://img.icons8.com/ios-glyphs/90/000000/group.png";
 
   Future<UserRole> get userRoles async {
     if (_userRoles != null) {
@@ -23,8 +25,8 @@ class GlobalConfig {
       user.id.toString(),
     );
     res.fold(
-      (l) => _userRoles = l,
-      (r) => throw (r),
+      (roles) => _userRoles = roles,
+      (error) => throw (error),
     );
     return _userRoles!;
   }

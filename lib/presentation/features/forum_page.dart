@@ -9,8 +9,9 @@ import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
 
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:rada_egerton/resources/utils/main.dart';
 
 class ForumPage extends StatelessWidget {
   const ForumPage({Key? key}) : super(key: key);
@@ -19,11 +20,9 @@ class ForumPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<RadaApplicationProvider>(context);
     final allForumns = provider.allForumns;
-    final subscribedForumns = provider.subscribedForumns;
 
     Future<void> _refresh() async {
       provider.initAllForumns();
-      provider.initUserForumns();
     }
 
     return Scaffold(
@@ -70,7 +69,7 @@ class ForumPage extends StatelessWidget {
               return ListView.builder(
                 itemBuilder: (context, index) => _ForumnItem(
                   forumn: allForumns[index],
-                  isSubscribed: subscribedForumns.contains(allForumns[index]),
+                  isSubscribed: provider.isSubscribedToForum(allForumns[index]),
                 ),
                 itemCount: allForumns.length,
               );
@@ -85,17 +84,18 @@ class ForumPage extends StatelessWidget {
 class _ForumnItem extends StatelessWidget {
   final GroupDTO forumn;
   final bool isSubscribed;
-  const _ForumnItem(
-      {required this.forumn, required this.isSubscribed, Key? key})
-      : super(key: key);
-
+  const _ForumnItem({
+    required this.forumn,
+    required this.isSubscribed,
+    Key? key,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     void _openForumn() {
-      if (isSubscribed) return;
+      if (!isSubscribed) return;
       context.pushNamed(
         AppRoutes.forumChats,
-        queryParams: {
+        params: {
           "forumnId": forumn.id.toString(),
         },
       );
@@ -128,11 +128,23 @@ class _ForumnItem extends StatelessWidget {
         subtitle: const Text(
           "say something...",
         ),
-        trailing: isSubscribed
+        trailing: !isSubscribed
             ? TextButton(
                 child: const Text('Join'),
-                onPressed: () => {
-                  //TODO join forum
+                onPressed: () {
+                  context
+                      .read<RadaApplicationProvider>()
+                      .joinForum(forumn.id)
+                      .then(
+                        (info) => ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              info.message,
+                              style: TextStyle(color: info.messageTypeColor),
+                            ),
+                          ),
+                        ),
+                      );
                 },
               )
             : TextButton(

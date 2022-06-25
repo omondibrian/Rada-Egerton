@@ -32,7 +32,7 @@ class News {
         universityId: json["University_id"],
       );
 
-  String get imageUrl => config.imageUrl(imageUrl);
+  String get imageUrl => config.imageUrl(imageName);
 
   Map<String, dynamic> toJson() => {
         "_id": id,

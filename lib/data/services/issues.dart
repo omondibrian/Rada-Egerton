@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
-import 'package:rada_egerton/data/entities/ComplaintDto.dart';
+import 'package:rada_egerton/data/entities/complaint_dto.dart';
 
 class IssueServiceProvider {
   final String _hostUrl = GlobalConfig.baseUrl;
@@ -23,7 +23,7 @@ class IssueServiceProvider {
           data: json.encode(data));
 
       return Left(ComplaintDto.fromJson(result.data));
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -46,7 +46,7 @@ class IssueServiceProvider {
 
       return Left(
           List<IssueCategory>.from(l.map((j) => IssueCategory.fromJson(j))));
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,

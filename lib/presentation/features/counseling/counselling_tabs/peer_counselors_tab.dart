@@ -8,7 +8,7 @@ import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
 import 'package:rada_egerton/presentation/loading_effect/shimmer_loading.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 
 class PeerCounsellorsTab extends StatelessWidget {
   const PeerCounsellorsTab({Key? key}) : super(key: key);
@@ -26,12 +26,12 @@ class PeerCounsellorsTab extends StatelessWidget {
       final peerCounsellors = counsellors[index];
       void _openPrivateChat() {
         if (peerCounsellors.user.id == GlobalConfig.instance.user.id) return;
-        context.pushNamed(
+        context.pushNamed(context.namedLocation(
           AppRoutes.privateChat,
           params: {
             "recepientId": peerCounsellors.user.id.toString(),
           },
-        );
+        ));
       }
 
       return GestureDetector(

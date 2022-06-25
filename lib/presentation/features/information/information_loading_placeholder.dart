@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
 import 'package:rada_egerton/presentation/loading_effect/shimmer_loading.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 
 class InformationListPlaceholder extends StatelessWidget {
   const InformationListPlaceholder({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double _imageHeight = SizeConfig.isTabletWidth ? 300 : 150;
-    double _imageWidth = SizeConfig.isTabletWidth ? 400 : 200;
-    int cols = (MediaQuery.of(context).size.width / (_imageWidth + 30)).round();
+    double imageHeight = SizeConfig.isTabletWidth ? 300 : 150;
+    double imageWidth = SizeConfig.isTabletWidth ? 400 : 200;
+    int cols = (MediaQuery.of(context).size.width / (imageWidth + 30)).round();
     int rows =
-        (MediaQuery.of(context).size.height / (_imageHeight + 50)).round();
+        (MediaQuery.of(context).size.height / (imageHeight + 50)).round();
     return Shimmer(
       child: ListView(
         children: List.generate(
@@ -38,7 +38,7 @@ class InformationListPlaceholder extends StatelessWidget {
                       children: List.generate(
                     cols,
                     (index) =>
-                        _informationCard(context, _imageHeight, _imageWidth),
+                        _informationCard(context, imageHeight, imageWidth),
                   ))),
               const SizedBox(
                 height: 30,
@@ -51,7 +51,7 @@ class InformationListPlaceholder extends StatelessWidget {
   }
 
   Widget _informationCard(
-      BuildContext context, double _imageHeight, double _imageWidth) {
+      BuildContext context, double imageHeight, double imageWidth) {
     return ShimmerLoading(
       child: Card(
         margin: const EdgeInsets.all(5.0),
@@ -65,8 +65,8 @@ class InformationListPlaceholder extends StatelessWidget {
                 Radius.circular(5.0),
               ),
               child: Container(
-                height: _imageHeight,
-                width: _imageWidth,
+                height: imageHeight,
+                width: imageWidth,
                 decoration: const BoxDecoration(
                   color: Colors.black,
                 ),

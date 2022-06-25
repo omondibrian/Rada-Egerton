@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/data/services/auth_service.dart';
 import 'package:rada_egerton/data/status.dart';
 

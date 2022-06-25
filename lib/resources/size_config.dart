@@ -30,7 +30,6 @@ class SizeConfig {
     safeBlockVertical = (screenHeight -
         _safeAreaVertical) / 100;
 
-    print("HEIGHT $screenHeight");
-    print("WIDTH $screenWidth");
+  
   }
 }

@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
+import 'package:rada_egerton/data/entities/chat_dto.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/data/entities/group_dto.dart';
 import 'package:rada_egerton/data/services/counseling_service.dart';
 import 'package:rada_egerton/data/status.dart';
+import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 /// Manage state for  Forumns, Groups, Users
@@ -18,6 +20,23 @@ class RadaApplicationProvider with ChangeNotifier {
   ServiceStatus allForumnsStatus = ServiceStatus.initial;
   List<User> users = [];
 
+  GroupDTO getForumn(String forumId) {
+    return allForumns.firstWhere((element) => element.id == forumId);
+  }
+
+  GroupDTO getGroup(String groupId) {
+    return groups.firstWhere((element) => element.id == groupId);
+  }
+
+  bool isSubscribedToForum(GroupDTO forum) {
+    for (var f in subscribedForumns) {
+      if (f.id == forum.id) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   RadaApplicationProvider() {
     initAllForumns();
     initGroups();
@@ -27,6 +46,8 @@ class RadaApplicationProvider with ChangeNotifier {
   Future<void> initUserForumns() async {
     subscribedForumnsStatus = ServiceStatus.loading;
     notifyListeners();
+    //TODO: replace to a call to subscribed forumns
+
     final res = await CounselingService.userForums();
     res.fold(
       (forumns) {
@@ -44,7 +65,6 @@ class RadaApplicationProvider with ChangeNotifier {
   Future<void> initAllForumns() async {
     allForumnsStatus = ServiceStatus.loading;
     notifyListeners();
-    //TODO: replace to a call to all forumns
     final res = await CounselingService.userForums();
     res.fold(
       (forumns) {
@@ -113,5 +133,26 @@ class RadaApplicationProvider with ChangeNotifier {
         InfoMessage(e.message, MessageType.error),
       );
     }
+  }
+
+  Future<InfoMessage> joinForum(String forumnId) async {
+    late InfoMessage message;
+
+    final res = await CounselingService.subToNewGroup(
+      GlobalConfig.instance.user.id.toString(),
+      forumnId,
+    );
+    res.fold(
+      (forum) {
+        subscribedForumns.add(forum);
+        notifyListeners();
+        message = InfoMessage(
+          "You have joined the forumn",
+          MessageType.success,
+        );
+      },
+      (error) => message = InfoMessage.fromError(error),
+    );
+    return message;
   }
 }

@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rada_egerton/data/entities/group_dto.dart';
+import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/presentation/features/chat/group_chat/bloc/bloc.dart';
 
 class GroupAppBar extends StatelessWidget {
@@ -10,8 +12,8 @@ class GroupAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final counselingProvider = Provider.of<CounsellorProvider>(context);
-    //TODO: add Group name, image
+    String groupId = context.read<GroupBloc>().groupId;
+    GroupDTO group = context.read<RadaApplicationProvider>().getGroup(groupId);
     return AppBar(
       title: Row(
         children: [
@@ -19,7 +21,7 @@ class GroupAppBar extends StatelessWidget {
             child: ClipOval(
               child: CachedNetworkImage(
                 color: Colors.white,
-                imageUrl: "formn image",
+                imageUrl: group.image,
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -35,6 +37,16 @@ class GroupAppBar extends StatelessWidget {
                 ),
               ),
             ),
+          ),
+          const SizedBox(width: 10),
+          Column(
+            children: [
+              Text(group.title),
+              const Text(
+                "Say something..",
+                style: TextStyle(fontSize: 12),
+              ),
+            ],
           ),
         ],
       ),

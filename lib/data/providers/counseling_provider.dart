@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/data/entities/CounsellorsDTO.dart';
-import 'package:rada_egerton/data/entities/PeerCounsellorDTO.dart';
+import 'package:rada_egerton/data/entities/counsellors_dto.dart';
+import 'package:rada_egerton/data/entities/peer_counsellor_dto.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 

@@ -2,9 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:rada_egerton/resources/config.dart';
-import 'package:rada_egerton/data/entities/NewsDTO.dart';
-import 'package:rada_egerton/data/entities/locationDto.dart';
-import 'package:rada_egerton/data/entities/ContactsDto.dart';
+import 'package:rada_egerton/data/entities/news_dto.dart';
+import 'package:rada_egerton/data/entities/location_dto.dart';
+import 'package:rada_egerton/data/entities/contacts_dto.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 class NewsAndLocationServiceProvider {
@@ -28,7 +28,7 @@ class NewsAndLocationServiceProvider {
       );
       Iterable l = result.data["news"];
       return Left(List<News>.from(l.map((j) => News.fromJson(j))));
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -53,7 +53,7 @@ class NewsAndLocationServiceProvider {
           result.data,
         ),
       );
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -75,7 +75,7 @@ class NewsAndLocationServiceProvider {
       );
       Iterable l = result.data["contacts"];
       return Left(List<Contact>.from(l.map((j) => Contact.fromJson(j))));
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rada_egerton/data/entities/informationData.dart';
+import 'package:rada_egerton/data/entities/information_data.dart';
 import 'package:rada_egerton/data/providers/information.content.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/resources/config.dart';
@@ -35,29 +35,37 @@ class InformationDetailPage extends StatelessWidget {
               .copyWith(color: Colors.white),
         ),
       ),
-      body: FutureBuilder(
-          future: context.read<InformationProvider>().init(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Text(snapshot.error.toString());
-            }
-            if (provider.status == ServiceStatus.loadingSuccess) {
-              return SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ListView(
-                    children: buildItems(
-                      getData()!.content,
-                    ),
-                  ),
+      body: Builder(builder: (context) {
+        if (provider.status == ServiceStatus.loadingFailure) {
+          return Row(
+            children: [
+              const Text(
+                "An error occured while loading the data",
+              ),
+              TextButton(
+                onPressed: () => context.read<InformationProvider>().init(),
+                child: const Text("Retry"),
+              )
+            ],
+          );
+        }
+        if (provider.status == ServiceStatus.loadingSuccess) {
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ListView(
+                children: buildItems(
+                  getData()!.content,
                 ),
-              );
-            }
+              ),
+            ),
+          );
+        }
 
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }),
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      }),
     );
   }
 

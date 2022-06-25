@@ -8,8 +8,13 @@ class ChatCard extends StatelessWidget {
   final Color chatCardColor;
   final ChatPayload? replyTo;
   final CrossAxisAlignment crossAxisAlignment;
-  ChatCard(
-      this.chat, this.chatCardColor, this.crossAxisAlignment, this.replyTo);
+  const ChatCard(
+    this.chat,
+    this.chatCardColor,
+    this.crossAxisAlignment,
+    this.replyTo, {
+    Key? key,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,7 +51,8 @@ class ChatCard extends StatelessWidget {
                     crossAxisAlignment: crossAxisAlignment,
                     children: [
                       Material(
-                        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(8.0)),
                         clipBehavior: Clip.hardEdge,
                         child: Image.network(
                           imageUrl(chat.imageUrl!),
@@ -85,11 +91,9 @@ class ChatCard extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      Container(
-                        child: Text(
-                          chat.message,
-                          style: const TextStyle(color: Colors.black),
-                        ),
+                      Text(
+                        chat.message,
+                        style: const TextStyle(color: Colors.black),
                       )
                     ],
                   )

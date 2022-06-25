@@ -31,8 +31,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
   submit() async {
-    if (state.submissionStatus != ServiceStatus.submiting &&
-        registerForm.currentState?.validate() == true) {
+    if (registerForm.currentState?.validate() == true) {
       emit(state.copyWith(
         status: ServiceStatus.submiting,
         message: InfoMessage(

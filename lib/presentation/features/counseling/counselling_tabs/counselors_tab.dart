@@ -1,15 +1,17 @@
 import 'package:go_router/go_router.dart';
+import 'package:rada_egerton/data/entities/counsellors_dto.dart';
+import 'package:rada_egerton/data/entities/group_dto.dart';
 import 'package:rada_egerton/data/providers/counseling_provider.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
 import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
-import 'package:rada_egerton/presentation/widgets/ratingBar.dart';
+import 'package:rada_egerton/presentation/widgets/rating_bar.dart';
 import 'package:rada_egerton/resources/config.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/resources/constants.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class CounsellorsTab extends StatelessWidget {
@@ -24,132 +26,105 @@ class CounsellorsTab extends StatelessWidget {
       await counsellorprovider.initCounsellors();
     }
 
-    Widget conselorsBuilder(BuildContext cxt, int index) {
-      return GestureDetector(
-        onTap: () {
-          if (counsellors[index].user.id == GlobalConfig.instance.user.id) {
-            return;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Builder(
+        builder: (context) {
+          if (counsellorprovider.counsellorStatus == ServiceStatus.loading) {
+            return Shimmer(
+              child: ListView(
+                children:
+                    List.generate(4, (index) => placeHolderListTile(context)),
+              ),
+            );
           }
-          context.pushNamed(
-            AppRoutes.privateChat,
-            params: {
-              "recepientId": counsellors[index].user.id.toString(),
-            },
-          );
-        },
-        child: Card(
-          elevation: 0,
-          margin: const EdgeInsets.only(bottom: 10),
-          child: Row(
-            children: [
-              Column(
+          if (counsellorprovider.counsellorStatus ==
+              ServiceStatus.loadingFailure) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
                 children: [
-                  CircleAvatar(
-                    radius: SizeConfig.isTabletWidth ? 40 : 20.0,
-                    child: ClipOval(
-                      child: CachedNetworkImage(
-                          color: Colors.white,
-                          imageUrl:
-                              imageUrl(counsellors[index].user.profilePic),
-                          imageBuilder: (context, imageProvider) => Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                width: SizeConfig.isTabletWidth ? 120 : 90,
-                                height: SizeConfig.isTabletWidth ? 120 : 90,
-                              ),
-                          placeholder: (context, url) =>
-                              Image.asset("assets/user.png")),
-                    ),
-                  ),
+                  const Text("An error occurred"),
+                  TextButton(
+                    onPressed: () => _refresh(),
+                    child: const Text("Retry"),
+                  )
                 ],
               ),
-              const SizedBox(
-                width: 20,
-              ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(
-                  children: [
-                    Text(
-                      counsellors[index].user.name,
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text('Expertise : ',
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2!
-                            .copyWith(fontSize: 14)),
-                    Text(
-                      counsellors[index].expertise,
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    ratingBar(rating: counsellors[index].rating, size: 20),
-                  ],
-                ),
-              ])
-            ],
-          ),
+            );
+          }
+          if (counsellors.isEmpty) {
+            return const Padding(
+              padding: EdgeInsets.all(8),
+              child: Text("No counsellors available"),
+            );
+          }
+          return ListView(children: [
+            ...counsellors
+                .map((c) => _CounselloItem(
+                      c,
+                    ))
+                .toList()
+          ]
+              // itemBuilder: (context, index) => _CounselloItem(
+              //   counsellors[index],
+              // ),
+              // itemCount: counsellors.length,
+              );
+        },
+      ),
+    );
+  }
+}
+
+class _CounselloItem extends StatelessWidget {
+  final Counsellor counsellor;
+  const _CounselloItem(this.counsellor, {Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    _openForumn() {
+      if (counsellor.user.id == GlobalConfig.instance.user.id) {
+        return;
+      }
+      context.push(
+        context.namedLocation(
+          AppRoutes.privateChat,
+          params: {
+            "recepientId": counsellor.user.id.toString(),
+          },
         ),
       );
     }
 
-    return RefreshIndicator(
-      onRefresh: () => _refresh(),
-      backgroundColor: Theme.of(context).primaryColor,
-      color: Colors.white,
-      displacement: 20.0,
-      edgeOffset: 5.0,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-
-        // ignore: curly_braces_in_flow_control_structures
-        child: Builder(
-          builder: (context) {
-            if (counsellorprovider.counsellorStatus == ServiceStatus.loading) {
-              return Shimmer(
-                child: ListView(
-                  children:
-                      List.generate(4, (index) => placeHolderListTile(context)),
+    return GestureDetector(
+      onTap: _openForumn,
+      child: ListTile(
+        minVerticalPadding: 0,
+        isThreeLine: true,
+        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+        leading: CircleAvatar(
+          child: CachedNetworkImage(
+            color: Colors.white,
+            imageUrl: imageUrl(counsellor.user.profilePic),
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
                 ),
-              );
-            }
-            if (counsellorprovider.counsellorStatus ==
-                ServiceStatus.loadingFailure) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    const Text("An error occurred"),
-                    TextButton(
-                      onPressed: () => _refresh(),
-                      child: const Text("Retry"),
-                    )
-                  ],
-                ),
-              );
-            }
-            if (counsellors.isEmpty) {
-              return const Padding(
-                padding: EdgeInsets.all(8),
-                child: Text("No counsellors available"),
-              );
-            }
-            return ListView.builder(
-              itemBuilder: conselorsBuilder,
-              itemCount: counsellors.length,
-            );
-          },
+              ),
+              width: 90,
+              height: 90,
+            ),
+            placeholder: (context, url) => Image.asset("assets/users.png"),
+          ),
         ),
+        title: Text(
+          counsellor.user.name,
+          style: Theme.of(context).textTheme.subtitle1,
+        ),
+        subtitle: Text(counsellor.expertise),
+        trailing: ratingBar(rating: counsellor.rating, size: 20),
       ),
     );
   }

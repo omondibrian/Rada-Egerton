@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
@@ -11,7 +11,7 @@ import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
 
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
@@ -107,9 +107,11 @@ class _ChatItem extends StatelessWidget {
 
     void _openChat() {
       if (GlobalConfig.instance.user.id.toString() == recipientId) return;
-      context.pushNamed(
-        AppRoutes.privateChat,
-        queryParams: {"recepientId": recipientId},
+      context.push(
+        context.namedLocation(
+          AppRoutes.privateChat,
+          params: {"recepientId": recipientId},
+        ),
       );
     }
 

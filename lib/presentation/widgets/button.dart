@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 import 'package:rada_egerton/resources/theme.dart';
 
 class RadaButton extends StatelessWidget {
@@ -17,7 +17,7 @@ class RadaButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: SizeConfig.isTabletWidth ? 600 : 290.0,
-      height: SizeConfig.isTabletWidth ? 50 : 40.0,
+      height: 50,
       padding: const EdgeInsets.all(0.0),
       margin: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -71,13 +71,13 @@ class RadaButtonProgress extends StatelessWidget {
   const RadaButtonProgress({
     Key? key,
     required this.title,
-    this.fill = false,
+    this.fill = true,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
       width: SizeConfig.isTabletWidth ? 600 : 290.0,
-      height: SizeConfig.isTabletWidth ? 50 : 40.0,
+      height: 50.0,
       padding: const EdgeInsets.all(0.0),
       margin: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -110,6 +110,7 @@ class RadaButtonProgress extends StatelessWidget {
         ),
         child: fill
             ? Row(
+               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
                     title,

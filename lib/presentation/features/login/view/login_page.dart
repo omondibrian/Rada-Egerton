@@ -5,11 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/login/bloc/bloc.dart';
-import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
-import 'package:rada_egerton/presentation/widgets/defaultInput.dart';
+import 'package:rada_egerton/presentation/widgets/button.dart';
+import 'package:rada_egerton/presentation/widgets/input.dart';
 import 'package:rada_egerton/presentation/widgets/password_field.dart';
 import 'package:rada_egerton/resources/constants.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 import 'package:rada_egerton/resources/utils/validators.dart';
 
@@ -82,10 +82,12 @@ class _LoginForm extends StatelessWidget {
             children: [
               SizedBox(
                 width: SizeConfig.isTabletWidth ? 600 : 290.0,
-                child: const DefaultInput(
+                child: DefaultInput(
                   hintText: 'Username',
                   validator: emailValidator,
                   icon: Icons.person,
+                  onChange: (value) =>
+                      context.read<LoginCubit>().emailChanged(value),
                 ),
               ),
               SizedBox(

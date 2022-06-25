@@ -4,12 +4,12 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 import 'package:rada_egerton/data/entities/group_dto.dart';
-import 'package:rada_egerton/data/entities/CounsellorsDTO.dart';
-import 'package:rada_egerton/data/entities/PeerCounsellorDTO.dart';
+import 'package:rada_egerton/data/entities/counsellors_dto.dart';
+import 'package:rada_egerton/data/entities/peer_counsellor_dto.dart';
 
 class CounselingService {
   static final String _hostUrl = GlobalConfig.baseUrl;
@@ -36,7 +36,7 @@ class CounselingService {
           ),
         ),
       );
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -61,7 +61,7 @@ class CounselingService {
         }, sendTimeout: 10000),
       );
       payload = result.data["counsellor"];
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -92,7 +92,7 @@ class CounselingService {
       for (var i = 0; i < payload.length; i++) {
         peerCounsellors.add(PeerCounsellorDto.fromJson(payload[i]));
       }
-    } on Exception catch (e) {
+    } catch (e) {
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );
@@ -111,6 +111,7 @@ class CounselingService {
           'Authorization': token,
         }, sendTimeout: 10000),
       );
+      print(result);
       Iterable forumns = result.data["data"]["payload"];
       return Left(
         List<GroupDTO>.from(
@@ -119,7 +120,7 @@ class CounselingService {
           ),
         ),
       );
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -149,7 +150,7 @@ class CounselingService {
           ),
         ),
       );
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -160,7 +161,7 @@ class CounselingService {
   }
 
   ///subscribeToGroup
-  static Future<Either<GroupDTO, ErrorMessage>?> subToNewGroup(
+  static Future<Either<GroupDTO, ErrorMessage>> subToNewGroup(
       String userId, String groupId) async {
     try {
       String token = GlobalConfig.instance.authToken;
@@ -179,7 +180,7 @@ class CounselingService {
           result.data["data"]["payload"],
         ),
       );
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -214,7 +215,7 @@ class CounselingService {
       return Left(
         GroupDTO.fromJson(result.data['data']['payload']),
       );
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -242,7 +243,7 @@ class CounselingService {
           result.data["data"]["payload"],
         ),
       );
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -266,7 +267,7 @@ class CounselingService {
         }, sendTimeout: 10000),
       );
       return Left(User.fromJson(result.data["user"]));
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -290,7 +291,7 @@ class CounselingService {
         }, sendTimeout: 10000),
       );
       return Left(User.fromJson(result.data["user"]));
-    } on Exception catch (e) {
+    } catch (e) {
       return Right(
         ServiceUtility.handleDioExceptions(e),
       );
@@ -315,7 +316,7 @@ class CounselingService {
           image: result.data['image'],
         ),
       );
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -343,7 +344,7 @@ class CounselingService {
       return Left(
         InfoMessage("Rating sucessfuly", MessageType.success),
       );
-    } on Exception catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,

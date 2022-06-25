@@ -17,19 +17,13 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -52,11 +46,31 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCl9ioK5W_NiaVkgSDEMbZPFqOLeRmjJ-Y',
+    appId: '1:577396855316:web:e95644374a02fb59cc8d01',
+    messagingSenderId: '577396855316',
+    projectId: 'rada-egerton',
+    authDomain: 'rada-egerton.firebaseapp.com',
+    storageBucket: 'rada-egerton.appspot.com',
+    measurementId: 'G-1BZ3W547BQ',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDhptKtgTJG5abGcL-TT66uzk1QrVbEgB4',
     appId: '1:577396855316:android:476a481185abd3bccc8d01',
     messagingSenderId: '577396855316',
     projectId: 'rada-egerton',
     storageBucket: 'rada-egerton.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAd3bn2k14HdGtMagt85vOmeOoRofxYyag',
+    appId: '1:577396855316:ios:9699836ba73959edcc8d01',
+    messagingSenderId: '577396855316',
+    projectId: 'rada-egerton',
+    storageBucket: 'rada-egerton.appspot.com',
+    iosClientId: '577396855316-mi1pdg3tb8mlh5gtuepbce0jet04foi8.apps.googleusercontent.com',
+    iosBundleId: 'com.example.radaEgerton',
   );
 }

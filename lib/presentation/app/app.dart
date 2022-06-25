@@ -35,6 +35,7 @@ class RadaApp extends StatelessWidget {
       refreshListenable: context.read<AuthenticationProvider>(),
       redirect: (state) {
         String location = state.location;
+        print(location);
         AuthenticationStatus status =
             context.read<AuthenticationProvider>().status;
 
@@ -54,8 +55,8 @@ class RadaApp extends StatelessWidget {
       },
       routes: [
         GoRoute(
-          path: AppRoutes.splash,
-          name: "/",
+          name: AppRoutes.splash,
+          path: "/",
           builder: (context, state) => const SplashScreen(),
         ),
         GoRoute(
@@ -79,12 +80,12 @@ class RadaApp extends StatelessWidget {
         GoRoute(
           path: AppRoutes.dashboard,
           name: AppRoutes.dashboard,
-          builder: (contex, state) => Dashboard(),
+          builder: (contex, state) => const Dashboard(),
           routes: [
             GoRoute(
               path: AppRoutes.counseling,
               name: AppRoutes.counseling,
-              builder: (context, state) => Counseling(),
+              builder: (context, state) => const Counseling(),
             ),
             GoRoute(
               path: AppRoutes.mentorship,
@@ -102,7 +103,8 @@ class RadaApp extends StatelessWidget {
               builder: (context, state) => const Information(),
               routes: [
                 GoRoute(
-                  path: AppRoutes.informationDetails,
+                  path: "information/:id",
+                  name: AppRoutes.informationDetails,
                   builder: (context, state) => InformationDetailPage(
                     state.params["id"]!,
                   ),
@@ -113,16 +115,16 @@ class RadaApp extends StatelessWidget {
               path: AppRoutes.forum,
               name: AppRoutes.forum,
               builder: (context, _) => const ForumPage(),
-              routes: [
-                GoRoute(
-                  path: AppRoutes.forumChats,
-                  builder: (context, state) =>
-                      ForumnChatPage(state.params["forumnId"]!),
-                )
-              ],
             ),
             GoRoute(
-              path: AppRoutes.privateChat,
+              path: "${AppRoutes.forumChats}/:forumnId",
+              name: AppRoutes.forumChats,
+              builder: (context, state) => ForumnChatPage(
+                state.params["forumnId"]!,
+              ),
+            ),
+            GoRoute(
+              path: "chat/:recepientId",
               name: AppRoutes.privateChat,
               builder: (context, state) => PrivateChatPage(
                 state.queryParams["recepientId"]!,

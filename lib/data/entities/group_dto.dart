@@ -18,7 +18,7 @@ class GroupDTO extends Equatable with Model {
         id: json["id"].toString(),
         title: json["title"],
         image: json["image"],
-        isForumn: json["forumn"],
+        isForumn: json["forum"] ?? false,
       );
 
   @override

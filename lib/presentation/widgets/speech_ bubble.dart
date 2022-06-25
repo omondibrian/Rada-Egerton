@@ -17,7 +17,7 @@ class TypingIndicator extends StatefulWidget {
   final Color flashingCircleBrightColor;
 
   @override
-  _TypingIndicatorState createState() => _TypingIndicatorState();
+  State<TypingIndicator> createState() => _TypingIndicatorState();
 }
 
 class _TypingIndicatorState extends State<TypingIndicator>

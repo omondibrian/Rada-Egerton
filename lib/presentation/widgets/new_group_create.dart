@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
-import 'RadaButton.dart';
+import 'button.dart';
 import 'package:flutter/material.dart';
 
 Widget newGroupForm(

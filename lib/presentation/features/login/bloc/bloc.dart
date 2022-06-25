@@ -31,8 +31,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   submit() async {
-    if (state.submissionStatus != ServiceStatus.submiting &&
-        loginFormKey.currentState?.validate() == true) {
+    if (loginFormKey.currentState?.validate() == true) {
       emit(
         state.copyWith(
           status: ServiceStatus.submiting,

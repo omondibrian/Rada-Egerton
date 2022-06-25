@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rada_egerton/data/entities/group_dto.dart';
+import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/presentation/features/chat/forum_chat/bloc/bloc.dart';
+import 'package:rada_egerton/resources/config.dart';
 
 class ForumnAppBar extends StatelessWidget {
   const ForumnAppBar({
@@ -10,16 +13,18 @@ class ForumnAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final counselingProvider = Provider.of<CounsellorProvider>(context);
-    //TODO: add forumn name, image
+    String forumnId = context.read<ForumnBloc>().forumnId;
+    GroupDTO forumn =
+        context.read<RadaApplicationProvider>().getForumn(forumnId);
     return AppBar(
+      centerTitle: true,
       title: Row(
         children: [
           CircleAvatar(
             child: ClipOval(
               child: CachedNetworkImage(
                 color: Colors.white,
-                imageUrl: "formn image",
+                imageUrl: imageUrl(forumn.image),
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -35,6 +40,16 @@ class ForumnAppBar extends StatelessWidget {
                 ),
               ),
             ),
+          ),
+          const SizedBox(width: 10),
+          Column(
+            children: [
+              Text(forumn.title),
+              const Text(
+                "Say something..",
+                style: TextStyle(fontSize: 12),
+              ),
+            ],
           ),
         ],
       ),

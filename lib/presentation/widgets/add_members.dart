@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
-import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
-import 'package:rada_egerton/presentation/widgets/defaultInput.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
+import 'package:rada_egerton/presentation/widgets/button.dart';
+import 'package:rada_egerton/presentation/widgets/input.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/data/services/counseling_service.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 
 class AddMembers extends StatefulWidget {
   final String groupId;
@@ -76,7 +76,7 @@ class _AddMembersState extends State<AddMembers> {
                           widget.groupId,
                         );
 
-                        result!.fold(
+                        result.fold(
                           (_) => context.pop(),
                           (err) => print(err),
                         );

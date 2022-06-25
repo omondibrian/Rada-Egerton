@@ -1,14 +1,12 @@
 import 'package:go_router/go_router.dart';
-import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/group_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
-import 'package:rada_egerton/data/providers/counseling_provider.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/presentation/widgets/NewGroupForm.dart';
+import 'package:rada_egerton/presentation/widgets/new_group_create.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/theme.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,10 +29,10 @@ class GroupSessionsTab extends StatelessWidget {
 
       return GestureDetector(
         onTap: () => {
-          context.goNamed(
+          context.push(context.namedLocation(
             AppRoutes.goupChat,
             params: {"goupId": group.id},
-          )
+          ))
         },
         child: ListTile(
           leading: CircleAvatar(

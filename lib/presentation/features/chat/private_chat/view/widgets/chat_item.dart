@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/bloc/bloc.dart';
-import 'package:rada_egerton/presentation/widgets/ChatCard.dart';
+import 'package:rada_egerton/presentation/widgets/chat_card.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/theme.dart';
 import 'package:swipeable_tile/swipeable_tile.dart';

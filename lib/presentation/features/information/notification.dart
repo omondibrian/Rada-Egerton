@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:rada_egerton/data/entities/NewsDTO.dart';
+import 'package:rada_egerton/data/entities/news_dto.dart';
 import 'package:rada_egerton/data/services/news_location_service.dart';
 
 

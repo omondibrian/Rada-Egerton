@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/resources/config.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,16 +16,15 @@ class Avatar extends StatelessWidget {
   final double radius;
   final double borderWidth;
   final bool canEdit;
-  Avatar(
-      {Key? key,
-      required this.imageUrl,
-      required this.canEdit,
-      this.borderColor = Colors.green,
-      this.backgroundColor,
-      this.radius = 30,
-      this.borderWidth = 5})
-      : super(key: key);
-  final ServiceUtility serviceUtility = ServiceUtility();
+  const Avatar({
+    Key? key,
+    required this.imageUrl,
+    required this.canEdit,
+    this.borderColor = Colors.green,
+    this.backgroundColor,
+    this.radius = 30,
+    this.borderWidth = 5,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     void _updateProfileImage() async {
@@ -61,7 +60,7 @@ class Avatar extends StatelessWidget {
             ),
           ),
         );
-      } on Exception catch (e) {
+      } catch (e) {
         ErrorMessage err = ServiceUtility.handleDioExceptions(e);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

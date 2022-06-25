@@ -11,57 +11,71 @@ class ServiceUtility {
   final ImagePicker _imagePicker = ImagePicker();
 
   static ErrorMessage handleDioExceptions(error) {
-    if (error is Exception) {
-      if (error is SocketException) {
-        return const ErrorMessage(
-            message: "SocketException",
-            status: "Please check your internet connection");
-      }
-      if (error is DioError) {
-        switch (error.type) {
-          case DioErrorType.cancel:
-            return const ErrorMessage(
-                message: "Request cancelled", status: "Request cancelled");
-          case DioErrorType.connectTimeout:
-            return const ErrorMessage(
-                message: "Timeout", status: "Connection timeout exceeded");
-          case DioErrorType.response:
-            switch (error.response!.statusCode) {
-              case 400:
-                return const ErrorMessage(
-                    message: "Client error", status: "Bad Request");
-              case 401:
-                return const ErrorMessage(
-                    message: "Client error", status: "Unauthorized");
-              case 403:
-                return const ErrorMessage(
-                    message: "Client error", status: "Forbidden");
-              case 404:
-                return const ErrorMessage(
-                    message: "Client error",
-                    status: "Server resource not found");
-              case 500:
-                return const ErrorMessage(
-                    message: "Server error", status: "Internal sever error");
-            }
-            break;
-          case DioErrorType.sendTimeout:
-            return const ErrorMessage(
-                message: "Request timeout", status: "Request timeout");
+    try {
+      if (error is Exception) {
+        if (error is SocketException) {
+          return const ErrorMessage(
+              message: "SocketException",
+              status: "Please check your internet connection");
+        }
+        if (error is DioError) {
+          if (error.response != null && error.response!.data != null) {
+            return ErrorMessage(
+              message: error.response!.data["msg"]?.toString() ??
+                  error.response!.data.toString(),
+              status: "DioError",
+            );
+          }
+          switch (error.type) {
+            case DioErrorType.cancel:
+              return const ErrorMessage(
+                  message: "Request cancelled", status: "Request cancelled");
+            case DioErrorType.connectTimeout:
+              return const ErrorMessage(
+                  message: "Timeout", status: "Connection timeout exceeded");
+            case DioErrorType.response:
+              switch (error.response!.statusCode) {
+                case 400:
+                  return const ErrorMessage(
+                      message: "Client error", status: "Bad Request");
+                case 401:
+                  return const ErrorMessage(
+                      message: "Client error", status: "Unauthorized");
+                case 403:
+                  return const ErrorMessage(
+                      message: "Client error", status: "Forbidden");
+                case 404:
+                  return const ErrorMessage(
+                      message: "Client error",
+                      status: "Server resource not found");
+                case 500:
+                  return const ErrorMessage(
+                      message: "Server error", status: "Internal sever error");
+              }
+              break;
+            case DioErrorType.sendTimeout:
+              return const ErrorMessage(
+                  message: "Request timeout", status: "Request timeout");
 
-          case DioErrorType.receiveTimeout:
-            return const ErrorMessage(
-                message: "Request timeout", status: "Request timeout");
-          case DioErrorType.other:
-            return const ErrorMessage(
-                message: "Error", status: "Unexpected error occured");
+            case DioErrorType.receiveTimeout:
+              return const ErrorMessage(
+                  message: "Request timeout", status: "Request timeout");
+            case DioErrorType.other:
+              return const ErrorMessage(
+                  message: "Error", status: "Unexpected error occured");
+          }
         }
       }
+      return ErrorMessage(
+        message: error.toString(),
+        status: "Unexpected error",
+      );
+    } catch (_) {
+      return const ErrorMessage(
+        message: "Unexpected error",
+        status: "Unexpected error",
+      );
     }
-    return ErrorMessage(
-      message: error.toString(),
-      status: "Unexpected error",
-    );
   }
 
   Future<File> uploadImage() async {
@@ -122,6 +136,10 @@ class InfoMessage {
   @override
   String toString() {
     return message;
+  }
+
+  factory InfoMessage.fromError(ErrorMessage message) {
+    return InfoMessage(message.message, MessageType.error);
   }
 }
 

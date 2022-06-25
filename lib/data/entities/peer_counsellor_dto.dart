@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:rada_egerton/data/database/sqlite.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
 
 PeerCounsellorDto peerCounsellorDtoFromJson(String str) =>
     PeerCounsellorDto.fromJson(json.decode(str));

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
-import 'package:rada_egerton/presentation/widgets/ProfileHeader.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
+import 'package:rada_egerton/presentation/widgets/profile_header.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/data/services/auth_service.dart';
 
@@ -8,7 +8,7 @@ class ViewProfileScreen extends StatefulWidget {
   final String userId;
   const ViewProfileScreen(this.userId,{Key? key}):super(key: key);
   @override
-  _ViewProfileScreenState createState() => _ViewProfileScreenState();
+  State<ViewProfileScreen> createState() => _ViewProfileScreenState();
 }
 
 class _ViewProfileScreenState extends State<ViewProfileScreen> {

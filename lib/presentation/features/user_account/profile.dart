@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
-import 'package:rada_egerton/presentation/widgets/ProfileHeader.dart';
-import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
+import 'package:rada_egerton/presentation/widgets/profile_header.dart';
+import 'package:rada_egerton/presentation/widgets/button.dart';
 import 'package:rada_egerton/resources/config.dart';
 
 import 'package:rada_egerton/data/services/auth_service.dart';
@@ -12,7 +12,7 @@ class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {

@@ -1,4 +1,4 @@
-import 'package:rada_egerton/data/entities/UserDTO.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
 
 class AuthDTO {
   String _email = "";

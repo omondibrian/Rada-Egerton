@@ -37,15 +37,15 @@ class User with Model {
   String? synced;
   String? joined;
 
+  ///absolute path
   String get profilePic {
     if (profilePic.isNotEmpty) {
-      return _profileImage;
+      return imageUrl(_profileImage);
     }
     return GlobalConfig.userAvi;
   }
 
-  factory User.empty() =>
-      User(email: "", id: -1, profileImage: "", name: "");
+  factory User.empty() => User(email: "", id: -1, profileImage: "", name: "");
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["_id"] is int ? json["_id"] : int.parse(json["_id"]),
