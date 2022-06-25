@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rada_egerton/data/entities/news_dto.dart';
 import 'package:rada_egerton/data/services/news_location_service.dart';
+import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
+import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
 
 class UserNotification extends StatefulWidget {
   const UserNotification({Key? key}) : super(key: key);
@@ -64,8 +66,13 @@ class _UserNotificationState extends State<UserNotification> {
           child: Builder(
             builder: (context) {
               if (_news == null) {
-                const Center(
-                  child: CircularProgressIndicator(),
+                return Shimmer(
+                  child: ListView(
+                    children: List.generate(
+                      4,
+                      (index) => const TileLoader(),
+                    ),
+                  ),
                 );
               }
               if (_news!.isEmpty) {
@@ -88,8 +95,8 @@ class _UserNotificationState extends State<UserNotification> {
   Widget _notificationItem(News notification) {
     return ListTile(
       leading: CachedNetworkImage(
-        height: 100,
-        width: 100,
+        height: 50,
+        width: 50,
         imageUrl: notification.imageUrl,
         placeholder: (context, url) => SpinKitFadingCircle(
           color: Theme.of(context).primaryColor,

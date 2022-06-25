@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 
-enum ChatType { peer, group, forumn }
+enum ChatType { peer, group, forum }
 
 class ChatPayload extends Equatable {
   const ChatPayload({

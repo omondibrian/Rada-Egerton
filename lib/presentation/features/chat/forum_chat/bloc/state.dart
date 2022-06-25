@@ -1,12 +1,12 @@
 part of "bloc.dart";
 
-class ForumnState extends Equatable {
+class ForumState extends Equatable {
   final ChatPayload? selectedChat;
   final List<ChatPayload> chats;
   final ServiceStatus status;
   final InfoMessage? infoMessage;
   final bool subscribed;
-  const ForumnState({
+  const ForumState({
     this.selectedChat,
     this.chats = const [],
     this.status = ServiceStatus.initial,
@@ -14,14 +14,14 @@ class ForumnState extends Equatable {
     this.subscribed = true,
   });
 
-  ForumnState copyWith({
+  ForumState copyWith({
     ChatPayload? selectedChat,
     List<ChatPayload>? forumMsgs,
     ServiceStatus? status,
     InfoMessage? infoMessage,
     bool? subscribed,
   }) {
-    return ForumnState(
+    return ForumState(
       selectedChat: selectedChat ?? this.selectedChat,
       chats: forumMsgs ?? chats,
       status: status ?? this.status,

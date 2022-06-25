@@ -112,10 +112,10 @@ class CounselingService {
         }, sendTimeout: 10000),
       );
       print(result);
-      Iterable forumns = result.data["data"]["payload"];
+      Iterable forums = result.data["data"]["payload"];
       return Left(
         List<GroupDTO>.from(
-          forumns.map(
+          forums.map(
             (json) => GroupDTO.fromJson(json),
           ),
         ),

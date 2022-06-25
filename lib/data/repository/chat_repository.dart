@@ -10,18 +10,18 @@ import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 class ChatRepository {
-  List<ChatPayload>? _forumnchats;
+  List<ChatPayload>? _forumchats;
   List<ChatPayload>? _groupchats;
   List<ChatPayload>? _privatechats;
   late Channel privateChannel;
   late PusherClient _pusher;
   final String _privateChannelName = "radaComms";
-  final _forumnChatControler = StreamController<ChatPayload>.broadcast();
+  final _forumChatControler = StreamController<ChatPayload>.broadcast();
   final _groupChatControler = StreamController<ChatPayload>.broadcast();
   final _privateChatControler = StreamController<ChatPayload>.broadcast();
 
   ChatRepository() {
-    //TODO: create group and forumn channels
+    //TODO: create group and forum channels
     initChats();
     _pusher = Pusher(
       appKey: GlobalConfig.instance.pusherApiKey,
@@ -41,20 +41,20 @@ class ChatRepository {
     yield* _groupChatControler.stream.asBroadcastStream();
   }
 
-  Stream<ChatPayload> get forumnChatStream async* {
-    yield* _forumnChatControler.stream.asBroadcastStream();
+  Stream<ChatPayload> get forumChatStream async* {
+    yield* _forumChatControler.stream.asBroadcastStream();
   }
 
   Stream<ChatPayload> get privateChatStream async* {
     yield* _privateChatControler.stream.asBroadcastStream();
   }
 
-  List<ChatPayload> get forumnchat => _forumnchats ?? [];
+  List<ChatPayload> get forumchat => _forumchats ?? [];
   List<ChatPayload> get groupchat => _groupchats ?? [];
   List<ChatPayload> get privatechat => _privatechats ?? [];
 
   Future<Either<InfoMessage, ErrorMessage>> initChats() async {
-    if (_forumnchats != null) {
+    if (_forumchats != null) {
       try {
         final res = await ChatService.fetchUserMsgs();
         res.fold(
@@ -72,31 +72,31 @@ class ChatRepository {
     );
   }
 
-  Future<Either<ChatPayload, InfoMessage>> sendForumnChat(
+  Future<Either<ChatPayload, InfoMessage>> sendForumChat(
       ChatPayload chat) async {
-    //TODO:call send forumnchat service, update forumn chats and event to forumn
+    //TODO:call send forumchat service, update forum chats and event to forum
     //chatStream
     throw UnimplementedError();
   }
 
   Future<Either<ChatPayload, InfoMessage>> sendGroupChat(
       ChatPayload chat) async {
-    //TODO:call send groupchat service, update forumn chats and event to group
+    //TODO:call send groupchat service, update forum chats and event to group
     //chatStream
     throw UnimplementedError();
   }
 
   Future<Either<ChatPayload, InfoMessage>> sendPrivateChat(
       ChatPayload chat) async {
-    //TODO:call send forumnchat  service, update forumn chats and event to forumn
+    //TODO:call send forumchat  service, update forum chats and event to forum
     //chatStream
     throw UnimplementedError();
   }
 
-  void _forumnChatReceived(ChatPayload chat) {
-    _forumnchats ??= [];
-    _forumnchats!.add(chat);
-    _forumnChatControler.add(chat);
+  void _forumChatReceived(ChatPayload chat) {
+    _forumchats ??= [];
+    _forumchats!.add(chat);
+    _forumChatControler.add(chat);
   }
 
   void _groupChatReceived(ChatPayload chat) {
@@ -111,8 +111,8 @@ class ChatRepository {
     _privateChatControler.add(chat);
   }
 
-  Future<Either<InfoMessage, ErrorMessage>> leaveForumn(String forumnId) async {
-    return await leaveGroup(forumnId);
+  Future<Either<InfoMessage, ErrorMessage>> leaveForum(String forumId) async {
+    return await leaveGroup(forumId);
   }
 
   Future<Either<InfoMessage, ErrorMessage>> leaveGroup(String groupId) async {
@@ -131,7 +131,7 @@ class ChatRepository {
   }
 
   void dispose() {
-    _forumnChatControler.close();
+    _forumChatControler.close();
     _privateChatControler.close();
     _groupChatControler.close();
   }

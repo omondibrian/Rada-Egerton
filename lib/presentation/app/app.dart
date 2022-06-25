@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/presentation/features/chat/forum_chat/view/forumn_chats_page.dart';
+import 'package:rada_egerton/presentation/features/chat/forum_chat/view/forum_chats_page.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/view/private_chats_page.dart';
 import 'package:rada_egerton/presentation/features/contributors.dart';
 import 'package:rada_egerton/presentation/features/counseling/counseling.dart';
@@ -117,10 +117,10 @@ class RadaApp extends StatelessWidget {
               builder: (context, _) => const ForumPage(),
             ),
             GoRoute(
-              path: "${AppRoutes.forumChats}/:forumnId",
+              path: "${AppRoutes.forumChats}/:forumId",
               name: AppRoutes.forumChats,
-              builder: (context, state) => ForumnChatPage(
-                state.params["forumnId"]!,
+              builder: (context, state) => ForumChatPage(
+                state.params["forumId"]!,
               ),
             ),
             GoRoute(

@@ -10,39 +10,39 @@ import 'package:rada_egerton/resources/utils/main.dart';
 part 'state.dart';
 part 'event.dart';
 
-class ForumnBloc extends Bloc<ForumnChatEvent, ForumnState> {
+class ForumBloc extends Bloc<ForumChatEvent, ForumState> {
   final ChatRepository chatRepo;
-  final String forumnId;
+  final String forumId;
   late StreamSubscription<ChatPayload> _streamSubscription;
 
-  ForumnBloc({required this.forumnId, required this.chatRepo})
+  ForumBloc({required this.forumId, required this.chatRepo})
       : super(
-          const ForumnState(),
+          const ForumState(),
         ) {
-    //Listen to new recived forumn messages
-    _streamSubscription = chatRepo.forumnChatStream.listen((chat) {
-      add(ForumnChatReceived(chat));
+    //Listen to new recived forum messages
+    _streamSubscription = chatRepo.forumChatStream.listen((chat) {
+      add(ForumChatReceived(chat));
     });
 
-    on<ForumnChatStarted>(_forumnChatStarted);
-    on<ForumnChatSelected>(
+    on<ForumChatStarted>(_forumChatStarted);
+    on<ForumChatSelected>(
       (event, emit) => emit(
-        state.copyWith(selectedChat: event.forumnchat),
+        state.copyWith(selectedChat: event.forumchat),
       ),
     );
-    on<ForumnChatUnselected>(
+    on<ForumChatUnselected>(
       (event, emit) => emit(
         state.copyWith(selectedChat: null),
       ),
     );
-    on<ForumnChatReceived>(_forumnChatReceived);
-    on<ForumnChatSend>(_forumnChatSend);
-    on<ForumnUnsubscribe>(_forumnUnsubscribe);
+    on<ForumChatReceived>(_forumChatReceived);
+    on<ForumChatSend>(_forumChatSend);
+    on<ForumUnsubscribe>(_forumUnsubscribe);
   }
 
-  FutureOr<void> _forumnChatStarted(
-    ForumnChatEvent event,
-    Emitter<ForumnState> emit,
+  FutureOr<void> _forumChatStarted(
+    ForumChatEvent event,
+    Emitter<ForumState> emit,
   ) async {
     emit(
       state.copyWith(status: ServiceStatus.loading),
@@ -51,8 +51,8 @@ class ForumnBloc extends Bloc<ForumnChatEvent, ForumnState> {
     res.fold(
       (infomessage) => emit(
         state.copyWith(
-          forumMsgs: chatRepo.forumnchat
-              .where((chat) => chat.groupsId == forumnId)
+          forumMsgs: chatRepo.forumchat
+              .where((chat) => chat.groupsId == forumId)
               .toList(),
         ),
       ),
@@ -68,32 +68,32 @@ class ForumnBloc extends Bloc<ForumnChatEvent, ForumnState> {
     );
   }
 
-  FutureOr<void> _forumnChatReceived(
-    ForumnChatReceived event,
-    Emitter<ForumnState> emit,
+  FutureOr<void> _forumChatReceived(
+    ForumChatReceived event,
+    Emitter<ForumState> emit,
   ) {
-    if (event.forumnchat.reciepient == forumnId) {
+    if (event.forumchat.reciepient == forumId) {
       emit(
         state.copyWith(
-          forumMsgs: [...state.chats, event.forumnchat],
+          forumMsgs: [...state.chats, event.forumchat],
         ),
       );
     }
   }
 
-  FutureOr<void> _forumnChatSend(
-    ForumnChatSend event,
-    Emitter<ForumnState> emit,
+  FutureOr<void> _forumChatSend(
+    ForumChatSend event,
+    Emitter<ForumState> emit,
   ) async {
     emit(
       state.copyWith(status: ServiceStatus.submiting),
     );
-    final res = await chatRepo.sendForumnChat(event.forumnchat);
+    final res = await chatRepo.sendForumChat(event.forumchat);
     res.fold(
       (chat) => emit(
         state.copyWith(
           status: ServiceStatus.submissionSucess,
-          forumMsgs: [...state.chats, event.forumnchat],
+          forumMsgs: [...state.chats, event.forumchat],
           infoMessage: InfoMessage("Chat send", MessageType.success),
         ),
       ),
@@ -106,17 +106,17 @@ class ForumnBloc extends Bloc<ForumnChatEvent, ForumnState> {
     );
   }
 
-  FutureOr<void> _forumnUnsubscribe(
-    ForumnUnsubscribe event,
-    Emitter<ForumnState> emit,
+  FutureOr<void> _forumUnsubscribe(
+    ForumUnsubscribe event,
+    Emitter<ForumState> emit,
   ) async {
     emit(
       state.copyWith(
         infoMessage:
-            InfoMessage("Leaving forumn please wait", MessageType.info),
+            InfoMessage("Leaving forum please wait", MessageType.info),
       ),
     );
-    final res = await chatRepo.leaveForumn(forumnId);
+    final res = await chatRepo.leaveForum(forumId);
     res.fold(
       (infomessage) => emit(
         state.copyWith(

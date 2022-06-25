@@ -3,27 +3,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/presentation/features/chat/forum_chat/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/features/chat/forum_chat/view/widgets/chat_item.dart';
-import 'package:rada_egerton/presentation/features/chat/forum_chat/view/widgets/forumn_appbar.dart';
-import 'package:rada_egerton/presentation/features/chat/forum_chat/view/widgets/forumn_chat_input.dart';
+import 'package:rada_egerton/presentation/features/chat/forum_chat/view/widgets/forum_appbar.dart';
+import 'package:rada_egerton/presentation/features/chat/forum_chat/view/widgets/forum_chat_input.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
-class ForumnChatPage extends StatelessWidget {
-  final String forumnId;
-  const ForumnChatPage(this.forumnId, {Key? key}) : super(key: key);
+class ForumChatPage extends StatelessWidget {
+  final String forumId;
+  const ForumChatPage(this.forumId, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ForumnBloc(
+      create: (_) => ForumBloc(
         chatRepo: context.read<ChatRepository>(),
-        forumnId: forumnId,
+        forumId: forumId,
       )..add(
-          ForumnChatStarted(),
+          ForumChatStarted(),
         ),
       child: Scaffold(
         appBar: const PreferredSize(
           preferredSize: Size.fromHeight(50),
-          child: ForumnAppBar(),
+          child: ForumAppBar(),
         ),
         body: Container(
           decoration: const BoxDecoration(
@@ -38,12 +38,12 @@ class ForumnChatPage extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.only(top: 10.0, bottom: 50),
-                child: _ForumnChatView(),
+                child: _ForumChatView(),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  ForumnChatInput(),
+                  ForumChatInput(),
                 ],
               ),
             ],
@@ -54,10 +54,10 @@ class ForumnChatPage extends StatelessWidget {
   }
 }
 
-class _ForumnChatView extends StatelessWidget {
+class _ForumChatView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ForumnBloc, ForumnState>(
+    return BlocConsumer<ForumBloc, ForumState>(
       listener: (context, state) {
         if (state.infoMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -75,7 +75,7 @@ class _ForumnChatView extends StatelessWidget {
       buildWhen: (previous, current) => current.chats != previous.chats,
       builder: (context, state) => ListView.builder(
         itemCount: state.chats.length,
-        itemBuilder: (BuildContext ctx, index) => ForumnChatItem(
+        itemBuilder: (BuildContext ctx, index) => ForumChatItem(
           chat: state.chats.elementAt(index),
         ),
       ),

@@ -83,7 +83,7 @@ class _CounselloItem extends StatelessWidget {
   const _CounselloItem(this.counsellor, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    _openForumn() {
+    _openForum() {
       if (counsellor.user.id == GlobalConfig.instance.user.id) {
         return;
       }
@@ -96,7 +96,7 @@ class _CounselloItem extends StatelessWidget {
     }
 
     return GestureDetector(
-      onTap: _openForumn,
+      onTap: _openForum,
       child: ListTile(
         minVerticalPadding: 0,
         isThreeLine: true,

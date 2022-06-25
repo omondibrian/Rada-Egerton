@@ -1,38 +1,38 @@
 part of 'bloc.dart';
 
-abstract class ForumnChatEvent extends Equatable {
+abstract class ForumChatEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class ForumnChatStarted extends ForumnChatEvent {}
+class ForumChatStarted extends ForumChatEvent {}
 
-class ForumnChatSelected extends ForumnChatEvent {
+class ForumChatSelected extends ForumChatEvent {
   @override
-  List<Object?> get props => [forumnchat];
+  List<Object?> get props => [forumchat];
 
-  final ChatPayload forumnchat;
-  ForumnChatSelected(this.forumnchat);
+  final ChatPayload forumchat;
+  ForumChatSelected(this.forumchat);
 }
 
-class ForumnChatUnselected extends ForumnChatEvent {}
+class ForumChatUnselected extends ForumChatEvent {}
 
-class ForumnChatSend extends ForumnChatEvent {
-  final ChatPayload forumnchat;
+class ForumChatSend extends ForumChatEvent {
+  final ChatPayload forumchat;
 
   @override
-  List<Object?> get props => [forumnchat];
-  ForumnChatSend(
-    this.forumnchat,
+  List<Object?> get props => [forumchat];
+  ForumChatSend(
+    this.forumchat,
   );
 }
 
-class ForumnChatReceived extends ForumnChatEvent {
+class ForumChatReceived extends ForumChatEvent {
   @override
-  List<Object?> get props => [forumnchat];
+  List<Object?> get props => [forumchat];
 
-  final ChatPayload forumnchat;
-  ForumnChatReceived(this.forumnchat);
+  final ChatPayload forumchat;
+  ForumChatReceived(this.forumchat);
 }
 
-class ForumnUnsubscribe extends ForumnChatEvent {}
+class ForumUnsubscribe extends ForumChatEvent {}

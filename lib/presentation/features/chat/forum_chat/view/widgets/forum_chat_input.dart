@@ -6,15 +6,15 @@ import 'package:rada_egerton/presentation/features/chat/forum_chat/bloc/bloc.dar
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/theme.dart';
 
-class ForumnChatInput extends StatelessWidget {
+class ForumChatInput extends StatelessWidget {
   final FocusNode inputNode = FocusNode();
   final TextEditingController _chatController = TextEditingController();
 
-  ForumnChatInput({Key? key}) : super(key: key);
+  ForumChatInput({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ForumnBloc, ForumnState>(
+    return BlocConsumer<ForumBloc, ForumState>(
       listenWhen: (previous, current) => previous.status != current.status,
       listener: (context, state) {
         if (state.status == ServiceStatus.submissionSucess) {
@@ -35,7 +35,7 @@ class ForumnChatInput extends StatelessWidget {
                     color: Colors.white,
                     child: Column(
                       children: [
-                        _ForumnSelectedChat(),
+                        _ForumSelectedChat(),
                         Row(
                           children: <Widget>[
                             const SizedBox(width: 8.0),
@@ -67,11 +67,11 @@ class ForumnChatInput extends StatelessWidget {
                 width: 5.0,
               ),
               GestureDetector(
-                onTap: () => context.read<ForumnBloc>().add(
-                      ForumnChatSend(
+                onTap: () => context.read<ForumBloc>().add(
+                      ForumChatSend(
                         ChatPayload(
                           message: _chatController.text,
-                          reciepient: context.read<ForumnBloc>().forumnId,
+                          reciepient: context.read<ForumBloc>().forumId,
                           senderId: GlobalConfig.instance.user.id.toString(),
                         ),
                       ),
@@ -80,7 +80,7 @@ class ForumnChatInput extends StatelessWidget {
                   backgroundColor: Palette.accent,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: BlocBuilder<ForumnBloc, ForumnState>(
+                    child: BlocBuilder<ForumBloc, ForumState>(
                       buildWhen: (previous, current) =>
                           current.status != previous.status,
                       builder: (context, state) {
@@ -106,10 +106,10 @@ class ForumnChatInput extends StatelessWidget {
   }
 }
 
-class _ForumnSelectedChat extends StatelessWidget {
+class _ForumSelectedChat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ForumnBloc, ForumnState>(
+    return BlocBuilder<ForumBloc, ForumState>(
       builder: (context, state) {
         if (state.selectedChat != null) {
           Container(
@@ -128,8 +128,8 @@ class _ForumnSelectedChat extends StatelessWidget {
                 ),
                 Expanded(child: Text(state.selectedChat!.message)),
                 IconButton(
-                  onPressed: () => context.read<ForumnBloc>().add(
-                        ForumnChatUnselected(),
+                  onPressed: () => context.read<ForumBloc>().add(
+                        ForumChatUnselected(),
                       ),
                   icon: const Icon(Icons.close),
                 )

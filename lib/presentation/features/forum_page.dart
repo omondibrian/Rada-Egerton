@@ -19,10 +19,10 @@ class ForumPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<RadaApplicationProvider>(context);
-    final allForumns = provider.allForumns;
+    final allForums = provider.allForums;
 
     Future<void> _refresh() async {
-      provider.initAllForumns();
+      provider.initAllForums();
     }
 
     return Scaffold(
@@ -38,7 +38,7 @@ class ForumPage extends StatelessWidget {
           edgeOffset: 5.0,
           child: Builder(
             builder: (context) {
-              if (provider.allForumnsStatus == ServiceStatus.loading) {
+              if (provider.allForumsStatus == ServiceStatus.loading) {
                 return Shimmer(
                   child: ListView(
                     children: List.generate(
@@ -48,7 +48,7 @@ class ForumPage extends StatelessWidget {
                   ),
                 );
               }
-              if (provider.allForumnsStatus == ServiceStatus.loadingFailure) {
+              if (provider.allForumsStatus == ServiceStatus.loadingFailure) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
@@ -62,18 +62,18 @@ class ForumPage extends StatelessWidget {
                   ),
                 );
               }
-              if (allForumns.isEmpty) {
+              if (allForums.isEmpty) {
                 return const Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text("No forumns available"),
+                  child: Text("No forums available"),
                 );
               }
               return ListView.builder(
-                itemBuilder: (context, index) => _ForumnItem(
-                  forumn: allForumns[index],
-                  isSubscribed: provider.isSubscribedToForum(allForumns[index]),
+                itemBuilder: (context, index) => _ForumItem(
+                  forum: allForums[index],
+                  isSubscribed: provider.isSubscribedToForum(allForums[index]),
                 ),
-                itemCount: allForumns.length,
+                itemCount: allForums.length,
               );
             },
           ),
@@ -83,28 +83,28 @@ class ForumPage extends StatelessWidget {
   }
 }
 
-class _ForumnItem extends StatelessWidget {
-  final GroupDTO forumn;
+class _ForumItem extends StatelessWidget {
+  final GroupDTO forum;
   final bool isSubscribed;
-  const _ForumnItem({
-    required this.forumn,
+  const _ForumItem({
+    required this.forum,
     required this.isSubscribed,
     Key? key,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    void _openForumn() {
+    void _openForum() {
       if (!isSubscribed) return;
       context.pushNamed(
         AppRoutes.forumChats,
         params: {
-          "forumnId": forumn.id.toString(),
+          "forumId": forum.id.toString(),
         },
       );
     }
 
     return GestureDetector(
-      onTap: _openForumn,
+      onTap: _openForum,
       child: ListTile(
         minVerticalPadding: 0,
         isThreeLine: true,
@@ -112,7 +112,7 @@ class _ForumnItem extends StatelessWidget {
         leading: CircleAvatar(
           child: CachedNetworkImage(
             color: Colors.white,
-            imageUrl: imageUrl(forumn.image),
+            imageUrl: imageUrl(forum.image),
             imageBuilder: (context, imageProvider) => Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -126,7 +126,7 @@ class _ForumnItem extends StatelessWidget {
             placeholder: (context, url) => Image.asset("assets/users.png"),
           ),
         ),
-        title: Text(forumn.title, style: Theme.of(context).textTheme.subtitle1),
+        title: Text(forum.title, style: Theme.of(context).textTheme.subtitle1),
         subtitle: const Text(
           "say something...",
         ),
@@ -136,7 +136,7 @@ class _ForumnItem extends StatelessWidget {
                 onPressed: () {
                   context
                       .read<RadaApplicationProvider>()
-                      .joinForum(forumn.id)
+                      .joinForum(forum.id)
                       .then(
                         (info) => ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -150,7 +150,7 @@ class _ForumnItem extends StatelessWidget {
                 },
               )
             : TextButton(
-                onPressed: _openForumn,
+                onPressed: _openForum,
                 child: const Text('View'),
               ),
       ),

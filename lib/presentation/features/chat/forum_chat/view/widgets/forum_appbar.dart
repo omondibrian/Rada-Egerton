@@ -6,16 +6,16 @@ import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/presentation/features/chat/forum_chat/bloc/bloc.dart';
 import 'package:rada_egerton/resources/config.dart';
 
-class ForumnAppBar extends StatelessWidget {
-  const ForumnAppBar({
+class ForumAppBar extends StatelessWidget {
+  const ForumAppBar({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String forumnId = context.read<ForumnBloc>().forumnId;
-    GroupDTO forumn =
-        context.read<RadaApplicationProvider>().getForumn(forumnId);
+    String forumId = context.read<ForumBloc>().forumId;
+    GroupDTO forum =
+        context.read<RadaApplicationProvider>().getForum(forumId);
     return AppBar(
       centerTitle: true,
       title: Row(
@@ -24,7 +24,7 @@ class ForumnAppBar extends StatelessWidget {
             child: ClipOval(
               child: CachedNetworkImage(
                 color: Colors.white,
-                imageUrl: imageUrl(forumn.image),
+                imageUrl: imageUrl(forum.image),
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -44,7 +44,7 @@ class ForumnAppBar extends StatelessWidget {
           const SizedBox(width: 10),
           Column(
             children: [
-              Text(forumn.title),
+              Text(forum.title),
               const Text(
                 "Say something..",
                 style: TextStyle(fontSize: 12),
@@ -60,8 +60,8 @@ class ForumnAppBar extends StatelessWidget {
           ),
           itemBuilder: (_) => [
             PopupMenuItem(
-              onTap: () => context.read<ForumnBloc>().add(
-                    ForumnUnsubscribe(),
+              onTap: () => context.read<ForumBloc>().add(
+                    ForumUnsubscribe(),
                   ),
               child: Text(
                 'Leave ',

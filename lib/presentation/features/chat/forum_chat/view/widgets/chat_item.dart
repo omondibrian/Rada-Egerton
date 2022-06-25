@@ -7,13 +7,13 @@ import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/theme.dart';
 import 'package:swipeable_tile/swipeable_tile.dart';
 
-class ForumnChatItem extends StatelessWidget {
+class ForumChatItem extends StatelessWidget {
   final ChatPayload chat;
-  const ForumnChatItem({required this.chat, Key? key}) : super(key: key);
+  const ForumChatItem({required this.chat, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    ChatPayload? replyTo = context.read<ForumnBloc>().state.chats.firstWhere(
+    ChatPayload? replyTo = context.read<ForumBloc>().state.chats.firstWhere(
           (element) => element.id == chat.id,
         );
     return SwipeableTile(
@@ -23,8 +23,8 @@ class ForumnChatItem extends StatelessWidget {
       // direction: chat.reciepient == GlobalConfig.instance.user.id
       //     ? SwipeDirection.endToStart
       //     : SwipeDirection.startToEnd,
-      onSwiped: (_) => context.read<ForumnBloc>().add(
-            ForumnChatSelected(chat),
+      onSwiped: (_) => context.read<ForumBloc>().add(
+            ForumChatSelected(chat),
           ),
       key: UniqueKey(),
       backgroundBuilder: (context, direction, progress) {

@@ -122,7 +122,7 @@ class DBManager {
 
     //forums
     await db.execute("""
-       CREATE TABLE ${TableNames.forumn.name}(
+       CREATE TABLE ${TableNames.forum.name}(
         id int PRIMARY KEY,
         image TEXT,
         title TEXT
@@ -182,7 +182,7 @@ enum TableNames {
   informationData,
   peerCounsellor,
   group,
-  forumn,
+  forum,
 }
 
 extension X on TableNames {

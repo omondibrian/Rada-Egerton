@@ -9,18 +9,18 @@ import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
-/// Manage state for  Forumns, Groups, Users
+/// Manage state for  Forums, Groups, Users
 class RadaApplicationProvider with ChangeNotifier {
   List<GroupDTO> groups = [];
   ServiceStatus groupStatus = ServiceStatus.initial;
-  List<GroupDTO> subscribedForumns = [];
-  ServiceStatus subscribedForumnsStatus = ServiceStatus.initial;
-  List<GroupDTO> allForumns = [];
-  ServiceStatus allForumnsStatus = ServiceStatus.initial;
+  List<GroupDTO> subscribedForums = [];
+  ServiceStatus subscribedForumsStatus = ServiceStatus.initial;
+  List<GroupDTO> allForums = [];
+  ServiceStatus allForumsStatus = ServiceStatus.initial;
   List<User> users = [];
 
-  GroupDTO getForumn(String forumId) {
-    return allForumns.firstWhere((element) => element.id == forumId);
+  GroupDTO getForum(String forumId) {
+    return allForums.firstWhere((element) => element.id == forumId);
   }
 
   GroupDTO getGroup(String groupId) {
@@ -28,7 +28,7 @@ class RadaApplicationProvider with ChangeNotifier {
   }
 
   bool isSubscribedToForum(GroupDTO forum) {
-    for (var f in subscribedForumns) {
+    for (var f in subscribedForums) {
       if (f.id == forum.id) {
         return true;
       }
@@ -37,42 +37,42 @@ class RadaApplicationProvider with ChangeNotifier {
   }
 
   RadaApplicationProvider() {
-    initAllForumns();
+    initAllForums();
     initGroups();
-    initUserForumns();
+    initUserForums();
   }
 
-  Future<void> initUserForumns() async {
-    subscribedForumnsStatus = ServiceStatus.loading;
+  Future<void> initUserForums() async {
+    subscribedForumsStatus = ServiceStatus.loading;
     notifyListeners();
-    //TODO: replace to a call to subscribed forumns
+    //TODO: replace to a call to subscribed forums
 
     final res = await CounselingService.userForums();
     res.fold(
-      (forumns) {
-        subscribedForumns = forumns;
-        subscribedForumnsStatus = ServiceStatus.loadingSuccess;
+      (forums) {
+        subscribedForums = forums;
+        subscribedForumsStatus = ServiceStatus.loadingSuccess;
         notifyListeners();
       },
       (r) {
-        subscribedForumnsStatus = ServiceStatus.loadingFailure;
+        subscribedForumsStatus = ServiceStatus.loadingFailure;
         notifyListeners();
       },
     );
   }
 
-  Future<void> initAllForumns() async {
-    allForumnsStatus = ServiceStatus.loading;
+  Future<void> initAllForums() async {
+    allForumsStatus = ServiceStatus.loading;
     notifyListeners();
     final res = await CounselingService.userForums();
     res.fold(
-      (forumns) {
-        allForumns = forumns;
-        allForumnsStatus = ServiceStatus.loadingSuccess;
+      (forums) {
+        allForums = forums;
+        allForumsStatus = ServiceStatus.loadingSuccess;
         notifyListeners();
       },
       (r) {
-        allForumnsStatus = ServiceStatus.loadingFailure;
+        allForumsStatus = ServiceStatus.loadingFailure;
         notifyListeners();
       },
     );
@@ -135,19 +135,19 @@ class RadaApplicationProvider with ChangeNotifier {
     }
   }
 
-  Future<InfoMessage> joinForum(String forumnId) async {
+  Future<InfoMessage> joinForum(String forumId) async {
     late InfoMessage message;
 
     final res = await CounselingService.subToNewGroup(
       GlobalConfig.instance.user.id.toString(),
-      forumnId,
+      forumId,
     );
     res.fold(
       (forum) {
-        subscribedForumns.add(forum);
+        subscribedForums.add(forum);
         notifyListeners();
         message = InfoMessage(
-          "You have joined the forumn",
+          "You have joined the forum",
           MessageType.success,
         );
       },
