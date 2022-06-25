@@ -10,6 +10,10 @@ class GlobalConfig {
   String authToken = "";
   User user = User.empty();
   UserRole? _userRoles;
+  //TODO provide cdn urls for placeholder images
+  //placeholder avatar images
+  static String userAvi = "";
+  static String usersApi = "";
 
   Future<UserRole> get userRoles async {
     if (_userRoles != null) {

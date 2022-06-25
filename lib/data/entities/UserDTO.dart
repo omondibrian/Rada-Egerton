@@ -1,17 +1,17 @@
 import 'dart:convert';
 
 import 'package:rada_egerton/data/database/sqlite.dart';
+import 'package:rada_egerton/resources/config.dart';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toMap());
 
 class User with Model {
-  
   User({
     required this.id,
     required this.name,
     required this.email,
-    required this.profilePic,
+    String profileImage = "",
     this.gender,
     this.phone,
     this.dob,
@@ -19,7 +19,7 @@ class User with Model {
     this.accountStatus,
     this.synced,
     this.joined,
-  });
+  }) : _profileImage = profileImage;
   @override
   int get getId {
     return id;
@@ -28,7 +28,7 @@ class User with Model {
   int id;
   String name;
   String email;
-  String profilePic;
+  String _profileImage;
   String? gender;
   String? phone;
   String? dob;
@@ -37,13 +37,21 @@ class User with Model {
   String? synced;
   String? joined;
 
-  factory User.empty() => User(email: "", id: 100001, profilePic: "", name: "");
+  String get profilePic {
+    if (profilePic.isNotEmpty) {
+      return _profileImage;
+    }
+    return GlobalConfig.userAvi;
+  }
+
+  factory User.empty() =>
+      User(email: "", id: -1, profileImage: "", name: "");
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["_id"] is int ? json["_id"] : int.parse(json["_id"]),
         name: json["name"],
         email: json["email"],
-        profilePic: json["profilePic"],
+        profileImage: json["profilePic"],
         gender: json["gender"],
         phone: json["phone"],
         dob: json["dob"],
@@ -53,11 +61,12 @@ class User with Model {
         joined: json["joined"],
       );
 
+  @override
   Map<String, dynamic> toMap() => {
         "_id": id,
         "name": name,
         "email": email,
-        "profilePic": profilePic,
+        "profileImage": _profileImage,
         "gender": gender,
         "phone": phone,
         "dob": dob,

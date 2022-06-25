@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/bloc/bloc.dart';
-import 'package:rada_egerton/resources/utils/main.dart';
 
 class PrivateChatAppBar extends StatefulWidget {
   const PrivateChatAppBar({
@@ -16,11 +15,10 @@ class PrivateChatAppBar extends StatefulWidget {
 }
 
 class _PrivateChatAppBarState extends State<PrivateChatAppBar> {
-  User? recepient;
-  void initRecepient() async {}
   @override
   Widget build(BuildContext context) {
-    Future<void> initRecepient() async {
+    Future<User> initRecepient() async {
+      late User recepient;
       int id = int.parse(context.read<PrivateChatBloc>().recepientId);
       await context
           .read<RadaApplicationProvider>()
@@ -29,33 +27,41 @@ class _PrivateChatAppBarState extends State<PrivateChatAppBar> {
           )
           .then(
             (res) => res.fold(
-              (user) => setState(
-                () {
-                  recepient = user;
-                },
-              ),
-              (info) => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    info.message,
-                    style: TextStyle(
-                      color: info.messageTypeColor,
-                    ),
-                  ),
-                  action: SnackBarAction(
-                    onPressed: () => initRecepient(),
-                    label: "Try again",
-                  ),
-                  duration: const Duration(minutes: 5),
-                ),
-              ),
+              (user) => {recepient = user},
+              (info) => throw (info),
             ),
           );
+      return recepient;
     }
 
     return FutureBuilder(
+      //TODO: add initial data
       future: initRecepient(),
-      builder: (context, _) {
+      builder: (context, snapshot) {
+        User? recepient;
+        if (snapshot.hasData) {
+          recepient = snapshot.data as User;
+        }
+        if (snapshot.hasError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                snapshot.error.toString(),
+                style: TextStyle(
+                  color: Colors.red[700],
+                ),
+              ),
+              action: SnackBarAction(
+                onPressed: () => {
+                  //to trigger rebuild incase on an error
+                  setState(() {})
+                },
+                label: "Try again",
+              ),
+              duration: const Duration(minutes: 5),
+            ),
+          );
+        }
         return AppBar(
           title: Row(
             children: [

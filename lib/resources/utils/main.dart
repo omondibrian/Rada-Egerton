@@ -119,6 +119,10 @@ class InfoMessage {
   MessageType messageType;
 
   InfoMessage(this.message, this.messageType);
+  @override
+  String toString() {
+    return message;
+  }
 }
 
 extension X on InfoMessage {

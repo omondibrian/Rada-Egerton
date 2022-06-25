@@ -29,7 +29,7 @@ class PeerCounsellorDto with Model {
       id: json["_id"],
       name: json["name"],
       email: json["email"],
-      profilePic: json["profilePic"],
+      profileImage: json["profilePic"],
       gender: json["gender"],
       phone: json["phone"],
       dob: json["dob"],
