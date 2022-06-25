@@ -9,7 +9,6 @@ class News {
     required this.newsCategoriesId,
     required this.adminUsersId,
     required this.status,
-    required this.universityId,
   });
 
   int id;
@@ -19,7 +18,6 @@ class News {
   String newsCategoriesId;
   String adminUsersId;
   String status;
-  String universityId;
 
   factory News.fromJson(Map<String, dynamic> json) => News(
         id: json["_id"],
@@ -29,9 +27,9 @@ class News {
         newsCategoriesId: json["NewsCategories_id"],
         adminUsersId: json["Admin_Users_id"],
         status: json["status"],
-        universityId: json["University_id"],
       );
 
+  ///absulute url
   String get imageUrl => config.imageUrl(imageName);
 
   Map<String, dynamic> toJson() => {
@@ -42,6 +40,5 @@ class News {
         "NewsCategories_id": newsCategoriesId,
         "Admin_Users_id": adminUsersId,
         "status": status,
-        "University_id": universityId,
       };
 }

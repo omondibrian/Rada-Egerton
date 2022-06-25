@@ -94,16 +94,17 @@ class GroupSessionsTab extends StatelessWidget {
               );
             }
             if (appProvider.groupStatus == ServiceStatus.loadingFailure) {
-              return Center(
-                child: Row(
-                  children: [
-                    const Text("Ann error occured"),
-                    TextButton(
-                      onPressed: () => _refresh(),
-                      child: const Text("Retry"),
-                    )
-                  ],
-                ),
+              return Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      children: [
+                        const Text("Ann error occured"),
+                        TextButton(
+                          onPressed: () => _refresh(),
+                          child: const Text("Retry"),
+                        )
+                      ],
+                    ),
               );
             }
             if (groups.isEmpty) {

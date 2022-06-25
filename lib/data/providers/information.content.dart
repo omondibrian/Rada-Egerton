@@ -14,41 +14,54 @@ class InformationProvider with ChangeNotifier {
   }
 
   Future<void> init() async {
-    if (informationCategory == null) {
+    //initialialize data only when null
+    if (informationData == null && informationCategory == null) {
       status = ServiceStatus.loading;
       notifyListeners();
+      if (informationCategory == null) {
+        final result = await ContentService.getInformationCategory();
+        result.fold(
+          (data) {
+            informationCategory = data;
+          },
+          (error) {},
+        );
+      }
 
-      final result = await ContentService.getInformationCategory();
-      result.fold(
-        (data) {
-          informationCategory = data;
-          status = ServiceStatus.loadingSuccess;
-          notifyListeners();
-        },
-        (error) {
-          status = ServiceStatus.loadingFailure;
-          notifyListeners();
-        },
-      );
-    }
-
-    if (informationData == null) {
-      status = ServiceStatus.loading;
-      notifyListeners();
-      final dataResult = await ContentService.getInformation();
-      dataResult.fold(
-        (data) {
-          informationData = data;
-          notifyListeners();
-        },
-        (error) {
-          throw (InfoMessage(error.message, MessageType.error));
-        },
-      );
-    }
-    if (informationCategory != null && informationData != null) {
-      status = ServiceStatus.loadingSuccess;
+      if (informationData == null) {
+        final dataResult = await ContentService.getInformation();
+        dataResult.fold(
+          (data) {
+            informationData = data;
+          },
+          (error) {},
+        );
+      }
+      if (informationCategory != null && informationData != null) {
+        status = ServiceStatus.loadingSuccess;
+      } else {
+        status = ServiceStatus.loadingFailure;
+      }
       notifyListeners();
     }
+  }
+
+  Future<void> refresh() async {
+    final result = await ContentService.getInformationCategory();
+    result.fold(
+      (data) {
+        informationCategory = data;
+      },
+      (error) {},
+    );
+
+    final dataResult = await ContentService.getInformation();
+    dataResult.fold(
+      (data) {
+        informationData = data;
+      },
+      (error) {},
+    );
+    notifyListeners();
   }
 }

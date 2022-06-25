@@ -41,8 +41,10 @@ class _PrivateChatTabView extends StatelessWidget {
         if (state.status == ServiceStatus.loading) {
           return Shimmer(
             child: ListView(
-              children:
-                  List.generate(4, (index) => placeHolderListTile(context)),
+              children: List.generate(
+                4,
+                (index) => TileLoader(),
+              ),
             ),
           );
         }
@@ -123,7 +125,7 @@ class _ChatItem extends StatelessWidget {
           child: ClipOval(
             child: CachedNetworkImage(
               color: Colors.white,
-              imageUrl: user?.profilePic??GlobalConfig.userAvi,
+              imageUrl: user?.profilePic ?? GlobalConfig.userAvi,
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(

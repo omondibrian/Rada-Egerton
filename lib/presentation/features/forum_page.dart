@@ -42,7 +42,9 @@ class ForumPage extends StatelessWidget {
                 return Shimmer(
                   child: ListView(
                     children: List.generate(
-                        4, (index) => placeHolderListTile(context)),
+                      4,
+                      (index) => const TileLoader(),
+                    ),
                   ),
                 );
               }

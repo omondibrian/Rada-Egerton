@@ -9,7 +9,6 @@ import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
 import 'package:rada_egerton/presentation/loading_effect/shimmer_loading.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
-import 'package:rada_egerton/resources/size_config.dart';
 
 class PeerCounsellorsTab extends StatelessWidget {
   const PeerCounsellorsTab({Key? key}) : super(key: key);
@@ -25,8 +24,8 @@ class PeerCounsellorsTab extends StatelessWidget {
 
     return RefreshIndicator(
       onRefresh: () => _refresh(),
-      backgroundColor: Theme.of(context).primaryColor,
-      color: Colors.white,
+      color: Theme.of(context).primaryColor,
+      // color: Colors.white,
       displacement: 20.0,
       edgeOffset: 5.0,
       child: Builder(
@@ -34,8 +33,10 @@ class PeerCounsellorsTab extends StatelessWidget {
           if (counsellorprovider.peerStatus == ServiceStatus.loading) {
             return Shimmer(
               child: ListView(
-                children:
-                    List.generate(4, (index) => placeHolderListTile(context)),
+                children: List.generate(
+                  4,
+                  (index) => const TileLoader(),
+                ),
               ),
             );
           }
@@ -122,57 +123,39 @@ class _PeerCounsellorItem extends StatelessWidget {
   }
 }
 
-Widget placeHolderListTile(BuildContext context) => Card(
-      elevation: 0,
-      margin: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        children: [
-          ShimmerLoading(
-            child: ClipOval(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                width: SizeConfig.isTabletWidth ? 100 : 80,
-                height: SizeConfig.isTabletWidth ? 100 : 80,
+class TileLoader extends StatelessWidget {
+  const TileLoader({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+        leading: ShimmerLoading(
+          child: CircleAvatar(
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
               ),
+              width: 90,
+              height: 90,
             ),
           ),
-          const SizedBox(
-            width: 20,
+        ),
+        title: ShimmerLoading(
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
+            height: 18,
+            width: MediaQuery.of(context).size.width * .4,
           ),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(
-              children: [
-                ShimmerLoading(
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      width: MediaQuery.of(context).size.width * .6,
-                      height: 30),
-                ),
-              ],
+        ),
+        subtitle: ShimmerLoading(
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
             ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              children: [
-                ShimmerLoading(
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      width: MediaQuery.of(context).size.width * .4,
-                      height: 24),
-                ),
-              ],
-            ),
-          ])
-        ],
-      ),
-    );
+            height: 16,
+            width: MediaQuery.of(context).size.width * .3,
+          ),
+        ),
+      );
+}

@@ -22,24 +22,27 @@ class InformationListPlaceholder extends StatelessWidget {
             children: [
               ShimmerLoading(
                 child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 250,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    )),
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: 250,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
               ),
               SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                      children: List.generate(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: List.generate(
                     cols,
                     (index) =>
                         _informationCard(context, imageHeight, imageWidth),
-                  ))),
+                  ),
+                ),
+              ),
               const SizedBox(
                 height: 30,
               ),
@@ -73,16 +76,16 @@ class InformationListPlaceholder extends StatelessWidget {
               ),
             ),
             Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                child: Container(
-                  width: 150,
-                  height: 18,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ))
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+              child: Container(
+                width: 150,
+                height: 18,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            )
           ],
         ),
       ),

@@ -27,7 +27,7 @@ class Information extends StatelessWidget {
           ),
         ),
         body: RefreshIndicator(
-          onRefresh: () => context.read<InformationProvider>().init(),
+          onRefresh: () => context.read<InformationProvider>().refresh(),
           child: Builder(
             builder: (context) {
               if (provider.status == ServiceStatus.loadingFailure) {
@@ -46,20 +46,13 @@ class Information extends StatelessWidget {
                 );
               }
               if (provider.status == ServiceStatus.loadingSuccess) {
-                return Container(
-                  child: provider.informationCategory == null ||
-                          provider.informationData == null
-                      ? const InformationListPlaceholder()
-                      : ListView.builder(
-                          itemBuilder: (context, index) =>
-                              _contentListRow(context, provider, index),
-                          itemCount: provider.informationCategory!.length,
-                        ),
+                return ListView.builder(
+                  itemBuilder: (context, index) =>
+                      _contentListRow(context, provider, index),
+                  itemCount: provider.informationCategory!.length,
                 );
               }
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const InformationListPlaceholder();
             },
           ),
         )
@@ -127,33 +120,34 @@ class Information extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(5.0),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(5.0),
+              ),
+              child: CachedNetworkImage(
+                imageUrl: imageUrl(
+                  informationItem.metadata.thumbnail,
                 ),
-                child: CachedNetworkImage(
-                  imageUrl: imageUrl(
-                    informationItem.metadata.thumbnail,
-                  ),
-                  placeholder: (context, url) => Image.asset(
-                    "assets/gif.gif",
-                    height: imageHeight,
-                    width: imageWidth,
-                  ),
-                  imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(5),
-                        ),
+                placeholder: (context, url) => Image.asset(
+                  "assets/gif.gif",
+                  height: imageHeight,
+                  width: imageWidth,
+                ),
+                imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
                       ),
-                      constraints:
-                          const BoxConstraints(minHeight: 150, minWidth: 200),
-                      height: imageHeight,
-                      width: imageWidth),
-                )),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                    constraints:
+                        const BoxConstraints(minHeight: 150, minWidth: 200),
+                    height: imageHeight,
+                    width: imageWidth),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
               child: Text(

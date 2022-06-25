@@ -26,31 +26,41 @@ class CounsellorsTab extends StatelessWidget {
       await counsellorprovider.initCounsellors();
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+    return RefreshIndicator(
+      onRefresh: () => _refresh(),
+      color: Theme.of(context).primaryColor,
+      displacement: 20.0,
+      edgeOffset: 5.0,
       child: Builder(
         builder: (context) {
-          if (counsellorprovider.counsellorStatus == ServiceStatus.loading) {
+;          if (counsellorprovider.counsellorStatus == ServiceStatus.loading) {
             return Shimmer(
               child: ListView(
-                children:
-                    List.generate(4, (index) => placeHolderListTile(context)),
+                children: List.generate(
+                  4,
+                  (index) => const TileLoader(),
+                ),
               ),
             );
           }
           if (counsellorprovider.counsellorStatus ==
               ServiceStatus.loadingFailure) {
-            return Row(
-              children: [
-                const Text("An error occurred"),
-                TextButton(
-                  onPressed: () => _refresh(),
-                  child: const Text("Retry"),
-                )
-              ],
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  const Text("An error occurred"),
+                  TextButton(
+                    onPressed: () => _refresh(),
+                    child: const Text("Retry"),
+                  )
+                ],
+              ),
             );
           }
-          if (counsellors.isEmpty && counsellorprovider.counsellorStatus == ServiceStatus.loadingSuccess) {
+          if (counsellors.isEmpty &&
+              counsellorprovider.counsellorStatus ==
+                  ServiceStatus.loadingSuccess) {
             return const Padding(
               padding: EdgeInsets.all(8),
               child: Text("No counsellors available"),
