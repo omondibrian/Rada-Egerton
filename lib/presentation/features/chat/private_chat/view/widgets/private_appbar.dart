@@ -1,67 +1,39 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rada_egerton/data/entities/user_dto.dart';
-import 'package:rada_egerton/data/providers/application_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/bloc/bloc.dart';
+import 'package:rada_egerton/resources/config.dart';
 
-class PrivateChatAppBar extends StatefulWidget {
+class PrivateChatAppBar extends StatelessWidget {
   const PrivateChatAppBar({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<PrivateChatAppBar> createState() => _PrivateChatAppBarState();
-}
-
-class _PrivateChatAppBarState extends State<PrivateChatAppBar> {
-  @override
   Widget build(BuildContext context) {
-    Future<User> initRecepient() async {
-      late User recepient;
-      int id = int.parse(context.read<PrivateChatBloc>().recepientId);
-      await context
-          .read<RadaApplicationProvider>()
-          .getUser(
-            userId: id,
-          )
-          .then(
-            (res) => res.fold(
-              (user) => {recepient = user},
-              (info) => throw (info),
-            ),
-          );
-      return recepient;
-    }
-
-    return FutureBuilder(
-      //TODO: add initial data
-      future: initRecepient(),
-      builder: (context, snapshot) {
-        User? recepient;
-        if (snapshot.hasData) {
-          recepient = snapshot.data as User;
-        }
-        if (snapshot.hasError) {
+    return BlocConsumer<PrivateChatBloc, PrivateChatState>(
+      listener: (context, state) {
+        if (state.recepientProfileStatus == ServiceStatus.loadingFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(
-                snapshot.error.toString(),
-                style: TextStyle(
-                  color: Colors.red[700],
-                ),
+              duration: const Duration(seconds: 5),
+              content: const Text(
+                "An error occured",
+                style: TextStyle(color: Colors.red),
               ),
               action: SnackBarAction(
-                onPressed: () => {
-                  //to trigger rebuild incase on an error
-                  setState(() {})
-                },
-                label: "Try again",
+                label: "Retry",
+                onPressed: () => context.read<PrivateChatBloc>().add(
+                      RecepientDataRequested(),
+                    ),
               ),
-              duration: const Duration(minutes: 5),
             ),
           );
         }
+      },
+      buildWhen: (previous, current) => current.recepient != previous.recepient,
+      builder: (context, state) {
         return AppBar(
           title: Row(
             children: [
@@ -69,7 +41,8 @@ class _PrivateChatAppBarState extends State<PrivateChatAppBar> {
                 child: ClipOval(
                   child: CachedNetworkImage(
                     color: Colors.white,
-                    imageUrl: recepient?.profilePic ?? "",
+                    imageUrl:
+                        state.recepient?.profilePic ?? GlobalConfig.userAvi,
                     imageBuilder: (context, imageProvider) => Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
@@ -85,6 +58,16 @@ class _PrivateChatAppBarState extends State<PrivateChatAppBar> {
                     ),
                   ),
                 ),
+              ),
+              const SizedBox(width: 10),
+              Column(
+                children: [
+                  Text(state.recepient?.name ?? "Loading..."),
+                  const Text(
+                    "Say something..",
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ],
               ),
             ],
           ),

@@ -40,37 +40,28 @@ class CounsellorsTab extends StatelessWidget {
           }
           if (counsellorprovider.counsellorStatus ==
               ServiceStatus.loadingFailure) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  const Text("An error occurred"),
-                  TextButton(
-                    onPressed: () => _refresh(),
-                    child: const Text("Retry"),
-                  )
-                ],
-              ),
+            return Row(
+              children: [
+                const Text("An error occurred"),
+                TextButton(
+                  onPressed: () => _refresh(),
+                  child: const Text("Retry"),
+                )
+              ],
             );
           }
-          if (counsellors.isEmpty) {
+          if (counsellors.isEmpty && counsellorprovider.counsellorStatus == ServiceStatus.loadingSuccess) {
             return const Padding(
               padding: EdgeInsets.all(8),
               child: Text("No counsellors available"),
             );
           }
-          return ListView(children: [
-            ...counsellors
-                .map((c) => _CounselloItem(
-                      c,
-                    ))
-                .toList()
-          ]
-              // itemBuilder: (context, index) => _CounselloItem(
-              //   counsellors[index],
-              // ),
-              // itemCount: counsellors.length,
-              );
+          return ListView.builder(
+            itemBuilder: (context, index) => _CounselloItem(
+              counsellors[index],
+            ),
+            itemCount: counsellors.length,
+          );
         },
       ),
     );
@@ -86,13 +77,11 @@ class _CounselloItem extends StatelessWidget {
       if (counsellor.user.id == GlobalConfig.instance.user.id) {
         return;
       }
-      context.push(
-        context.namedLocation(
-          AppRoutes.privateChat,
-          params: {
-            "recepientId": counsellor.user.id.toString(),
-          },
-        ),
+      context.pushNamed(
+        AppRoutes.privateChat,
+        params: {
+          "recepientId": counsellor.user.id.toString(),
+        },
       );
     }
 
@@ -104,8 +93,10 @@ class _CounselloItem extends StatelessWidget {
         contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
         leading: CircleAvatar(
           child: CachedNetworkImage(
+            width: 90,
+            height: 90,
             color: Colors.white,
-            imageUrl: imageUrl(counsellor.user.profilePic),
+            imageUrl: counsellor.user.profilePic,
             imageBuilder: (context, imageProvider) => Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -116,7 +107,7 @@ class _CounselloItem extends StatelessWidget {
               width: 90,
               height: 90,
             ),
-            placeholder: (context, url) => Image.asset("assets/users.png"),
+            placeholder: (context, url) => Image.asset("assets/user.png"),
           ),
         ),
         title: Text(

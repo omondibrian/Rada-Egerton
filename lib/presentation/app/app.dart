@@ -127,7 +127,7 @@ class RadaApp extends StatelessWidget {
               path: "chat/:recepientId",
               name: AppRoutes.privateChat,
               builder: (context, state) => PrivateChatPage(
-                state.queryParams["recepientId"]!,
+                state.params["recepientId"]!,
               ),
             ),
             GoRoute(

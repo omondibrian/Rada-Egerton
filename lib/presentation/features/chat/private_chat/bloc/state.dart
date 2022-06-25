@@ -5,11 +5,15 @@ class PrivateChatState extends Equatable {
   final List<ChatPayload> chats;
   final ServiceStatus status;
   final InfoMessage? infoMessage;
+  final User? recepient;
+  final ServiceStatus recepientProfileStatus;
   const PrivateChatState({
     this.selectedChat,
     this.chats = const [],
     this.status = ServiceStatus.initial,
     this.infoMessage,
+    this.recepient,
+    this.recepientProfileStatus = ServiceStatus.initial,
   });
 
   PrivateChatState copyWith({
@@ -17,12 +21,17 @@ class PrivateChatState extends Equatable {
     List<ChatPayload>? forumMsgs,
     ServiceStatus? status,
     InfoMessage? infoMessage,
+    User? user,
+    ServiceStatus? recepientProfileStatus,
   }) {
     return PrivateChatState(
       selectedChat: selectedChat ?? this.selectedChat,
       chats: forumMsgs ?? chats,
       status: status ?? this.status,
       infoMessage: infoMessage,
+      recepient: user ?? recepient,
+      recepientProfileStatus:
+          recepientProfileStatus ?? this.recepientProfileStatus,
     );
   }
 
@@ -32,5 +41,7 @@ class PrivateChatState extends Equatable {
         status,
         infoMessage,
         chats,
+        recepient,
+        recepientProfileStatus
       ];
 }

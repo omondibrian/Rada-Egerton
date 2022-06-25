@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
+import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
@@ -14,8 +17,12 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
   final ChatRepository chatRepo;
   final String recepientId;
   late StreamSubscription<ChatPayload> _streamSubscription;
+  final RadaApplicationProvider appProvider;
 
-  PrivateChatBloc({required this.recepientId, required this.chatRepo})
+  PrivateChatBloc(
+      {required this.recepientId,
+      required this.appProvider,
+      required this.chatRepo})
       : super(
           const PrivateChatState(),
         ) {
@@ -37,6 +44,7 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
     );
     on<PrivateChatReceived>(_privateChatReceived);
     on<PrivateChatSend>(_privateChatSend);
+    on<RecepientDataRequested>(_initRecepient);
   }
 
   FutureOr<void> _privateChatStarted(
@@ -99,6 +107,31 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
         ),
       ),
     );
+  }
+
+  FutureOr<void> _initRecepient(
+    RecepientDataRequested event,
+    Emitter<PrivateChatState> emit,
+  ) async {
+    await appProvider
+        .getUser(
+          userId: int.parse(recepientId),
+        )
+        .then(
+          (res) => res.fold(
+            (user) => emit(
+              state.copyWith(
+                user: user,
+                recepientProfileStatus: ServiceStatus.loadingSuccess,
+              ),
+            ),
+            (info) => emit(
+              state.copyWith(
+                recepientProfileStatus: ServiceStatus.loadingFailure,
+              ),
+            ),
+          ),
+        );
   }
 
   @override

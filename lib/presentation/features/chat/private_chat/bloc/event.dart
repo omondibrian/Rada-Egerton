@@ -35,3 +35,5 @@ class PrivateChatReceived extends PrivateChatEvent {
   PrivateChatReceived(this.privatechat);
 }
 
+class RecepientDataRequested extends PrivateChatEvent {}
+

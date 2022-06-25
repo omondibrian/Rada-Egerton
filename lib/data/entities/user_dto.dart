@@ -39,7 +39,7 @@ class User with Model {
 
   ///absolute path
   String get profilePic {
-    if (profilePic.isNotEmpty) {
+    if (_profileImage.isNotEmpty) {
       return imageUrl(_profileImage);
     }
     return GlobalConfig.userAvi;

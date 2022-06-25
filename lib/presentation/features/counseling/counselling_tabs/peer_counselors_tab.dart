@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:rada_egerton/data/entities/peer_counsellor_dto.dart';
 import 'package:rada_egerton/data/providers/counseling_provider.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
@@ -20,83 +21,6 @@ class PeerCounsellorsTab extends StatelessWidget {
 
     Future<void> _refresh() async {
       counsellorprovider.initPeerCounsellors();
-    }
-
-    Widget peerCounsellorBuilder(BuildContext cxt, int index) {
-      final peerCounsellors = counsellors[index];
-      void _openPrivateChat() {
-        if (peerCounsellors.user.id == GlobalConfig.instance.user.id) return;
-        context.pushNamed(context.namedLocation(
-          AppRoutes.privateChat,
-          params: {
-            "recepientId": peerCounsellors.user.id.toString(),
-          },
-        ));
-      }
-
-      return GestureDetector(
-        onTap: _openPrivateChat,
-        child: Card(
-          elevation: 0,
-          margin: const EdgeInsets.only(bottom: 10),
-          child: Row(
-            children: [
-              Column(
-                children: [
-                  CircleAvatar(
-                    child: ClipOval(
-                      child: CachedNetworkImage(
-                        color: Colors.white,
-                        imageUrl: imageUrl(peerCounsellors.user.profilePic),
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          width: SizeConfig.isTabletWidth ? 120 : 90,
-                          height: SizeConfig.isTabletWidth ? 120 : 90,
-                        ),
-                        placeholder: (context, url) =>
-                            Image.asset("assets/user.png"),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        counsellors[index].user.name,
-                        style: Theme.of(context).textTheme.subtitle1,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text('Expertise : ',
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle2!
-                              .copyWith(fontSize: 14)),
-                      Text(
-                        peerCounsellors.expertise,
-                      ),
-                    ],
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-      );
     }
 
     return RefreshIndicator(
@@ -129,17 +53,70 @@ class PeerCounsellorsTab extends StatelessWidget {
               ),
             );
           }
-          if (counsellors.isEmpty) {
+          if (counsellors.isEmpty &&
+              counsellorprovider.peerStatus == ServiceStatus.loadingSuccess) {
             return const Padding(
               padding: EdgeInsets.all(8.0),
               child: Text("No peer counsellors available"),
             );
           }
           return ListView.builder(
-            itemBuilder: peerCounsellorBuilder,
+            itemBuilder: (_, index) => _PeerCounsellorItem(counsellors[index]),
             itemCount: counsellors.length,
           );
         },
+      ),
+    );
+  }
+}
+
+class _PeerCounsellorItem extends StatelessWidget {
+  final PeerCounsellorDto counsellor;
+  const _PeerCounsellorItem(this.counsellor, {Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    _openForumn() {
+      if (counsellor.user.id == GlobalConfig.instance.user.id) {
+        return;
+      }
+      context.pushNamed(
+        AppRoutes.privateChat,
+        params: {
+          "recepientId": counsellor.user.id.toString(),
+        },
+      );
+    }
+
+    return GestureDetector(
+      onTap: _openForumn,
+      child: ListTile(
+        minVerticalPadding: 0,
+        isThreeLine: true,
+        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+        leading: CircleAvatar(
+          child: CachedNetworkImage(
+            width: 90,
+            height: 90,
+            color: Colors.white,
+            imageUrl: counsellor.user.profilePic,
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              width: 90,
+              height: 90,
+            ),
+            placeholder: (context, url) => Image.asset("assets/user.png"),
+          ),
+        ),
+        title: Text(
+          counsellor.user.name,
+          style: Theme.of(context).textTheme.subtitle1,
+        ),
+        subtitle: Text(counsellor.expertise),
       ),
     );
   }

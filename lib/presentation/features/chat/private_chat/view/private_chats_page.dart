@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/view/widgets/chat_item.dart';
@@ -15,10 +16,15 @@ class PrivateChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => PrivateChatBloc(
+        appProvider: context.read<RadaApplicationProvider>(),
         chatRepo: context.read<ChatRepository>(),
         recepientId: recepientId,
-      )..add(
+      )
+        ..add(
           PrivateChatStarted(),
+        )
+        ..add(
+          RecepientDataRequested(),
         ),
       child: Scaffold(
         appBar: const PreferredSize(

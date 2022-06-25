@@ -95,7 +95,7 @@ class _PrivateChatTabView extends StatelessWidget {
 }
 
 class _ChatItem extends StatelessWidget {
-  //TODO fetch user profile
+  //TODO fetch recepient profile
   final ChatPayload chat;
   User? user;
 
@@ -107,11 +107,12 @@ class _ChatItem extends StatelessWidget {
 
     void _openChat() {
       if (GlobalConfig.instance.user.id.toString() == recipientId) return;
-      context.push(
-        context.namedLocation(
-          AppRoutes.privateChat,
-          params: {"recepientId": recipientId},
-        ),
+
+      context.pushNamed(
+        AppRoutes.privateChat,
+        params: {
+          "recepientId": recipientId,
+        },
       );
     }
 
@@ -122,7 +123,7 @@ class _ChatItem extends StatelessWidget {
           child: ClipOval(
             child: CachedNetworkImage(
               color: Colors.white,
-              imageUrl: imageUrl("${user?.profilePic}"),
+              imageUrl: user?.profilePic??GlobalConfig.userAvi,
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
