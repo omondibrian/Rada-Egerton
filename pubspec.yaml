@@ -54,6 +54,7 @@ dependencies:
   equatable: ^2.0.3
   firebase_crashlytics: ^2.8.2
   firebase_core: ^1.18.0
+  url_launcher: ^6.1.4
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/profile/bloc/bloc.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/size_config.dart';
@@ -32,13 +33,30 @@ class Avatar extends StatelessWidget {
                 top: 90,
                 child: CircleAvatar(
                   backgroundColor: Colors.white,
-                  child: IconButton(
-                    icon: const Icon(Icons.camera_alt, color: Colors.black),
-                    onPressed: context.read<ProfileCubit>().updateProfileImage,
-                  ),
+                  child: _UploadImage(),
                 ),
               ),
           ],
+        );
+      },
+    );
+  }
+}
+
+class _UploadImage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      buildWhen: (previous, current) => previous.status != current.status,
+      builder: (context, state) {
+        if (state.status == ServiceStatus.submiting) {
+          return const CircularProgressIndicator(
+            color: Colors.black,
+          );
+        }
+        return IconButton(
+          icon: const Icon(Icons.camera_alt, color: Colors.black),
+          onPressed: context.read<ProfileCubit>().updateProfileImage,
         );
       },
     );

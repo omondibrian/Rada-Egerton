@@ -132,7 +132,11 @@ class ProfileCubit extends Cubit<ProfileState> {
     if (imageFile == null) return;
     emit(
       state.copyWith(
-        message: InfoMessage("Updating profile image..", MessageType.success),
+        status: ServiceStatus.submiting,
+        message: InfoMessage(
+          "Updating profile image..",
+          MessageType.success,
+        ),
       ),
     );
     String imageFileName = imageFile.path.split('/').last;
@@ -152,6 +156,7 @@ class ProfileCubit extends Cubit<ProfileState> {
               "Profile updated",
               MessageType.success,
             ),
+            status: ServiceStatus.submissionSucess,
           ),
         );
         GlobalConfig.instance.inialize(user: user);
@@ -159,6 +164,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       (error) => emit(
         state.copyWith(
           message: InfoMessage.fromError(error),
+          status: ServiceStatus.submissionFailure,
         ),
       ),
     );

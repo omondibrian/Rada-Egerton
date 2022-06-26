@@ -92,11 +92,11 @@ Widget buildChatContent(List<InformationContent> contentItems) {
   //Render rich text created with Quil.js WYSIWYG editor//
   //----------------------------------------------------//
 
+  //TODO: follow link on click - links have a link atribute
   for (i = 0; i < contentItems.length; i++) {
     var item = contentItems[i];
     if (item.type == InformationContent.text) {
-      if (i < contentItems.length - 1 &&
-          contentItems[i + 1].attributes.list != null) {
+      if (i < contentItems.length - 1 && contentItems[i + 1].attributes.list != null) {
         span.add(
           WidgetSpan(
             child: Padding(
@@ -126,7 +126,7 @@ Widget buildChatContent(List<InformationContent> contentItems) {
       );
     }
   }
-  return Text.rich(
+  return SelectableText.rich(
     TextSpan(children: span),
   );
 }

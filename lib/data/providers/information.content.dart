@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:rada_egerton/data/entities/information_data.dart';
 import 'package:rada_egerton/data/services/content_service.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/resources/utils/main.dart';
 
 class InformationProvider with ChangeNotifier {
   List<InformationCategory>? informationCategory;

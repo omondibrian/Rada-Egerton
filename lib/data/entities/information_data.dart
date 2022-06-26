@@ -86,7 +86,9 @@ class InformationContent {
           : InformationContent.image,
       attributes: json["attributes"] == null
           ? ContentAttributes()
-          : ContentAttributes.fromJson(json["attributes"]),
+          : ContentAttributes.fromJson(
+              json["attributes"],
+            ),
     );
   }
   Map<String, dynamic> toMap() {
@@ -98,6 +100,7 @@ class InformationContent {
   static String image = "1";
   static String text = "2";
   static String title = "3";
+  static String link = "4";
 }
 
 class ContentAttributes {
@@ -127,17 +130,18 @@ class ContentAttributes {
       this.link});
   factory ContentAttributes.fromJson(Map<String, dynamic> json) {
     return ContentAttributes(
-        align: json["align"],
-        bold: json["bold"],
-        list: json["list"],
-        image: json["image"],
-        italic: json["italic"],
-        color: json["color"],
-        link: json["link"],
-        header: json["header"],
-        strike: json["strike"],
-        indent: json["intent"],
-        underline: json["underline"]);
+      align: json["align"],
+      bold: json["bold"],
+      list: json["list"],
+      image: json["image"],
+      italic: json["italic"],
+      color: json["color"],
+      link: json["link"],
+      header: json["header"],
+      strike: json["strike"],
+      indent: json["intent"],
+      underline: json["underline"],
+    );
   }
 }
 
@@ -162,13 +166,19 @@ extension X on InformationContent {
       color: Palette.lightTextColor,
     );
     if (attributes.bold != null) {
-      style = style.copyWith(fontWeight: FontWeight.bold);
+      style = style.copyWith(
+        fontWeight: FontWeight.bold,
+      );
     }
     if (attributes.italic != null) {
-      style = style.copyWith(fontStyle: FontStyle.italic);
+      style = style.copyWith(
+        fontStyle: FontStyle.italic,
+      );
     }
     if (attributes.color != null) {
-      style = style.copyWith(color: HexColor(attributes.color!));
+      style = style.copyWith(
+        color: HexColor(attributes.color!),
+      );
     }
 
     if (attributes.header == 1) {
@@ -185,10 +195,20 @@ extension X on InformationContent {
     }
 
     if (attributes.strike != null) {
-      style = style.copyWith(decoration: TextDecoration.lineThrough);
+      style = style.copyWith(
+        decoration: TextDecoration.lineThrough,
+      );
     }
     if (attributes.underline != null) {
-      style = style.copyWith(decoration: TextDecoration.underline);
+      style = style.copyWith(
+        decoration: TextDecoration.underline,
+      );
+    }
+    if (attributes.link != null) {
+      style = style.copyWith(
+        decoration: TextDecoration.underline,
+        color: Colors.blue,
+      );
     }
 
     return style;
