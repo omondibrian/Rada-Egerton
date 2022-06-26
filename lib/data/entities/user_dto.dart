@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:rada_egerton/data/database/sqlite.dart';
 import 'package:rada_egerton/resources/config.dart';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toMap());
 
-class User with Model {
+class User extends Equatable with Model {
   User({
     required this.id,
     required this.name,
@@ -25,17 +26,17 @@ class User with Model {
     return id;
   }
 
-  int id;
-  String name;
-  String email;
-  String _profileImage;
-  String? gender;
-  String? phone;
-  String? dob;
-  String? status;
-  String? accountStatus;
-  String? synced;
-  String? joined;
+  final int id;
+  final String name;
+  final String email;
+  final String _profileImage;
+  final String? gender;
+  final String? phone;
+  final String? dob;
+  final String? status;
+  final String? accountStatus;
+  final String? synced;
+  final String? joined;
 
   ///absolute path
   String get profilePic {
@@ -75,8 +76,40 @@ class User with Model {
         "synced": synced,
         "joined": joined,
       };
-}
 
-User userfromMap(Map<String, dynamic> user) {
-  return User.fromJson(user);
+  User copyWith(
+    {int? id,
+    String? name,
+    String? email,
+    String? gender,
+    String? phone,
+    String? dob,
+    String? profilePic,}
+  ) {
+    return User(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      accountStatus: accountStatus,
+      dob: dob ?? this.dob,
+      gender: gender ?? this.gender,
+      phone: phone ?? this.phone,
+      joined: joined,
+      profileImage: profilePic ?? this.profilePic,
+      status: status,
+      synced: synced,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        email,
+        _profileImage,
+        gender,
+        phone,
+        dob,
+        joined,
+      ];
 }
