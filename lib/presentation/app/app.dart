@@ -157,8 +157,7 @@ class RadaApp extends StatelessWidget {
         //-------------------------------------------------------//
       ],
     );
-    //init size config data
-    SizeConfig().init(context);
+    
     context.read<AuthenticationProvider>().addListener(
       () {
         GlobalConfig.instance.inialize(

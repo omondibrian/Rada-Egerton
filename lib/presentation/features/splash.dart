@@ -24,7 +24,8 @@ class SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
+    //init size config class
+    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: Palette.primary,
       body: Center(
