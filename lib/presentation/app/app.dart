@@ -3,19 +3,19 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/presentation/features/auth/login_page.dart';
-import 'package:rada_egerton/presentation/features/auth/register_page.dart';
-import 'package:rada_egerton/presentation/features/chat/view/forum_chats_page.dart';
-import 'package:rada_egerton/presentation/features/chat/view/forum_page.dart';
-import 'package:rada_egerton/presentation/features/chat/view/peer_counseling_chats.dart';
-import 'package:rada_egerton/presentation/features/chat/view/private_chats.dart';
+import 'package:rada_egerton/presentation/features/chat/forum_chat/view/forum_chats_page.dart';
+import 'package:rada_egerton/presentation/features/chat/private_chat/view/private_chats_page.dart';
 import 'package:rada_egerton/presentation/features/contributors.dart';
 import 'package:rada_egerton/presentation/features/counseling/counseling.dart';
 import 'package:rada_egerton/presentation/features/dashboard.dart';
+import 'package:rada_egerton/presentation/features/forum_page.dart';
 import 'package:rada_egerton/presentation/features/help/help.dart';
+import 'package:rada_egerton/presentation/features/information/information_detail.dart';
 import 'package:rada_egerton/presentation/features/information/information_list.dart';
 import 'package:rada_egerton/presentation/features/information/notification.dart';
+import 'package:rada_egerton/presentation/features/login/view/login_page.dart';
 import 'package:rada_egerton/presentation/features/mentorship/mentorship.dart';
+import 'package:rada_egerton/presentation/features/register/view/register_page.dart';
 import 'package:rada_egerton/presentation/features/splash.dart';
 import 'package:rada_egerton/presentation/features/user_account/profile.dart';
 import 'package:rada_egerton/presentation/features/user_account/view_profile.dart';
@@ -25,14 +25,17 @@ import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/theme.dart';
 
 class RadaApp extends StatelessWidget {
+  const RadaApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final GoRouter router = GoRouter(
       debugLogDiagnostics: true,
-      initialLocation: AppRoutes.splash,
+      initialLocation: "/",
       refreshListenable: context.read<AuthenticationProvider>(),
       redirect: (state) {
         String location = state.location;
+        print(location);
         AuthenticationStatus status =
             context.read<AuthenticationProvider>().status;
 
@@ -52,8 +55,8 @@ class RadaApp extends StatelessWidget {
       },
       routes: [
         GoRoute(
-          path: AppRoutes.splash,
           name: AppRoutes.splash,
+          path: "/",
           builder: (context, state) => const SplashScreen(),
         ),
         GoRoute(
@@ -64,7 +67,7 @@ class RadaApp extends StatelessWidget {
         GoRoute(
           path: AppRoutes.login,
           name: AppRoutes.login,
-          builder: (context, state) => Login(),
+          builder: (context, state) => LoginPage(),
         ),
         GoRoute(
           path: AppRoutes.register,
@@ -77,12 +80,12 @@ class RadaApp extends StatelessWidget {
         GoRoute(
           path: AppRoutes.dashboard,
           name: AppRoutes.dashboard,
-          builder: (contex, state) => Dashboard(),
+          builder: (contex, state) => const Dashboard(),
           routes: [
             GoRoute(
               path: AppRoutes.counseling,
               name: AppRoutes.counseling,
-              builder: (context, state) => Counseling(),
+              builder: (context, state) => const Counseling(),
             ),
             GoRoute(
               path: AppRoutes.mentorship,
@@ -98,6 +101,15 @@ class RadaApp extends StatelessWidget {
               path: AppRoutes.information,
               name: AppRoutes.information,
               builder: (context, state) => const Information(),
+              routes: [
+                GoRoute(
+                  path: "information/:id",
+                  name: AppRoutes.informationDetails,
+                  builder: (context, state) => InformationDetailPage(
+                    state.params["id"]!,
+                  ),
+                ),
+              ],
             ),
             GoRoute(
               path: AppRoutes.forum,
@@ -105,30 +117,23 @@ class RadaApp extends StatelessWidget {
               builder: (context, _) => const ForumPage(),
             ),
             GoRoute(
-              path: AppRoutes.forumMessages,
-              name: AppRoutes.forumMessages,
-              builder: (context, state) => ForumChats(
-                forumnId: state.queryParams["id"]!,
+              path: "${AppRoutes.forumChats}/:forumId",
+              name: AppRoutes.forumChats,
+              builder: (context, state) => ForumChatPage(
+                state.params["forumId"]!,
               ),
             ),
             GoRoute(
-              path: AppRoutes.peerChat,
-              name: AppRoutes.peerChat,
-              builder: (context, state) => PeerCounsellingChats(
-                id: state.queryParams["id"]!,
-              ),
-            ),
-            GoRoute(
-              path: AppRoutes.privateChat,
+              path: "chat/:recepientId",
               name: AppRoutes.privateChat,
-              builder: (context, state) => PrivateChats(
-                receipientId: state.queryParams["id"]!,
+              builder: (context, state) => PrivateChatPage(
+                state.params["recepientId"]!,
               ),
             ),
             GoRoute(
               path: AppRoutes.notification,
               name: AppRoutes.notification,
-              builder: (context, state) => UserNotification(),
+              builder: (context, state) => const UserNotification(),
             ),
             GoRoute(
               path: AppRoutes.profile,
@@ -157,7 +162,6 @@ class RadaApp extends StatelessWidget {
           authToken: context.read<AuthenticationProvider>().authToken,
           user: context.read<AuthenticationProvider>().user,
         );
-        print(GlobalConfig.instance.user.toMap());
       },
     );
     return MaterialApp.router(

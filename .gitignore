@@ -44,3 +44,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Google Maps API Key
+android/local.properties
+lib/resources/api_key.dart

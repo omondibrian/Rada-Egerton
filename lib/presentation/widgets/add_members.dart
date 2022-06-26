@@ -1,13 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
-import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
-import 'package:rada_egerton/presentation/widgets/defaultInput.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
+import 'package:rada_egerton/presentation/widgets/button.dart';
+import 'package:rada_egerton/presentation/widgets/input.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/data/services/counseling_service.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
-
+import 'package:rada_egerton/resources/size_config.dart';
 
 class AddMembers extends StatefulWidget {
   final String groupId;
@@ -18,8 +17,6 @@ class AddMembers extends StatefulWidget {
 }
 
 class _AddMembersState extends State<AddMembers> {
-  final CounselingServiceProvider _counselingServiceProvider =
-      CounselingServiceProvider();
   User? user;
   @override
   Widget build(BuildContext context) {
@@ -42,22 +39,22 @@ class _AddMembersState extends State<AddMembers> {
               Row(
                 children: [
                   Expanded(
+                    flex: 2,
                     child: DefaultInput(
                       hintText: "enter email for new member",
                       controller: queryStringController,
                       validator: validator,
                       icon: Icons.email_outlined,
                     ),
-                    flex: 2,
                   ),
                   Expanded(
                     flex: 1,
                     child: RadaButton(
                       title: 'search',
                       handleClick: () async {
-                        var result = await _counselingServiceProvider
-                            .queryUserData(queryStringController.text);
-                        result!.fold(
+                        var result = await CounselingService.queryUserData(
+                            queryStringController.text);
+                        result.fold(
                           (user) => setState(() {
                             this.user = user;
                           }),
@@ -74,11 +71,12 @@ class _AddMembersState extends State<AddMembers> {
                   if (user != null)
                     GestureDetector(
                       onTap: () async {
-                       
-                        var result = await _counselingServiceProvider
-                            .subToNewGroup(user!.id.toString(), widget.groupId);
+                        var result = await CounselingService.subToNewGroup(
+                          user!.id.toString(),
+                          widget.groupId,
+                        );
 
-                        result!.fold(
+                        result.fold(
                           (_) => context.pop(),
                           (err) => print(err),
                         );
@@ -89,8 +87,7 @@ class _AddMembersState extends State<AddMembers> {
                           leading: CircleAvatar(
                             child: ClipOval(
                               child: CachedNetworkImage(
-                                imageUrl: imageUrl(
-                                    user!.profilePic),
+                                imageUrl: imageUrl(user!.profilePic),
                                 imageBuilder: (context, imageProvider) =>
                                     Container(
                                   decoration: BoxDecoration(

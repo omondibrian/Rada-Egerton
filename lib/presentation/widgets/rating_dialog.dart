@@ -28,7 +28,10 @@ Widget ratingDialog(String counsellorId) {
     ),
     submitButtonText: 'Submit',
     onSubmitted: (response) {
-      CounselingServiceProvider().rateCounsellor(counsellorId, response.rating);
+      CounselingService.rateCounsellor(
+        counsellorId,
+        response.rating,
+      );
     },
   );
 }

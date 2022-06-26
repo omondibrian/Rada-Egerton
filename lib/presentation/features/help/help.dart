@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/presentation/features/help/help_tabs/ContactTab.dart';
+import 'package:rada_egerton/presentation/features/help/help_tabs/contact_tab.dart';
 import 'package:rada_egerton/presentation/features/help/help_tabs/issues.dart';
-import 'package:rada_egerton/presentation/features/help/help_tabs/locationTab.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/presentation/features/help/help_tabs/location_tab.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 
 
 class Help extends StatelessWidget {
@@ -34,9 +34,9 @@ class Help extends StatelessWidget {
             ),
           ];
         },
-        body: TabBarView(
+        body: const TabBarView(
           children: [
-            const LocationTab(),
+            LocationTab(),
             ContactTab(),
             Issues(),
           ],

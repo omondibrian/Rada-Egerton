@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/data/entities/ComplaintDto.dart';
+import 'package:rada_egerton/data/entities/complaint_dto.dart';
 import 'package:rada_egerton/data/services/issues.dart';
-import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
+import 'package:rada_egerton/presentation/widgets/button.dart';
 
 class Issues extends StatefulWidget {
+  const Issues({Key? key}) : super(key: key);
+
   @override
-  _IssuesState createState() => _IssuesState();
+  State<Issues> createState() => _IssuesState();
 }
 
 class _IssuesState extends State<Issues> {

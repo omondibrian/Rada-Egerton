@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
-import 'package:rada_egerton/presentation/widgets/ProfileHeader.dart';
-import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
+import 'package:rada_egerton/presentation/widgets/profile_header.dart';
+import 'package:rada_egerton/presentation/widgets/button.dart';
 import 'package:rada_egerton/resources/config.dart';
 
 import 'package:rada_egerton/data/services/auth_service.dart';
@@ -12,7 +12,7 @@ class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
@@ -31,18 +31,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _updateUserProfile() async {
     if (profileForm.currentState!.validate()) {
-      final result = await AuthService.updateProfile(User(
+      final result = await AuthService.updateProfile(
+        User(
           id: _user!.id,
           name: _lastNameController.text,
           email: _user!.email,
-          profilePic: _user!.profilePic,
+          profileImage: "",
           gender: _user!.gender,
           phone: _phoneNumberController.text,
           dob: _user!.dob,
           status: _user!.status,
           accountStatus: _user!.accountStatus,
           synced: _user!.synced,
-          joined: _user!.joined));
+          joined: _user!.joined,
+        ),
+      );
       result.fold((user) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
@@ -102,7 +105,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: <Widget>[
                   ProfileHeader(
                     avatarUrl: imageUrl(_user!.profilePic),
-                    coverImage: const AssetImage('assets/android-icon-192x192.png'),
+                    coverImage:
+                        const AssetImage('assets/android-icon-192x192.png'),
                     title: _user!.name,
                     actions: <Widget>[
                       MaterialButton(
@@ -175,7 +179,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         errorText: "Required"),
                                   ),
                                   ListTile(
-                                    leading: const Icon(Icons.account_box_outlined),
+                                    leading:
+                                        const Icon(Icons.account_box_outlined),
                                     title: const Text("Account status"),
                                     subtitle: Text("${_user!.accountStatus}"),
                                   ),
@@ -197,20 +202,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   if (isEditing)
                                     Row(
                                       children: [
-                                    Expanded(
-                                        child: RadaButton(
-                                      fill: true,
-                                      handleClick: _updateUserProfile,
-                                      title: "Save",
-                                    )),
-                                    Expanded(
-                                        child: RadaButton(
-                                      fill: false,
-                                      handleClick: () => setState(() {
-                                        isEditing = false;
-                                      }),
-                                      title: "Cancel",
-                                    ))
+                                        Expanded(
+                                            child: RadaButton(
+                                          fill: true,
+                                          handleClick: _updateUserProfile,
+                                          title: "Save",
+                                        )),
+                                        Expanded(
+                                            child: RadaButton(
+                                          fill: false,
+                                          handleClick: () => setState(() {
+                                            isEditing = false;
+                                          }),
+                                          title: "Cancel",
+                                        ))
                                       ],
                                     ),
                                 ],

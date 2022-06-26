@@ -1,3 +1,5 @@
+import 'package:rada_egerton/data/entities/user_dto.dart';
+
 class AuthDTO {
   String _email = "";
   String _password = "";
@@ -27,4 +29,10 @@ class AuthDTO {
   String getPassword() => _password;
   String getUsername() => _userName;
   String getUniversity() => _university;
+}
+
+class LoginData {
+  final User user;
+  final String authToken;
+  LoginData({required this.user, required this.authToken});
 }
