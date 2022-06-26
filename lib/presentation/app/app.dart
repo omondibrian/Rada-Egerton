@@ -21,6 +21,7 @@ import 'package:rada_egerton/presentation/features/splash.dart';
 import 'package:rada_egerton/presentation/features/welcome.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 import 'package:rada_egerton/resources/theme.dart';
 
 class RadaApp extends StatelessWidget {
@@ -156,6 +157,8 @@ class RadaApp extends StatelessWidget {
         //-------------------------------------------------------//
       ],
     );
+    //init size config data
+    SizeConfig().init(context);
     context.read<AuthenticationProvider>().addListener(
       () {
         GlobalConfig.instance.inialize(

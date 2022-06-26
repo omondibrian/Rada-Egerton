@@ -14,8 +14,8 @@ class CounsellingProvider with ChangeNotifier {
 
   List<PeerCounsellorDto> peerCounsellors = [];
   List<Counsellor> counsellors = [];
-  ServiceStatus peerStatus = ServiceStatus.initial;
-  ServiceStatus counsellorStatus = ServiceStatus.initial;
+  ServiceStatus peerStatus = ServiceStatus.loading;
+  ServiceStatus counsellorStatus = ServiceStatus.loading;
 
   Counsellor getCounsellor({required int userId}) {
     return counsellors.firstWhere((c) => c.user.id == userId);
@@ -27,8 +27,6 @@ class CounsellingProvider with ChangeNotifier {
 
   Future<InfoMessage?> initCounsellors() async {
     final res = await CounselingService.fetchCounsellors();
-    counsellorStatus = ServiceStatus.loading;
-    notifyListeners();
     try {
       res.fold(
         (counsellors) => this.counsellors = counsellors,
@@ -46,8 +44,7 @@ class CounsellingProvider with ChangeNotifier {
 
   Future<InfoMessage?> initPeerCounsellors() async {
     final res = await CounselingService.fetchPeerCounsellors();
-    peerStatus = ServiceStatus.loading;
-    notifyListeners();
+
     try {
       res.fold(
         (counsellors) => peerCounsellors = counsellors,

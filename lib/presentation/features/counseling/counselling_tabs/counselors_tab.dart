@@ -1,6 +1,5 @@
 import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/entities/counsellors_dto.dart';
-import 'package:rada_egerton/data/entities/group_dto.dart';
 import 'package:rada_egerton/data/providers/counseling_provider.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
@@ -11,7 +10,6 @@ import 'package:rada_egerton/resources/config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/resources/constants.dart';
-import 'package:rada_egerton/resources/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class CounsellorsTab extends StatelessWidget {
@@ -33,7 +31,7 @@ class CounsellorsTab extends StatelessWidget {
       edgeOffset: 5.0,
       child: Builder(
         builder: (context) {
-;          if (counsellorprovider.counsellorStatus == ServiceStatus.loading) {
+          if (counsellorprovider.counsellorStatus == ServiceStatus.loading) {
             return Shimmer(
               child: ListView(
                 children: List.generate(
