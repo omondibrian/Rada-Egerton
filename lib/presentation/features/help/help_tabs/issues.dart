@@ -45,11 +45,11 @@ class _IssuesState extends State<Issues> {
                 content: Text("Issue created successfuly",
                     style: TextStyle(color: Theme.of(context).errorColor)),
                 duration: const Duration(seconds: 10),
-                action: SnackBarAction(label: "retry", onPressed: createIssue),
+                action: SnackBarAction(label: "RETRY", onPressed: createIssue),
               )));
     }
   }
-  // action: SnackBarAction(label: "retry", onPressed: fetchData),
+  // action: SnackBarAction(label: "RETRY", onPressed: fetchData),
 
   @override
   void initState() {

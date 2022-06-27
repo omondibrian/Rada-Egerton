@@ -25,7 +25,7 @@ class PrivateChatAppBar extends StatelessWidget {
                 style: TextStyle(color: Colors.red),
               ),
               action: SnackBarAction(
-                label: "Retry",
+                label: "RETRY",
                 onPressed: () => context.read<PrivateChatBloc>().add(
                       RecepientDataRequested(),
                     ),

@@ -101,7 +101,7 @@ class GroupSessionsTab extends StatelessWidget {
                         const Text("Ann error occured"),
                         TextButton(
                           onPressed: () => _refresh(),
-                          child: const Text("Retry"),
+                          child: const Text("RETRY"),
                         )
                       ],
                     ),

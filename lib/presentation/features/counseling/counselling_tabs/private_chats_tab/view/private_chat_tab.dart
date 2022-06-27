@@ -57,7 +57,7 @@ class _PrivateChatTabView extends StatelessWidget {
                   onPressed: () => context.read<PrivateChatBloc>().add(
                         PrivateChatTabStarted(),
                       ),
-                  child: const Text("Retry"),
+                  child: const Text("RETRY"),
                 )
               ],
             ),

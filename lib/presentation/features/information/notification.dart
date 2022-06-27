@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:rada_egerton/data/entities/news_dto.dart';
 import 'package:rada_egerton/data/services/news_location_service.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
@@ -31,7 +30,7 @@ class _UserNotificationState extends State<UserNotification> {
               style: const TextStyle(color: Colors.red),
             ),
             action: SnackBarAction(
-              label: "Retry",
+              label: "RETRY",
               onPressed: init,
             ),
           ),
@@ -98,8 +97,10 @@ class _UserNotificationState extends State<UserNotification> {
         height: 50,
         width: 50,
         imageUrl: notification.imageUrl,
-        placeholder: (context, url) => SpinKitFadingCircle(
-          color: Theme.of(context).primaryColor,
+        placeholder: (context, url) => Image.asset(
+          "assets/gif.gif",
+          height: 100,
+          width: 100,
         ),
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(

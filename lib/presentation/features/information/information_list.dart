@@ -40,7 +40,7 @@ class Information extends StatelessWidget {
                     TextButton(
                       onPressed: () =>
                           context.read<InformationProvider>().init(),
-                      child: const Text("Retry"),
+                      child: const Text("RETRY"),
                     )
                   ],
                 );

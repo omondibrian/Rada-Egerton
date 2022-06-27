@@ -165,12 +165,12 @@ extension X on InformationContent {
       fontSize: 14.0,
       color: Palette.lightTextColor,
     );
-    if (attributes.bold != null) {
+    if (attributes.bold == true) {
       style = style.copyWith(
         fontWeight: FontWeight.bold,
       );
     }
-    if (attributes.italic != null) {
+    if (attributes.italic == true) {
       style = style.copyWith(
         fontStyle: FontStyle.italic,
       );
@@ -194,12 +194,12 @@ extension X on InformationContent {
       );
     }
 
-    if (attributes.strike != null) {
+    if (attributes.strike == true) {
       style = style.copyWith(
         decoration: TextDecoration.lineThrough,
       );
     }
-    if (attributes.underline != null) {
+    if (attributes.underline == true) {
       style = style.copyWith(
         decoration: TextDecoration.underline,
       );

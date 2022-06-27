@@ -26,6 +26,8 @@ class CounsellingProvider with ChangeNotifier {
   }
 
   Future<InfoMessage?> initCounsellors() async {
+    counsellorStatus = ServiceStatus.loading;
+    notifyListeners();
     final res = await CounselingService.fetchCounsellors();
     try {
       res.fold(
@@ -43,8 +45,9 @@ class CounsellingProvider with ChangeNotifier {
   }
 
   Future<InfoMessage?> initPeerCounsellors() async {
+    peerStatus = ServiceStatus.loading;
+    notifyListeners();
     final res = await CounselingService.fetchPeerCounsellors();
-
     try {
       res.fold(
         (counsellors) => peerCounsellors = counsellors,

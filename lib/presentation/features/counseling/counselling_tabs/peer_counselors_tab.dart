@@ -48,7 +48,7 @@ class PeerCounsellorsTab extends StatelessWidget {
                   const Text("An error occurred"),
                   TextButton(
                     onPressed: () => _refresh(),
-                    child: const Text("Retry"),
+                    child: const Text("RETRY"),
                   )
                 ],
               ),
