@@ -15,13 +15,13 @@ import 'package:rada_egerton/presentation/features/information/information_list.
 import 'package:rada_egerton/presentation/features/information/notification.dart';
 import 'package:rada_egerton/presentation/features/login/view/login_page.dart';
 import 'package:rada_egerton/presentation/features/mentorship/mentorship.dart';
+import 'package:rada_egerton/presentation/features/profile/view/profile_page.dart';
 import 'package:rada_egerton/presentation/features/register/view/register_page.dart';
 import 'package:rada_egerton/presentation/features/splash.dart';
-import 'package:rada_egerton/presentation/features/user_account/profile.dart';
-import 'package:rada_egerton/presentation/features/user_account/view_profile.dart';
 import 'package:rada_egerton/presentation/features/welcome.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 import 'package:rada_egerton/resources/theme.dart';
 
 class RadaApp extends StatelessWidget {
@@ -35,7 +35,6 @@ class RadaApp extends StatelessWidget {
       refreshListenable: context.read<AuthenticationProvider>(),
       redirect: (state) {
         String location = state.location;
-        print(location);
         AuthenticationStatus status =
             context.read<AuthenticationProvider>().status;
 
@@ -146,9 +145,11 @@ class RadaApp extends StatelessWidget {
               builder: (context, state) => const ContributorScreen(),
             ),
             GoRoute(
-              path: AppRoutes.viewProfile,
+              path: "profile/:userId",
               name: AppRoutes.viewProfile,
-              builder: (context, state) => const ViewProfileScreen("1"),
+              builder: (context, state) => ProfileScreen(
+                userId: int.parse(state.params["userId"]!),
+              ),
             ),
           ],
         ),
@@ -156,6 +157,7 @@ class RadaApp extends StatelessWidget {
         //-------------------------------------------------------//
       ],
     );
+    
     context.read<AuthenticationProvider>().addListener(
       () {
         GlobalConfig.instance.inialize(

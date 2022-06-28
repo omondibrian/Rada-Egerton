@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/bloc/bloc.dart';
 import 'package:rada_egerton/resources/config.dart';
+import 'package:rada_egerton/resources/constants.dart';
 
 class PrivateChatAppBar extends StatelessWidget {
   const PrivateChatAppBar({
@@ -78,14 +80,15 @@ class PrivateChatAppBar extends StatelessWidget {
               ),
               itemBuilder: (_) => [
                 PopupMenuItem(
-                  onTap: () => {},
-                  child: Text(
-                    'Leave ',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
+                  onTap: () => {
+                    context.pushNamed(AppRoutes.viewProfile, params: {
+                      "userId": context.read<PrivateChatBloc>().recepientId
+                    })
+                  },
+                  child: const Text(
+                    'View Profile',
                   ),
-                ),
+                )
               ],
             ),
           ],

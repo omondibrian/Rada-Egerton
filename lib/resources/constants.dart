@@ -19,7 +19,7 @@ class AppRoutes {
   static const forumChats = "forum-chats";
   static const connectionError = "connection-error";
   static const privateChat = "chats-private";
-  static const profile = "profile";
+  static const profile = "profile-me";
   static const viewProfile = "view-profile";
   static const contributors = "contributors";
 }

@@ -78,10 +78,12 @@ class ServiceUtility {
     }
   }
 
-  Future<File> uploadImage() async {
+  Future<File?> uploadImage() async {
     var pickedImage = await _imagePicker.pickImage(source: ImageSource.gallery);
-    File imageFile = File(pickedImage!.path);
-    return imageFile;
+    if (pickedImage != null) {
+      return File(pickedImage.path);
+    }
+    return null;
   }
 }
 

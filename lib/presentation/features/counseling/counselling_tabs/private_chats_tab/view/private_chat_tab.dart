@@ -43,7 +43,7 @@ class _PrivateChatTabView extends StatelessWidget {
             child: ListView(
               children: List.generate(
                 4,
-                (index) => TileLoader(),
+                (index) => const TileLoader(),
               ),
             ),
           );
@@ -109,7 +109,6 @@ class _ChatItem extends StatelessWidget {
 
     void _openChat() {
       if (GlobalConfig.instance.user.id.toString() == recipientId) return;
-
       context.pushNamed(
         AppRoutes.privateChat,
         params: {
