@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-LocationsDto locationsDtoFromJson(String str) =>
-    LocationsDto.fromJson(json.decode(str));
-
-String locationsDtoToJson(LocationsDto data) => json.encode(data.toJson());
-
 class LocationsDto {
   LocationsDto({
     required this.locations,
   });
+
+  LocationsDto locationsDtoFromJson(String str) =>
+      LocationsDto.fromJson(json.decode(str));
+
+  String locationsDtoToJson(LocationsDto data) => json.encode(data.toJson());
 
   List<Location> locations;
 
@@ -25,6 +25,7 @@ class LocationsDto {
 class Location {
   Location({
     required this.id,
+    required this.name,
     required this.latitude,
     required this.longitude,
     required this.campusesId,
@@ -32,6 +33,7 @@ class Location {
   });
 
   String id;
+  String name;
   String latitude;
   String longitude;
   String campusesId;
@@ -39,6 +41,7 @@ class Location {
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
         id: json["_id"],
+        name: json["name"],
         latitude: json["latitude"],
         longitude: json["longitude"],
         campusesId: json["Campuses_id"],
@@ -47,6 +50,7 @@ class Location {
 
   Map<String, dynamic> toJson() => {
         "_id": id,
+        "name": name,
         "latitude": latitude,
         "longitude": longitude,
         "Campuses_id": campusesId,

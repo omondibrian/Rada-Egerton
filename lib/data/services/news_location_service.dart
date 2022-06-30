@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/services.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/data/entities/NewsDTO.dart';
 import 'package:rada_egerton/data/entities/locationDto.dart';
@@ -40,18 +43,21 @@ class NewsAndLocationServiceProvider {
     }
   }
 
-  Future<Either<LocationsDto, ErrorMessage>> fetchLocationPins() async {
-    String? authtoken = await ServiceUtility.getAuthToken();
+  Future<Either<ErrorMessage,LocationsDto >> fetchLocationPins() async {
+    // String? authtoken = await ServiceUtility.getAuthToken();
     try {
-      final result = await _httpClientConn.get(
-        "$_hostUrl/api/v1/admin/location",
-        options: Options(
-            headers: {'Authorization': authtoken}, sendTimeout: _timeOut),
-      );
-      return Left(
+      // final result = await _httpClientConn.get(
+      //   "$_hostUrl/api/v1/admin/location",
+      //   options: Options(
+      //       headers: {'Authorization': authtoken}, sendTimeout: _timeOut),
+      // );
+      //todo: revert back to fetching from derver when backend is populated
+      final result = await rootBundle.loadString('assets/locations.json');
+      return Right(
         LocationsDto.fromJson(
-          result.data,
-        ),
+            jsonDecode(result)),
+            //todo: revert this too
+            // result.data,
       );
     } on DioError catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
@@ -59,7 +65,7 @@ class NewsAndLocationServiceProvider {
         stackTrace,
         reason: 'Error while fetching location pins',
       );
-      return Right(
+      return Left(
         ServiceUtility.handleDioExceptions(e),
       );
     }

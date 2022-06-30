@@ -4,6 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rada_egerton/data/services/news_location_service.dart';
+
+import '../../../../data/entities/locationDto.dart';
 
 void main() {
   if (defaultTargetPlatform == TargetPlatform.android) {
@@ -21,25 +24,25 @@ class LocationTab extends StatefulWidget {
 
 class _LocationTabState extends State<LocationTab> {
   final Completer<GoogleMapController> _controller = Completer();
-  final marker = const Marker(
-    markerId: MarkerId('Counselling Dept.'),
-    position: LatLng(-0.36973278363331785, 35.93140758698434),
-  );
+  final locationService = NewsAndLocationServiceProvider();
 
-  void _onMapCreated(GoogleMapController mapController) {
+  Future<void> _onMapCreated(GoogleMapController mapController) async {
+    final markers = <String, Marker>{};
     _controller.complete(mapController);
+    final helpOffices = await locationService.fetchLocationPins();
+    for (final office
+        in helpOffices.foldRight<List<Location>>(Location, (r, previous) => null)) {
+          final marker = Marker(
+            markerId: office.
+          )
+        }
   }
 
-  final markers = <String, Marker>{
-    'counselling_dept': const Marker(
-      markerId: MarkerId('Counselling Dept.'),
-      position: LatLng(-0.36973278363331785, 35.93140758698434),
-    ),
-    'ntcc': const Marker(
-      markerId: MarkerId('NTCC.'),
-      position: LatLng(-0.28896128588051473, 36.05793424851361),
-    )
-  };
+  static const CameraPosition _initialCameraPosition = CameraPosition(
+    tilt: 45,
+    target: LatLng(-0.36932651926935073, 35.9313568419356),
+    zoom: 20.0,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +64,6 @@ class _LocationTabState extends State<LocationTab> {
 // class MapSampleState extends State<LocationTab> {
 //   final Completer<GoogleMapController> _controller = Completer();
 
-const CameraPosition _initialCameraPosition = CameraPosition(
-  tilt: 45,
-  target: LatLng(-0.36932651926935073, 35.9313568419356),
-  zoom: 20.0,
-);
 
 //   static const CameraPosition _egertonntcc = CameraPosition(
 //     bearing: 90,
@@ -105,7 +103,3 @@ const CameraPosition _initialCameraPosition = CameraPosition(
 //     mapController.animateCamera(CameraUpdate.newCameraPosition(_egertonntcc));
 //   }
 // }
-
-//Dean Of Sudent's location -0.36932651926935073, 35.9313568419356
-//Counselling's department -0.36973278363331785, 35.93140758698434
-//Egerton Town Campus -0.28896128588051473, 36.05793424851361
