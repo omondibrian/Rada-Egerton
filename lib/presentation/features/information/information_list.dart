@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/entities/information_data.dart';
-import 'package:rada_egerton/data/providers/information.content.dart';
+import 'package:rada_egerton/data/providers/information_content.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/information/information_loading_placeholder.dart';
 import 'package:rada_egerton/resources/config.dart';

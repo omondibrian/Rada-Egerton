@@ -145,11 +145,11 @@ class RadaApplicationProvider with ChangeNotifier {
     res.fold(
       (forum) {
         subscribedForums.add(forum);
-        notifyListeners();
         message = InfoMessage(
           "You have joined the forum",
           MessageType.success,
         );
+        notifyListeners();
       },
       (error) => message = InfoMessage.fromError(error),
     );

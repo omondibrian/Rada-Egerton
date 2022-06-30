@@ -9,8 +9,6 @@ class ContributorScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0.0,
         title: const Text('Contributors'),
-        // impliment the revert button to prev screen
-        leading: IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
       ),
       body: Column(
         children: [
@@ -25,60 +23,61 @@ class ContributorScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-              child: ListView(
-            children: ListTile.divideTiles(context: context, tiles: [
-              const Padding(
-                padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
-                child: Expanded(
-                  child: ListTile(
-                    title: Text('Name: Brian'),
-                    subtitle:
-                        Text('University: Egerton \nRole: Software developer'),
+            child: ListView(
+              children: ListTile.divideTiles(context: context, tiles: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
+                  child: Expanded(
+                    child: ListTile(
+                      title: Text('Name: Brian'),
+                      subtitle: Text(
+                          'University: Egerton \nRole: Software developer'),
+                    ),
                   ),
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
-                child: Expanded(
-                  child: ListTile(
-                    title: Text('Name: Moses'),
-                    subtitle:
-                        Text('University: Egerton \nRole: Software developer'),
+                const Padding(
+                  padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
+                  child: Expanded(
+                    child: ListTile(
+                      title: Text('Name: Moses'),
+                      subtitle: Text(
+                          'University: Egerton \nRole: Software developer'),
+                    ),
                   ),
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
-                child: Expanded(
-                  child: ListTile(
-                    title: Text('Name: Jonathan'),
-                    subtitle:
-                        Text('University: Egerton \nRole: Software developer'),
+                const Padding(
+                  padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
+                  child: Expanded(
+                    child: ListTile(
+                      title: Text('Name: Jonathan'),
+                      subtitle: Text(
+                          'University: Egerton \nRole: Software developer'),
+                    )
+                  )
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
+                  child: Expanded(
+                    child: ListTile(
+                      title: Text('Name: Onesmus'),
+                      subtitle: Text(
+                          'University: Egerton \nRole: Software developer'),
+                    ),
                   ),
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
-                child: Expanded(
-                  child: ListTile(
-                    title: Text('Name: Onesmus'),
-                    subtitle:
-                        Text('University: Egerton \nRole: Software developer'),
+                const Padding(
+                  padding: EdgeInsets.only(top: 16.0),
+                  child: Expanded(
+                    child: ListTile(
+                      title: Text('Name: Said'),
+                      subtitle: Text(
+                          'University: Egerton \nRole: Software developer'),
+                    ),
                   ),
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 16.0),
-                child: Expanded(
-                  child: ListTile(
-                    title: Text('Name: Said'),
-                    subtitle:
-                        Text('University: Egerton \nRole: Software developer'),
-                  ),
-                ),
-              ),
-            ]).toList(),
-          )),
+              ]).toList(),
+            ),
+          ),
         ],
       ),
     );

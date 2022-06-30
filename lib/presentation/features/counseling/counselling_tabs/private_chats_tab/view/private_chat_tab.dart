@@ -99,12 +99,12 @@ class _PrivateChatTabView extends StatelessWidget {
 class _ChatItem extends StatelessWidget {
   //TODO fetch recepient profile
   final ChatPayload chat;
-  User? user;
 
-  _ChatItem(this.chat, {Key? key}) : super(key: key);
+  const _ChatItem(this.chat, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    User? user;
     String recipientId = chat.reciepient.toString();
 
     void _openChat() {

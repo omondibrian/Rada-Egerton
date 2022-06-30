@@ -111,7 +111,6 @@ class CounselingService {
           'Authorization': token,
         }, sendTimeout: 10000),
       );
-      print(result);
       Iterable forums = result.data["data"]["payload"];
       return Left(
         List<GroupDTO>.from(

@@ -2,7 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/entities/group_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/presentation/widgets/new_group_create.dart';
+import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/new_group_create.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/theme.dart';
@@ -71,7 +71,7 @@ class GroupSessionsTab extends StatelessWidget {
           showBottomSheet(
             context: context,
             builder: (context) {
-              return newGroupForm(context, appProvider);
+              return NewGroupForm();
             },
           );
         },
@@ -95,16 +95,16 @@ class GroupSessionsTab extends StatelessWidget {
             }
             if (appProvider.groupStatus == ServiceStatus.loadingFailure) {
               return Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      children: [
-                        const Text("Ann error occured"),
-                        TextButton(
-                          onPressed: () => _refresh(),
-                          child: const Text("RETRY"),
-                        )
-                      ],
-                    ),
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    const Text("Ann error occured"),
+                    TextButton(
+                      onPressed: () => _refresh(),
+                      child: const Text("RETRY"),
+                    )
+                  ],
+                ),
               );
             }
             if (groups.isEmpty) {

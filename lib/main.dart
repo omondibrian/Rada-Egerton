@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/providers/counseling_provider.dart';
-import 'package:rada_egerton/data/providers/information.content.dart';
+import 'package:rada_egerton/data/providers/information_content.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'presentation/app/app.dart';
 
