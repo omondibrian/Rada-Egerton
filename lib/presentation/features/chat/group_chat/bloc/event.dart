@@ -36,3 +36,5 @@ class GroupChatReceived extends GroupChatEvent {
 }
 
 class GroupUnsubscribe extends GroupChatEvent {}
+
+class DeleteGroup extends GroupChatEvent {}

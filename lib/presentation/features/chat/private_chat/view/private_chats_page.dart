@@ -68,6 +68,7 @@ class _PrivateChatView extends StatelessWidget {
         if (state.infoMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              duration: const Duration(seconds: 10),
               content: Text(
                 state.infoMessage!.message,
                 style: TextStyle(

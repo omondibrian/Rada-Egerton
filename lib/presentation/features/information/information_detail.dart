@@ -2,9 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/entities/information_data.dart';
-import 'package:rada_egerton/data/providers/information.content.dart';
+import 'package:rada_egerton/data/providers/information_content.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/resources/config.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class InformationDetailPage extends StatelessWidget {
   final String infoId;
@@ -44,7 +45,7 @@ class InformationDetailPage extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () => context.read<InformationProvider>().init(),
-                    child: const Text("Retry"),
+                    child: const Text("RETRY"),
                   )
                 ],
               );
@@ -64,7 +65,7 @@ class InformationDetailPage extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 30, bottom: 10),
-                    child: Text(
+                    child: SelectableText(
                       data.metadata.title,
                       style: Theme.of(context).textTheme.headline2,
                     ),
@@ -85,6 +86,17 @@ class InformationDetailPage extends StatelessWidget {
   }
 }
 
+Widget _link(String url, Widget child) {
+  return InkWell(
+    child: child,
+    onTap: () async {
+      if (await canLaunchUrlString(url)) {
+        await launchUrlString(url);
+      }
+    },
+  );
+}
+
 Widget buildChatContent(List<InformationContent> contentItems) {
   int i = 0;
   List<InlineSpan> span = [];
@@ -92,23 +104,30 @@ Widget buildChatContent(List<InformationContent> contentItems) {
   //Render rich text created with Quil.js WYSIWYG editor//
   //----------------------------------------------------//
 
-  //TODO: follow link on click - links have a link atribute
+  bool isList(int i) {
+    return i < contentItems.length - 1 &&
+        contentItems[i + 1].attributes.list != null;
+  }
+
   for (i = 0; i < contentItems.length; i++) {
     var item = contentItems[i];
     if (item.type == InformationContent.text) {
-      if (i < contentItems.length - 1 && contentItems[i + 1].attributes.list != null) {
+      String text = isList(i)
+          ? "${'\t' * 3}\u2022 ${item.bodyContent}"
+          : item.bodyContent;
+      //links
+      if (item.attributes.link != null) {
         span.add(
           WidgetSpan(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child:
-                  Text("\u2022 ${item.bodyContent}", style: item.getTextStyle),
+            child: _link(
+              item.attributes.link!,
+              Text(text, style: item.getTextStyle),
             ),
           ),
         );
       } else {
         span.add(
-          TextSpan(text: item.bodyContent, style: item.getTextStyle),
+          TextSpan(text: text, style: item.getTextStyle),
         );
       }
     } else if (item.type == InformationContent.image) {
@@ -116,9 +135,14 @@ Widget buildChatContent(List<InformationContent> contentItems) {
         WidgetSpan(
           child: Center(
             child: Container(
-              constraints: const BoxConstraints(maxHeight: 400, minWidth: 100),
+              constraints: const BoxConstraints(maxWidth: 400, minWidth: 100),
               child: CachedNetworkImage(
                 imageUrl: imageUrl(contentItems[i].bodyContent),
+                placeholder: (context, url) => Image.asset(
+                  "assets/gif.gif",
+                  height: 200,
+                  width: 400,
+                ),
               ),
             ),
           ),
@@ -126,6 +150,7 @@ Widget buildChatContent(List<InformationContent> contentItems) {
       );
     }
   }
+
   return SelectableText.rich(
     TextSpan(children: span),
   );

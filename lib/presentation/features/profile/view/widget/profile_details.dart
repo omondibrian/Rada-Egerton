@@ -43,7 +43,7 @@ class ProfileDetails extends StatelessWidget {
                   const Text("An error occured"),
                   TextButton(
                     onPressed: () => context.read<ProfileCubit>().getUser(),
-                    child: const Text("Retry"),
+                    child: const Text("RETRY"),
                   )
                 ],
               );

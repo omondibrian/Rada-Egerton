@@ -6,6 +6,7 @@ import 'package:rada_egerton/resources/utils/main.dart';
 
 import '../services/counseling_service.dart';
 
+/// Manages counsellors and peer counsellors
 class CounsellingProvider with ChangeNotifier {
   CounsellingProvider() {
     initCounsellors();
@@ -26,6 +27,8 @@ class CounsellingProvider with ChangeNotifier {
   }
 
   Future<InfoMessage?> initCounsellors() async {
+    counsellorStatus = ServiceStatus.loading;
+    notifyListeners();
     final res = await CounselingService.fetchCounsellors();
     try {
       res.fold(
@@ -43,8 +46,9 @@ class CounsellingProvider with ChangeNotifier {
   }
 
   Future<InfoMessage?> initPeerCounsellors() async {
+    peerStatus = ServiceStatus.loading;
+    notifyListeners();
     final res = await CounselingService.fetchPeerCounsellors();
-
     try {
       res.fold(
         (counsellors) => peerCounsellors = counsellors,
@@ -58,5 +62,23 @@ class CounsellingProvider with ChangeNotifier {
       return InfoMessage(e.message, MessageType.error);
     }
     return null;
+  }
+
+  Future<void> refreshPeerCounsellors() async {
+    final res = await CounselingService.fetchPeerCounsellors();
+    res.fold((counsellors) {
+      peerStatus = ServiceStatus.loadingSuccess;
+      peerCounsellors = counsellors;
+      notifyListeners();
+    }, (errorMessage) => null);
+  }
+
+  Future<void> refreshCounsellors() async {
+    final res = await CounselingService.fetchCounsellors();
+    res.fold((counsellors) {
+      this.counsellors = counsellors;
+      counsellorStatus = ServiceStatus.loadingSuccess;
+    }, (errorMessage) => null);
+    notifyListeners();
   }
 }

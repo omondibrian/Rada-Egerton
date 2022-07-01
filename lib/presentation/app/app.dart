@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/presentation/features/chat/forum_chat/view/forum_chats_page.dart';
+import 'package:rada_egerton/presentation/features/chat/group_chat/view/forumn_chats_page.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/view/private_chats_page.dart';
 import 'package:rada_egerton/presentation/features/contributors.dart';
 import 'package:rada_egerton/presentation/features/counseling/counseling.dart';
@@ -21,7 +21,6 @@ import 'package:rada_egerton/presentation/features/splash.dart';
 import 'package:rada_egerton/presentation/features/welcome.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
-import 'package:rada_egerton/resources/size_config.dart';
 import 'package:rada_egerton/resources/theme.dart';
 
 class RadaApp extends StatelessWidget {
@@ -116,10 +115,10 @@ class RadaApp extends StatelessWidget {
               builder: (context, _) => const ForumPage(),
             ),
             GoRoute(
-              path: "${AppRoutes.forumChats}/:forumId",
-              name: AppRoutes.forumChats,
-              builder: (context, state) => ForumChatPage(
-                state.params["forumId"]!,
+              path: "${AppRoutes.goupChat}/:groupId",
+              name: AppRoutes.goupChat,
+              builder: (context, state) => GroupChatPage(
+                state.params["groupId"]!,
               ),
             ),
             GoRoute(
@@ -157,7 +156,7 @@ class RadaApp extends StatelessWidget {
         //-------------------------------------------------------//
       ],
     );
-    
+
     context.read<AuthenticationProvider>().addListener(
       () {
         GlobalConfig.instance.inialize(
@@ -172,6 +171,7 @@ class RadaApp extends StatelessWidget {
       routeInformationParser: router.routeInformationParser,
       title: 'Rada',
       debugShowCheckedModeBanner: false,
+      
       theme: ThemeData(
         primaryColorLight: Palette.accent,
         primaryColor: Palette.primary,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
+import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
@@ -14,9 +15,13 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
   final ChatRepository chatRepo;
   final String groupId;
   late StreamSubscription<ChatPayload> _streamSubscription;
+  final RadaApplicationProvider appProvider;
 
-  GroupBloc({required this.groupId, required this.chatRepo})
-      : super(
+  GroupBloc({
+    required this.groupId,
+    required this.chatRepo,
+    required this.appProvider,
+  }) : super(
           const GroupState(),
         ) {
     //Listen to new recived group messages
@@ -38,6 +43,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
     on<GroupChatReceived>(_groupChatReceived);
     on<GroupChatSend>(_groupChatSend);
     on<GroupUnsubscribe>(_groupUnsubscribe);
+    on<DeleteGroup>(_groupDeleteGroup);
   }
 
   FutureOr<void> _groupChatStarted(
@@ -50,7 +56,11 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
     final res = await chatRepo.initChats();
     res.fold(
       (infomesage) => emit(
-        state.copyWith(forumMsgs: chatRepo.groupchat),
+        state.copyWith(
+          forumMsgs: chatRepo.groupchat
+              .where((chat) => chat.groupsId == groupId)
+              .toList(),
+        ),
       ),
       (errormassage) => emit(
         state.copyWith(
@@ -68,7 +78,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
     GroupChatReceived event,
     Emitter<GroupState> emit,
   ) {
-    if (event.groupChat.reciepient == groupId) {
+    if (event.groupChat.groupsId == groupId) {
       emit(
         state.copyWith(
           forumMsgs: [...state.chats, event.groupChat],
@@ -109,15 +119,40 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
   ) async {
     emit(
       state.copyWith(
-        infoMessage: InfoMessage("Leaving group please wait", MessageType.info),
+        infoMessage:
+            InfoMessage("Leaving group please wait", MessageType.success),
       ),
     );
-    final res = await chatRepo.leaveGroup(groupId);
+    final res = await appProvider.leaveGroup(groupId);
     res.fold(
       (infomessage) => emit(
+        state.copyWith(infoMessage: infomessage, subscribed: false),
+      ),
+      (errorMessage) => emit(
         state.copyWith(
-          infoMessage: infomessage,
+          infoMessage: InfoMessage(
+            errorMessage.message,
+            MessageType.error,
+          ),
         ),
+      ),
+    );
+  }
+
+  FutureOr<void> _groupDeleteGroup(
+    DeleteGroup event,
+    Emitter<GroupState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        infoMessage:
+            InfoMessage("Deleting group, please wait...", MessageType.success),
+      ),
+    );
+    final res = await appProvider.deleteGroup(groupId);
+    res.fold(
+      (infomessage) => emit(
+        state.copyWith(infoMessage: infomessage, subscribed: false),
       ),
       (errorMessage) => emit(
         state.copyWith(

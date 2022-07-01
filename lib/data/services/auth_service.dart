@@ -177,7 +177,7 @@ class AuthService {
   static Future<Either<UserRole, ErrorMessage>> getUserRoles(
       String userId) async {
     try {
-      String authToken = GlobalConfig.instance.appKey;
+      String authToken = GlobalConfig.instance.authToken;
       final result = await _httpClientConn.get(
         "$_hostUrl/api/v1/admin/role/$userId",
         options:

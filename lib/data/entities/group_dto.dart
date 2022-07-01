@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:rada_egerton/data/database/sqlite.dart';
 
-class GroupDTO extends Equatable with Model {
+class GroupDTO extends Equatable {
   @override
   List<Object?> get props => [id, title, image, isForum];
   final String id;
@@ -18,13 +17,13 @@ class GroupDTO extends Equatable with Model {
         id: json["id"].toString(),
         title: json["title"],
         image: json["image"],
-        isForum: json["forum"] ?? false,
+        isForum: json["forum"],
       );
 
-  @override
-  Map<String, dynamic> toMap() =>
-      {"id": id, "title": title, "image": image, "forum": isForum};
-
-  @override
-  int get getId => int.parse(id);
+  Map<String, dynamic> toMap() => {
+        "id": id,
+        "title": title,
+        "image": image,
+        "forum": isForum,
+      };
 }

@@ -22,7 +22,7 @@ class ForumPage extends StatelessWidget {
     final allForums = provider.allForums;
 
     Future<void> _refresh() async {
-      provider.initAllForums();
+      await provider.refreshForums();
     }
 
     return Scaffold(
@@ -56,7 +56,7 @@ class ForumPage extends StatelessWidget {
                       const Text("An error occurred"),
                       TextButton(
                         onPressed: () => _refresh(),
-                        child: const Text("Retry"),
+                        child: const Text("RETRY"),
                       )
                     ],
                   ),
@@ -96,9 +96,9 @@ class _ForumItem extends StatelessWidget {
     void _openForum() {
       if (!isSubscribed) return;
       context.pushNamed(
-        AppRoutes.forumChats,
+        AppRoutes.goupChat,
         params: {
-          "forumId": forum.id.toString(),
+          "groupId": forum.id.toString(),
         },
       );
     }
@@ -109,21 +109,23 @@ class _ForumItem extends StatelessWidget {
         minVerticalPadding: 0,
         isThreeLine: true,
         contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-        leading: CircleAvatar(
-          child: CachedNetworkImage(
-            color: Colors.white,
-            imageUrl: imageUrl(forum.image),
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
+        leading: ClipOval(
+          child: CircleAvatar(
+            child: CachedNetworkImage(
+              color: Colors.white,
+              imageUrl: imageUrl(forum.image),
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
                 ),
+                width: SizeConfig.isTabletWidth ? 120 : 90,
+                height: SizeConfig.isTabletWidth ? 120 : 90,
               ),
-              width: SizeConfig.isTabletWidth ? 120 : 90,
-              height: SizeConfig.isTabletWidth ? 120 : 90,
+              placeholder: (context, url) => Image.asset("assets/users.png"),
             ),
-            placeholder: (context, url) => Image.asset("assets/users.png"),
           ),
         ),
         title: Text(forum.title, style: Theme.of(context).textTheme.subtitle1),

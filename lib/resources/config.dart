@@ -3,6 +3,7 @@ import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/data/entities/user_roles.dart';
 import 'package:rada_egerton/data/services/auth_service.dart';
 
+/// Singleton class to store Global configuration variables
 class GlobalConfig {
   String pusherApiKey = "8da328d2097b06731d0a";
   static String baseUrl = "https://radaegerton.ddns.net";
@@ -10,13 +11,16 @@ class GlobalConfig {
   String authToken = "";
   User user = User.empty();
   UserRole? _userRoles;
-  
-  //placeholder avatar images
+
+  ///placeholder user image
   static String userAvi =
       "https://img.icons8.com/ios-glyphs/90/000000/user--v1.png";
-  static String usersApi =
+
+  ///placeholder users image
+  static String usersAvi =
       "https://img.icons8.com/ios-glyphs/90/000000/group.png";
 
+  ///Return  a [Future][UserRole]
   Future<UserRole> get userRoles async {
     if (_userRoles != null) {
       return _userRoles!;
@@ -31,6 +35,7 @@ class GlobalConfig {
     return _userRoles!;
   }
 
+  ///Intitialile or set [GlobalConfiguration] variable
   void inialize({
     String? authToken,
     User? user,
@@ -50,6 +55,7 @@ Dio httpClient = Dio(
   ),
 );
 
+///Create absolute image url
 String imageUrl(String path) {
   if (path.startsWith("/")) {
     return "${GlobalConfig.baseUrl}/api/v1/uploads$path";
@@ -57,6 +63,7 @@ String imageUrl(String path) {
   return "${GlobalConfig.baseUrl}/api/v1/uploads/$path";
 }
 
+///Create an absulute url by concatinating Server host url and give parameters
 String url({required String url, Map<String, dynamic>? queryParams}) {
   if (url.startsWith("/")) {
     url = url.substring(1);

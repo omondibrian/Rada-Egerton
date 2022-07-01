@@ -16,7 +16,6 @@ class AppRoutes {
   static const notification = "notification";
   static const mentorship = "mentorship";
   static const forum = "forum";
-  static const forumChats = "forum-chats";
   static const connectionError = "connection-error";
   static const privateChat = "chats-private";
   static const profile = "profile-me";
@@ -36,4 +35,3 @@ class ChatEvent {
   static const String USER = 'USER';
 }
 
-enum ChatModes { PRIVATE, FORUM, GROUP }

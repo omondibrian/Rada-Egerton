@@ -1,12 +1,11 @@
 import 'dart:convert';
 
-import 'package:rada_egerton/data/database/sqlite.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
 
 PeerCounsellorDto peerCounsellorDtoFromJson(String str) =>
     PeerCounsellorDto.fromJson(json.decode(str));
 
-class PeerCounsellorDto with Model {
+class PeerCounsellorDto {
   PeerCounsellorDto({
     required this.user,
     required this.regNo,
@@ -19,10 +18,7 @@ class PeerCounsellorDto with Model {
   String expertise;
   int? campusesId;
   User user;
-  @override
-  int get getId {
-    return peerCounsellorId;
-  }
+ 
 
   factory PeerCounsellorDto.fromJson(Map<String, dynamic> json) {
     User user = User(
@@ -49,7 +45,6 @@ class PeerCounsellorDto with Model {
     );
   }
 
-  @override
   Map<String, dynamic> toMap() => {
         "_id": user.id,
         "regNo": regNo,

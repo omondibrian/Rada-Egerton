@@ -2,7 +2,7 @@ class UserRole {
   List<String> roles;
   UserRole(this.roles);
   bool get isCounsellor {
-    return roles.contains("Counsellor");
+    return roles.contains("COUNSELLOR");
   }
 
   bool get isPeerCounsellor {
@@ -11,5 +11,10 @@ class UserRole {
 
   bool get isStudent {
     return !(isCounsellor || isPeerCounsellor);
+  }
+
+  @override
+  String toString() {
+    return "UserRoles($roles)";
   }
 }

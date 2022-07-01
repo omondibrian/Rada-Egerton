@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/presentation/features/chat/group_chat/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/features/chat/group_chat/view/widgets/chat_item.dart';
@@ -18,6 +19,7 @@ class GroupChatPage extends StatelessWidget {
       create: (_) => GroupBloc(
         chatRepo: context.read<ChatRepository>(),
         groupId: groupId,
+        appProvider: context.read<RadaApplicationProvider>(),
       )..add(
           GroupChatStarted(),
         ),
@@ -63,6 +65,7 @@ class _GroupChatView extends StatelessWidget {
         if (state.infoMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              duration: const Duration(seconds: 10),
               content: Text(
                 state.infoMessage!.message,
                 style: TextStyle(

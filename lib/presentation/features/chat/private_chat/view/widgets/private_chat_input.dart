@@ -67,16 +67,18 @@ class PrivateChatInput extends StatelessWidget {
                 width: 5.0,
               ),
               GestureDetector(
-                onTap: () => context.read<PrivateChatBloc>().add(
-                      PrivateChatSend(
-                        ChatPayload(
-                          message: _chatController.text,
-                          reciepient:
-                              context.read<PrivateChatBloc>().recepientId,
-                          senderId: GlobalConfig.instance.user.id.toString(),
+                onTap: () {
+                  context.read<PrivateChatBloc>().add(
+                        PrivateChatSend(
+                          ChatPayload(
+                            message: _chatController.text,
+                            reciepient:
+                                context.read<PrivateChatBloc>().recepientId,
+                            senderId: GlobalConfig.instance.user.id.toString(),
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                },
                 child: CircleAvatar(
                   backgroundColor: Palette.accent,
                   child: Padding(

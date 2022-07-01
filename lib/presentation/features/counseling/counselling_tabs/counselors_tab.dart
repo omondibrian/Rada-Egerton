@@ -21,7 +21,7 @@ class CounsellorsTab extends StatelessWidget {
     final counsellors = counsellorprovider.counsellors;
 
     Future<void> _refresh() async {
-      await counsellorprovider.initCounsellors();
+      await counsellorprovider.refreshCounsellors();
     }
 
     return RefreshIndicator(
@@ -50,7 +50,7 @@ class CounsellorsTab extends StatelessWidget {
                   const Text("An error occurred"),
                   TextButton(
                     onPressed: () => _refresh(),
-                    child: const Text("Retry"),
+                    child: const Text("RETRY"),
                   )
                 ],
               ),
@@ -100,22 +100,24 @@ class _CounselloItem extends StatelessWidget {
         isThreeLine: true,
         contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
         leading: CircleAvatar(
-          child: CachedNetworkImage(
-            width: 90,
-            height: 90,
-            color: Colors.white,
-            imageUrl: counsellor.user.profilePic,
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
-                ),
-              ),
+          child: ClipOval(
+            child: CachedNetworkImage(
               width: 90,
               height: 90,
+              color: Colors.white,
+              imageUrl: counsellor.user.profilePic,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                width: 90,
+                height: 90,
+              ),
+              placeholder: (context, url) => Image.asset("assets/user.png"),
             ),
-            placeholder: (context, url) => Image.asset("assets/user.png"),
           ),
         ),
         title: Text(

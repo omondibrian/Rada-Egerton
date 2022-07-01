@@ -2,7 +2,9 @@ import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/entities/group_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/presentation/widgets/new_group_create.dart';
+import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/new_group_create.dart';
+import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
+import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/theme.dart';
@@ -22,24 +24,25 @@ class GroupSessionsTab extends StatelessWidget {
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
-    Future<void> _refresh() async {}
+    Future<void> _refresh() async {
+      await appProvider.refreshGroups();
+    }
 
     Widget conversationBuilder(BuildContext ctx, int index) {
       GroupDTO group = groups[index];
-
       return GestureDetector(
         onTap: () => {
-          context.push(context.namedLocation(
+          context.pushNamed(
             AppRoutes.goupChat,
-            params: {"goupId": group.id},
-          ))
+            params: {"groupId": group.id},
+          )
         },
         child: ListTile(
           leading: CircleAvatar(
             child: ClipOval(
               child: CachedNetworkImage(
                 color: Colors.white,
-                imageUrl: imageUrl("infoConversations.image"),
+                imageUrl: imageUrl(group.image),
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -48,11 +51,11 @@ class GroupSessionsTab extends StatelessWidget {
                     ),
                   ),
                 ),
-                placeholder: (context, url) => Image.asset("assets/user.png"),
+                placeholder: (context, url) => Image.asset("assets/users.png"),
               ),
             ),
           ),
-          title: Text("infoConversations.title", style: style),
+          title: Text(group.title, style: style),
           subtitle: Text(
             "say something",
             style: TextStyle(
@@ -71,7 +74,7 @@ class GroupSessionsTab extends StatelessWidget {
           showBottomSheet(
             context: context,
             builder: (context) {
-              return newGroupForm(context, appProvider);
+              return const NewGroupForm();
             },
           );
         },
@@ -89,26 +92,31 @@ class GroupSessionsTab extends StatelessWidget {
         child: Builder(
           builder: (context) {
             if (appProvider.groupStatus == ServiceStatus.loading) {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return Shimmer(
+                child: ListView(
+                  children: List.generate(
+                    4,
+                    (index) => const TileLoader(),
+                  ),
+                ),
               );
             }
             if (appProvider.groupStatus == ServiceStatus.loadingFailure) {
               return Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      children: [
-                        const Text("Ann error occured"),
-                        TextButton(
-                          onPressed: () => _refresh(),
-                          child: const Text("Retry"),
-                        )
-                      ],
-                    ),
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    const Text("Ann error occured"),
+                    TextButton(
+                      onPressed: () => _refresh(),
+                      child: const Text("RETRY"),
+                    )
+                  ],
+                ),
               );
             }
             if (groups.isEmpty) {
-              Center(
+              return Center(
                 child: Image.asset(
                   "assets/message.png",
                   width: 250,

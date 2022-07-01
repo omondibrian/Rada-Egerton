@@ -1,8 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:rada_egerton/data/database/sqlite.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
 
-class Counsellor extends Equatable with Model {
+class Counsellor extends Equatable {
   @override
   List<Object?> get props => [
         user,
@@ -23,10 +22,6 @@ class Counsellor extends Equatable with Model {
       required this.isOnline,
       required this.expertise,
       required this.counsellorId});
-  @override
-  int get getId {
-    return counsellorId;
-  }
 
   factory Counsellor.fromJson(Map<String, dynamic> json) {
     User user = User(
@@ -43,17 +38,18 @@ class Counsellor extends Equatable with Model {
       joined: json["joined"],
     );
     return Counsellor(
-        counsellorId: json['counsellorId'] is int
-            ? json['counsellorId']
-            : int.parse(json['counsellorId']),
-        user: user,
-        isOnline: json['status'] == "online",
-        expertise: json['expertise'],
-        rating: double.parse(
-          json['rating'].toString(),
-        ));
+      counsellorId: json['counsellorId'] is int
+          ? json['counsellorId']
+          : int.parse(json['counsellorId']),
+      user: user,
+      isOnline: json['status'] == "online",
+      expertise: json['expertise'],
+      rating: double.parse(
+        json['rating'].toString(),
+      ),
+    );
   }
-  @override
+
   Map<String, dynamic> toMap() {
     return {
       "counsellorId": counsellorId,

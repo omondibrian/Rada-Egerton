@@ -21,8 +21,11 @@ class ContentService {
         }, sendTimeout: 10000),
       );
       Iterable information = result.data["content"];
-      return Left(List<InformationData>.from(
-          information.map((data) => InformationData.fromJson(data))));
+      return Left(
+        List<InformationData>.from(
+          information.map((data) => InformationData.fromJson(data)),
+        ),
+      );
     } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
@@ -46,9 +49,12 @@ class ContentService {
         }, sendTimeout: 10000),
       );
       Iterable informationCategory = result.data["contentCategories"];
-      return Left(List<InformationCategory>.from(informationCategory.map(
-          (data) =>
-              InformationCategory(data["_id"].toString(), data["name"]))));
+      return Left(
+        List<InformationCategory>.from(
+          informationCategory.map((data) =>
+              InformationCategory(data["_id"].toString(), data["name"])),
+        ),
+      );
     } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,

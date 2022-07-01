@@ -28,7 +28,8 @@ class Dashboard extends StatelessWidget {
         child: ListTile(
           contentPadding: SizeConfig.isTabletWidth
               ? const EdgeInsets.all(20)
-              : const EdgeInsets.only(left: 10, top: 2.0, right: 2.0, bottom: 2.0),
+              : const EdgeInsets.only(
+                  left: 10, top: 2.0, right: 2.0, bottom: 2.0),
           leading: SvgPicture.asset(
             dashboardItems[index]['leadingIcon'],
             width: SizeConfig.isTabletWidth ? 90 : 60,
@@ -43,12 +44,13 @@ class Dashboard extends StatelessWidget {
             style: style,
           ),
           trailing: IconButton(
-              iconSize: 30,
-              color: Theme.of(ctx).primaryColor,
-              icon: const Icon(Icons.arrow_forward_ios),
-              onPressed: () {
-                ctx.pushNamed(dashboardItems[index]['routeName']);
-              }),
+            iconSize: 30,
+            color: Theme.of(ctx).primaryColor,
+            icon: const Icon(Icons.arrow_forward_ios),
+            onPressed: () {
+              ctx.pushNamed(dashboardItems[index]['routeName']);
+            },
+          ),
         ),
       ),
     );
