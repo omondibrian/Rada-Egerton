@@ -191,7 +191,7 @@ class CounselingService {
 
   /// create new  group
   static Future<Either<GroupDTO, ErrorMessage>> createGroup(
-      String name, String desc, File? imageFile) async {
+      String name, String desc, File? imageFile, bool isForumn) async {
     try {
       String token = GlobalConfig.instance.authToken;
       String imageFileName = imageFile!.path.split('/').last;
@@ -204,13 +204,14 @@ class CounselingService {
         },
       );
       final result = await _httpClientConn.post(
-        "$_hostUrl/rada/api/v1/counseling",
+        "$_hostUrl/rada/api/v1/counseling${isForumn ? "/forum" : ""}",
         data: formData,
         options: Options(headers: {
           'Authorization': token,
           "Content-type": "multipart/form-data",
         }, sendTimeout: 10000),
       );
+
       return Left(
         GroupDTO.fromJson(result.data['data']['payload']),
       );

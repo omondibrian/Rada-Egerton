@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
+import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
@@ -96,16 +97,37 @@ class _PrivateChatTabView extends StatelessWidget {
   }
 }
 
-class _ChatItem extends StatelessWidget {
-  //TODO fetch recepient profile
+class _ChatItem extends StatefulWidget {
   final ChatPayload chat;
-
   const _ChatItem(this.chat, {Key? key}) : super(key: key);
 
   @override
+  State<_ChatItem> createState() => _ChatItemState();
+}
+
+class _ChatItemState extends State<_ChatItem> {
+  User? user;
+  @override
   Widget build(BuildContext context) {
-    User? user;
-    String recipientId = chat.reciepient.toString();
+    String recipientId = widget.chat.reciepient!;
+    //initialized recepient profile
+    context
+        .read<RadaApplicationProvider>()
+        .getUser(
+          userId: int.parse(
+            widget.chat.reciepient!,
+          ),
+        )
+        .then(
+          (res) => res.fold(
+            (user) => setState(
+              () {
+                this.user = user;
+              },
+            ),
+            (r) => null,
+          ),
+        );
 
     void _openChat() {
       if (GlobalConfig.instance.user.id.toString() == recipientId) return;

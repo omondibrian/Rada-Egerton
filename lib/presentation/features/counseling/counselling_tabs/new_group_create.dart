@@ -18,6 +18,7 @@ class _NewGroupFormState extends State<NewGroupForm> {
   final grpNameController = TextEditingController();
   final descriptionController = TextEditingController();
   File? imageFile;
+  bool isForumn = false;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   String? validator(String? value) {
@@ -51,6 +52,7 @@ class _NewGroupFormState extends State<NewGroupForm> {
               grpNameController.text,
               descriptionController.text,
               imageFile,
+              isForumn,
             )
             .then(
           (info) {
@@ -152,6 +154,14 @@ class _NewGroupFormState extends State<NewGroupForm> {
                   ),
                   controller: descriptionController,
                   validator: validator,
+                ),
+                const SizedBox(height: 10),
+                CheckboxListTile(
+                  onChanged: (value) => setState(() {
+                    isForumn = value ?? false;
+                  }),
+                  value: isForumn,
+                  title: const Text("Is forum"),
                 ),
                 const SizedBox(
                   height: 30,

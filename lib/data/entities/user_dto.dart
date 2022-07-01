@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:rada_egerton/data/database/sqlite.dart';
 import 'package:rada_egerton/resources/config.dart';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
@@ -42,7 +41,8 @@ class User extends Equatable {
     return GlobalConfig.userAvi;
   }
 
-  factory User.empty() => User(email: "", id: -1, profileImage: "", name: "");
+  factory User.empty() =>
+      const User(email: "", id: -1, profileImage: "", name: "");
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["_id"] is int ? json["_id"] : int.parse(json["_id"]),
@@ -58,7 +58,6 @@ class User extends Equatable {
         joined: json["joined"],
       );
 
-  @override
   Map<String, dynamic> toMap() => {
         "_id": id,
         "name": name,

@@ -13,15 +13,14 @@ class RadaApplicationProvider with ChangeNotifier {
   ///groups comprises of public forumns which a user subscribes and
   ///private groups which a user is added
   ///
+  //User groups and forumns
   List<GroupDTO> groups = [];
   ServiceStatus groupStatus = ServiceStatus.initial;
+
+  //All forumns
   List<GroupDTO> allForums = [];
   ServiceStatus allForumsStatus = ServiceStatus.initial;
   List<User> users = [];
-
-  GroupDTO getForum(String forumId) {
-    return allForums.firstWhere((element) => element.id == forumId);
-  }
 
   GroupDTO getGroup(String groupId) {
     return groups.firstWhere((element) => element.id == groupId);
@@ -58,6 +57,15 @@ class RadaApplicationProvider with ChangeNotifier {
     );
   }
 
+  Future<void> refreshForums() async {
+    final res = await CounselingService.userForums();
+    res.fold((forums) {
+      allForums = forums;
+      allForumsStatus = ServiceStatus.loadingSuccess;
+      notifyListeners();
+    }, (r) => null);
+  }
+
   Future<void> initGroups() async {
     groupStatus = ServiceStatus.loading;
     notifyListeners();
@@ -75,13 +83,35 @@ class RadaApplicationProvider with ChangeNotifier {
     );
   }
 
+  Future<void> refreshGroups() async {
+    final res = await CounselingService.fetchGroups();
+    res.fold((groups) {
+      this.groups = groups;
+      groupStatus = ServiceStatus.loadingSuccess;
+      notifyListeners();
+    }, (r) => null);
+  }
+
   Future<InfoMessage> createNewGroup(
-      String name, String desc, File? imageFile) async {
+    String name,
+    String desc,
+    File? imageFile,
+    bool isForumn,
+  ) async {
     late InfoMessage info;
-    final result = await CounselingService.createGroup(name, desc, imageFile);
+    final result = await CounselingService.createGroup(
+      name,
+      desc,
+      imageFile,
+      isForumn,
+    );
+
     result.fold(
       (group) {
         groups.add(group);
+        if (group.isForum) {
+          allForums.add(group);
+        }
         info = InfoMessage("Created successfuly", MessageType.success);
         notifyListeners();
       },
@@ -142,6 +172,25 @@ class RadaApplicationProvider with ChangeNotifier {
       result.fold(
         (group) {
           groups.remove(group);
+          notifyListeners();
+        },
+        (error) => throw (error),
+      );
+      return Left(
+        InfoMessage("You have left the group", MessageType.success),
+      );
+    } on ErrorMessage catch (e) {
+      return Right(e);
+    }
+  }
+
+  Future<Either<InfoMessage, ErrorMessage>> deleteGroup(String groupId) async {
+    try {
+      final result = await CounselingService.deleteGroup(groupId);
+      result.fold(
+        (group) {
+          groups.remove(group);
+          allForums.remove(group);
           notifyListeners();
         },
         (error) => throw (error),

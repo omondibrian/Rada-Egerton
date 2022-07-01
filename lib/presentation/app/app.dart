@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/presentation/features/chat/forum_chat/view/forum_chats_page.dart';
 import 'package:rada_egerton/presentation/features/chat/group_chat/view/forumn_chats_page.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/view/private_chats_page.dart';
 import 'package:rada_egerton/presentation/features/contributors.dart';
@@ -115,14 +114,6 @@ class RadaApp extends StatelessWidget {
               name: AppRoutes.forum,
               builder: (context, _) => const ForumPage(),
             ),
-            //TODO:combine group and forumn chats
-            GoRoute(
-              path: "${AppRoutes.forumChats}/:forumId",
-              name: AppRoutes.forumChats,
-              builder: (context, state) => ForumChatPage(
-                state.params["forumId"]!,
-              ),
-            ),
             GoRoute(
               path: "${AppRoutes.goupChat}/:groupId",
               name: AppRoutes.goupChat,
@@ -180,6 +171,7 @@ class RadaApp extends StatelessWidget {
       routeInformationParser: router.routeInformationParser,
       title: 'Rada',
       debugShowCheckedModeBanner: false,
+      
       theme: ThemeData(
         primaryColorLight: Palette.accent,
         primaryColor: Palette.primary,

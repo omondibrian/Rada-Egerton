@@ -19,7 +19,7 @@ class PeerCounsellorsTab extends StatelessWidget {
     var counsellors = counsellorprovider.peerCounsellors;
 
     Future<void> _refresh() async {
-      counsellorprovider.initPeerCounsellors();
+      await counsellorprovider.refreshPeerCounsellors();
     }
 
     return RefreshIndicator(
@@ -95,22 +95,24 @@ class _PeerCounsellorItem extends StatelessWidget {
         isThreeLine: true,
         contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
         leading: CircleAvatar(
-          child: CachedNetworkImage(
-            width: 90,
-            height: 90,
-            color: Colors.white,
-            imageUrl: counsellor.user.profilePic,
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
-                ),
-              ),
+          child: ClipOval(
+            child: CachedNetworkImage(
               width: 90,
               height: 90,
+              color: Colors.white,
+              imageUrl: counsellor.user.profilePic,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                width: 90,
+                height: 90,
+              ),
+              placeholder: (context, url) => Image.asset("assets/user.png"),
             ),
-            placeholder: (context, url) => Image.asset("assets/user.png"),
           ),
         ),
         title: Text(

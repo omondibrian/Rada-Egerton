@@ -43,6 +43,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
     on<GroupChatReceived>(_groupChatReceived);
     on<GroupChatSend>(_groupChatSend);
     on<GroupUnsubscribe>(_groupUnsubscribe);
+    on<DeleteGroup>(_groupDeleteGroup);
   }
 
   FutureOr<void> _groupChatStarted(
@@ -55,7 +56,11 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
     final res = await chatRepo.initChats();
     res.fold(
       (infomesage) => emit(
-        state.copyWith(forumMsgs: chatRepo.groupchat),
+        state.copyWith(
+          forumMsgs: chatRepo.groupchat
+              .where((chat) => chat.groupsId == groupId)
+              .toList(),
+        ),
       ),
       (errormassage) => emit(
         state.copyWith(
@@ -73,7 +78,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
     GroupChatReceived event,
     Emitter<GroupState> emit,
   ) {
-    if (event.groupChat.reciepient == groupId) {
+    if (event.groupChat.groupsId == groupId) {
       emit(
         state.copyWith(
           forumMsgs: [...state.chats, event.groupChat],
@@ -119,6 +124,32 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
       ),
     );
     final res = await appProvider.leaveGroup(groupId);
+    res.fold(
+      (infomessage) => emit(
+        state.copyWith(infoMessage: infomessage, subscribed: false),
+      ),
+      (errorMessage) => emit(
+        state.copyWith(
+          infoMessage: InfoMessage(
+            errorMessage.message,
+            MessageType.error,
+          ),
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _groupDeleteGroup(
+    DeleteGroup event,
+    Emitter<GroupState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        infoMessage:
+            InfoMessage("Deleting group, please wait...", MessageType.success),
+      ),
+    );
+    final res = await appProvider.deleteGroup(groupId);
     res.fold(
       (infomessage) => emit(
         state.copyWith(infoMessage: infomessage, subscribed: false),

@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rada_egerton/data/entities/group_dto.dart';
+import 'package:rada_egerton/data/entities/user_roles.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/presentation/features/chat/group_chat/bloc/bloc.dart';
+import 'package:rada_egerton/presentation/features/chat/group_chat/view/widgets/add_members.dart';
 import 'package:rada_egerton/resources/config.dart';
 
 class GroupAppBar extends StatelessWidget {
@@ -52,24 +54,92 @@ class GroupAppBar extends StatelessWidget {
         ],
       ),
       actions: [
-        PopupMenuButton(
-          icon: const Icon(
-            Icons.more_vert,
-          ),
-          itemBuilder: (_) => [
-            PopupMenuItem(
-              onTap: () => context.read<GroupBloc>().add(
-                    GroupUnsubscribe(),
-                  ),
-              child: Text(
-                'Leave ',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
+        FutureBuilder(
+          future: GlobalConfig.instance.userRoles,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              UserRole role = snapshot.data as UserRole;
+              return PopupMenuButton(
+                icon: const Icon(
+                  Icons.more_vert,
                 ),
+                itemBuilder: (_) => [
+                  if (role.isCounsellor) ...[
+                    PopupMenuItem(
+                      onTap: () => showBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return AddMembers(
+                            groupId: context.read<GroupBloc>().groupId,
+                          );
+                        },
+                      ),
+                      child: const Text(
+                        'Add member ',
+                      ),
+                    ),
+                    //TODO: implement edit
+                    PopupMenuItem(
+                      onTap: () => context.read<GroupBloc>().add(
+                            GroupUnsubscribe(),
+                          ),
+                      child: Text(
+                        'Leave ',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      onTap: () => context.read<GroupBloc>().add(
+                            DeleteGroup(),
+                          ),
+                      child: Text(
+                        'Delete ',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ),
+                  ],
+                  if (!role.isCounsellor)
+                    PopupMenuItem(
+                      onTap: () => context.read<GroupBloc>().add(
+                            GroupUnsubscribe(),
+                          ),
+                      child: Text(
+                        'Leave ',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            }
+            return PopupMenuButton(
+              icon: const Icon(
+                Icons.more_vert,
               ),
-              // onTap: _openBottomSheet
-            ),
-          ],
+              itemBuilder: (_) => [
+                PopupMenuItem(
+                  onTap: () => context.read<GroupBloc>().add(
+                        GroupUnsubscribe(),
+                      ),
+                  child: Text(
+                    'Leave ',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                ),
+                PopupMenuItem(
+                  onTap: () {},
+                  child: const CircularProgressIndicator(),
+                ),
+              ],
+            );
+          },
         ),
       ],
     );

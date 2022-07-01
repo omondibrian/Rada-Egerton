@@ -24,7 +24,9 @@ class GroupSessionsTab extends StatelessWidget {
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
-    Future<void> _refresh() async {}
+    Future<void> _refresh() async {
+      await appProvider.refreshGroups();
+    }
 
     Widget conversationBuilder(BuildContext ctx, int index) {
       GroupDTO group = groups[index];
@@ -72,7 +74,7 @@ class GroupSessionsTab extends StatelessWidget {
           showBottomSheet(
             context: context,
             builder: (context) {
-              return NewGroupForm();
+              return const NewGroupForm();
             },
           );
         },

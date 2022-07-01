@@ -15,10 +15,18 @@ class _ContactTabState extends State<ContactTab> {
   Future<void> init() async {
     final result = await service.getContacts();
     result.fold(
-        (l) => setState(() {
-              _contactList = l;
-            }),
-        (r) => print(r));
+      (l) => setState(() {
+        _contactList = l;
+      }),
+      (err) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            err.message,
+            style: TextStyle(color: Colors.red[700]),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
