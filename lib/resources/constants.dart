@@ -36,4 +36,3 @@ class ChatEvent {
   static const String USER = 'USER';
 }
 
-enum ChatModes { PRIVATE, FORUM, GROUP }

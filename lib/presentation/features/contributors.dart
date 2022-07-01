@@ -22,61 +22,52 @@ class ContributorScreen extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-            child: ListView(
-              children: ListTile.divideTiles(context: context, tiles: [
+          ListView(
+            shrinkWrap: true,
+            children: ListTile.divideTiles(
+              context: context,
+              tiles: [
                 const Padding(
                   padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
-                  child: Expanded(
-                    child: ListTile(
-                      title: Text('Name: Brian'),
-                      subtitle: Text(
-                          'University: Egerton \nRole: Software developer'),
-                    ),
+                  child: ListTile(
+                    title: Text('Name: Brian'),
+                    subtitle:
+                        Text('University: Egerton \nRole: Software developer'),
                   ),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
-                  child: Expanded(
-                    child: ListTile(
-                      title: Text('Name: Moses'),
-                      subtitle: Text(
-                          'University: Egerton \nRole: Software developer'),
-                    ),
+                  child: ListTile(
+                    title: Text('Name: Moses'),
+                    subtitle:
+                        Text('University: Egerton \nRole: Software developer'),
                   ),
                 ),
                 const Padding(
-                  padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
-                  child: Expanded(
+                    padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
                     child: ListTile(
                       title: Text('Name: Jonathan'),
                       subtitle: Text(
                           'University: Egerton \nRole: Software developer'),
-                    )
-                  )
-                ),
+                    )),
                 const Padding(
                   padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
-                  child: Expanded(
-                    child: ListTile(
-                      title: Text('Name: Onesmus'),
-                      subtitle: Text(
-                          'University: Egerton \nRole: Software developer'),
-                    ),
+                  child: ListTile(
+                    title: Text('Name: Onesmus'),
+                    subtitle:
+                        Text('University: Egerton \nRole: Software developer'),
                   ),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 16.0),
-                  child: Expanded(
-                    child: ListTile(
-                      title: Text('Name: Said'),
-                      subtitle: Text(
-                          'University: Egerton \nRole: Software developer'),
-                    ),
+                  child: ListTile(
+                    title: Text('Name: Said'),
+                    subtitle:
+                        Text('University: Egerton \nRole: Software developer'),
                   ),
                 ),
-              ]).toList(),
-            ),
+              ],
+            ).toList(),
           ),
         ],
       ),

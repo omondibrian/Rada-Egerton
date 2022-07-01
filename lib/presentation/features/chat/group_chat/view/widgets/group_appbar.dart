@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rada_egerton/data/entities/group_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/presentation/features/chat/group_chat/bloc/bloc.dart';
+import 'package:rada_egerton/resources/config.dart';
 
 class GroupAppBar extends StatelessWidget {
   const GroupAppBar({
@@ -21,7 +22,7 @@ class GroupAppBar extends StatelessWidget {
             child: ClipOval(
               child: CachedNetworkImage(
                 color: Colors.white,
-                imageUrl: group.image,
+                imageUrl: imageUrl(group.image),
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(

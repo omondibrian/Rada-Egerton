@@ -111,24 +111,7 @@ class ChatRepository {
     _privateChatControler.add(chat);
   }
 
-  Future<Either<InfoMessage, ErrorMessage>> leaveForum(String forumId) async {
-    return await leaveGroup(forumId);
-  }
-
-  Future<Either<InfoMessage, ErrorMessage>> leaveGroup(String groupId) async {
-    try {
-      final result = await CounselingService.exitGroup(groupId);
-      result.fold(
-        (_) {},
-        (error) => throw (error),
-      );
-      return Left(
-        InfoMessage("You have left the group", MessageType.success),
-      );
-    } on ErrorMessage catch (e) {
-      return Right(e);
-    }
-  }
+  
 
   void dispose() {
     _forumChatControler.close();

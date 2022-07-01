@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/chat/forum_chat/view/forum_chats_page.dart';
+import 'package:rada_egerton/presentation/features/chat/group_chat/view/forumn_chats_page.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/view/private_chats_page.dart';
 import 'package:rada_egerton/presentation/features/contributors.dart';
 import 'package:rada_egerton/presentation/features/counseling/counseling.dart';
@@ -114,11 +115,19 @@ class RadaApp extends StatelessWidget {
               name: AppRoutes.forum,
               builder: (context, _) => const ForumPage(),
             ),
+            //TODO:combine group and forumn chats
             GoRoute(
               path: "${AppRoutes.forumChats}/:forumId",
               name: AppRoutes.forumChats,
               builder: (context, state) => ForumChatPage(
                 state.params["forumId"]!,
+              ),
+            ),
+            GoRoute(
+              path: "${AppRoutes.goupChat}/:groupId",
+              name: AppRoutes.goupChat,
+              builder: (context, state) => GroupChatPage(
+                state.params["groupId"]!,
               ),
             ),
             GoRoute(
@@ -156,7 +165,7 @@ class RadaApp extends StatelessWidget {
         //-------------------------------------------------------//
       ],
     );
-    
+
     context.read<AuthenticationProvider>().addListener(
       () {
         GlobalConfig.instance.inialize(

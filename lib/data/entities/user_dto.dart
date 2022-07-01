@@ -7,8 +7,8 @@ import 'package:rada_egerton/resources/config.dart';
 User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toMap());
 
-class User extends Equatable with Model {
-  User({
+class User extends Equatable {
+  const User({
     required this.id,
     required this.name,
     required this.email,
@@ -21,10 +21,6 @@ class User extends Equatable with Model {
     this.synced,
     this.joined,
   }) : _profileImage = profileImage;
-  @override
-  int get getId {
-    return id;
-  }
 
   final int id;
   final String name;
@@ -77,15 +73,15 @@ class User extends Equatable with Model {
         "joined": joined,
       };
 
-  User copyWith(
-    {int? id,
+  User copyWith({
+    int? id,
     String? name,
     String? email,
     String? gender,
     String? phone,
     String? dob,
-    String? profilePic,}
-  ) {
+    String? profilePic,
+  }) {
     return User(
       id: id ?? this.id,
       name: name ?? this.name,

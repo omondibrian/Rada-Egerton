@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
+import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
@@ -13,10 +14,14 @@ part 'event.dart';
 class ForumBloc extends Bloc<ForumChatEvent, ForumState> {
   final ChatRepository chatRepo;
   final String forumId;
+  final RadaApplicationProvider appProvider;
   late StreamSubscription<ChatPayload> _streamSubscription;
 
-  ForumBloc({required this.forumId, required this.chatRepo})
-      : super(
+  ForumBloc({
+    required this.forumId,
+    required this.chatRepo,
+    required this.appProvider,
+  }) : super(
           const ForumState(),
         ) {
     //Listen to new recived forum messages
@@ -112,11 +117,10 @@ class ForumBloc extends Bloc<ForumChatEvent, ForumState> {
   ) async {
     emit(
       state.copyWith(
-        infoMessage:
-            InfoMessage("Leaving forum please wait", MessageType.info),
+        infoMessage: InfoMessage("Leaving forum please wait", MessageType.info),
       ),
     );
-    final res = await chatRepo.leaveForum(forumId);
+    final res = await appProvider.leaveGroup(forumId);
     res.fold(
       (infomessage) => emit(
         state.copyWith(

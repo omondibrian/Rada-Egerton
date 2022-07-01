@@ -17,22 +17,22 @@ class PrivateChatAppBar extends StatelessWidget {
     return BlocConsumer<PrivateChatBloc, PrivateChatState>(
       listener: (context, state) {
         if (state.recepientProfileStatus == ServiceStatus.loadingFailure) {
-          ScaffoldMessenger.of(context).showMaterialBanner(
-            MaterialBanner(
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
               content: Text(
                 state.infoMessage?.message ?? "An error occured",
+                style: const TextStyle(color: Colors.red),
               ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    context.read<PrivateChatBloc>().add(
-                          RecepientDataRequested(),
-                        );
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Retry"),
-                )
-              ],
+              action: SnackBarAction(
+                label: "RETRY",
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  context.read<PrivateChatBloc>().add(
+                        RecepientDataRequested(),
+                      );
+                },
+              ),
+              duration: const Duration(seconds: 60),
             ),
           );
         }

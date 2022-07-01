@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/presentation/features/chat/forum_chat/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/features/chat/forum_chat/view/widgets/chat_item.dart';
@@ -17,6 +18,7 @@ class ForumChatPage extends StatelessWidget {
       create: (_) => ForumBloc(
         chatRepo: context.read<ChatRepository>(),
         forumId: forumId,
+        appProvider: context.read<RadaApplicationProvider>(),
       )..add(
           ForumChatStarted(),
         ),

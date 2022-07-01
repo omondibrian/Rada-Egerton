@@ -7,12 +7,18 @@ import 'package:rada_egerton/resources/utils/main.dart';
 
 import 'package:flutter/material.dart';
 
-class NewGroupForm extends StatelessWidget {
+class NewGroupForm extends StatefulWidget {
+  const NewGroupForm({Key? key}) : super(key: key);
+
+  @override
+  State<NewGroupForm> createState() => _NewGroupFormState();
+}
+
+class _NewGroupFormState extends State<NewGroupForm> {
   final grpNameController = TextEditingController();
   final descriptionController = TextEditingController();
+  File? imageFile;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  NewGroupForm({Key? key}) : super(key: key);
 
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
@@ -23,13 +29,22 @@ class NewGroupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    File? imageFile;
     void _updateProfileImage() async {
       imageFile = await ServiceUtility().uploadImage();
+      setState(() {});
     }
 
     void _handleSubmit(BuildContext context) async {
       if (formKey.currentState!.validate()) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            duration: Duration(seconds: 10),
+            content: Text(
+              "Creating group, please wait...",
+              style: TextStyle(color: Colors.greenAccent),
+            ),
+          ),
+        );
         context
             .read<RadaApplicationProvider>()
             .createNewGroup(
@@ -47,7 +62,9 @@ class NewGroupForm extends StatelessWidget {
                 ),
               ),
             );
-            Navigator.of(context).pop();
+            if (info.messageType == MessageType.success) {
+              Navigator.of(context).pop();
+            }
           },
         );
       }
@@ -58,7 +75,10 @@ class NewGroupForm extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-              border: Border(top: BorderSide(color: Colors.grey.shade200))),
+            border: Border(
+              top: BorderSide(color: Colors.grey.shade200),
+            ),
+          ),
           child: Form(
             key: formKey,
             child: Column(
@@ -71,17 +91,31 @@ class NewGroupForm extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline2,
                   ),
                 ),
-                Positioned(
-                  left: 100,
-                  top: 30,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: IconButton(
-                      icon: const Icon(Icons.camera_alt, color: Colors.black),
-                      onPressed: _updateProfileImage,
+                Stack(
+                  children: [
+                    CircleAvatar(
+                      maxRadius: 80,
+                      backgroundImage: imageFile == null
+                          ? Image.asset("assets/users.png").image
+                          : Image.file(imageFile!).image,
                     ),
-                  ),
+                    Positioned(
+                      right: 20,
+                      bottom: 0,
+                      child: CircleAvatar(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.camera_alt,
+                            color: Colors.white,
+                          ),
+                          onPressed: _updateProfileImage,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 10),
                 SizedBox(
                   child: TextFormField(
                     textAlign: TextAlign.start,

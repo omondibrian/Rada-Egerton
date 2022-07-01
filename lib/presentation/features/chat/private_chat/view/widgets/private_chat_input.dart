@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/bloc/bloc.dart';
+import 'package:rada_egerton/resources/audio_players.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/theme.dart';
 
@@ -67,16 +68,18 @@ class PrivateChatInput extends StatelessWidget {
                 width: 5.0,
               ),
               GestureDetector(
-                onTap: () => context.read<PrivateChatBloc>().add(
-                      PrivateChatSend(
-                        ChatPayload(
-                          message: _chatController.text,
-                          reciepient:
-                              context.read<PrivateChatBloc>().recepientId,
-                          senderId: GlobalConfig.instance.user.id.toString(),
+                onTap: () {
+                  context.read<PrivateChatBloc>().add(
+                        PrivateChatSend(
+                          ChatPayload(
+                            message: _chatController.text,
+                            reciepient:
+                                context.read<PrivateChatBloc>().recepientId,
+                            senderId: GlobalConfig.instance.user.id.toString(),
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                },
                 child: CircleAvatar(
                   backgroundColor: Palette.accent,
                   child: Padding(

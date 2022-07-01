@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
@@ -11,10 +10,11 @@ import 'package:rada_egerton/resources/utils/main.dart';
 
 /// Manage state for  Forums, Groups, Users
 class RadaApplicationProvider with ChangeNotifier {
+  ///groups comprises of public forumns which a user subscribes and
+  ///private groups which a user is added
+  ///
   List<GroupDTO> groups = [];
   ServiceStatus groupStatus = ServiceStatus.initial;
-  List<GroupDTO> subscribedForums = [];
-  ServiceStatus subscribedForumsStatus = ServiceStatus.initial;
   List<GroupDTO> allForums = [];
   ServiceStatus allForumsStatus = ServiceStatus.initial;
   List<User> users = [];
@@ -28,7 +28,7 @@ class RadaApplicationProvider with ChangeNotifier {
   }
 
   bool isSubscribedToForum(GroupDTO forum) {
-    for (var f in subscribedForums) {
+    for (var f in groups) {
       if (f.id == forum.id) {
         return true;
       }
@@ -39,26 +39,6 @@ class RadaApplicationProvider with ChangeNotifier {
   RadaApplicationProvider() {
     initAllForums();
     initGroups();
-    initUserForums();
-  }
-
-  Future<void> initUserForums() async {
-    subscribedForumsStatus = ServiceStatus.loading;
-    notifyListeners();
-    //TODO: replace to a call to subscribed forums
-
-    final res = await CounselingService.userForums();
-    res.fold(
-      (forums) {
-        subscribedForums = forums;
-        subscribedForumsStatus = ServiceStatus.loadingSuccess;
-        notifyListeners();
-      },
-      (r) {
-        subscribedForumsStatus = ServiceStatus.loadingFailure;
-        notifyListeners();
-      },
-    );
   }
 
   Future<void> initAllForums() async {
@@ -84,7 +64,7 @@ class RadaApplicationProvider with ChangeNotifier {
     final res = await CounselingService.fetchGroups();
     res.fold(
       (groups) {
-        groups = groups;
+        this.groups = groups;
         groupStatus = ServiceStatus.loadingSuccess;
         notifyListeners();
       },
@@ -101,7 +81,9 @@ class RadaApplicationProvider with ChangeNotifier {
     final result = await CounselingService.createGroup(name, desc, imageFile);
     result.fold(
       (group) {
+        groups.add(group);
         info = InfoMessage("Created successfuly", MessageType.success);
+        notifyListeners();
       },
       (error) {
         info = InfoMessage(error.message, MessageType.error);
@@ -111,7 +93,6 @@ class RadaApplicationProvider with ChangeNotifier {
   }
 
   Future<Either<User, InfoMessage>> getUser({required int userId}) async {
-    //TODO: implement get user by id
     for (User u in users) {
       if (u.id == userId) {
         return Left(u);
@@ -137,14 +118,13 @@ class RadaApplicationProvider with ChangeNotifier {
 
   Future<InfoMessage> joinForum(String forumId) async {
     late InfoMessage message;
-
     final res = await CounselingService.subToNewGroup(
       GlobalConfig.instance.user.id.toString(),
       forumId,
     );
     res.fold(
       (forum) {
-        subscribedForums.add(forum);
+        groups.add(forum);
         message = InfoMessage(
           "You have joined the forum",
           MessageType.success,
@@ -154,5 +134,23 @@ class RadaApplicationProvider with ChangeNotifier {
       (error) => message = InfoMessage.fromError(error),
     );
     return message;
+  }
+
+  Future<Either<InfoMessage, ErrorMessage>> leaveGroup(String groupId) async {
+    try {
+      final result = await CounselingService.exitGroup(groupId);
+      result.fold(
+        (group) {
+          groups.remove(group);
+          notifyListeners();
+        },
+        (error) => throw (error),
+      );
+      return Left(
+        InfoMessage("You have left the group", MessageType.success),
+      );
+    } on ErrorMessage catch (e) {
+      return Right(e);
+    }
   }
 }

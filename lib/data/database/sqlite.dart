@@ -18,15 +18,25 @@ class DBManager {
 
   /// Initialize DB
   Future<Database> initDb() async {
-    String path = join(await getDatabasesPath(), "Rada-Database.db");
-    final taskDb = await openDatabase(path, version: 2, onCreate: createDb);
+    String path = join(
+      await getDatabasesPath(),
+      "Rada-Database.db",
+    );
+    final taskDb = await openDatabase(
+      path,
+      version: 2,
+      onCreate: createDb,
+    );
     return taskDb;
   }
 
-  FutureOr<void> createDb(Database db, int version) async {
+  FutureOr<void> createDb(
+    Database db,
+    int version,
+  ) async {
     //create user table
     await db.execute("""
-      CREATE TABLE ${TableNames.user.name}(
+      CREATE TABLE users(
         _id int PRIMARY KEY,
         name TEXT,
         email TEXT,
@@ -39,152 +49,81 @@ class DBManager {
         joined TEXT,
         phone TEXT
       )""");
-    // counsellor table
+
+    // store chats
     await db.execute("""
-      CREATE TABLE ${TableNames.counsellor.name}(
-        counsellorId int PRIMARY KEY, 
-        rating float,
-        expertise TEXT,
-        _id int,
-        status TEXT,
-        FOREIGN KEY(_id) REFERENCES User(_id)
-      )""");
-    // create peerCounsellor table
-    await db.execute("""
-      CREATE TABLE ${TableNames.peerCounsellor.name}(
-        peer_counsellorId int PRIMARY KEY, 
-        regNo TEXT,
-        campuses_id int,
-        expertise TEXT,
-        _id int,
-        student_id TEXT,
-        FOREIGN KEY(_id) REFERENCES User(_id)
-      )""");
-    await db.execute("""
-       CREATE TABLE ${TableNames.informationData.name}(
+       CREATE TABLE chats(
         _id int PRIMARY KEY,
-        content TEXT,
-        metadata TEXT
+        imageUrl TEXT,
+        message TEXT,
+        sender_id TEXT,
+        Groups_id TEXT,
+        reply TEXT,
+        status TEXT,
+        reciepient TEXT,
+        user_type TEXT
        )""");
-    // // store forum messages
-    // await db.execute("""
-    //    CREATE TABLE ${ChatPayload.tableName_ + "Forum"}(
-    //     _id int PRIMARY KEY,
-    //     imageUrl TEXT,
-    //     message TEXT,
-    //     sender_id TEXT,
-    //     Groups_id TEXT NOT NULL,
-    //     reply TEXT,
-    //     status TEXT,
-    //     reciepient TEXT,
-    //     user_type TEXT,
-    //     FOREIGN KEY(sender_id) REFERENCES User(_id),
-    //     FOREIGN KEY(reciepient) REFERENCES User(_id)
-    //    )""");
-    // store private messages
-    // await db.execute("""
-    //    CREATE TABLE ${ChatPayload.tableName_ + "Private"}(
-    //     _id int PRIMARY KEY,
-    //     imageUrl TEXT,
-    //     message TEXT,
-    //     sender_id TEXT NOT NULL,
-    //     Groups_id TEXT,
-    //     reply TEXT,
-    //     status TEXT,
-    //     reciepient TEXT,
-    //     user_type TEXT,
-    //     FOREIGN KEY(sender_id) REFERENCES User(_id),
-    //     FOREIGN KEY(reciepient) REFERENCES User(_id)
-    //    )""");
-    // store group messages
-    // await db.execute("""
-    //    CREATE TABLE ${ChatPayload.tableName_ + "Group"}(
-    //     _id int PRIMARY KEY,
-    //     imageUrl TEXT,
-    //     message TEXT,
-    //     sender_id TEXT,
-    //     Groups_id TEXT NOT NULL,
-    //     reply TEXT,
-    //     status TEXT,
-    //     reciepient TEXT,
-    //     user_type TEXT,
-    //     FOREIGN KEY(sender_id) REFERENCES User(_id),
-    //     FOREIGN KEY(reciepient) REFERENCES User(_id)
-    //    )""");
 
     // Groups
     await db.execute("""
-       CREATE TABLE ${TableNames.group.name}(
+       CREATE TABLE groups(
         id int PRIMARY KEY,
         image TEXT,
-        title TEXT
-       )""");
-
-    //forums
-    await db.execute("""
-       CREATE TABLE ${TableNames.forum.name}(
-        id int PRIMARY KEY,
-        image TEXT,
-        title TEXT
+        title TEXT,
+        forumn INTEGER
        )""");
   }
 
-  Future<Model> insertItem(Model item, {required TableNames tableName}) async {
+  Future<Map<String, dynamic>> insertItem(
+    Map<String, dynamic> item, {
+    required String tableName,
+  }) async {
     db.then(
       (db) => db.insert(
-        tableName.name,
-        item.toMap(),
+        tableName,
+        item,
         conflictAlgorithm: ConflictAlgorithm.replace,
       ),
     );
     return item;
   }
 
-  Future<Model> delete(
-      {required Model item, required TableNames tableName}) async {
+  Future<void> delete({
+    required Map<String, dynamic> args,
+    required String tableName,
+  }) async {
     db.then(
       (db) => db.delete(
-        tableName.toString(),
-        where: "_id = ?",
-        whereArgs: [item.getId],
+        tableName,
+        where: args.keys.map((k) => "$k = ?").join(' and '),
+        whereArgs: args.values.toList(),
       ),
     );
-    return item;
   }
 
-  Future<Map<String, dynamic>?> getItem(TableNames tableName, int id) async {
+  Future<Map<String, dynamic>?> getItem({
+    required String tableName,
+    required Map<String, dynamic> args,
+  }) async {
     List<Map<String, dynamic>> query = await db.then(
-        (db) => db.query(tableName.name, where: "_id = ?", whereArgs: [id]));
+      (db) => db.query(
+        tableName,
+        where: args.keys.map((k) => "$k = ?").join(' and '),
+        whereArgs: args.values.toList(),
+      ),
+    );
     if (query.isNotEmpty) {
       return query[0];
     }
     return null;
   }
 
-  Future<List<Map<String, dynamic>>> getItems(TableNames tableName) async {
+  Future<List<Map<String, dynamic>>> getItems(
+    String tableName,
+  ) async {
     Database database = await db;
-    List<Map<String, dynamic>> query = await database.query(tableName.name);
+    List<Map<String, dynamic>> query = await database.query(tableName);
     return query;
   }
 }
 
-abstract class Model {
-  factory Model.fromJson() {
-    throw UnimplementedError();
-  }
-  Map<String, dynamic> toMap();
-  int get getId;
-}
-
-enum TableNames {
-  user,
-  counsellor,
-  informationData,
-  peerCounsellor,
-  group,
-  forum,
-}
-
-extension X on TableNames {
-  String get name => toString();
-}

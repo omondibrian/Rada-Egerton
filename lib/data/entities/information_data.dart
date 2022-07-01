@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/resources/theme.dart';
-import 'package:rada_egerton/data/database/sqlite.dart';
 
 class InformationCategory {
   String name;
@@ -10,18 +9,13 @@ class InformationCategory {
   InformationCategory(this.id, this.name);
 }
 
-class InformationData with Model {
+class InformationData {
   InformationMetadata metadata;
   List<InformationContent> content;
   int id;
   static String tableName_ = "InformationData";
   InformationData(
       {required this.metadata, required this.content, required this.id});
-
-  @override
-  int get getId {
-    return id;
-  }
 
   factory InformationData.fromJson(Map<String, dynamic> json) {
     Iterable content = json["content"];
@@ -34,7 +28,6 @@ class InformationData with Model {
         content: informationContent,
         id: json["_id"] is int ? json["_id"] : int.parse(json["_id"]));
   }
-  @override
   Map<String, dynamic> toMap() {
     return {
       "_id": id,
