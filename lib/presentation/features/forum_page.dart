@@ -55,7 +55,7 @@ class ForumPage extends StatelessWidget {
                     children: [
                       const Text("An error occurred"),
                       TextButton(
-                        onPressed: () => _refresh(),
+                        onPressed: () => provider.initAllForums(),
                         child: const Text("RETRY"),
                       )
                     ],

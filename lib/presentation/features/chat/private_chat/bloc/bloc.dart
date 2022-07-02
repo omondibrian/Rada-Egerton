@@ -56,14 +56,15 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
       state.copyWith(status: ServiceStatus.loading),
     );
     final res = await chatRepo.initChats();
+    String uid = GlobalConfig.instance.user.id.toString();
     res.fold(
       (successInfoMessage) => emit(
         state.copyWith(
           msgs: chatRepo.privatechat
               .where(
                 (chat) =>
-                    chat.recipient == recepientId ||
-                    chat.recipient == GlobalConfig.instance.user.id.toString(),
+                    (chat.recipient == recepientId) ||
+                    (chat.senderId == recepientId),
               )
               .toList(),
         ),
@@ -84,9 +85,7 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
     PrivateChatReceived event,
     Emitter<PrivateChatState> emit,
   ) {
-    if (event.privatechat.recipient == recepientId ||
-        event.privatechat.recipient ==
-            GlobalConfig.instance.user.id.toString()) {
+    if (event.privatechat.senderId == recepientId) {
       emit(
         state.copyWith(
           msgs: [...state.chats, event.privatechat],

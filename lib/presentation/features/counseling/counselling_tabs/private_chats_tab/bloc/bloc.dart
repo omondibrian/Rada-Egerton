@@ -6,12 +6,14 @@ import 'package:equatable/equatable.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
+import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 part 'state.dart';
 part 'event.dart';
 
-class PrivateTabChatBloc extends Bloc<PrivateChatTabEvent, PrivateChatTabState> {
+class PrivateTabChatBloc
+    extends Bloc<PrivateChatTabEvent, PrivateChatTabState> {
   final ChatRepository chatRepo;
   late StreamSubscription<ChatPayload> _streamSubscription;
 
@@ -40,9 +42,8 @@ class PrivateTabChatBloc extends Bloc<PrivateChatTabEvent, PrivateChatTabState> 
     res.fold(
       (successInfoMessage) => emit(
         state.copyWith(
-          conversations: _conversations(chatRepo.privatechat),
-          status: ServiceStatus.loadingSuccess
-        ),
+            conversations: _conversations(chatRepo.privatechat),
+            status: ServiceStatus.loadingSuccess),
       ),
       (errorMessage) => emit(
         state.copyWith(
@@ -59,8 +60,11 @@ class PrivateTabChatBloc extends Bloc<PrivateChatTabEvent, PrivateChatTabState> 
   List<ChatPayload> _conversations(List<ChatPayload> chats) {
     List<String> ids = [];
     List<ChatPayload> conversations = [];
+    String id = GlobalConfig.instance.user.id.toString();
     for (var c in chats) {
-      if (!ids.contains(c.recipient) && c.groupsId == null) {
+      if (c.recipient != id &&
+          !ids.contains(c.recipient) &&
+          c.groupsId == null) {
         ids.add(c.recipient!);
         conversations.add(c);
       }

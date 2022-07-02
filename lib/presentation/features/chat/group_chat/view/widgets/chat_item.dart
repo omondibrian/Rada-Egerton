@@ -23,9 +23,7 @@ class GroupChatItem extends StatelessWidget {
       behavior: HitTestBehavior.translucent,
       color: Colors.transparent,
       swipeThreshold: 0.2,
-      direction: chat.recipient == GlobalConfig.instance.user.id.toString()
-          ? SwipeDirection.endToStart
-          : SwipeDirection.startToEnd,
+      direction: SwipeDirection.startToEnd,
       onSwiped: (_) => context.read<GroupBloc>().add(
             GroupChatSelected(chat.copyWith()),
           ),

@@ -48,6 +48,8 @@ class RadaApplicationProvider with ChangeNotifier {
       (forums) {
         allForums = forums;
         allForumsStatus = ServiceStatus.loadingSuccess;
+        //Init Groups
+        initGroups();
         notifyListeners();
       },
       (r) {
@@ -63,6 +65,8 @@ class RadaApplicationProvider with ChangeNotifier {
       allForums = forums;
       allForumsStatus = ServiceStatus.loadingSuccess;
       notifyListeners();
+      //Refresh also groups
+      refreshGroups();
     }, (r) => null);
   }
 
