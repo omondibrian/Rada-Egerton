@@ -19,8 +19,8 @@ class ForumPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<RadaApplicationProvider>(context);
+    
     final allForums = provider.allForums;
-
     Future<void> _refresh() async {
       await provider.refreshForums();
     }
@@ -55,7 +55,7 @@ class ForumPage extends StatelessWidget {
                     children: [
                       const Text("An error occurred"),
                       TextButton(
-                        onPressed: () => provider.initAllForums(),
+                        onPressed: () => provider.init(),
                         child: const Text("RETRY"),
                       )
                     ],

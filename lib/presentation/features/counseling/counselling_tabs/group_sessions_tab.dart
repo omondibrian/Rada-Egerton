@@ -20,10 +20,11 @@ class GroupSessionsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final appProvider = Provider.of<RadaApplicationProvider>(context);
     final groups = appProvider.groups;
-
+    
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );
+
     Future<void> _refresh() async {
       await appProvider.refreshGroups();
     }
@@ -91,7 +92,8 @@ class GroupSessionsTab extends StatelessWidget {
         edgeOffset: 5.0,
         child: Builder(
           builder: (context) {
-            if (appProvider.groupStatus == ServiceStatus.loading) {
+            if (appProvider.groupStatus == ServiceStatus.loading ||
+                appProvider.groupStatus == ServiceStatus.initial) {
               return Shimmer(
                 child: ListView(
                   children: List.generate(
@@ -108,7 +110,7 @@ class GroupSessionsTab extends StatelessWidget {
                   children: [
                     const Text("Ann error occured"),
                     TextButton(
-                      onPressed: () => appProvider.initGroups(),
+                      onPressed: () => appProvider.init(),
                       child: const Text("RETRY"),
                     )
                   ],

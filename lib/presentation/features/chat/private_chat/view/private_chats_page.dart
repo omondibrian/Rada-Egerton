@@ -43,10 +43,7 @@ class PrivateChatPage extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              Container(
-                padding: const EdgeInsets.only(top: 10.0, bottom: 50),
-                child: _PrivateChatView(),
-              ),
+              _PrivateChatView(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: const [
@@ -90,7 +87,7 @@ class _PrivateChatView extends StatelessWidget {
         //SizedBox provide extra space at the bottom
         itemBuilder: (BuildContext ctx, index) => index == state.chats.length
             ? const SizedBox(
-                height: 30,
+                height: 80,
               )
             : PrivateChatItem(
                 chat: state.chats.elementAt(index),

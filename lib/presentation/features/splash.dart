@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/entities/auth_dto.dart';
+import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/services/auth_service.dart';
 import 'package:rada_egerton/resources/constants.dart';
@@ -65,7 +66,7 @@ class SplashScreenState extends State<SplashScreen> {
             user: data.user,
             authToken: data.authToken,
           );
-      context.goNamed(AppRoutes.dashboard);
+      context.read<RadaApplicationProvider>().init();    
     }
   }
 }

@@ -40,10 +40,7 @@ class GroupChatPage extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              Container(
-                padding: const EdgeInsets.only(top: 10.0, bottom: 50),
-                child: _GroupChatView(),
-              ),
+              _GroupChatView(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: const [
@@ -88,7 +85,7 @@ class _GroupChatView extends StatelessWidget {
         itemCount: state.chats.length + 1,
         // Sized box provides a space at the bottom
         itemBuilder: (BuildContext ctx, index) => index == state.chats.length
-            ? const SizedBox(height: 30)
+            ? const SizedBox(height: 80)
             : GroupChatItem(
                 chat: state.chats.elementAt(index),
               ),
