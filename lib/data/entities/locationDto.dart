@@ -32,20 +32,20 @@ class Location {
     required this.universityId,
   });
 
-  String id;
+  int id;
   String name;
-  String latitude;
-  String longitude;
-  String campusesId;
-  String universityId;
+  double latitude;
+  double longitude;
+  int campusesId;
+  int universityId;
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
-        id: json["_id"],
+        id: json["_id"] as int,
         name: json["name"],
-        latitude: json["latitude"],
-        longitude: json["longitude"],
-        campusesId: json["Campuses_id"],
-        universityId: json["University_id"],
+        latitude: json["latitude"] as double,
+        longitude: json["longitude"] as double,
+        campusesId: json["Campuses_id"] as int,
+        universityId: json["University_id"] as int,
       );
 
   Map<String, dynamic> toJson() => {

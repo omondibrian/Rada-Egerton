@@ -43,7 +43,7 @@ class NewsAndLocationServiceProvider {
     }
   }
 
-  Future<Either<LocationsDto,ErrorMessage>> fetchLocationPins() async {
+  Future<Either<LocationsDto, ErrorMessage>> fetchLocationPins() async {
     // String? authtoken = await ServiceUtility.getAuthToken();
     try {
       // final result = await _httpClientConn.get(
@@ -54,10 +54,9 @@ class NewsAndLocationServiceProvider {
       //todo: revert back to fetching from derver when backend is populated
       final result = await rootBundle.loadString('assets/locations.json');
       return Left(
-        LocationsDto.fromJson(
-            jsonDecode(result)),
-            //todo: revert this too
-            // result.data,
+        LocationsDto.fromJson(jsonDecode(result)),
+        //todo: revert this too
+        // result.data,
       );
     } on DioError catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
