@@ -1,0 +1,28 @@
+{
+    "locations": [
+        {
+            "_id": 1,
+            "name": "Dean Of Student/'s Office - Njoro",
+            "latitude": -0.36932651926935073,
+            "longitude": 35.9313568419356,
+            "Campuses_id": 1,
+            "University_id": 2
+        },
+        {
+            "_id": 2,
+            "name": "Counselling Department - Njoro",
+            "latitude": -0.36973278363331785,
+            "longitude": 35.93140758698434,
+            "Campuses_id": 1,
+            "University_id": 2
+        },
+        {
+            "_id": 3,
+            "name": "Dean Of Student/'s Office - NTCC",
+            "latitude": -0.28896128588051473,
+            "longitude": 36.05793424851361,
+            "Campuses_id": 1,
+            "University_id": 2
+        }
+    ]
+}

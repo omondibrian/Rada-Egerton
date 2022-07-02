@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+
 import 'package:equatable/equatable.dart';
 
 LocationsDto locationsDtoFromJson(String str) =>
@@ -8,9 +9,16 @@ LocationsDto locationsDtoFromJson(String str) =>
 String locationsDtoToJson(LocationsDto data) => json.encode(data.toJson());
 
 class LocationsDto extends Equatable {
+
+
   LocationsDto({
     required this.locations,
   });
+
+  LocationsDto locationsDtoFromJson(String str) =>
+      LocationsDto.fromJson(json.decode(str));
+
+  String locationsDtoToJson(LocationsDto data) => json.encode(data.toJson());
 
   List<Location> locations;
 
@@ -30,28 +38,32 @@ class LocationsDto extends Equatable {
 class Location extends Equatable {
   Location({
     required this.id,
+    required this.name,
     required this.latitude,
     required this.longitude,
     required this.campusesId,
     required this.universityId,
   });
 
-  String id;
-  String latitude;
-  String longitude;
-  String campusesId;
-  String universityId;
+  int id;
+  String name;
+  double latitude;
+  double longitude;
+  int campusesId;
+  int universityId;
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
-        id: json["_id"],
-        latitude: json["latitude"],
-        longitude: json["longitude"],
-        campusesId: json["Campuses_id"],
-        universityId: json["University_id"],
+        id: json["_id"] as int,
+        name: json["name"],
+        latitude: json["latitude"] as double,
+        longitude: json["longitude"] as double,
+        campusesId: json["Campuses_id"] as int,
+        universityId: json["University_id"] as int,
       );
 
   Map<String, dynamic> toJson() => {
         "_id": id,
+        "name": name,
         "latitude": latitude,
         "longitude": longitude,
         "Campuses_id": campusesId,
