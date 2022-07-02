@@ -24,7 +24,8 @@ class _UserNotificationState extends State<UserNotification> {
       (r) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+            SnackBar( behavior: SnackBarBehavior.floating, 
+
             content: Text(
               r.message,
               style: const TextStyle(color: Colors.red),

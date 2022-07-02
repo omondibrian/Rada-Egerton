@@ -58,7 +58,8 @@ class _LoginForm extends StatelessWidget {
         
         if (state.message != null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+              SnackBar( behavior: SnackBarBehavior.floating, 
+
               content: Text(
                 state.message!.message,
                 style: TextStyle(color: state.message!.messageTypeColor),

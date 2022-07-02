@@ -123,6 +123,7 @@ class RadaApplicationProvider with ChangeNotifier {
   }
 
   Future<Either<User, InfoMessage>> getUser({required int userId}) async {
+    print(users);
     for (User u in users) {
       if (u.id == userId) {
         return Left(u);

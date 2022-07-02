@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
+import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 part 'state.dart';
@@ -16,6 +19,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
   final String groupId;
   late StreamSubscription<ChatPayload> _streamSubscription;
   final RadaApplicationProvider appProvider;
+  final ScrollController controller = ScrollController();
 
   GroupBloc({
     required this.groupId,
@@ -26,6 +30,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
         ) {
     //Listen to new recived group messages
     _streamSubscription = chatRepo.groupChatStream.listen((chat) {
+      print("_____stream__$chat");
       add(GroupChatReceived(chat));
     });
 
@@ -37,7 +42,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
     );
     on<GroupChatUnselected>(
       (event, emit) => emit(
-        state.copyWith(selectedChat: null),
+        state.copyWith(retainSelectedChat: false),
       ),
     );
     on<GroupChatReceived>(_groupChatReceived);
@@ -84,6 +89,11 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
           forumMsgs: [...state.chats, event.groupChat],
         ),
       );
+      controller.animateTo(
+        controller.position.maxScrollExtent + 500,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
     }
   }
 
@@ -91,22 +101,38 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
     GroupChatSend event,
     Emitter<GroupState> emit,
   ) async {
+    if (state.status == ServiceStatus.submiting) return;
     emit(
       state.copyWith(status: ServiceStatus.submiting),
     );
-    final res = await chatRepo.sendGroupChat(event.groupChat);
-    res.fold(
-      (chat) => emit(
+    final res = await chatRepo.sendGroupChat(
+      groupId: groupId,
+      message: event.message,
+      senderId: GlobalConfig.instance.user.id.toString(),
+      picture: event.picture,
+      reply: state.selectedChat?.id.toString(),
+      retryLog: (value) => emit(
         state.copyWith(
-          status: ServiceStatus.submissionSucess,
-          forumMsgs: [...state.chats, event.groupChat],
-          infoMessage: InfoMessage("Chat send", MessageType.success),
-          subscribed: true,
+          infoMessage: InfoMessage("Retrying..", MessageType.error),
         ),
       ),
+    );
+    res.fold(
+      (chat) {
+        if (chat.groupsId == groupId) {
+          emit(
+            state.copyWith(
+              status: ServiceStatus.submissionSucess,
+              forumMsgs: [...state.chats, chat],
+              infoMessage: InfoMessage("Chat send", MessageType.success),
+              retainSelectedChat: false,
+            ),
+          );
+        }
+      },
       (r) => emit(
         state.copyWith(
-          infoMessage: InfoMessage("Chat send", MessageType.success),
+          infoMessage: InfoMessage.fromError(r),
           status: ServiceStatus.submissionFailure,
         ),
       ),

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
+import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/resources/config.dart';
@@ -281,11 +282,14 @@ class CounselingService {
 
   /// query user data
   static Future<Either<User, ErrorMessage>> getUser(int userId) async {
+    Dio dio = Dio();
+    dio.interceptors.add(
+      RetryInterceptor(dio: dio),
+    );
     try {
       String token = GlobalConfig.instance.authToken;
-      //TODO: call get user by id route
-      final result = await _httpClientConn.get(
-        "$_hostUrl/api/v1/admin/user/queryUserInfo/$userId",
+      final result = await dio.get(
+        "$_hostUrl/api/v1/admin/user/userprofile/$userId",
         options: Options(headers: {
           'Authorization': token,
         }, sendTimeout: 10000),

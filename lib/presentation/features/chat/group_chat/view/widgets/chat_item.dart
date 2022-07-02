@@ -13,18 +13,21 @@ class GroupChatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ChatPayload? replyTo = context.read<GroupBloc>().state.chats.firstWhere(
-          (element) => element.id == chat.id,
-        );
-    return SwipeableTile(
+    ChatPayload? replyTo;
+    for (var c in context.read<GroupBloc>().state.chats) {
+      if (c.id?.toString() == chat.reply) {
+        replyTo = c;
+      }
+    }
+    return SwipeableTile.swipeToTrigger(
       behavior: HitTestBehavior.translucent,
       color: Colors.transparent,
       swipeThreshold: 0.2,
-      // direction: chat.reciepient == GlobalConfig.instance.user.id
-      //     ? SwipeDirection.endToStart
-      //     : SwipeDirection.startToEnd,
+      direction: chat.recipient == GlobalConfig.instance.user.id.toString()
+          ? SwipeDirection.endToStart
+          : SwipeDirection.startToEnd,
       onSwiped: (_) => context.read<GroupBloc>().add(
-            GroupChatSelected(chat),
+            GroupChatSelected(chat.copyWith()),
           ),
       key: UniqueKey(),
       backgroundBuilder: (context, direction, progress) {
@@ -68,7 +71,9 @@ class GroupChatItem extends StatelessWidget {
       },
       child: GestureDetector(
         onLongPress: () {
-          // onReply(chat);
+          context.read<GroupBloc>().add(
+                GroupChatSelected(chat.copyWith()),
+              );
         },
         child: Row(
           mainAxisAlignment: chat.senderId.toString() ==

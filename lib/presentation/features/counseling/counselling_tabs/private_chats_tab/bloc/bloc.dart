@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -10,11 +11,11 @@ import 'package:rada_egerton/resources/utils/main.dart';
 part 'state.dart';
 part 'event.dart';
 
-class PrivateChatBloc extends Bloc<PrivateChatTabEvent, PrivateChatTabState> {
+class PrivateTabChatBloc extends Bloc<PrivateChatTabEvent, PrivateChatTabState> {
   final ChatRepository chatRepo;
   late StreamSubscription<ChatPayload> _streamSubscription;
 
-  PrivateChatBloc({
+  PrivateTabChatBloc({
     required this.chatRepo,
   }) : super(
           const PrivateChatTabState(),
@@ -40,6 +41,7 @@ class PrivateChatBloc extends Bloc<PrivateChatTabEvent, PrivateChatTabState> {
       (successInfoMessage) => emit(
         state.copyWith(
           conversations: _conversations(chatRepo.privatechat),
+          status: ServiceStatus.loadingSuccess
         ),
       ),
       (errorMessage) => emit(
@@ -55,11 +57,11 @@ class PrivateChatBloc extends Bloc<PrivateChatTabEvent, PrivateChatTabState> {
   }
 
   List<ChatPayload> _conversations(List<ChatPayload> chats) {
-    List<String?> ids = [];
+    List<String> ids = [];
     List<ChatPayload> conversations = [];
     for (var c in chats) {
-      if (!ids.contains(c.reciepient)) {
-        ids.add(c.reciepient);
+      if (!ids.contains(c.recipient) && c.groupsId == null) {
+        ids.add(c.recipient!);
         conversations.add(c);
       }
     }

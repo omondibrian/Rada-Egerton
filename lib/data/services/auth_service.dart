@@ -148,7 +148,7 @@ class AuthService {
   ) async {
     try {
       String authToken = GlobalConfig.instance.authToken;
-      final profile = await Dio().put(
+      final profile = await _httpClientConn.put(
         url(url: "/api/v1/admin/user/profile"),
         data: formData,
         options: Options(

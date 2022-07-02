@@ -18,15 +18,17 @@ class PrivateChatState extends Equatable {
 
   PrivateChatState copyWith({
     ChatPayload? selectedChat,
-    List<ChatPayload>? forumMsgs,
+    List<ChatPayload>? msgs,
     ServiceStatus? status,
     InfoMessage? infoMessage,
     User? user,
     ServiceStatus? recepientProfileStatus,
+    bool retainSelectedChat = true,
   }) {
     return PrivateChatState(
-      selectedChat: selectedChat ?? this.selectedChat,
-      chats: forumMsgs ?? chats,
+      selectedChat:
+          !retainSelectedChat ? null : selectedChat ?? this.selectedChat,
+      chats: msgs ?? chats,
       status: status ?? this.status,
       infoMessage: infoMessage,
       recepient: user ?? recepient,

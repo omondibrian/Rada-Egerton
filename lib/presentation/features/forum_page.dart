@@ -142,6 +142,7 @@ class _ForumItem extends StatelessWidget {
                       .then(
                         (info) => ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            behavior: SnackBarBehavior.floating,
                             content: Text(
                               info.message,
                               style: TextStyle(color: info.messageTypeColor),

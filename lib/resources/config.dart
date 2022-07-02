@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/data/entities/user_roles.dart';
 import 'package:rada_egerton/data/services/auth_service.dart';
@@ -48,10 +49,12 @@ class GlobalConfig {
   static GlobalConfig instance = GlobalConfig._();
 }
 
+///include a smart retry
 Dio httpClient = Dio(
   BaseOptions(
     connectTimeout: 10000,
     receiveTimeout: 10000,
+    sendTimeout: 20000,
   ),
 );
 

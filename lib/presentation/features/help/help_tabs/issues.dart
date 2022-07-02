@@ -45,7 +45,8 @@ class _IssuesState extends State<Issues> {
   void createIssue() async {
     if (_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+          SnackBar( behavior: SnackBarBehavior.floating, 
+
           content: Text(
             "Submiting your issue, please wait...",
             style: TextStyle(color: Theme.of(context).primaryColor),
@@ -63,14 +64,16 @@ class _IssuesState extends State<Issues> {
 
       result.fold(
         (l) => ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+            SnackBar( behavior: SnackBarBehavior.floating, 
+
             content: Text("Issue created successfuly",
                 style: TextStyle(color: Theme.of(context).primaryColor)),
             duration: const Duration(seconds: 10),
           ),
         ),
         (r) => ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+            SnackBar( behavior: SnackBarBehavior.floating, 
+
             content: Text(r.message,
                 style: TextStyle(color: Theme.of(context).errorColor)),
             duration: const Duration(seconds: 10),

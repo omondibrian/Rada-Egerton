@@ -38,7 +38,8 @@ class _NewGroupFormState extends State<NewGroupForm> {
     void _handleSubmit(BuildContext context) async {
       if (formKey.currentState!.validate()) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          const   SnackBar( behavior: SnackBarBehavior.floating, 
+
             duration: Duration(seconds: 10),
             content: Text(
               "Creating group, please wait...",
@@ -57,7 +58,9 @@ class _NewGroupFormState extends State<NewGroupForm> {
             .then(
           (info) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+
+                SnackBar( behavior: SnackBarBehavior.floating, 
+
                 content: Text(
                   info.message,
                   style: TextStyle(color: info.messageTypeColor),
