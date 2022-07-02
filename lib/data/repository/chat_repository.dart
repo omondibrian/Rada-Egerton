@@ -7,6 +7,7 @@ import 'package:pusher_client/pusher_client.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/services/chat_service.dart';
+import 'package:rada_egerton/resources/audio_players.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
@@ -109,7 +110,10 @@ class ChatRepository {
     late ChatPayload chat;
     ErrorMessage? info;
     res.fold(
-      (chat_) => chat = chat_,
+      (chat_) {
+        NotificationAudio.messageSend();
+        chat = chat_;
+      },
       (err) => info = err,
     );
     if (info != null) {
@@ -142,7 +146,10 @@ class ChatRepository {
     late ChatPayload chat;
     ErrorMessage? info;
     res.fold(
-      (chat_) => chat = chat_,
+      (chat_) {
+        NotificationAudio.messageSend();
+        chat = chat_;
+      },
       (err) => info = err,
     );
     if (info != null) {
@@ -154,19 +161,19 @@ class ChatRepository {
   }
 
   void _groupChatReceived(PusherEvent? event) {
+    NotificationAudio.messageReceived();
     if (event?.data != null) {
-      print(event?.data);
       ChatPayload chat = ChatPayload.fromJson(
         jsonDecode(event!.data!)["chat"],
       );
       _groupchats ??= [];
       _groupchats!.add(chat);
-      print(_groupchats!.length);
       _groupChatControler.add(chat);
     }
   }
 
   void _privateChatReceived(PusherEvent? event) {
+    NotificationAudio.messageReceived();
     if (event?.data != null) {
       ChatPayload chat = ChatPayload.fromJson(
         jsonDecode(event!.data!)["chat"],
