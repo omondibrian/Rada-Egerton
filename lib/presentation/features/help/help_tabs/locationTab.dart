@@ -23,19 +23,27 @@ class LocationTab extends StatefulWidget {
 }
 
 class _LocationTabState extends State<LocationTab> {
-  final Completer<GoogleMapController> _controller = Completer();
   final locationService = NewsAndLocationServiceProvider();
+  final Map<String, Marker> _markers = {};
 
   Future<void> _onMapCreated(GoogleMapController mapController) async {
-    final markers = <String, Marker>{};
-    _controller.complete(mapController);
     final helpOffices = await locationService.fetchLocationPins();
-    for (final office
-        in helpOffices.foldRight<List<Location>>(Location, (r, previous) => null)) {
-          final marker = Marker(
-            markerId: office.
-          )
-        }
+    final helpOfficesLocations =
+        helpOffices.fold<List<Location>>((l) => l.locations, (r) => []);
+    setState(() {
+      _markers.clear();
+      for (final office in helpOfficesLocations) {
+        final marker = Marker(
+          markerId: MarkerId(office.name),
+          position: LatLng(
+            double.parse(office.latitude),
+            double.parse(office.longitude),
+          ),
+          infoWindow: InfoWindow(title: office.name),
+        );
+        _markers[office.name] = marker;
+      }
+    });
   }
 
   static const CameraPosition _initialCameraPosition = CameraPosition(
@@ -47,12 +55,17 @@ class _LocationTabState extends State<LocationTab> {
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
+      mapToolbarEnabled: true,
+      buildingsEnabled: true,
+      compassEnabled: true,
+      myLocationEnabled: true,
       initialCameraPosition: _initialCameraPosition,
       onMapCreated: _onMapCreated,
-      markers: markers.values.toSet(),
+      markers: _markers.values.toSet(),
     );
   }
 }
+//todo: hardcode the marker values until a simple fetching solution is made possible
 
 // class LocationTab extends StatefulWidget {
 //   const LocationTab({Key? key}) : super(key: key);

@@ -43,7 +43,7 @@ class NewsAndLocationServiceProvider {
     }
   }
 
-  Future<Either<ErrorMessage,LocationsDto >> fetchLocationPins() async {
+  Future<Either<LocationsDto,ErrorMessage>> fetchLocationPins() async {
     // String? authtoken = await ServiceUtility.getAuthToken();
     try {
       // final result = await _httpClientConn.get(
@@ -53,7 +53,7 @@ class NewsAndLocationServiceProvider {
       // );
       //todo: revert back to fetching from derver when backend is populated
       final result = await rootBundle.loadString('assets/locations.json');
-      return Right(
+      return Left(
         LocationsDto.fromJson(
             jsonDecode(result)),
             //todo: revert this too
@@ -65,7 +65,7 @@ class NewsAndLocationServiceProvider {
         stackTrace,
         reason: 'Error while fetching location pins',
       );
-      return Left(
+      return Right(
         ServiceUtility.handleDioExceptions(e),
       );
     }
