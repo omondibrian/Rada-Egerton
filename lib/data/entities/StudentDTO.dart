@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
 
 StudentDto studentDtoFromJson(String str) =>
@@ -7,7 +8,7 @@ StudentDto studentDtoFromJson(String str) =>
 
 String studentDtotoJson(StudentDto data) => json.encode(data.toMap());
 
-class StudentDto {
+class StudentDto extends Equatable {
   StudentDto({
     required this.user,
   });
@@ -21,4 +22,7 @@ class StudentDto {
   Map<String, dynamic> toMap() => {
         "user": user.toMap(),
       };
+
+  @override
+  List<Object?> get props => [user];
 }

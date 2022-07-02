@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:rada_egerton/data/database/sqlite.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
 
-class Counsellor with Model {
+class Counsellor extends Equatable with Model {
   User user;
   final double rating;
   final bool isOnline;
@@ -54,4 +55,13 @@ class Counsellor with Model {
       "status": isOnline
     };
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [
+        counsellorId,
+        rating,
+        expertise,
+        isOnline,
+      ];
 }

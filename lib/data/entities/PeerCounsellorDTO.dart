@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:rada_egerton/data/database/sqlite.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
 
 PeerCounsellorDto peerCounsellorDtoFromJson(String str) =>
     PeerCounsellorDto.fromJson(json.decode(str));
 
-class PeerCounsellorDto with Model {
+class PeerCounsellorDto extends Equatable with Model {
   PeerCounsellorDto({
     required this.user,
     required this.regNo,
@@ -58,4 +59,14 @@ class PeerCounsellorDto with Model {
         "expertise": expertise,
         "Campuses_id": campusesId,
       };
+
+  @override
+  List<Object?> get props => [
+        regNo,
+        user,
+        peerCounsellorId,
+        expertise,
+        campusesId,
+        studentId,
+      ];
 }

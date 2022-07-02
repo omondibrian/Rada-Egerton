@@ -1,12 +1,12 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:rada_egerton/data/database/sqlite.dart';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toMap());
 
-class User with Model {
-  
+class User extends Equatable with Model {
   User({
     required this.id,
     required this.name,
@@ -66,6 +66,21 @@ class User with Model {
         "synced": synced,
         "joined": joined,
       };
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        email,
+        profilePic,
+        gender,
+        phone,
+        dob,
+        status,
+        accountStatus,
+        synced,
+        joined,
+      ];
 }
 
 User userfromMap(Map<String, dynamic> user) {

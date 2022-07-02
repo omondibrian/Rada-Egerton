@@ -1,4 +1,6 @@
-class Contact {
+import 'package:equatable/equatable.dart';
+
+class Contact extends Equatable {
   int id;
   String name;
   String email;
@@ -21,4 +23,14 @@ class Contact {
         phone: json["phone"],
         universityId: int.parse(json["University_id"]));
   }
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        phone,
+        campusId,
+        universityId,
+        email,
+      ];
 }

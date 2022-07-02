@@ -1,10 +1,11 @@
+import 'package:equatable/equatable.dart';
 
-class ComplaintDto {
-  ComplaintDto({
+class ComplaintDto extends Equatable {
+  const ComplaintDto({
     required this.newComplaint,
   });
 
-  NewComplaint newComplaint;
+  final NewComplaint newComplaint;
 
   factory ComplaintDto.fromJson(Map<String, dynamic> json) => ComplaintDto(
         newComplaint: NewComplaint.fromJson(json["newComplaint"]),
@@ -13,6 +14,10 @@ class ComplaintDto {
   Map<String, dynamic> toJson() => {
         "newComplaint": newComplaint.toJson(),
       };
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [newComplaint];
 }
 
 class NewComplaint {

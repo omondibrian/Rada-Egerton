@@ -1,4 +1,6 @@
-class AuthDTO {
+import 'package:equatable/equatable.dart';
+
+class AuthDTO extends Equatable {
   String _email = "";
   String _password = "";
   String _userName = "";
@@ -27,4 +29,13 @@ class AuthDTO {
   String getPassword() => _password;
   String getUsername() => _userName;
   String getUniversity() => _university;
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [
+        _email,
+        _password,
+        _userName,
+        _university,
+      ];
 }
