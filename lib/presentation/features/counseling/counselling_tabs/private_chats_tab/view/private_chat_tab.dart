@@ -82,8 +82,8 @@ class _PrivateChatTabView extends StatelessWidget {
       listener: (_, state) {
         if (state.infoMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar( behavior: SnackBarBehavior.floating, 
-
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
               content: Text(
                 state.infoMessage!.message,
                 style: TextStyle(
@@ -122,6 +122,15 @@ class _ChatItem extends StatelessWidget {
           .getUser(
             userId: int.parse(
               chat.recipient!,
+            ),
+            retryLog: (value) => ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text(
+                  "An error occured, retying...",
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
             ),
           )
           .then(

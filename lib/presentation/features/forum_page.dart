@@ -138,7 +138,19 @@ class _ForumItem extends StatelessWidget {
                 onPressed: () {
                   context
                       .read<RadaApplicationProvider>()
-                      .joinForum(forum.id)
+                      .joinForum(
+                        forum.id,
+                        retryLog: (value) =>
+                            ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text(
+                              "An error occured, retying...",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ),
+                      )
                       .then(
                         (info) => ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
+import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/data/entities/news_dto.dart';
@@ -65,10 +66,15 @@ class NewsAndLocationServiceProvider {
     }
   }
 
-  Future<Either<List<Contact>, ErrorMessage>> getContacts() async {
+  Future<Either<List<Contact>, ErrorMessage>> getContacts(
+      {Function(String)? retryLog}) async {
     String? authtoken = GlobalConfig.instance.authToken;
+    Dio dio = Dio();
+    dio.interceptors.add(
+      RetryInterceptor(dio: dio, logPrint: retryLog),
+    );
     try {
-      final result = await _httpClientConn.get(
+      final result = await dio.get(
         "$_hostUrl/api/v1/admin/contact",
         options: Options(
             headers: {'Authorization': authtoken}, sendTimeout: _timeOut),

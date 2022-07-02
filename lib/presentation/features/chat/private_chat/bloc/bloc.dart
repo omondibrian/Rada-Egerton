@@ -56,7 +56,7 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
       state.copyWith(status: ServiceStatus.loading),
     );
     final res = await chatRepo.initChats();
-    String uid = GlobalConfig.instance.user.id.toString();
+
     res.fold(
       (successInfoMessage) => emit(
         state.copyWith(
@@ -86,6 +86,13 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
     Emitter<PrivateChatState> emit,
   ) {
     if (event.privatechat.senderId == recepientId) {
+       controller.animateTo(
+            controller.position.maxScrollExtent + 500,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.ease,
+          );
+        
+            
       emit(
         state.copyWith(
           msgs: [...state.chats, event.privatechat],
@@ -110,7 +117,10 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
       reply: state.selectedChat?.id.toString(),
       video: event.video,
       retryLog: (value) => emit(
-        state.copyWith(infoMessage: InfoMessage(value, MessageType.success)),
+        state.copyWith(
+          infoMessage:
+              InfoMessage("error occured, retrying...", MessageType.error),
+        ),
       ),
     );
     res.fold(
@@ -147,6 +157,14 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
     await appProvider
         .getUser(
           userId: int.parse(recepientId),
+          retryLog: (_) => emit(
+            state.copyWith(
+              infoMessage: InfoMessage(
+                "Error while fetching user profile, retrying ...",
+                MessageType.error,
+              ),
+            ),
+          ),
         )
         .then(
           (res) => res.fold(
@@ -168,6 +186,8 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
   @override
   Future<void> close() async {
     _streamSubscription.cancel();
+    controller.dispose();
+
     return super.close();
   }
 }

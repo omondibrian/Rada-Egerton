@@ -38,8 +38,8 @@ class _NewGroupFormState extends State<NewGroupForm> {
     void _handleSubmit(BuildContext context) async {
       if (formKey.currentState!.validate()) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const   SnackBar( behavior: SnackBarBehavior.floating, 
-
+          const SnackBar(
+            behavior: SnackBarBehavior.floating,
             duration: Duration(seconds: 10),
             content: Text(
               "Creating group, please wait...",
@@ -54,13 +54,21 @@ class _NewGroupFormState extends State<NewGroupForm> {
               descriptionController.text,
               imageFile,
               isForumn,
+              retryLog: (_) => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  content: Text(
+                    "An error occured, retying...",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ),
             )
             .then(
           (info) {
             ScaffoldMessenger.of(context).showSnackBar(
-
-                SnackBar( behavior: SnackBarBehavior.floating, 
-
+              SnackBar(
+                behavior: SnackBarBehavior.floating,
                 content: Text(
                   info.message,
                   style: TextStyle(color: info.messageTypeColor),

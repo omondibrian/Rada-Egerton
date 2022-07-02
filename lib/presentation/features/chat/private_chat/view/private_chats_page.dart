@@ -82,19 +82,19 @@ class _PrivateChatView extends StatelessWidget {
             ),
           );
         }
-        if (state.status == ServiceStatus.submissionSucess) {
-          controller.animateTo(controller.position.maxScrollExtent + 300,
-              duration: const Duration(milliseconds: 500), curve: Curves.ease);
-        }
       },
       buildWhen: (previous, current) => current.chats != previous.chats,
       builder: (context, state) => ListView.builder(
         controller: controller,
-        itemCount: state.chats.length,
-        itemBuilder: (BuildContext ctx, index) => PrivateChatItem(
-          chat: state.chats.elementAt(index),
-        ),
-        padding: const EdgeInsets.only(bottom: 30),
+        itemCount: state.chats.length + 1,
+        //SizedBox provide extra space at the bottom
+        itemBuilder: (BuildContext ctx, index) => index == state.chats.length
+            ? const SizedBox(
+                height: 30,
+              )
+            : PrivateChatItem(
+                chat: state.chats.elementAt(index),
+              ),
       ),
     );
   }

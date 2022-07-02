@@ -81,20 +81,18 @@ class _GroupChatView extends StatelessWidget {
         if (!state.subscribed) {
           context.pop();
         }
-        if (state.status == ServiceStatus.submissionSucess) {
-          controller.animateTo(controller.position.maxScrollExtent + 300,
-              duration: const Duration(milliseconds: 500), curve: Curves.ease);
-        }
       },
       buildWhen: (previous, current) => current.chats != previous.chats,
       builder: (context, state) => ListView.builder(
         controller: controller,
-        itemCount: state.chats.length,
-        itemBuilder: (BuildContext ctx, index) => GroupChatItem(
-          chat: state.chats.elementAt(index),
-        ),
+        itemCount: state.chats.length + 1,
+        // Sized box provides a space at the bottom
+        itemBuilder: (BuildContext ctx, index) => index == state.chats.length
+            ? const SizedBox(height: 30)
+            : GroupChatItem(
+                chat: state.chats.elementAt(index),
+              ),
         padding: const EdgeInsets.only(bottom: 30),
-
       ),
     );
   }

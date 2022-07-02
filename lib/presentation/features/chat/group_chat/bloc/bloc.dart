@@ -120,6 +120,12 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
     res.fold(
       (chat) {
         if (chat.groupsId == groupId) {
+          // Scroll to the latest chat
+          controller.animateTo(
+            controller.position.maxScrollExtent + 500,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.ease,
+          );
           emit(
             state.copyWith(
               status: ServiceStatus.submissionSucess,
@@ -149,7 +155,15 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
             InfoMessage("Leaving group please wait", MessageType.success),
       ),
     );
-    final res = await appProvider.leaveGroup(groupId);
+    final res = await appProvider.leaveGroup(
+      groupId,
+      retryLog: (_) => emit(
+        state.copyWith(
+          infoMessage:
+              InfoMessage("An error occured, retrying...", MessageType.error),
+        ),
+      ),
+    );
     res.fold(
       (infomessage) => emit(
         state.copyWith(infoMessage: infomessage, subscribed: false),
@@ -194,6 +208,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
   @override
   Future<void> close() async {
     _streamSubscription.cancel();
+    controller.dispose();
     return super.close();
   }
 }

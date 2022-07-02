@@ -15,14 +15,24 @@ class _ContactTabState extends State<ContactTab> {
   List<Contact>? _contactList;
   NewsAndLocationServiceProvider service = NewsAndLocationServiceProvider();
   Future<void> init() async {
-    final result = await service.getContacts();
+    final result = await service.getContacts(
+      retryLog: (_) => ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text(
+            "An error occured, retying...",
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+      ),
+    );
     result.fold(
       (l) => setState(() {
         _contactList = l;
       }),
       (err) => ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar( behavior: SnackBarBehavior.floating, 
-
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
           content: Text(
             err.message,
             style: TextStyle(color: Colors.red[700]),
