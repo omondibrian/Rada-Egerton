@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
+import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/chat/group_chat/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/features/chat/group_chat/view/widgets/chat_item.dart';
 import 'package:rada_egerton/presentation/features/chat/group_chat/view/widgets/group_appbar.dart';
@@ -39,13 +40,10 @@ class GroupChatPage extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              Container(
-                padding: const EdgeInsets.only(top: 10.0, bottom: 50),
-                child: _GroupChatView(),
-              ),
+              _GroupChatView(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: [
+                children: const [
                   GroupChatInput(),
                 ],
               ),
@@ -60,11 +58,13 @@ class GroupChatPage extends StatelessWidget {
 class _GroupChatView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final ScrollController controller = context.read<GroupBloc>().controller;
     return BlocConsumer<GroupBloc, GroupState>(
       listener: (context, state) {
         if (state.infoMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              behavior: SnackBarBehavior.floating,
               duration: const Duration(seconds: 10),
               content: Text(
                 state.infoMessage!.message,
@@ -81,10 +81,15 @@ class _GroupChatView extends StatelessWidget {
       },
       buildWhen: (previous, current) => current.chats != previous.chats,
       builder: (context, state) => ListView.builder(
-        itemCount: state.chats.length,
-        itemBuilder: (BuildContext ctx, index) => GroupChatItem(
-          chat: state.chats.elementAt(index),
-        ),
+        controller: controller,
+        itemCount: state.chats.length + 1,
+        // Sized box provides a space at the bottom
+        itemBuilder: (BuildContext ctx, index) => index == state.chats.length
+            ? const SizedBox(height: 80)
+            : GroupChatItem(
+                chat: state.chats.elementAt(index),
+              ),
+        padding: const EdgeInsets.only(bottom: 30),
       ),
     );
   }

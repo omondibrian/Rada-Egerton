@@ -20,9 +20,11 @@ class GroupState extends Equatable {
     ServiceStatus? status,
     InfoMessage? infoMessage,
     bool? subscribed,
+    bool retainSelectedChat = true,
   }) {
     return GroupState(
-      selectedChat: selectedChat ?? this.selectedChat,
+      selectedChat:
+          !retainSelectedChat ? null : selectedChat ?? this.selectedChat,
       chats: forumMsgs ?? chats,
       status: status ?? this.status,
       infoMessage: infoMessage,

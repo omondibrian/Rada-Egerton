@@ -18,10 +18,11 @@ class PrivateChatAppBar extends StatelessWidget {
       listener: (context, state) {
         if (state.recepientProfileStatus == ServiceStatus.loadingFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                state.infoMessage?.message ?? "An error occured",
-                style: const TextStyle(color: Colors.red),
+              SnackBar( behavior: SnackBarBehavior.floating, 
+
+              content: const Text(
+                "An error occured while loading recipient profile",
+                style:  TextStyle(color: Colors.red),
               ),
               action: SnackBarAction(
                 label: "RETRY",

@@ -35,9 +35,10 @@ class RadaApplicationProvider with ChangeNotifier {
     return false;
   }
 
-  RadaApplicationProvider() {
-    initAllForums();
-    initGroups();
+//This method is called on spash screen when the app starts
+  init() async{
+    await initAllForums();
+    await initGroups();
   }
 
   Future<void> initAllForums() async {
@@ -48,6 +49,7 @@ class RadaApplicationProvider with ChangeNotifier {
       (forums) {
         allForums = forums;
         allForumsStatus = ServiceStatus.loadingSuccess;
+        //Init Groups
         notifyListeners();
       },
       (r) {
@@ -63,6 +65,7 @@ class RadaApplicationProvider with ChangeNotifier {
       allForums = forums;
       allForumsStatus = ServiceStatus.loadingSuccess;
       notifyListeners();
+      //Refresh also groups
     }, (r) => null);
   }
 
@@ -93,17 +96,15 @@ class RadaApplicationProvider with ChangeNotifier {
   }
 
   Future<InfoMessage> createNewGroup(
-    String name,
-    String desc,
-    File? imageFile,
-    bool isForumn,
-  ) async {
+      String name, String desc, File? imageFile, bool isForumn,
+      {Function(String)? retryLog}) async {
     late InfoMessage info;
     final result = await CounselingService.createGroup(
       name,
       desc,
       imageFile,
       isForumn,
+      retryLog: retryLog,
     );
 
     result.fold(
@@ -122,7 +123,10 @@ class RadaApplicationProvider with ChangeNotifier {
     return info;
   }
 
-  Future<Either<User, InfoMessage>> getUser({required int userId}) async {
+  Future<Either<User, InfoMessage>> getUser({
+    required int userId,
+    Function(String)? retryLog,
+  }) async {
     for (User u in users) {
       if (u.id == userId) {
         return Left(u);
@@ -130,7 +134,10 @@ class RadaApplicationProvider with ChangeNotifier {
     }
     try {
       late User user;
-      final res = await CounselingService.getUser(userId);
+      final res = await CounselingService.getUser(
+        userId,
+        retryLog: retryLog,
+      );
       res.fold(
         (user_) {
           users.add(user_);
@@ -146,12 +153,12 @@ class RadaApplicationProvider with ChangeNotifier {
     }
   }
 
-  Future<InfoMessage> joinForum(String forumId) async {
+  Future<InfoMessage> joinForum(String forumId,
+      {Function(String)? retryLog}) async {
     late InfoMessage message;
     final res = await CounselingService.subToNewGroup(
-      GlobalConfig.instance.user.id.toString(),
-      forumId,
-    );
+        GlobalConfig.instance.user.id.toString(), forumId,
+        retryLog: retryLog);
     res.fold(
       (forum) {
         groups.add(forum);
@@ -166,9 +173,11 @@ class RadaApplicationProvider with ChangeNotifier {
     return message;
   }
 
-  Future<Either<InfoMessage, ErrorMessage>> leaveGroup(String groupId) async {
+  Future<Either<InfoMessage, ErrorMessage>> leaveGroup(String groupId,
+      {Function(String)? retryLog}) async {
     try {
-      final result = await CounselingService.exitGroup(groupId);
+      final result =
+          await CounselingService.exitGroup(groupId, retryLog: retryLog);
       result.fold(
         (group) {
           groups.remove(group);

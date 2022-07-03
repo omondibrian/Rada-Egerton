@@ -52,7 +52,9 @@ class _AddMembersState extends State<AddMembers> {
                       title: 'search',
                       handleClick: () async {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
+                          const   SnackBar( behavior: SnackBarBehavior.floating, 
+
+
                             duration: Duration(seconds: 10),
                             content: Text(
                               "Searching, please wait...",
@@ -72,7 +74,9 @@ class _AddMembersState extends State<AddMembers> {
                             },
                           ),
                           (err) => ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            
+                              SnackBar( behavior: SnackBarBehavior.floating, 
+
                               content: Text(
                                 err.message,
                                 style: TextStyle(color: Colors.red[700]),
@@ -117,7 +121,8 @@ class _AddMembersState extends State<AddMembers> {
                     child: const Text('Add'),
                     onPressed: () async {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
+                        const   SnackBar( behavior: SnackBarBehavior.floating, 
+
                           duration: Duration(seconds: 10),
                           content: Text(
                             "Adding user, please wait...",
@@ -135,7 +140,8 @@ class _AddMembersState extends State<AddMembers> {
                       result.fold(
                         (_) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                              SnackBar( behavior: SnackBarBehavior.floating, 
+
                               content: Text(
                                 "User ${user!.email}, has been added to the group",
                                 style: const TextStyle(
@@ -147,7 +153,8 @@ class _AddMembersState extends State<AddMembers> {
                           context.pop();
                         },
                         (err) => ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                            SnackBar( behavior: SnackBarBehavior.floating, 
+
                             content: Text(
                               err.message,
                               style: TextStyle(color: Colors.red[700]),

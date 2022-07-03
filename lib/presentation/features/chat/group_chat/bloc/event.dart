@@ -18,13 +18,17 @@ class GroupChatSelected extends GroupChatEvent {
 class GroupChatUnselected extends GroupChatEvent {}
 
 class GroupChatSend extends GroupChatEvent {
-  final ChatPayload groupChat;
+  final String message;
+  final File? picture;
+  final File? video;
 
   @override
-  List<Object?> get props => [groupChat];
-  GroupChatSend(
-    this.groupChat,
-  );
+  List<Object?> get props => [message, video, picture];
+  GroupChatSend({
+    this.picture,
+    this.video,
+    required this.message,
+  });
 }
 
 class GroupChatReceived extends GroupChatEvent {

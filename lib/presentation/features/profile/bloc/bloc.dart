@@ -44,6 +44,12 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
     final res = await provider.getUser(
       userId: userId ?? GlobalConfig.instance.user.id,
+      retryLog: (_) => emit(
+        state.copyWith(
+          message: InfoMessage(
+              "error while loading profile, retrying..", MessageType.error),
+        ),
+      ),
     );
     res.fold(
       (user) => emit(

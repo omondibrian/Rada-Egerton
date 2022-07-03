@@ -18,86 +18,84 @@ class ChatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints:
-            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * .7),
-        padding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-        decoration: BoxDecoration(
-            color: chatCardColor, borderRadius: BorderRadius.circular(8.0)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (replyTo != null)
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    left: BorderSide(width: 5.0, color: Palette.accent),
-                  ),
+      constraints:
+          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * .7),
+      padding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+      decoration: BoxDecoration(
+          color: chatCardColor, borderRadius: BorderRadius.circular(8.0)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (replyTo != null)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
+              decoration: const BoxDecoration(
+                border: Border(
+                  left: BorderSide(width: 5.0, color: Palette.accent),
                 ),
-                child: Text(replyTo!.message),
               ),
-            chat.picture == null
-                // Text
-                ? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
+              child: Text(replyTo!.message),
+            ),
+          chat.imageUrl == null
+              // Text
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    chat.message,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                )
+              :
+              // Image
+              Column(
+                  crossAxisAlignment: crossAxisAlignment,
+                  children: [
+                    Material(
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(8.0)),
+                      clipBehavior: Clip.hardEdge,
+                      child: Image.network(
+                        imageUrl(chat.imageUrl!),
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 15.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: chatCardColor,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                            ),
+                            constraints: const BoxConstraints(
+                                minHeight: 200, minWidth: 200),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.green,
+                                value: loadingProgress.expectedTotalBytes !=
+                                            null &&
+                                        loadingProgress.expectedTotalBytes !=
+                                            null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            ),
+                          );
+                        },
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Text(
                       chat.message,
                       style: const TextStyle(color: Colors.black),
-                    ),
-                  )
-                :
-                // Image
-                Column(
-                    crossAxisAlignment: crossAxisAlignment,
-                    children: [
-                      Material(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(8.0)),
-                        clipBehavior: Clip.hardEdge,
-                        child: Image.network(
-                          imageUrl(chat.imageUrl!),
-                          loadingBuilder: (BuildContext context, Widget child,
-                              ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Container(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 15.0,
-                              ),
-                              decoration: BoxDecoration(
-                                color: chatCardColor,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(8.0),
-                                ),
-                              ),
-                              width: 200.0,
-                              height: 200.0,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: Colors.green,
-                                  value: loadingProgress.expectedTotalBytes !=
-                                              null &&
-                                          loadingProgress.expectedTotalBytes !=
-                                              null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
-                                ),
-                              ),
-                            );
-                          },
-
-                          // width: 200.0,
-                          height: 200.0,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Text(
-                        chat.message,
-                        style: const TextStyle(color: Colors.black),
-                      )
-                    ],
-                  )
-          ],
-        ));
+                    )
+                  ],
+                )
+        ],
+      ),
+    );
   }
 }

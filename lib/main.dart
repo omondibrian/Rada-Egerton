@@ -14,9 +14,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  RadaApplicationProvider appProvider = RadaApplicationProvider();
   runApp(
     RepositoryProvider(
-      create: (context) => ChatRepository(),
+      create: (context) => ChatRepository(applicationProvider: appProvider),
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -25,8 +26,8 @@ void main() async {
           ChangeNotifierProvider(
             create: (_) => CounsellingProvider(),
           ),
-          ChangeNotifierProvider(
-            create: (_) => RadaApplicationProvider(),
+          ChangeNotifierProvider.value(
+            value: appProvider,
           ),
           ChangeNotifierProvider(
             create: (_) => InformationProvider(),

@@ -3,10 +3,10 @@ import 'package:rada_egerton/data/entities/counsellors_dto.dart';
 import 'package:rada_egerton/data/providers/counseling_provider.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
+import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/rating_dialog.dart';
 import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
 import 'package:rada_egerton/presentation/widgets/rating_bar.dart';
 import 'package:rada_egerton/resources/config.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/resources/constants.dart';
@@ -49,7 +49,7 @@ class CounsellorsTab extends StatelessWidget {
                 children: [
                   const Text("An error occurred"),
                   TextButton(
-                    onPressed: () => _refresh(),
+                    onPressed: counsellorprovider.initCounsellors,
                     child: const Text("RETRY"),
                   )
                 ],
@@ -125,7 +125,15 @@ class _CounselloItem extends StatelessWidget {
           style: Theme.of(context).textTheme.subtitle1,
         ),
         subtitle: Text(counsellor.expertise),
-        trailing: ratingBar(rating: counsellor.rating, size: 20),
+        trailing: InkWell(
+          child: ratingBar(rating: counsellor.rating, size: 20),
+          onTap: () => showDialog(
+            context: context,
+            builder: (context) => CounsellorRatingDialog(
+              counsellorId: counsellor.counsellorId.toString(),
+            ),
+          ),
+        ),
       ),
     );
   }

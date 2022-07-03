@@ -24,19 +24,13 @@ class _IssuesState extends State<Issues> {
         _issueCategories = issueCategories;
       }),
       (error) => {
-        ScaffoldMessenger.of(context).showMaterialBanner(
-          MaterialBanner(
-            content: Text(error.message),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  init();
-                },
-                child: const Text("Retry"),
-              )
-            ],
-          ),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                error.message,
+                style: const TextStyle(color: Colors.red),
+              ),
+              behavior: SnackBarBehavior.floating),
         )
       },
     );
@@ -46,6 +40,7 @@ class _IssuesState extends State<Issues> {
     if (_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          behavior: SnackBarBehavior.floating,
           content: Text(
             "Submiting your issue, please wait...",
             style: TextStyle(color: Theme.of(context).primaryColor),
@@ -64,6 +59,7 @@ class _IssuesState extends State<Issues> {
       result.fold(
         (l) => ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            behavior: SnackBarBehavior.floating,
             content: Text("Issue created successfuly",
                 style: TextStyle(color: Theme.of(context).primaryColor)),
             duration: const Duration(seconds: 10),
@@ -71,6 +67,7 @@ class _IssuesState extends State<Issues> {
         ),
         (r) => ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            behavior: SnackBarBehavior.floating,
             content: Text(r.message,
                 style: TextStyle(color: Theme.of(context).errorColor)),
             duration: const Duration(seconds: 10),

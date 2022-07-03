@@ -19,8 +19,14 @@ class ForumPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<RadaApplicationProvider>(context);
+    if (provider.allForumsStatus == ServiceStatus.initial) {
+      //Ensure approvider is initialized
+      Future.delayed(
+        const Duration(milliseconds: 10),
+        () => provider.init(),
+      );
+    }
     final allForums = provider.allForums;
-
     Future<void> _refresh() async {
       await provider.refreshForums();
     }
@@ -55,7 +61,7 @@ class ForumPage extends StatelessWidget {
                     children: [
                       const Text("An error occurred"),
                       TextButton(
-                        onPressed: () => _refresh(),
+                        onPressed: () => provider.init(),
                         child: const Text("RETRY"),
                       )
                     ],
@@ -138,10 +144,23 @@ class _ForumItem extends StatelessWidget {
                 onPressed: () {
                   context
                       .read<RadaApplicationProvider>()
-                      .joinForum(forum.id)
+                      .joinForum(
+                        forum.id,
+                        retryLog: (value) =>
+                            ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text(
+                              "An error occured, retying...",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ),
+                      )
                       .then(
                         (info) => ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            behavior: SnackBarBehavior.floating,
                             content: Text(
                               info.message,
                               style: TextStyle(color: info.messageTypeColor),

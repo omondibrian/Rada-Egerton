@@ -13,10 +13,9 @@ class InformationProvider with ChangeNotifier {
   }
 
   Future<void> init() async {
-    //initialialize data only when null
-    if (informationData == null && informationCategory == null) {
       status = ServiceStatus.loading;
       notifyListeners();
+    if (informationData == null && informationCategory == null) {
       if (informationCategory == null) {
         final result = await ContentService.getInformationCategory();
         result.fold(

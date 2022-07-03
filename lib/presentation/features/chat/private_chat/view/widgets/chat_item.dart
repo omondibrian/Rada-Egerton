@@ -13,19 +13,21 @@ class PrivateChatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ChatPayload? replyTo =
-        context.read<PrivateChatBloc>().state.chats.firstWhere(
-              (element) => element.id == chat.id,
-            );
-    return SwipeableTile(
+    ChatPayload? replyTo;
+    for (var c in context.read<PrivateChatBloc>().state.chats) {
+      if (c.id?.toString() == chat.reply) {
+        replyTo = c;
+      }
+    }
+
+    return SwipeableTile.swipeToTrigger(
       behavior: HitTestBehavior.translucent,
       color: Colors.transparent,
       swipeThreshold: 0.2,
-      // direction: chat.reciepient == GlobalConfig.instance.user.id
-      //     ? SwipeDirection.endToStart
-      //     : SwipeDirection.startToEnd,
+      direction: SwipeDirection.startToEnd,
+
       onSwiped: (_) => context.read<PrivateChatBloc>().add(
-            PrivateChatSelected(chat),
+            PrivateChatSelected(chat.copyWith()),
           ),
       key: UniqueKey(),
       backgroundBuilder: (context, direction, progress) {
@@ -68,9 +70,9 @@ class PrivateChatItem extends StatelessWidget {
         );
       },
       child: GestureDetector(
-        onLongPress: () {
-          // onReply(chat);
-        },
+        onLongPress: () => context.read<PrivateChatBloc>().add(
+              PrivateChatSelected(chat.copyWith()),
+            ),
         child: Row(
           mainAxisAlignment: chat.senderId.toString() ==
                   GlobalConfig.instance.user.id.toString()

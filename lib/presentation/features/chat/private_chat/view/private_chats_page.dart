@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
+import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/view/widgets/chat_item.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/view/widgets/private_appbar.dart';
@@ -42,13 +43,10 @@ class PrivateChatPage extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              Container(
-                padding: const EdgeInsets.only(top: 10.0, bottom: 50),
-                child: _PrivateChatView(),
-              ),
+              _PrivateChatView(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: [
+                children: const [
                   PrivateChatInput(),
                 ],
               ),
@@ -63,11 +61,14 @@ class PrivateChatPage extends StatelessWidget {
 class _PrivateChatView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final ScrollController controller =
+        context.read<PrivateChatBloc>().controller;
     return BlocConsumer<PrivateChatBloc, PrivateChatState>(
       listener: (context, state) {
         if (state.infoMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              behavior: SnackBarBehavior.floating,
               duration: const Duration(seconds: 10),
               content: Text(
                 state.infoMessage!.message,
@@ -81,10 +82,16 @@ class _PrivateChatView extends StatelessWidget {
       },
       buildWhen: (previous, current) => current.chats != previous.chats,
       builder: (context, state) => ListView.builder(
-        itemCount: state.chats.length,
-        itemBuilder: (BuildContext ctx, index) => PrivateChatItem(
-          chat: state.chats.elementAt(index),
-        ),
+        controller: controller,
+        itemCount: state.chats.length + 1,
+        //SizedBox provide extra space at the bottom
+        itemBuilder: (BuildContext ctx, index) => index == state.chats.length
+            ? const SizedBox(
+                height: 80,
+              )
+            : PrivateChatItem(
+                chat: state.chats.elementAt(index),
+              ),
       ),
     );
   }

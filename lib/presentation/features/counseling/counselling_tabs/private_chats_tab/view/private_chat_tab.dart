@@ -22,7 +22,7 @@ class PrivateSessionsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => PrivateChatBloc(
+      create: (context) => PrivateTabChatBloc(
         chatRepo: context.read<ChatRepository>(),
       )..add(
           PrivateChatTabStarted(),
@@ -35,9 +35,9 @@ class PrivateSessionsTab extends StatelessWidget {
 class _PrivateChatTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<PrivateChatBloc, PrivateChatTabState>(
-      buildWhen: (previous, current) =>
-          current.conversations != current.conversations,
+    return BlocConsumer<PrivateTabChatBloc, PrivateChatTabState>(
+      // buildWhen: (previous, current) =>
+      //     current.conversations != current.conversations,
       builder: (context, state) {
         if (state.status == ServiceStatus.loading) {
           return Shimmer(
@@ -55,7 +55,7 @@ class _PrivateChatTabView extends StatelessWidget {
               children: [
                 const Text("Ann error occured"),
                 TextButton(
-                  onPressed: () => context.read<PrivateChatBloc>().add(
+                  onPressed: () => context.read<PrivateTabChatBloc>().add(
                         PrivateChatTabStarted(),
                       ),
                   child: const Text("RETRY"),
@@ -83,6 +83,7 @@ class _PrivateChatTabView extends StatelessWidget {
         if (state.infoMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              behavior: SnackBarBehavior.floating,
               content: Text(
                 state.infoMessage!.message,
                 style: TextStyle(
@@ -97,38 +98,13 @@ class _PrivateChatTabView extends StatelessWidget {
   }
 }
 
-class _ChatItem extends StatefulWidget {
+class _ChatItem extends StatelessWidget {
   final ChatPayload chat;
   const _ChatItem(this.chat, {Key? key}) : super(key: key);
 
   @override
-  State<_ChatItem> createState() => _ChatItemState();
-}
-
-class _ChatItemState extends State<_ChatItem> {
-  User? user;
-  @override
   Widget build(BuildContext context) {
-    String recipientId = widget.chat.reciepient!;
-    //initialized recepient profile
-    context
-        .read<RadaApplicationProvider>()
-        .getUser(
-          userId: int.parse(
-            widget.chat.reciepient!,
-          ),
-        )
-        .then(
-          (res) => res.fold(
-            (user) => setState(
-              () {
-                this.user = user;
-              },
-            ),
-            (r) => null,
-          ),
-        );
-
+    String recipientId = chat.recipient!;
     void _openChat() {
       if (GlobalConfig.instance.user.id.toString() == recipientId) return;
       context.pushNamed(
@@ -139,34 +115,66 @@ class _ChatItemState extends State<_ChatItem> {
       );
     }
 
-    return GestureDetector(
-      onTap: _openChat,
-      child: ListTile(
-        leading: CircleAvatar(
-          child: ClipOval(
-            child: CachedNetworkImage(
-              color: Colors.white,
-              imageUrl: user?.profilePic ?? GlobalConfig.userAvi,
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.cover,
-                  ),
+    Future<User?> initProfile() async {
+      User? user;
+      await context
+          .read<RadaApplicationProvider>()
+          .getUser(
+            userId: int.parse(
+              chat.recipient!,
+            ),
+            retryLog: (value) => ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text(
+                  "An error occured, retying...",
+                  style: TextStyle(color: Colors.red),
                 ),
               ),
             ),
-          ),
-        ),
-        title: Text('${user?.name}'),
-        subtitle: Text(
-          "say something",
-          style: TextStyle(
-            color: Theme.of(context).primaryColor,
-            fontSize: SizeConfig.isTabletWidth ? 16 : 14,
-          ),
-        ),
-      ),
+          )
+          .then(
+            (res) => res.fold(
+              (user_) => user = user_,
+              (r) => null,
+            ),
+          );
+      return user;
+    }
+
+    return GestureDetector(
+      onTap: _openChat,
+      child: FutureBuilder(
+          future: initProfile(),
+          builder: (context, snapshot) {
+            User? user = snapshot.data as User?;
+            return ListTile(
+              leading: CircleAvatar(
+                child: ClipOval(
+                  child: CachedNetworkImage(
+                    color: Colors.white,
+                    imageUrl: user?.profilePic ?? GlobalConfig.userAvi,
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              title: Text('${user?.name}'),
+              subtitle: Text(
+                "say something",
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: SizeConfig.isTabletWidth ? 16 : 14,
+                ),
+              ),
+            );
+          }),
     );
   }
 }

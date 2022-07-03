@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
+import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/resources/config.dart';
@@ -26,7 +27,7 @@ class CounselingService {
         "$_hostUrl/api/v1/admin/user/counsellors",
         options: Options(headers: {
           'Authorization': token,
-        }, sendTimeout: 10000),
+        }, receiveTimeout: 10000),
       );
       List payload = result.data["counsellors"];
       return Left(
@@ -58,7 +59,7 @@ class CounselingService {
         "$_hostUrl/api/v1/admin/user/counsellor/$id",
         options: Options(headers: {
           'Authorization': token,
-        }, sendTimeout: 10000),
+        }, receiveTimeout: 10000),
       );
       payload = result.data["counsellor"];
     } catch (e, stackTrace) {
@@ -85,7 +86,7 @@ class CounselingService {
         "$_hostUrl/api/v1/admin/user/peercounsellors",
         options: Options(headers: {
           'Authorization': token,
-        }, sendTimeout: 10000),
+        }, receiveTimeout: 10000),
       );
       List payload = result.data["counsellors"];
 
@@ -109,7 +110,7 @@ class CounselingService {
         "$_hostUrl/rada/api/v1/counseling/forums",
         options: Options(headers: {
           'Authorization': token,
-        }, sendTimeout: 10000),
+        }, receiveTimeout: 10000),
       );
       Iterable forums = result.data["data"]["payload"];
       return Left(
@@ -139,7 +140,7 @@ class CounselingService {
         "$_hostUrl/rada/api/v1/counseling/grps",
         options: Options(headers: {
           'Authorization': token,
-        }, sendTimeout: 10000),
+        }, receiveTimeout: 10000),
       );
       Iterable groups = result.data["data"]["payload"];
       return Left(
@@ -161,10 +162,15 @@ class CounselingService {
 
   ///subscribeToGroup
   static Future<Either<GroupDTO, ErrorMessage>> subToNewGroup(
-      String userId, String groupId) async {
+      String userId, String groupId,
+      {Function(String)? retryLog}) async {
+    Dio dio = Dio();
+    dio.interceptors.add(
+      RetryInterceptor(dio: dio, logPrint: retryLog),
+    );
     try {
       String token = GlobalConfig.instance.authToken;
-      final result = await _httpClientConn.get(
+      final result = await dio.get(
         "$_hostUrl/rada/api/v1/counseling/subscribe/$userId/$groupId",
         options: Options(
           headers: {
@@ -191,7 +197,12 @@ class CounselingService {
 
   /// create new  group
   static Future<Either<GroupDTO, ErrorMessage>> createGroup(
-      String name, String desc, File? imageFile, bool isForumn) async {
+      String name, String desc, File? imageFile, bool isForumn,
+      {Function(String)? retryLog}) async {
+    Dio dio = Dio();
+    dio.interceptors.add(
+      RetryInterceptor(dio: dio, logPrint: retryLog),
+    );
     try {
       String token = GlobalConfig.instance.authToken;
       String imageFileName = imageFile!.path.split('/').last;
@@ -203,13 +214,14 @@ class CounselingService {
           "description": desc,
         },
       );
-      final result = await _httpClientConn.post(
+
+      final result = await dio.post(
         "$_hostUrl/rada/api/v1/counseling${isForumn ? "/forum" : ""}",
         data: formData,
         options: Options(headers: {
           'Authorization': token,
           "Content-type": "multipart/form-data",
-        }, sendTimeout: 10000),
+        }, sendTimeout: 3 * 6000),
       );
 
       return Left(
@@ -228,11 +240,15 @@ class CounselingService {
   }
 
   /// exit group
-  static Future<Either<GroupDTO, ErrorMessage>> exitGroup(
-      String groupId) async {
+  static Future<Either<GroupDTO, ErrorMessage>> exitGroup(String groupId,
+      {Function(String)? retryLog}) async {
+    Dio dio = Dio();
+    dio.interceptors.add(
+      RetryInterceptor(dio: dio, logPrint: retryLog),
+    );
     try {
       String token = GlobalConfig.instance.authToken;
-      final result = await _httpClientConn.put(
+      final result = await dio.put(
         "$_hostUrl/rada/api/v1/counseling/$groupId",
         options: Options(headers: {
           'Authorization': token,
@@ -257,10 +273,16 @@ class CounselingService {
 
   /// query user data
   static Future<Either<User, ErrorMessage>> queryUserData(
-      String queryString) async {
+    String queryString, {
+    Function(String)? retryLog,
+  }) async {
+    Dio dio = Dio();
+    dio.interceptors.add(
+      RetryInterceptor(dio: dio, logPrint: retryLog),
+    );
     try {
       String token = GlobalConfig.instance.authToken;
-      final result = await _httpClientConn.get(
+      final result = await dio.get(
         "$_hostUrl/api/v1/admin/user/queryUserInfo/$queryString",
         options: Options(headers: {
           'Authorization': token,
@@ -280,12 +302,18 @@ class CounselingService {
   }
 
   /// query user data
-  static Future<Either<User, ErrorMessage>> getUser(int userId) async {
+  static Future<Either<User, ErrorMessage>> getUser(
+    int userId, {
+    Function(String)? retryLog,
+  }) async {
+    Dio dio = Dio();
+    dio.interceptors.add(
+      RetryInterceptor(dio: dio, logPrint: retryLog),
+    );
     try {
       String token = GlobalConfig.instance.authToken;
-      //TODO: call get user by id route
-      final result = await _httpClientConn.get(
-        "$_hostUrl/api/v1/admin/user/queryUserInfo/$userId",
+      final result = await dio.get(
+        "$_hostUrl/api/v1/admin/user/userprofile/$userId",
         options: Options(headers: {
           'Authorization': token,
         }, sendTimeout: 10000),

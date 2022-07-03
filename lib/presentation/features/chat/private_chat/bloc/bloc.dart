@@ -1,12 +1,14 @@
 import 'dart:async';
-
+import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
+import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 part 'state.dart';
@@ -17,7 +19,7 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
   final String recepientId;
   late StreamSubscription<ChatPayload> _streamSubscription;
   final RadaApplicationProvider appProvider;
-
+  final ScrollController controller = ScrollController();
   PrivateChatBloc(
       {required this.recepientId,
       required this.appProvider,
@@ -38,7 +40,7 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
     );
     on<PrivateChatUnselected>(
       (event, emit) => emit(
-        state.copyWith(selectedChat: null),
+        state.copyWith(retainSelectedChat: false),
       ),
     );
     on<PrivateChatReceived>(_privateChatReceived);
@@ -54,9 +56,18 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
       state.copyWith(status: ServiceStatus.loading),
     );
     final res = await chatRepo.initChats();
+
     res.fold(
       (successInfoMessage) => emit(
-        state.copyWith(forumMsgs: chatRepo.privatechat),
+        state.copyWith(
+          msgs: chatRepo.privatechat
+              .where(
+                (chat) =>
+                    (chat.recipient == recepientId) ||
+                    (chat.senderId == recepientId),
+              )
+              .toList(),
+        ),
       ),
       (errorMessage) => emit(
         state.copyWith(
@@ -74,10 +85,17 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
     PrivateChatReceived event,
     Emitter<PrivateChatState> emit,
   ) {
-    if (event.privatechat.reciepient == recepientId) {
+    if (event.privatechat.senderId == recepientId) {
+       controller.animateTo(
+            controller.position.maxScrollExtent + 500,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.ease,
+          );
+        
+            
       emit(
         state.copyWith(
-          forumMsgs: [...state.chats, event.privatechat],
+          msgs: [...state.chats, event.privatechat],
         ),
       );
     }
@@ -87,21 +105,45 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
     PrivateChatSend event,
     Emitter<PrivateChatState> emit,
   ) async {
+    if (state.status == ServiceStatus.submiting) return;
     emit(
       state.copyWith(status: ServiceStatus.submiting),
     );
-    final res = await chatRepo.sendPrivateChat(event.privatechat);
-    res.fold(
-      (chat) => emit(
+    final res = await chatRepo.sendPrivateChat(
+      message: event.message,
+      recipientId: recepientId,
+      senderId: GlobalConfig.instance.user.id.toString(),
+      picture: event.picture,
+      reply: state.selectedChat?.id.toString(),
+      video: event.video,
+      retryLog: (value) => emit(
         state.copyWith(
-          status: ServiceStatus.submissionSucess,
-          forumMsgs: [...state.chats, event.privatechat],
-          infoMessage: InfoMessage("Chat send", MessageType.success),
+          infoMessage:
+              InfoMessage("error occured, retrying...", MessageType.error),
         ),
       ),
-      (r) => emit(
+    );
+    res.fold(
+      (chat) {
+        if (chat.recipient == recepientId) {
+          controller.animateTo(
+            controller.position.maxScrollExtent + 500,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.ease,
+          );
+          emit(
+            state.copyWith(
+              status: ServiceStatus.submissionSucess,
+              msgs: [...state.chats, chat],
+              infoMessage: InfoMessage("Chat send", MessageType.success),
+              retainSelectedChat: false,
+            ),
+          );
+        }
+      },
+      (err) => emit(
         state.copyWith(
-          infoMessage: InfoMessage("Chat send", MessageType.success),
+          infoMessage: InfoMessage.fromError(err),
           status: ServiceStatus.submissionFailure,
         ),
       ),
@@ -115,6 +157,14 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
     await appProvider
         .getUser(
           userId: int.parse(recepientId),
+          retryLog: (_) => emit(
+            state.copyWith(
+              infoMessage: InfoMessage(
+                "Error while fetching user profile, retrying ...",
+                MessageType.error,
+              ),
+            ),
+          ),
         )
         .then(
           (res) => res.fold(
@@ -136,6 +186,8 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
   @override
   Future<void> close() async {
     _streamSubscription.cancel();
+    controller.dispose();
+
     return super.close();
   }
 }

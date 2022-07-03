@@ -18,13 +18,17 @@ class PrivateChatSelected extends PrivateChatEvent {
 class PrivateChatUnselected extends PrivateChatEvent {}
 
 class PrivateChatSend extends PrivateChatEvent {
-  final ChatPayload privatechat;
+  final String message;
+  final File? picture;
+  final File? video;
 
   @override
-  List<Object?> get props => [privatechat];
-  PrivateChatSend(
-    this.privatechat,
-  );
+  List<Object?> get props => [message, video, picture];
+  PrivateChatSend({
+    this.picture,
+    this.video,
+    required this.message,
+  });
 }
 
 class PrivateChatReceived extends PrivateChatEvent {
@@ -36,4 +40,3 @@ class PrivateChatReceived extends PrivateChatEvent {
 }
 
 class RecepientDataRequested extends PrivateChatEvent {}
-

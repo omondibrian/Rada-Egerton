@@ -31,17 +31,21 @@ class Information extends StatelessWidget {
           child: Builder(
             builder: (context) {
               if (provider.status == ServiceStatus.loadingFailure) {
-                return Row(
+                return ListView(
                   children: [
-                    const Text("An error occurred"),
-                    const SizedBox(
-                      width: 20,
+                    Row(
+                      children: [
+                        const Text("An error occurred"),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        TextButton(
+                          onPressed: () =>
+                              context.read<InformationProvider>().init(),
+                          child: const Text("RETRY"),
+                        )
+                      ],
                     ),
-                    TextButton(
-                      onPressed: () =>
-                          context.read<InformationProvider>().init(),
-                      child: const Text("RETRY"),
-                    )
                   ],
                 );
               }
@@ -85,7 +89,9 @@ class Information extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: categoryData
-                .map((item) => _informationCard(item, context))
+                .map(
+                  (item) => _informationCard(item, context),
+                )
                 .toList(),
           ),
         ),

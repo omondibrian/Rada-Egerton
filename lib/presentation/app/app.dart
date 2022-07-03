@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/presentation/features/chat/group_chat/view/forumn_chats_page.dart';
+import 'package:rada_egerton/presentation/features/chat/group_chat/view/group_chats_page.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/view/private_chats_page.dart';
 import 'package:rada_egerton/presentation/features/contributors.dart';
 import 'package:rada_egerton/presentation/features/counseling/counseling.dart';
