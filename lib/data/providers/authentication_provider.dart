@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/data/services/auth_service.dart';
 import 'package:rada_egerton/data/status.dart';
 
@@ -13,10 +13,10 @@ class AuthenticationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void loginUser({required User user, required String AuthToken}) {
+  void loginUser({required User user, required String authToken}) {
     this.user = user;
     this.authToken = authToken;
-    this.status = AuthenticationStatus.authenticated;
+    status = AuthenticationStatus.authenticated;
     notifyListeners();
   }
 

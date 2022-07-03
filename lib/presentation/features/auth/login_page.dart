@@ -4,13 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/entities/UserDTO.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
-import 'package:rada_egerton/presentation/widgets/RadaButton.dart';
-import 'package:rada_egerton/presentation/widgets/defaultInput.dart';
 import 'package:rada_egerton/presentation/widgets/password_field.dart';
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/data/services/auth_service.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
 import 'package:rada_egerton/resources/utils/validators.dart';
+
+import '../../../resources/size_config.dart';
+import '../../widgets/button.dart';
+import '../../widgets/input.dart';
 
 class Login extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -80,7 +81,7 @@ class Login extends StatelessWidget {
                       ),
                       SizedBox(
                         width: SizeConfig.isTabletWidth ? 600 : 290.0,
-                        child: PasswordField(passwordController),
+                        child: PasswordField(controller: passwordController),
                       ),
                       const SizedBox(
                         height: 30,

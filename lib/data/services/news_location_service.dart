@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
+import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/services.dart';
 import 'package:rada_egerton/resources/config.dart';
-import 'package:rada_egerton/data/entities/NewsDTO.dart';
-import 'package:rada_egerton/data/entities/locationDto.dart';
-import 'package:rada_egerton/data/entities/ContactsDto.dart';
+import 'package:rada_egerton/data/entities/news_dto.dart';
+import 'package:rada_egerton/data/entities/location_dto.dart';
+import 'package:rada_egerton/data/entities/contacts_dto.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 class NewsAndLocationServiceProvider {
@@ -19,7 +20,7 @@ class NewsAndLocationServiceProvider {
 
   Future<Either<List<News>, ErrorMessage>> fetchNews() async {
     try {
-      String token = await ServiceUtility.getAuthToken() as String;
+      String token = GlobalConfig.instance.authToken;
       final result = await _httpClientConn.get(
         "$_hostUrl/api/v1/admin/news",
         options: Options(
@@ -31,7 +32,7 @@ class NewsAndLocationServiceProvider {
       );
       Iterable l = result.data["news"];
       return Left(List<News>.from(l.map((j) => News.fromJson(j))));
-    } on DioError catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -44,7 +45,7 @@ class NewsAndLocationServiceProvider {
   }
 
   Future<Either<LocationsDto, ErrorMessage>> fetchLocationPins() async {
-    // String? authtoken = await ServiceUtility.getAuthToken();
+    String? authtoken = GlobalConfig.instance.authToken;
     try {
       // final result = await _httpClientConn.get(
       //   "$_hostUrl/api/v1/admin/location",
@@ -58,7 +59,7 @@ class NewsAndLocationServiceProvider {
         //todo: revert this too
         // result.data,
       );
-    } on DioError catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,
@@ -70,17 +71,22 @@ class NewsAndLocationServiceProvider {
     }
   }
 
-  Future<Either<List<Contact>, ErrorMessage>> getContacts() async {
-    String? authtoken = await ServiceUtility.getAuthToken();
+  Future<Either<List<Contact>, ErrorMessage>> getContacts(
+      {Function(String)? retryLog}) async {
+    String? authtoken = GlobalConfig.instance.authToken;
+    Dio dio = Dio();
+    dio.interceptors.add(
+      RetryInterceptor(dio: dio, logPrint: retryLog),
+    );
     try {
-      final result = await _httpClientConn.get(
+      final result = await dio.get(
         "$_hostUrl/api/v1/admin/contact",
         options: Options(
             headers: {'Authorization': authtoken}, sendTimeout: _timeOut),
       );
       Iterable l = result.data["contacts"];
       return Left(List<Contact>.from(l.map((j) => Contact.fromJson(j))));
-    } on DioError catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,
         stackTrace,

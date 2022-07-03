@@ -1,8 +1,6 @@
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
 
-enum ChatType { peer, group, forumn }
+enum ChatType { peer, group, forum }
 
 class ChatPayload extends Equatable {
   const ChatPayload({
@@ -13,7 +11,7 @@ class ChatPayload extends Equatable {
     this.groupsId,
     this.reply,
     this.status = "",
-    this.reciepient,
+    this.recipient,
     this.role,
     this.picture,
     this.video,
@@ -25,23 +23,23 @@ class ChatPayload extends Equatable {
   final String? senderId;
   final dynamic groupsId;
   final String? reply;
-  final String status;
-  final String? reciepient;
+  final String? status;
+  final String? recipient;
   final String? role;
   // final String? media;
   //formdata
-  final File? picture;
-  final File? video;
+  final String? picture;
+  final String? video;
 
   factory ChatPayload.fromJson(Map<String, dynamic> json) => ChatPayload(
         id: json["_id"],
         message: json["message"],
-        imageUrl: json["imageUrl"],
+        imageUrl: json["imageUrl"]?.isEmpty ? null : json["imageUrl"],
         senderId: json["sender_id"],
         groupsId: json["Groups_id"],
         reply: json["reply"],
         status: json["status"],
-        reciepient: json["reciepient"],
+        recipient: json["reciepient"],
         role: json["user_type"],
       );
   ChatPayload copyWith(
@@ -52,10 +50,10 @@ class ChatPayload extends Equatable {
       dynamic groupsId,
       String? reply,
       String? status,
-      String? reciepient,
+      String? recipient,
       String? role,
-      File? video,
-      File? picture}) {
+      String? video,
+      String? picture}) {
     return ChatPayload(
       id: id ?? this.id,
       message: message ?? this.message,
@@ -64,7 +62,9 @@ class ChatPayload extends Equatable {
       groupsId: groupsId,
       reply: reply ?? this.reply,
       status: status ?? this.status,
-      reciepient: reciepient ?? this.reciepient,
+      recipient: recipient ?? this.recipient,
+      video: video ?? this.video,
+      picture: picture ?? this.picture,
     );
   }
 
@@ -76,7 +76,7 @@ class ChatPayload extends Equatable {
         "Groups_id": groupsId,
         "reply": reply,
         "status": status,
-        "reciepient": reciepient,
+        "reciepient": recipient,
         "user_type": role,
       };
 
@@ -87,10 +87,12 @@ class ChatPayload extends Equatable {
         imageUrl,
         senderId,
         groupsId,
-        reciepient,
+        recipient,
         role,
         reply,
-        status
+        status,
+        picture,
+        video
       ];
 }
 

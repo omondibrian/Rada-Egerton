@@ -6,7 +6,7 @@ import 'package:rada_egerton/data/database/sqlite.dart';
 User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toMap());
 
-class User extends Equatable with Model {
+class User extends Equatable {
   User({
     required this.id,
     required this.name,

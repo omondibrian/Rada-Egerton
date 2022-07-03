@@ -3,14 +3,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
-import 'package:rada_egerton/resources/config.dart';
 
 import 'package:rada_egerton/resources/constants.dart';
-import 'package:rada_egerton/resources/sizeConfig.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 
+// ignore: constant_identifier_names
 enum FilterOptions { Profile, Contributors, LogOut }
 
 class Dashboard extends StatelessWidget {
+  const Dashboard({Key? key}) : super(key: key);
+
   Widget dashBoardBuilder(BuildContext ctx, int index) {
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
@@ -26,7 +28,8 @@ class Dashboard extends StatelessWidget {
         child: ListTile(
           contentPadding: SizeConfig.isTabletWidth
               ? const EdgeInsets.all(20)
-              : const EdgeInsets.only(left: 10, top: 2.0, right: 2.0, bottom: 2.0),
+              : const EdgeInsets.only(
+                  left: 10, top: 2.0, right: 2.0, bottom: 2.0),
           leading: SvgPicture.asset(
             dashboardItems[index]['leadingIcon'],
             width: SizeConfig.isTabletWidth ? 90 : 60,
@@ -41,12 +44,13 @@ class Dashboard extends StatelessWidget {
             style: style,
           ),
           trailing: IconButton(
-              iconSize: 30,
-              color: Theme.of(ctx).primaryColor,
-              icon: const Icon(Icons.arrow_forward_ios),
-              onPressed: () {
-                ctx.pushNamed(dashboardItems[index]['routeName']);
-              }),
+            iconSize: 30,
+            color: Theme.of(ctx).primaryColor,
+            icon: const Icon(Icons.arrow_forward_ios),
+            onPressed: () {
+              ctx.pushNamed(dashboardItems[index]['routeName']);
+            },
+          ),
         ),
       ),
     );

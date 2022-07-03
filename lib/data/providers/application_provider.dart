@@ -1,59 +1,214 @@
 import 'dart:io';
-
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/data/entities/userRoles.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
+import 'package:rada_egerton/data/entities/group_dto.dart';
 import 'package:rada_egerton/data/services/counseling_service.dart';
+import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
-//TODO: organize this file
 
+/// Manage state for  Forums, Groups, Users
 class RadaApplicationProvider with ChangeNotifier {
-  UserRole userRole = UserRole([]);
-  final CounselingServiceProvider _serviceProvider = CounselingServiceProvider();
+  ///groups comprises of public forumns which a user subscribes and
+  ///private groups which a user is added
+  ///
+  //User groups and forumns
+  List<GroupDTO> groups = [];
+  ServiceStatus groupStatus = ServiceStatus.initial;
 
+  //All forumns
+  List<GroupDTO> allForums = [];
+  ServiceStatus allForumsStatus = ServiceStatus.initial;
+  List<User> users = [];
 
-  void clearState() {
-    userRole = UserRole([]);
+  GroupDTO getGroup(String groupId) {
+    return groups.firstWhere((element) => element.id == groupId);
   }
 
-  Future<InfoMessage> leaveGroup(String grpId) async {
-    final result = await _serviceProvider.exitGroup(grpId);
-    late InfoMessage info;
-    result!.fold((l) {
-      info = InfoMessage("You have left the group", InfoMessage.success);
-    }, (error) {
-      info = InfoMessage(error.message, InfoMessage.error);
-    });
-    return info;
+  bool isSubscribedToForum(GroupDTO forum) {
+    for (var f in groups) {
+      if (f.id == forum.id) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+//This method is called on spash screen when the app starts
+  init() async{
+    await initAllForums();
+    await initGroups();
+  }
+
+  Future<void> initAllForums() async {
+    allForumsStatus = ServiceStatus.loading;
+    notifyListeners();
+    final res = await CounselingService.userForums();
+    res.fold(
+      (forums) {
+        allForums = forums;
+        allForumsStatus = ServiceStatus.loadingSuccess;
+        //Init Groups
+        notifyListeners();
+      },
+      (r) {
+        allForumsStatus = ServiceStatus.loadingFailure;
+        notifyListeners();
+      },
+    );
+  }
+
+  Future<void> refreshForums() async {
+    final res = await CounselingService.userForums();
+    res.fold((forums) {
+      allForums = forums;
+      allForumsStatus = ServiceStatus.loadingSuccess;
+      notifyListeners();
+      //Refresh also groups
+    }, (r) => null);
+  }
+
+  Future<void> initGroups() async {
+    groupStatus = ServiceStatus.loading;
+    notifyListeners();
+    final res = await CounselingService.fetchGroups();
+    res.fold(
+      (groups) {
+        this.groups = groups;
+        groupStatus = ServiceStatus.loadingSuccess;
+        notifyListeners();
+      },
+      (r) {
+        groupStatus = ServiceStatus.loadingFailure;
+        notifyListeners();
+      },
+    );
+  }
+
+  Future<void> refreshGroups() async {
+    final res = await CounselingService.fetchGroups();
+    res.fold((groups) {
+      this.groups = groups;
+      groupStatus = ServiceStatus.loadingSuccess;
+      notifyListeners();
+    }, (r) => null);
   }
 
   Future<InfoMessage> createNewGroup(
-      String name, String desc, File? imageFile) async {
+      String name, String desc, File? imageFile, bool isForumn,
+      {Function(String)? retryLog}) async {
     late InfoMessage info;
-    final result = await _serviceProvider.createGroup(name, desc, imageFile);
-    result!.fold((group) {
-      //TODO:- add group to state
-      info = InfoMessage("Created successfuly", InfoMessage.success);
-    }, (error) {
-      info = InfoMessage(error.message, InfoMessage.error);
-    });
+    final result = await CounselingService.createGroup(
+      name,
+      desc,
+      imageFile,
+      isForumn,
+      retryLog: retryLog,
+    );
+
+    result.fold(
+      (group) {
+        groups.add(group);
+        if (group.isForum) {
+          allForums.add(group);
+        }
+        info = InfoMessage("Created successfuly", MessageType.success);
+        notifyListeners();
+      },
+      (error) {
+        info = InfoMessage(error.message, MessageType.error);
+      },
+    );
     return info;
   }
 
-  Future<InfoMessage> joinGroup(String grpId) async {
-    late InfoMessage info;
-    final result = await _serviceProvider.subToNewGroup(
-      GlobalConfig.instance.user.id.toString(),
-      grpId,
-    );
-    result!.fold((group) {
-      info = InfoMessage(
-        "Joined successfuly",
-        InfoMessage.success,
+  Future<Either<User, InfoMessage>> getUser({
+    required int userId,
+    Function(String)? retryLog,
+  }) async {
+    for (User u in users) {
+      if (u.id == userId) {
+        return Left(u);
+      }
+    }
+    try {
+      late User user;
+      final res = await CounselingService.getUser(
+        userId,
+        retryLog: retryLog,
       );
-    }, (error) {
-      info = InfoMessage(error.message, InfoMessage.error);
-    });
-    return info;
+      res.fold(
+        (user_) {
+          users.add(user_);
+          user = user_;
+        },
+        (errorMessage) => throw (errorMessage),
+      );
+      return Left(user);
+    } on ErrorMessage catch (e) {
+      return Right(
+        InfoMessage(e.message, MessageType.error),
+      );
+    }
+  }
+
+  Future<InfoMessage> joinForum(String forumId,
+      {Function(String)? retryLog}) async {
+    late InfoMessage message;
+    final res = await CounselingService.subToNewGroup(
+        GlobalConfig.instance.user.id.toString(), forumId,
+        retryLog: retryLog);
+    res.fold(
+      (forum) {
+        groups.add(forum);
+        message = InfoMessage(
+          "You have joined the forum",
+          MessageType.success,
+        );
+        notifyListeners();
+      },
+      (error) => message = InfoMessage.fromError(error),
+    );
+    return message;
+  }
+
+  Future<Either<InfoMessage, ErrorMessage>> leaveGroup(String groupId,
+      {Function(String)? retryLog}) async {
+    try {
+      final result =
+          await CounselingService.exitGroup(groupId, retryLog: retryLog);
+      result.fold(
+        (group) {
+          groups.remove(group);
+          notifyListeners();
+        },
+        (error) => throw (error),
+      );
+      return Left(
+        InfoMessage("You have left the group", MessageType.success),
+      );
+    } on ErrorMessage catch (e) {
+      return Right(e);
+    }
+  }
+
+  Future<Either<InfoMessage, ErrorMessage>> deleteGroup(String groupId) async {
+    try {
+      final result = await CounselingService.deleteGroup(groupId);
+      result.fold(
+        (group) {
+          groups.remove(group);
+          allForums.remove(group);
+          notifyListeners();
+        },
+        (error) => throw (error),
+      );
+      return Left(
+        InfoMessage("You have left the group", MessageType.success),
+      );
+    } on ErrorMessage catch (e) {
+      return Right(e);
+    }
   }
 }

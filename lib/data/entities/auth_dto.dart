@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
 
 class AuthDTO extends Equatable {
   String _email = "";
@@ -38,4 +39,10 @@ class AuthDTO extends Equatable {
         _userName,
         _university,
       ];
+}
+
+class LoginData {
+  final User user;
+  final String authToken;
+  LoginData({required this.user, required this.authToken});
 }

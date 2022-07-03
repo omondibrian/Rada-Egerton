@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:rada_egerton/data/entities/auth_dto.dart';
+import 'package:rada_egerton/data/providers/application_provider.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
+import 'package:rada_egerton/data/services/auth_service.dart';
 import 'package:rada_egerton/resources/constants.dart';
+import 'package:rada_egerton/resources/size_config.dart';
 import 'package:rada_egerton/resources/theme.dart';
-import 'package:rada_egerton/resources/utils/main.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -20,6 +25,8 @@ class SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //init size config class
+    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: Palette.primary,
       body: Center(
@@ -46,13 +53,20 @@ class SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  Future initializeApp() async {
-    String? authToken = await ServiceUtility.getAuthToken();
+  Future<void> initializeApp() async {
+    LoginData? data = await AuthService.loadUserData();
     //inialize app data
-    if (authToken == null) {
+    if (!mounted) {
+      return;
+    }
+    if (data == null) {
       context.goNamed(AppRoutes.welcome);
     } else {
-      context.goNamed(AppRoutes.dashboard);
+      context.read<AuthenticationProvider>().loginUser(
+            user: data.user,
+            authToken: data.authToken,
+          );
+      context.read<RadaApplicationProvider>().init();    
     }
   }
 }
