@@ -20,6 +20,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
   late StreamSubscription<ChatPayload> _streamSubscription;
   final RadaApplicationProvider appProvider;
   final ScrollController controller = ScrollController();
+  final String userId = GlobalConfig.instance.user.id.toString();
 
   GroupBloc({
     required this.groupId,
@@ -30,7 +31,6 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
         ) {
     //Listen to new recived group messages
     _streamSubscription = chatRepo.groupChatStream.listen((chat) {
-      print("_____stream__$chat");
       add(GroupChatReceived(chat));
     });
 
@@ -108,7 +108,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
     final res = await chatRepo.sendGroupChat(
       groupId: groupId,
       message: event.message,
-      senderId: GlobalConfig.instance.user.id.toString(),
+      senderId: userId,
       picture: event.picture,
       reply: state.selectedChat?.id.toString(),
       retryLog: (value) => emit(

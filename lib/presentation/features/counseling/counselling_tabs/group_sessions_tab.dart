@@ -19,8 +19,15 @@ class GroupSessionsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appProvider = Provider.of<RadaApplicationProvider>(context);
+    if (appProvider.groupStatus == ServiceStatus.initial) {
+      //Ensure approvider is initialized
+      Future.delayed(
+        const Duration(milliseconds: 10),
+        () => appProvider.init(),
+      );
+    }
     final groups = appProvider.groups;
-    
+
     final style = TextStyle(
       fontSize: SizeConfig.isTabletWidth ? 16 : 14,
     );

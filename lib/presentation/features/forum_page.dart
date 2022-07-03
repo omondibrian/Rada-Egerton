@@ -19,7 +19,13 @@ class ForumPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<RadaApplicationProvider>(context);
-    
+    if (provider.allForumsStatus == ServiceStatus.initial) {
+      //Ensure approvider is initialized
+      Future.delayed(
+        const Duration(milliseconds: 10),
+        () => provider.init(),
+      );
+    }
     final allForums = provider.allForums;
     Future<void> _refresh() async {
       await provider.refreshForums();

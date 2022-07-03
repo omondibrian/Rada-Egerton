@@ -36,9 +36,9 @@ class RadaApplicationProvider with ChangeNotifier {
   }
 
 //This method is called on spash screen when the app starts
-  init() {
-    initAllForums();
-    initGroups();
+  init() async{
+    await initAllForums();
+    await initGroups();
   }
 
   Future<void> initAllForums() async {

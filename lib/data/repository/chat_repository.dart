@@ -166,6 +166,9 @@ class ChatRepository {
       ChatPayload chat = ChatPayload.fromJson(
         jsonDecode(event!.data!)["chat"],
       );
+      // Prevent chat send by current user not to be added twice to state
+      // Chat send be current user is added to state when send
+      if (chat.senderId == GlobalConfig.instance.user.id.toString()) return;
       _groupchats ??= [];
       _groupchats!.add(chat);
       _groupChatControler.add(chat);
