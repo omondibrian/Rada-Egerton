@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:equatable/equatable.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
 
 StudentDto studentDtoFromJson(String str) =>
     StudentDto.fromJson(json.decode(str));

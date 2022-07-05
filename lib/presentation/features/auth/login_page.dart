@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rada_egerton/data/entities/UserDTO.dart';
+import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/presentation/widgets/password_field.dart';
 import 'package:rada_egerton/resources/constants.dart';
