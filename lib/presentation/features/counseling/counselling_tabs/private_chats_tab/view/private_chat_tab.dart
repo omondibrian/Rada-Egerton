@@ -36,8 +36,6 @@ class _PrivateChatTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PrivateTabChatBloc, PrivateChatTabState>(
-      // buildWhen: (previous, current) =>
-      //     current.conversations != current.conversations,
       builder: (context, state) {
         if (state.status == ServiceStatus.loading) {
           return Shimmer(
@@ -50,10 +48,11 @@ class _PrivateChatTabView extends StatelessWidget {
           );
         }
         if (state.status == ServiceStatus.loadingFailure) {
-          return Center(
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                const Text("Ann error occured"),
+                const Text("An error occured"),
                 TextButton(
                   onPressed: () => context.read<PrivateTabChatBloc>().add(
                         PrivateChatTabStarted(),
@@ -165,7 +164,7 @@ class _ChatItem extends StatelessWidget {
                   ),
                 ),
               ),
-              title: Text('${user?.name}'),
+              title: Text(user?.name ?? "Loading..."),
               subtitle: Text(
                 "say something",
                 style: TextStyle(

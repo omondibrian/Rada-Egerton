@@ -80,11 +80,11 @@ class _LoginForm extends StatelessWidget {
               SizedBox(
                 width: SizeConfig.isTabletWidth ? 600 : 290.0,
                 child: DefaultInput(
-                  hintText: 'Username',
+                  hintText: 'Email',
                   validator: validator,
-                  icon: Icons.person,
+                  icon: Icons.email,
                   onChange: (value) =>
-                      context.read<RegisterCubit>().usernameChanged(
+                      context.read<RegisterCubit>().emailChanged(
                             value,
                           ),
                 ),

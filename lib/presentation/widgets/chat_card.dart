@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/resources/config.dart';
@@ -54,38 +55,46 @@ class ChatCard extends StatelessWidget {
                       borderRadius:
                           const BorderRadius.all(Radius.circular(8.0)),
                       clipBehavior: Clip.hardEdge,
-                      child: Image.network(
-                        imageUrl(chat.imageUrl!),
-                        loadingBuilder: (BuildContext context, Widget child,
-                            ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Container(
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 15.0,
-                            ),
-                            decoration: BoxDecoration(
-                              color: chatCardColor,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(8.0),
+                      child: GestureDetector(
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (_) => _ImageView(
+                            url: imageUrl(chat.imageUrl!),
+                          ),
+                        ),
+                        child: Image.network(
+                          imageUrl(chat.imageUrl!),
+                          loadingBuilder: (BuildContext context, Widget child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 15.0,
                               ),
-                            ),
-                            constraints: const BoxConstraints(
-                                minHeight: 200, minWidth: 200),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.green,
-                                value: loadingProgress.expectedTotalBytes !=
-                                            null &&
-                                        loadingProgress.expectedTotalBytes !=
-                                            null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
+                              decoration: BoxDecoration(
+                                color: chatCardColor,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        fit: BoxFit.cover,
+                              constraints: const BoxConstraints(
+                                  minHeight: 200, minWidth: 200),
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.green,
+                                  value: loadingProgress.expectedTotalBytes !=
+                                              null &&
+                                          loadingProgress.expectedTotalBytes !=
+                                              null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              ),
+                            );
+                          },
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     Text(
@@ -95,6 +104,38 @@ class ChatCard extends StatelessWidget {
                   ],
                 )
         ],
+      ),
+    );
+  }
+}
+
+class _ImageView extends StatelessWidget {
+  final String url;
+  const _ImageView({required this.url});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: Colors.transparent,
+      ),
+      backgroundColor: Colors.black38,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: CachedNetworkImage(
+            imageUrl: url,
+            width: double.infinity,
+            placeholder: (context, _) => Center(
+              child: Container(
+                constraints:
+                    const BoxConstraints(maxHeight: 300, maxWidth: 300),
+                child: const CircularProgressIndicator(),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

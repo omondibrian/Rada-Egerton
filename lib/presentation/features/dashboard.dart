@@ -3,12 +3,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
+import 'package:rada_egerton/data/providers/counseling_provider.dart';
+import 'package:rada_egerton/resources/config.dart';
 
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/size_config.dart';
 
 // ignore: constant_identifier_names
-enum FilterOptions { Profile, Contributors, LogOut }
+enum FilterOptions { Profile, Contributors, LogOut, schedule }
 
 class Dashboard extends StatelessWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -58,6 +60,9 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isCounsellor = context.watch<CounsellingProvider>().isCounsellor(
+          userId: GlobalConfig.instance.user.id,
+        );
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -67,6 +72,10 @@ class Dashboard extends StatelessWidget {
                 context.pushNamed(AppRoutes.profile);
               } else if (selectedValue == FilterOptions.LogOut) {
                 context.read<AuthenticationProvider>().logout();
+              } else if (selectedValue == FilterOptions.schedule) {
+                context.pushNamed(AppRoutes.schedule, params: {
+                  "userId": GlobalConfig.instance.user.id.toString()
+                });
               } else {
                 context.pushNamed(AppRoutes.contributors);
               }
@@ -84,6 +93,11 @@ class Dashboard extends StatelessWidget {
                 value: FilterOptions.Profile,
                 child: Text('Profile'),
               ),
+              if (isCounsellor)
+                const PopupMenuItem(
+                  value: FilterOptions.schedule,
+                  child: Text('Schedule'),
+                ),
               const PopupMenuItem(
                 value: FilterOptions.Contributors,
                 child: Text('Contributors'),

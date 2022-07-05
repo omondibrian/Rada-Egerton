@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rada_egerton/data/providers/counseling_provider.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/bloc/bloc.dart';
 import 'package:rada_egerton/resources/config.dart';
@@ -18,11 +19,11 @@ class PrivateChatAppBar extends StatelessWidget {
       listener: (context, state) {
         if (state.recepientProfileStatus == ServiceStatus.loadingFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar( behavior: SnackBarBehavior.floating, 
-
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
               content: const Text(
                 "An error occured while loading recipient profile",
-                style:  TextStyle(color: Colors.red),
+                style: TextStyle(color: Colors.red),
               ),
               action: SnackBarAction(
                 label: "RETRY",
@@ -40,6 +41,15 @@ class PrivateChatAppBar extends StatelessWidget {
       },
       buildWhen: (previous, current) => current.recepient != previous.recepient,
       builder: (context, state) {
+        bool currentIsCounsellor =
+            context.read<CounsellingProvider>().isCounsellor(
+                  userId: GlobalConfig.instance.user.id,
+                );
+        bool recepientIsCounsellor = context
+            .read<CounsellingProvider>()
+            .isCounsellor(
+              userId: int.parse(context.read<PrivateChatBloc>().recepientId),
+            );
         return AppBar(
           title: Row(
             children: [
@@ -83,16 +93,28 @@ class PrivateChatAppBar extends StatelessWidget {
                 Icons.more_vert,
               ),
               itemBuilder: (_) => [
-                PopupMenuItem(
-                  onTap: () => {
-                    context.pushNamed(AppRoutes.viewProfile, params: {
-                      "userId": context.read<PrivateChatBloc>().recepientId
-                    })
-                  },
-                  child: const Text(
-                    'View Profile',
+                if (currentIsCounsellor)
+                  PopupMenuItem(
+                    onTap: () => {
+                      context.pushNamed(AppRoutes.viewProfile, params: {
+                        "userId": context.read<PrivateChatBloc>().recepientId
+                      })
+                    },
+                    child: const Text(
+                      'profile',
+                    ),
                   ),
-                )
+                if (recepientIsCounsellor)
+                  PopupMenuItem(
+                    onTap: () => {
+                      context.pushNamed(AppRoutes.schedule, params: {
+                        "userId": context.read<PrivateChatBloc>().recepientId
+                      })
+                    },
+                    child: const Text(
+                      'schedule',
+                    ),
+                  )
               ],
             ),
           ],
