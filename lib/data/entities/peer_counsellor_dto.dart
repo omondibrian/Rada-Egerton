@@ -53,4 +53,14 @@ class PeerCounsellorDto {
         "expertise": expertise,
         "Campuses_id": campusesId,
       };
+
+  @override
+  List<Object?> get props => [
+        regNo,
+        user,
+        peerCounsellorId,
+        expertise,
+        campusesId,
+        studentId,
+      ];
 }

@@ -7,7 +7,7 @@ class GroupDTO extends Equatable {
   final String title;
   final String image;
   final bool isForum;
-  const GroupDTO({
+   GroupDTO({
     required this.id,
     required this.title,
     required this.image,

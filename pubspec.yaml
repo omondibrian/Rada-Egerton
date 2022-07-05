@@ -102,6 +102,7 @@ flutter:
     - assets/user.png
     - assets/users.png
     - assets/android-icon-192x192-green.png
+    - assets/locations.json
     - assets/sounds/send.ogg
     - assets/sounds/received.ogg
   # An image asset can refer to one or more resolution-specific "variants", see

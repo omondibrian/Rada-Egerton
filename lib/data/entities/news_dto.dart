@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:rada_egerton/resources/config.dart' as config;
 
-class News {
+class News extends Equatable {
   News({
     required this.id,
     required this.title,
@@ -41,4 +42,15 @@ class News {
         "Admin_Users_id": adminUsersId,
         "status": status,
       };
+
+  @override
+  List<Object?> get props => [
+        id,
+        title,
+        content,
+        imageName,
+        newsCategoriesId,
+        adminUsersId,
+        status,
+      ];
 }

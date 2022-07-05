@@ -1,4 +1,6 @@
-class UserRole {
+import 'package:equatable/equatable.dart';
+
+class UserRole extends Equatable {
   List<String> roles;
   UserRole(this.roles);
   bool get isCounsellor {
@@ -17,4 +19,7 @@ class UserRole {
   String toString() {
     return "UserRoles($roles)";
   }
+
+  @override
+  List<Object?> get props => [roles];
 }
