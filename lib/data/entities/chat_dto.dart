@@ -95,29 +95,3 @@ class ChatPayload extends Equatable {
         video
       ];
 }
-
-class Chats extends Equatable {
-  final List<ChatPayload> peerMsgs;
-  final List<ChatPayload> forumMsgs;
-  final List<ChatPayload> groupMsgs;
-  @override
-  List<Object?> get props => [peerMsgs, forumMsgs, groupMsgs];
-
-  const Chats({
-    this.peerMsgs = const [],
-    this.groupMsgs = const [],
-    this.forumMsgs = const [],
-  });
-
-  Chats copyWith({
-    List<ChatPayload>? peerMsgs,
-    List<ChatPayload>? forumMsgs,
-    List<ChatPayload>? groupMsgs,
-  }) {
-    return Chats(
-      forumMsgs: forumMsgs ?? this.forumMsgs,
-      peerMsgs: peerMsgs ?? this.peerMsgs,
-      groupMsgs: groupMsgs ?? this.peerMsgs,
-    );
-  }
-}

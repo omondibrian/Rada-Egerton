@@ -68,9 +68,7 @@ class _GroupChatView extends StatelessWidget {
               duration: const Duration(seconds: 10),
               content: Text(
                 state.infoMessage!.message,
-                style: TextStyle(
-                  color: state.infoMessage!.messageTypeColor,
-                ),
+                style:state.infoMessage!.style,
               ),
             ),
           );

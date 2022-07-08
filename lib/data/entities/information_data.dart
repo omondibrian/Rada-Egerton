@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/resources/theme.dart';
@@ -21,28 +19,30 @@ class InformationData extends Equatable {
   List<InformationContent> content;
   int id;
   static String tableName_ = "InformationData";
-  InformationData(
-      {required this.metadata, required this.content, required this.id});
+  InformationData({
+    required this.metadata,
+    required this.content,
+    required this.id,
+  });
 
   factory InformationData.fromJson(Map<String, dynamic> json) {
     Iterable content = json["content"];
     List<InformationContent> informationContent = List<InformationContent>.from(
-        content.map((item) => InformationContent.fromJson(item)));
+      content.map(
+        (item) => InformationContent.fromJson(item),
+      ),
+    );
     InformationMetadata metadata =
         InformationMetadata.fromJson(json["metadata"]);
     return InformationData(
-        metadata: metadata,
-        content: informationContent,
-        id: json["_id"] is int ? json["_id"] : int.parse(json["_id"]));
-  }
-  Map<String, dynamic> toMap() {
-    return {
-      "_id": id,
-      "content": jsonEncode(List<Map<String, dynamic>>.from(content.map(
-        (item) => item.toMap(),
-      ))),
-      "metadata": json.encode(metadata.toMap()),
-    };
+      metadata: metadata,
+      content: informationContent,
+      id: json["_id"] is int
+          ? json["_id"]
+          : int.parse(
+              json["_id"],
+            ),
+    );
   }
 
   @override
@@ -65,12 +65,10 @@ class InformationMetadata extends Equatable {
   });
   factory InformationMetadata.fromJson(Map<String, dynamic> json) {
     return InformationMetadata(
-        title: json["title"],
-        category: json["category"].toString(),
-        thumbnail: json["thumbnail"]);
-  }
-  Map<String, dynamic> toMap() {
-    return {"category": category, "title": title, "thumbnail": thumbnail};
+      title: json["title"],
+      category: json["category"].toString(),
+      thumbnail: json["thumbnail"],
+    );
   }
 
   @override
@@ -88,10 +86,11 @@ class InformationContent extends Equatable {
   String bodyContent;
   String type;
   ContentAttributes attributes;
-  InformationContent(
-      {required this.type,
-      required this.bodyContent,
-      required this.attributes});
+  InformationContent({
+    required this.type,
+    required this.bodyContent,
+    required this.attributes,
+  });
   factory InformationContent.fromJson(Map<String, dynamic> json) {
     return InformationContent(
       bodyContent:
@@ -105,9 +104,6 @@ class InformationContent extends Equatable {
               json["attributes"],
             ),
     );
-  }
-  Map<String, dynamic> toMap() {
-    return {"insert": bodyContent, "attributes": attributes};
   }
 
   //information type

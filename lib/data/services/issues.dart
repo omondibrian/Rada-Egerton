@@ -13,7 +13,7 @@ class IssueServiceProvider {
   static final FirebaseCrashlytics _firebaseCrashlytics =
       FirebaseCrashlytics.instance;
   // issues/category
-  Future<Either<ComplaintDto, ErrorMessage>> createNewIssue(
+  Future<Either<NewComplaint, ErrorMessage>> createNewIssue(
       Map<String, dynamic> data) async {
     String? authToken = GlobalConfig.instance.authToken;
     try {
@@ -22,7 +22,9 @@ class IssueServiceProvider {
               headers: {'Authorization': authToken}, sendTimeout: _timeOut),
           data: json.encode(data));
 
-      return Left(ComplaintDto.fromJson(result.data));
+      return Left(
+        NewComplaint.fromJson(result.data["newComplaint"]),
+      );
     } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,

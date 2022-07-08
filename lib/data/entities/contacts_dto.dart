@@ -7,13 +7,14 @@ class Contact extends Equatable {
   String phone;
   int? campusId;
   int? universityId;
-  Contact(
-      {required this.id,
-      required this.name,
-      required this.phone,
-      required this.campusId,
-      required this.universityId,
-      required this.email});
+  Contact({
+    required this.id,
+    required this.name,
+    required this.phone,
+    required this.campusId,
+    required this.universityId,
+    required this.email,
+  });
   factory Contact.fromJson(Map<String, dynamic> json) {
     return Contact(
         campusId: int.parse(json["Campuses_id"]),
