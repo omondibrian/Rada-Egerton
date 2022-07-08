@@ -22,6 +22,25 @@ class CounsellingProvider with ChangeNotifier {
     return counsellors.firstWhere((c) => c.user.id == userId);
   }
 
+  void updateCounsellor(Counsellor? counsellor) {
+    counsellors = counsellors.map((c) {
+      if (c.counsellorId == counsellor?.counsellorId) {
+        return counsellor!;
+      }
+      return c;
+    }).toList();
+    notifyListeners();
+  }
+
+  bool isCounsellor({required int userId}) {
+    for (var c in counsellors) {
+      if (c.user.id == userId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   PeerCounsellorDto getperCounsellor({required int userId}) {
     return peerCounsellors.firstWhere((c) => c.user.id == userId);
   }

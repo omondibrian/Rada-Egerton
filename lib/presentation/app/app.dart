@@ -7,6 +7,7 @@ import 'package:rada_egerton/presentation/features/chat/group_chat/view/group_ch
 import 'package:rada_egerton/presentation/features/chat/private_chat/view/private_chats_page.dart';
 import 'package:rada_egerton/presentation/features/contributors.dart';
 import 'package:rada_egerton/presentation/features/counseling/counseling.dart';
+import 'package:rada_egerton/presentation/features/counsellor_schedule/view/schedule_page.dart';
 import 'package:rada_egerton/presentation/features/dashboard.dart';
 import 'package:rada_egerton/presentation/features/forum_page.dart';
 import 'package:rada_egerton/presentation/features/help/help.dart';
@@ -150,6 +151,13 @@ class RadaApp extends StatelessWidget {
                 userId: int.parse(state.params["userId"]!),
               ),
             ),
+            GoRoute(
+              path: "schedule/:userId",
+              name: AppRoutes.schedule,
+              builder: (context, state) => CounsellorSchedulePage(
+                userId: int.parse(state.params["userId"]!),
+              ),
+            ),
           ],
         ),
         //-------------------------------------------------------//
@@ -171,7 +179,6 @@ class RadaApp extends StatelessWidget {
       routeInformationParser: router.routeInformationParser,
       title: 'Rada',
       debugShowCheckedModeBanner: false,
-      
       theme: ThemeData(
         primaryColorLight: Palette.accent,
         primaryColor: Palette.primary,

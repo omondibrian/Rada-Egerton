@@ -20,6 +20,7 @@ class AppRoutes {
   static const privateChat = "chats-private";
   static const profile = "profile-me";
   static const viewProfile = "view-profile";
+  static const schedule = "schedule";
   static const contributors = "contributors";
 }
 
@@ -34,4 +35,3 @@ class ChatEvent {
   static const String online = "online";
   static const String USER = 'USER';
 }
-

@@ -384,4 +384,34 @@ class CounselingService {
       );
     }
   }
+
+  /// query user data
+  static Future<Either<InfoMessage, ErrorMessage>> updateSchedule(
+    List<Schedule> schedule, {
+    Function(String)? retryLog,
+  }) async {
+    Dio dio = Dio();
+    dio.interceptors.add(
+      RetryInterceptor(dio: dio, logPrint: retryLog),
+    );
+    try {
+      String token = GlobalConfig.instance.authToken;
+      final result = await dio.put(
+        "$_hostUrl/api/v1/admin/user/counsellor/schedule",
+        options: Options(headers: {
+          'Authorization': token,
+        }, sendTimeout: 10000),
+        data: jsonEncode({
+          "schedule": schedule.map((s) => s.toMap()).toList(),
+        }),
+      );
+      return Left(
+          InfoMessage("Schedule created successfuly", MessageType.success));
+    } catch (e) {
+      // print((e as DioError).response);
+      return Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
+    }
+  }
 }
