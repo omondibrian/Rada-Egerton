@@ -1,39 +1,6 @@
 import 'dart:convert';
 
-
 import 'package:equatable/equatable.dart';
-
-LocationsDto locationsDtoFromJson(String str) =>
-    LocationsDto.fromJson(json.decode(str));
-
-String locationsDtoToJson(LocationsDto data) => json.encode(data.toJson());
-
-class LocationsDto extends Equatable {
-
-
-  LocationsDto({
-    required this.locations,
-  });
-
-  LocationsDto locationsDtoFromJson(String str) =>
-      LocationsDto.fromJson(json.decode(str));
-
-  String locationsDtoToJson(LocationsDto data) => json.encode(data.toJson());
-
-  List<Location> locations;
-
-  factory LocationsDto.fromJson(Map<String, dynamic> json) => LocationsDto(
-        locations: List<Location>.from(
-            json["locations"].map((x) => Location.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "locations": List<dynamic>.from(locations.map((x) => x.toJson())),
-      };
-
-  @override
-  List<Object?> get props => [locations];
-}
 
 class Location extends Equatable {
   Location({

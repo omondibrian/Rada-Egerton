@@ -163,7 +163,7 @@ class _ForumItem extends StatelessWidget {
                             behavior: SnackBarBehavior.floating,
                             content: Text(
                               info.message,
-                              style: TextStyle(color: info.messageTypeColor),
+                              style: info.style,
                             ),
                           ),
                         ),

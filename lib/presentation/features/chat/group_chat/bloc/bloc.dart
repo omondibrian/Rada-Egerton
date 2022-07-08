@@ -62,7 +62,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
     res.fold(
       (infomesage) => emit(
         state.copyWith(
-          forumMsgs: chatRepo.groupchat
+          msgs: chatRepo.groupchat
               .where((chat) => chat.groupsId == groupId)
               .toList(),
         ),
@@ -86,7 +86,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
     if (event.groupChat.groupsId == groupId) {
       emit(
         state.copyWith(
-          forumMsgs: [...state.chats, event.groupChat],
+          msgs: [...state.chats, event.groupChat],
         ),
       );
       controller.animateTo(
@@ -113,7 +113,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
       reply: state.selectedChat?.id.toString(),
       retryLog: (value) => emit(
         state.copyWith(
-          infoMessage: InfoMessage("Retrying..", MessageType.error),
+          infoMessage: InfoMessage("Retrying..", MessageType.info),
         ),
       ),
     );
@@ -129,8 +129,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
           emit(
             state.copyWith(
               status: ServiceStatus.submissionSucess,
-              forumMsgs: [...state.chats, chat],
-              infoMessage: InfoMessage("Chat send", MessageType.success),
+              msgs: [...state.chats, chat],
               retainSelectedChat: false,
             ),
           );

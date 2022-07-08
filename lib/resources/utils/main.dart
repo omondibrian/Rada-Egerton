@@ -153,4 +153,7 @@ extension X on InfoMessage {
 
     return Colors.red[700] ?? Colors.red;
   }
+   TextStyle get style {
+    return TextStyle(color: messageTypeColor);
+  }
 }

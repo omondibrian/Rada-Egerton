@@ -7,12 +7,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rada_egerton/data/services/news_location_service.dart';
 import '../../../../data/entities/location_dto.dart';
 
-void main() {
-  if (defaultTargetPlatform == TargetPlatform.android) {
-    AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
-  }
-  runApp(const LocationTab());
-}
+// void main() {
+//   if (defaultTargetPlatform == TargetPlatform.android) {
+//     AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
+//   }
+//   runApp(const LocationTab());
+// }
 
 class LocationTab extends StatefulWidget {
   const LocationTab({Key? key}) : super(key: key);
@@ -28,7 +28,7 @@ class _LocationTabState extends State<LocationTab> {
   Future<void> _onMapCreated(GoogleMapController mapController) async {
     final helpOffices = await locationService.fetchLocationPins();
     final helpOfficesLocations =
-        helpOffices.fold<List<Location>>((l) => l.locations, (r) {
+        helpOffices.fold<List<Location>>((l) => l, (r) {
       print(r);
       return [];
     });

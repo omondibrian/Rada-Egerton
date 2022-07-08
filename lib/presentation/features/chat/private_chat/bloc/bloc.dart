@@ -86,13 +86,12 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
     Emitter<PrivateChatState> emit,
   ) {
     if (event.privatechat.senderId == recepientId) {
-       controller.animateTo(
-            controller.position.maxScrollExtent + 500,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.ease,
-          );
-        
-            
+      controller.animateTo(
+        controller.position.maxScrollExtent + 500,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
+
       emit(
         state.copyWith(
           msgs: [...state.chats, event.privatechat],
@@ -135,7 +134,6 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
             state.copyWith(
               status: ServiceStatus.submissionSucess,
               msgs: [...state.chats, chat],
-              infoMessage: InfoMessage("Chat send", MessageType.success),
               retainSelectedChat: false,
             ),
           );
@@ -187,7 +185,6 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
   Future<void> close() async {
     _streamSubscription.cancel();
     controller.dispose();
-
     return super.close();
   }
 }

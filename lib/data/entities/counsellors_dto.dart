@@ -62,12 +62,13 @@ class Counsellor extends Equatable {
     List<Schedule>? schedule,
   }) {
     return Counsellor(
-        user: user ?? this.user,
-        rating: rating ?? this.rating,
-        isOnline: isOnline ?? this.isOnline,
-        expertise: expertise ?? this.expertise,
-        counsellorId: counsellorId ?? this.counsellorId,
-        schedule: schedule ?? this.schedule);
+      user: user ?? this.user,
+      rating: rating ?? this.rating,
+      isOnline: isOnline ?? this.isOnline,
+      expertise: expertise ?? this.expertise,
+      counsellorId: counsellorId ?? this.counsellorId,
+      schedule: schedule ?? this.schedule,
+    );
   }
 }
 

@@ -16,7 +16,7 @@ class GroupState extends Equatable {
 
   GroupState copyWith({
     ChatPayload? selectedChat,
-    List<ChatPayload>? forumMsgs,
+    List<ChatPayload>? msgs,
     ServiceStatus? status,
     InfoMessage? infoMessage,
     bool? subscribed,
@@ -25,7 +25,7 @@ class GroupState extends Equatable {
     return GroupState(
       selectedChat:
           !retainSelectedChat ? null : selectedChat ?? this.selectedChat,
-      chats: forumMsgs ?? chats,
+      chats: msgs ?? chats,
       status: status ?? this.status,
       infoMessage: infoMessage,
       subscribed: subscribed ?? this.subscribed,
