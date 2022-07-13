@@ -51,6 +51,14 @@ class _ContactTabState extends State<ContactTab> {
     init();
   }
 
+  //removes "+" in query parameters in the mail url launcher
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((MapEntry<String, String> e) =>
+            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+  }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -99,8 +107,6 @@ class _ContactTabState extends State<ContactTab> {
                               await launchUrl(
                                 Uri(scheme: 'tel', path: contact.phone),
                               );
-                              //todo: set url launcher to phone screen
-                              //todo: with respective number on the keypad
                             },
                             child: const Icon(
                               Icons.phone,
@@ -124,10 +130,11 @@ class _ContactTabState extends State<ContactTab> {
                                 Uri(
                                     scheme: 'mailto',
                                     path: contact.email,
-                                    queryParameters: {
+                                    query:
+                                        encodeQueryParameters(<String, String>{
                                       'subject': 'Rada Help',
                                       'body': 'Include your message here.'
-                                    }),
+                                    })),
                               );
                             },
                             child: const Icon(
