@@ -73,19 +73,23 @@ class NewsAndLocationServiceProvider {
 
   Future<Either<List<Contact>, ErrorMessage>> getContacts(
       {Function(String)? retryLog}) async {
-    String? authtoken = GlobalConfig.instance.authToken;
-    Dio dio = Dio();
-    dio.interceptors.add(
-      RetryInterceptor(dio: dio, logPrint: retryLog),
-    );
+    // String? authtoken = GlobalConfig.instance.authToken;
+    // Dio dio = Dio();
+    // dio.interceptors.add(
+    //   RetryInterceptor(dio: dio, logPrint: retryLog),
+    // );
     try {
-      final result = await dio.get(
-        "$_hostUrl/api/v1/admin/contact",
-        options: Options(
-            headers: {'Authorization': authtoken}, sendTimeout: _timeOut),
-      );
-      Iterable l = result.data["contacts"];
-      return Left(List<Contact>.from(l.map((j) => Contact.fromJson(j))));
+    //   final result = await dio.get(
+    //     "$_hostUrl/api/v1/admin/contact",
+    //     options: Options(
+    //         headers: {'Authorization': authtoken}, sendTimeout: _timeOut),
+    //   );
+    // Iterable l = result.data["contacts"];
+
+    //todo: revert to the above code, when "url launcher" works
+    final result = await rootBundle.loadString('assets/contacts.json');
+    Map<String,dynamic> l = jsonDecode(result);
+      return Left(List<Contact>.from(l["contacts"].map((j) => Contact.fromJson(j))));
     } catch (e, stackTrace) {
       _firebaseCrashlytics.recordError(
         e,

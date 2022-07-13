@@ -16,13 +16,6 @@ class ContactTab extends StatefulWidget {
 class _ContactTabState extends State<ContactTab> {
   List<Contact>? _contactList;
   NewsAndLocationServiceProvider service = NewsAndLocationServiceProvider();
-  // late final Uri _defaultAppUrl;
-
-  // void _launchDefaultApp() async {
-  //   if (!await launchUrl(_defaultAppUrl)) {
-  //     throw 'Could not launch url : $_defaultAppUrl';
-  //   }
-  // }
 
   Future<void> init() async {
     final result = await service.getContacts(
@@ -85,73 +78,71 @@ class _ContactTabState extends State<ContactTab> {
         showModalBottomSheet(
             context: context,
             builder: (context) => Container(
-                  decoration: BoxDecoration(
-                    border: const Border(
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  decoration: const BoxDecoration(
+                    border: Border(
                       top: BorderSide(
                         color: Palette.primary,
+                        width: 2.0,
                       ),
                     ),
-                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Center(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                await launchUrl(
-                                  Uri(scheme: 'tel', path: contact.phone),
-                                );
-                                //todo: set url launcher to phone screen
-                                //todo: with respective number on the keypad
-                              },
-                              child: const Icon(
-                                Icons.phone,
-                                color: Palette.primary,
-                                size: 50.0,
-                              ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              await launchUrl(
+                                Uri(scheme: 'tel', path: contact.phone),
+                              );
+                              //todo: set url launcher to phone screen
+                              //todo: with respective number on the keypad
+                            },
+                            child: const Icon(
+                              Icons.phone,
+                              color: Palette.primary,
+                              size: 50.0,
                             ),
-                            Text(
-                              'Phone',
-                              style: Theme.of(context).textTheme.headline6,
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                await launchUrl(
-                                  Uri(
-                                      scheme: 'mailto',
-                                      path: contact.email,
-                                      queryParameters: {
-                                        'subject': 'Rada Help',
-                                        'body': 'Include your message here.'
-                                      }),
-                                );
-                                //todo: set url launcher to default email app
-                                //todo: with respective details populated
-                              },
-                              child: const Icon(
-                                Icons.email_rounded,
-                                color: Palette.primary,
-                                size: 50.0,
-                              ),
+                          ),
+                          Text(
+                            'Phone',
+                            style: Theme.of(context).textTheme.headline6,
+                          )
+                        ],
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              await launchUrl(
+                                Uri(
+                                    scheme: 'mailto',
+                                    path: contact.email,
+                                    queryParameters: {
+                                      'subject': 'Rada Help',
+                                      'body': 'Include your message here.'
+                                    }),
+                              );
+                            },
+                            child: const Icon(
+                              Icons.email_rounded,
+                              color: Palette.primary,
+                              size: 50.0,
                             ),
-                            Text(
-                              'Mail',
-                              style: Theme.of(context).textTheme.headline6,
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                          Text(
+                            'Mail',
+                            style: Theme.of(context).textTheme.headline6,
+                          )
+                        ],
+                      ),
+                    ],
                   ),
                 ));
       },

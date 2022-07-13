@@ -1,0 +1,12 @@
+{
+	"contacts": [
+		{
+			"_id": 1,
+			"name": "Nakuru campus",
+			"email": "rada@gmail.com",
+			"phone": "07123456",
+			"Campuses_id": "2",
+			"University_id": "2"
+		}
+	]
+}

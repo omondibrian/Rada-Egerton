@@ -84,6 +84,7 @@ flutter:
     - assets/bell.svg
     - assets/consulting.svg
     - assets/contact.svg
+    - assets/contacts.json
     - assets/counseling.svg
     - assets/curve_left.svg
     - assets/curve_top.svg
