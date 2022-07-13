@@ -165,9 +165,7 @@ class _SubmitButton extends StatelessWidget {
         }
         return RadaButton(
           title: 'Login',
-          handleClick: () => Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Help())),
-          // context.read<LoginCubit>().submit(),
+          handleClick: () => context.read<LoginCubit>().submit(),
           fill: true,
         );
       },

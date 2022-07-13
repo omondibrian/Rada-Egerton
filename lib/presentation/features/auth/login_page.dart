@@ -34,7 +34,6 @@ class Login extends StatelessWidget {
         //       AuthToken: "iUUUS",
         //     );
         // context.go(AppRoutes.dashboard);
-        Navigator.pushNamed(context, AppRoutes.help);
       }
     } catch (e) {
       print(e);
