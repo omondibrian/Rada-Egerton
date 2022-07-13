@@ -79,11 +79,11 @@ class NewsAndLocationServiceProvider {
       RetryInterceptor(dio: dio, logPrint: retryLog),
     );
     try {
-      final result = await dio.get(
-        "$_hostUrl/api/v1/admin/contact",
-        options: Options(
-            headers: {'Authorization': authtoken}, sendTimeout: _timeOut),
-      );
+        final result = await dio.get(
+          "$_hostUrl/api/v1/admin/contact",
+          options: Options(
+              headers: {'Authorization': authtoken}, sendTimeout: _timeOut),
+        );
       Iterable l = result.data["contacts"];
       return Left(List<Contact>.from(l.map((j) => Contact.fromJson(j))));
     } catch (e, stackTrace) {

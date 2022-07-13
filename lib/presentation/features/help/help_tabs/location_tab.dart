@@ -51,7 +51,7 @@ class _LocationTabState extends State<LocationTab> {
   static const CameraPosition _initialCameraPosition = CameraPosition(
     tilt: 45,
     target: LatLng(-0.369273, 35.931386),
-    zoom: 17.5,
+    zoom: 11,
   );
 
   @override
