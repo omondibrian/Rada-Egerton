@@ -5,8 +5,9 @@ class GroupDTO extends Equatable {
   List<Object?> get props => [id, title, image, isForum];
   final String id;
   final String title;
-  final String image;
+  final String? image;
   final bool isForum;
+
    GroupDTO({
     required this.id,
     required this.title,

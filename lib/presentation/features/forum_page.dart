@@ -119,7 +119,9 @@ class _ForumItem extends StatelessWidget {
           child: CircleAvatar(
             child: CachedNetworkImage(
               color: Colors.white,
-              imageUrl: imageUrl(forum.image),
+              imageUrl: forum.image != null
+                    ? imageUrl(forum.image!)
+                    : GlobalConfig.usersAvi,
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
