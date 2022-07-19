@@ -29,6 +29,13 @@
             {
               "client_id": "577396855316-c15tkigt4beal0njbhql4hdfh5la59e1.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "577396855316-mi1pdg3tb8mlh5gtuepbce0jet04foi8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.radaEgerton"
+              }
             }
           ]
         }
