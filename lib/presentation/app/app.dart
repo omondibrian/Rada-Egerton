@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -24,9 +25,47 @@ import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/theme.dart';
 
-class RadaApp extends StatelessWidget {
+class RadaApp extends StatefulWidget {
   const RadaApp({Key? key}) : super(key: key);
 
+  @override
+  State<RadaApp> createState() => _RadaAppState();
+}
+
+class _RadaAppState extends State<RadaApp> {
+  @override
+  void initState() {
+    super.initState();
+    //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   RemoteNotification? notification = message.notification;
+    //   AndroidNotification? android = message.notification?.android;
+    //   if (notification != null && android != null) {
+    //    //
+    //    print(notification);
+    //   }
+    // });
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   RemoteNotification? notification = message.notification;
+    //   AndroidNotification? android = message.notification?.android;
+    //   if (notification != null && android != null) {
+    //     showDialog(
+    //         context: context,
+    //         builder: (_) {
+    //           return AlertDialog(
+    //             title: Text(notification.title??""),
+    //             content: SingleChildScrollView(
+    //               child: Column(
+    //                 mainAxisAlignment: MainAxisAlignment.center,
+    //                 mainAxisSize: MainAxisSize.min,
+    //                 children: [Text(notification.body??"")],
+    //               ),
+    //             ),
+    //           );
+    //         });
+    //   }
+    // });
+  
+  }
   @override
   Widget build(BuildContext context) {
     final GoRouter router = GoRouter(

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/services/auth_service.dart';
@@ -11,6 +12,8 @@ part 'state.dart';
 class LoginCubit extends Cubit<LoginState> {
   final GlobalKey<FormState> loginFormKey;
   final AuthenticationProvider authenticationProvider;
+   FirebaseMessaging messaging = FirebaseMessaging.instance;
+  
   LoginCubit(
     this.loginFormKey,
     this.authenticationProvider,
@@ -56,6 +59,12 @@ class LoginCubit extends Cubit<LoginState> {
               ),
             ),
           );
+          //Register user device token 
+   messaging.getToken().then((value) {
+      if(value !=null){
+      AuthService.registerDeviceToken(value).then((res) =>res.fold((l) => print(l), (r) => print(r),), );
+      }
+    },);
           authenticationProvider.loginUser(
             user: data.user,
             authToken: data.authToken,

@@ -8,11 +8,33 @@ import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/providers/counseling_provider.dart';
 import 'package:rada_egerton/data/providers/information_content.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
+// import 'package:rada_egerton/firebase_options.dart';
 import 'presentation/app/app.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+  print('Handling a background message ${message.messageId}');
+}
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    // options: DefaultFirebaseOptions.currentPlatform,
+  );
+  // FirebaseMessaging messaging = FirebaseMessaging.instance;
+  // messaging.setForegroundNotificationPresentationOptions(
+  //   alert: true,
+  //   badge: true,
+  //   sound: true,
+  // );
+
+ print("App started");
+
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   RadaApplicationProvider appProvider = RadaApplicationProvider();
   runApp(
