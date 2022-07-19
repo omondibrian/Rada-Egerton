@@ -29,7 +29,7 @@ class GroupAppBar extends StatelessWidget {
             child: ClipOval(
               child: CachedNetworkImage(
                 color: Colors.white,
-                imageUrl: imageUrl(group.image),
+                imageUrl:group.image !=null? imageUrl(group.image!):GlobalConfig.usersAvi,
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
