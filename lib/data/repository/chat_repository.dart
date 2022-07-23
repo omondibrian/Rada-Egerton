@@ -3,56 +3,32 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:pusher_client/pusher_client.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/services/chat_service.dart';
 import 'package:rada_egerton/resources/audio_players.dart';
 import 'package:rada_egerton/resources/config.dart';
-import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 class ChatRepository {
   List<ChatPayload>? _groupchats;
   List<ChatPayload>? _privatechats;
   bool chatsInitialized = false;
-  List<String> groupChatSubscribed = [];
   List<Channel> groupChannels = [];
-  late Channel privateChannel;
-  late PusherClient _pusher;
-  final String _privateChannelName = "radaComms";
 
   final _groupChatControler = StreamController<ChatPayload>.broadcast();
   final _privateChatControler = StreamController<ChatPayload>.broadcast();
 
-  final RadaApplicationProvider applicationProvider;
-  ChatRepository({required this.applicationProvider}) {
+  ChatRepository() {
     initChats();
-    _pusher = Pusher(
-      appKey: GlobalConfig.instance.pusherApiKey,
-      token: GlobalConfig.instance.authToken,
-    ).getConnection();
-
-    privateChannel = _pusher.subscribe(
-      "$_privateChannelName${GlobalConfig.instance.user.id}",
-    );
-
-    privateChannel.bind(ChatEvent.CHAT, _privateChatReceived);
-
-    applicationProvider.addListener(
-      () {
-        //Add a channel to each group
-        for (var c in applicationProvider.groups) {
-          if (!groupChatSubscribed.contains(c.id)) {
-            final Channel channel =
-                _pusher.subscribe("${_privateChannelName}group${c.id}");
-            channel.bind(ChatEvent.CHAT, _groupChatReceived);
-            groupChannels.add(channel);
-            groupChatSubscribed.add(c.id);
-          }
-        }
-      },
-    );
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      _chatReceived(message.notification!.body!);
+    });
+    FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async {
+      _chatReceived(message.notification!.body!);
+    });
   }
 
   Stream<ChatPayload> get groupChatStream async* {
@@ -160,34 +136,28 @@ class ChatRepository {
     return Left(chat);
   }
 
-  void _groupChatReceived(PusherEvent? event) {
-    NotificationAudio.messageReceived();
-    if (event?.data != null) {
+  _chatReceived(String chatData) {
+    try {
       ChatPayload chat = ChatPayload.fromJson(
-        jsonDecode(event!.data!)["chat"],
+        jsonDecode(chatData)["chat"],
       );
-      // Prevent chat send by current user not to be added twice to state
-      // Chat send be current user is added to state when send
-      if (chat.senderId == GlobalConfig.instance.user.id.toString()) return;
-      _groupchats ??= [];
-      _groupchats!.add(chat);
-      _groupChatControler.add(chat);
+
+      if (chat.groupsId != null && chat.groupsId.toString().isNotEmpty) {
+        if (chat.senderId == GlobalConfig.instance.user.id.toString()) return;
+        _groupchats ??= [];
+        _groupchats!.add(chat);
+        _groupChatControler.add(chat);
+      } else {
+        _privatechats ??= [];
+        _privatechats!.add(chat);
+        _privateChatControler.add(chat);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
-  void _privateChatReceived(PusherEvent? event) {
-    NotificationAudio.messageReceived();
-    if (event?.data != null) {
-      ChatPayload chat = ChatPayload.fromJson(
-        jsonDecode(event!.data!)["chat"],
-      );
-      _privatechats ??= [];
-      _privatechats!.add(chat);
-      _privateChatControler.add(chat);
-    }
-  }
-
-  void dispose() {
+  dispose() {
     _privateChatControler.close();
     _groupChatControler.close();
   }
