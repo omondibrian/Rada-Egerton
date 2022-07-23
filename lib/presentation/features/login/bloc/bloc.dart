@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/services/auth_service.dart';
 import 'package:rada_egerton/data/status.dart';
@@ -12,11 +13,13 @@ part 'state.dart';
 class LoginCubit extends Cubit<LoginState> {
   final GlobalKey<FormState> loginFormKey;
   final AuthenticationProvider authenticationProvider;
-   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  
+  final RadaApplicationProvider applicationProvider;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
   LoginCubit(
     this.loginFormKey,
     this.authenticationProvider,
+    this.applicationProvider,
   ) : super(
           const LoginState(),
         );
@@ -48,6 +51,19 @@ class LoginCubit extends Cubit<LoginState> {
         state.email,
         state.password,
       );
+      //Register user device token for firebase messaging
+      messaging.getToken().then(
+        (value) {
+          if (value != null) {
+            AuthService.registerDeviceToken(value).then(
+              (res) => res.fold(
+                (l) => print(l),
+                (r) => print(r),
+              ),
+            );
+          }
+        },
+      );
       res.fold(
         (data) {
           emit(
@@ -59,16 +75,12 @@ class LoginCubit extends Cubit<LoginState> {
               ),
             ),
           );
-          //Register user device token 
-   messaging.getToken().then((value) {
-      if(value !=null){
-      AuthService.registerDeviceToken(value).then((res) =>res.fold((l) => print(l), (r) => print(r),), );
-      }
-    },);
+
           authenticationProvider.loginUser(
             user: data.user,
             authToken: data.authToken,
           );
+          applicationProvider.init();
         },
         (r) {
           emit(

@@ -1,9 +1,11 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
+import 'package:rada_egerton/main.dart';
 import 'package:rada_egerton/presentation/features/chat/group_chat/view/group_chats_page.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/view/private_chats_page.dart';
 import 'package:rada_egerton/presentation/features/contributors.dart';
@@ -36,36 +38,40 @@ class _RadaAppState extends State<RadaApp> {
   @override
   void initState() {
     super.initState();
-    //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //   RemoteNotification? notification = message.notification;
-    //   AndroidNotification? android = message.notification?.android;
-    //   if (notification != null && android != null) {
-    //    //
-    //    print(notification);
-    //   }
-    // });
-    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    //   RemoteNotification? notification = message.notification;
-    //   AndroidNotification? android = message.notification?.android;
-    //   if (notification != null && android != null) {
-    //     showDialog(
-    //         context: context,
-    //         builder: (_) {
-    //           return AlertDialog(
-    //             title: Text(notification.title??""),
-    //             content: SingleChildScrollView(
-    //               child: Column(
-    //                 mainAxisAlignment: MainAxisAlignment.center,
-    //                 mainAxisSize: MainAxisSize.min,
-    //                 children: [Text(notification.body??"")],
-    //               ),
-    //             ),
-    //           );
-    //         });
-    //   }
-    // });
-  
+    FirebaseMessaging.onMessage.listen(
+      (RemoteMessage message) {
+        RemoteNotification? notification = message.notification;
+        if (notification != null) {
+          flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                  androidChannel.id, androidChannel.name,
+                  channelDescription: androidChannel.description,
+                  color: Palette.primary,
+                  sound: androidChannel.sound
+                  
+                  ),
+              // TODO: configure ios notification details
+            ),
+          );
+        }
+      },
+    );
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      (RemoteMessage message) {
+        RemoteNotification? notification = message.notification;
+        AndroidNotification? android = message.notification?.android;
+        if (notification != null && android != null) {
+          //TODO:open notification
+          print("---------------------${notification.body}-------------");
+        }
+      },
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     final GoRouter router = GoRouter(
@@ -76,7 +82,6 @@ class _RadaAppState extends State<RadaApp> {
         String location = state.location;
         AuthenticationStatus status =
             context.read<AuthenticationProvider>().status;
-
         //Redirect authenticated trying to access the app to login
         if (location.startsWith("/app") &&
             status != AuthenticationStatus.authenticated) {

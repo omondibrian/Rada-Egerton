@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/presentation/features/help/help.dart';
 import 'package:rada_egerton/presentation/features/login/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/widgets/button.dart';
 import 'package:rada_egerton/presentation/widgets/input.dart';
@@ -27,6 +27,7 @@ class LoginPage extends StatelessWidget {
           create: (_) => LoginCubit(
             _formKey,
             context.read<AuthenticationProvider>(),
+            context.read<RadaApplicationProvider>(),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,7 +67,8 @@ class _LoginForm extends StatelessWidget {
       listener: (context, state) {
         if (state.message != null) {
           ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar( behavior: SnackBarBehavior.floating, 
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
               content: Text(
                 state.message!.message,
                 style: TextStyle(color: state.message!.messageTypeColor),
