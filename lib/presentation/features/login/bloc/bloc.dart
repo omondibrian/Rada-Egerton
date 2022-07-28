@@ -51,19 +51,7 @@ class LoginCubit extends Cubit<LoginState> {
         state.email,
         state.password,
       );
-      //Register user device token for firebase messaging
-      messaging.getToken().then(
-        (value) {
-          if (value != null) {
-            AuthService.registerDeviceToken(value).then(
-              (res) => res.fold(
-                (l) => print(l),
-                (r) => print(r),
-              ),
-            );
-          }
-        },
-      );
+
       res.fold(
         (data) {
           emit(
@@ -75,12 +63,25 @@ class LoginCubit extends Cubit<LoginState> {
               ),
             ),
           );
-
           authenticationProvider.loginUser(
             user: data.user,
             authToken: data.authToken,
           );
           applicationProvider.init();
+          
+          //Register user device token for firebase messaging
+          messaging.getToken().then(
+            (value) {
+              if (value != null) {
+                AuthService.registerDeviceToken(value).then(
+                  (res) => res.fold(
+                    (l) => print(l),
+                    (r) => print(r),
+                  ),
+                );
+              }
+            },
+          );
         },
         (r) {
           emit(

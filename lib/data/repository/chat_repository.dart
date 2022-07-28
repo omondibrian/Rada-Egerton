@@ -24,10 +24,10 @@ class ChatRepository {
   ChatRepository() {
     initChats();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      _chatReceived(message.notification!.body!);
+      _chatReceived(message.data);
     });
     FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async {
-      _chatReceived(message.notification!.body!);
+      _chatReceived(message.data);
     });
   }
 
@@ -42,6 +42,18 @@ class ChatRepository {
   // List<ChatPayload> get forumchat => _forumchats ?? [];
   List<ChatPayload> get groupchat => _groupchats ?? [];
   List<ChatPayload> get privatechat => _privatechats ?? [];
+  
+  Future refresh() async {
+    final res = await ChatService.fetchUserMsgs();
+    res.fold(
+      (chats) {
+        _privatechats = chats["privateChats"];
+        _groupchats = chats["groupChats"];
+        chatsInitialized = true;
+      },
+      (errorMessage) => null,
+    );
+  }
 
   Future<Either<InfoMessage, ErrorMessage>> initChats() async {
     if (!chatsInitialized) {
@@ -136,12 +148,9 @@ class ChatRepository {
     return Left(chat);
   }
 
-  _chatReceived(String chatData) {
+  _chatReceived(Map<String, dynamic> chatData) {
     try {
-      ChatPayload chat = ChatPayload.fromJson(
-        jsonDecode(chatData)["chat"],
-      );
-
+      ChatPayload chat = ChatPayload.fromJson(chatData);
       if (chat.groupsId != null && chat.groupsId.toString().isNotEmpty) {
         if (chat.senderId == GlobalConfig.instance.user.id.toString()) return;
         _groupchats ??= [];

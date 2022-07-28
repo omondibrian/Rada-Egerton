@@ -239,7 +239,9 @@ class AuthService {
 
 
   static Future<Either<bool, ErrorMessage>> registerDeviceToken(String token,{ Function(String)? onRetry}) async {
-    final dio = Dio();
+    final dio = Dio(
+      
+    );
     dio.interceptors.add(
         RetryInterceptor(
           dio: dio,
@@ -253,6 +255,7 @@ class AuthService {
         options: Options(
           headers: {'Authorization': authToken},
           sendTimeout: 50000,
+          receiveTimeout: 10000
         ),
         data: {"token":token}
       );

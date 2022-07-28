@@ -6,6 +6,7 @@ abstract class GroupChatEvent extends Equatable {
 }
 
 class GroupChatStarted extends GroupChatEvent {}
+class GroupChatRefresh extends GroupChatEvent {}
 
 class GroupChatSelected extends GroupChatEvent {
   @override

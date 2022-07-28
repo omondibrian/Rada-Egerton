@@ -62,7 +62,7 @@ class ServiceUtility {
                   message: "Request timeout", status: "Request timeout");
             case DioErrorType.other:
               return const ErrorMessage(
-                  message: "Error", status: "Unexpected error occured");
+                  message: "Unexpected error occured", status: "Unexpected error occured");
           }
         }
       }

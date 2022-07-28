@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
-import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/view/widgets/chat_item.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/view/widgets/private_appbar.dart';
@@ -81,17 +80,21 @@ class _PrivateChatView extends StatelessWidget {
         }
       },
       buildWhen: (previous, current) => current.chats != previous.chats,
-      builder: (context, state) => ListView.builder(
-        controller: controller,
-        itemCount: state.chats.length + 1,
-        //SizedBox provide extra space at the bottom
-        itemBuilder: (BuildContext ctx, index) => index == state.chats.length
-            ? const SizedBox(
-                height: 80,
-              )
-            : PrivateChatItem(
-                chat: state.chats.elementAt(index),
-              ),
+      builder: (context, state) => RefreshIndicator(
+        onRefresh: () async =>
+            context.read<PrivateChatBloc>().add(PrivateChatRefresh()),
+        child: ListView.builder(
+          controller: controller,
+          itemCount: state.chats.length + 1,
+          //SizedBox provide extra space at the bottom
+          itemBuilder: (BuildContext ctx, index) => index == state.chats.length
+              ? const SizedBox(
+                  height: 80,
+                )
+              : PrivateChatItem(
+                  chat: state.chats.elementAt(index),
+                ),
+        ),
       ),
     );
   }

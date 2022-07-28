@@ -51,9 +51,7 @@ class _RadaAppState extends State<RadaApp> {
                   androidChannel.id, androidChannel.name,
                   channelDescription: androidChannel.description,
                   color: Palette.primary,
-                  sound: androidChannel.sound
-                  
-                  ),
+                  sound: androidChannel.sound),
               // TODO: configure ios notification details
             ),
           );
@@ -62,11 +60,22 @@ class _RadaAppState extends State<RadaApp> {
     );
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) {
-        RemoteNotification? notification = message.notification;
-        AndroidNotification? android = message.notification?.android;
-        if (notification != null && android != null) {
-          //TODO:open notification
-          print("---------------------${notification.body}-------------");
+        if (message.data["Groups_id"] != null &&
+            message.data["Groups_id"] != "") {
+          context.pushNamed(
+            AppRoutes.goupChat,
+            params: {
+              "groupId": message.data["Groups_id"].toString(),
+            },
+          );
+        } else if (message.data["recepient"] != null &&
+            message.data["recepient"] != "") {
+          context.pushNamed(
+            AppRoutes.privateChat,
+            params: {
+              "recepientId": message.data["recepient"].toString(),
+            },
+          );
         }
       },
     );

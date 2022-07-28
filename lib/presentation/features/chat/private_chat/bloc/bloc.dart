@@ -46,6 +46,10 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
     on<PrivateChatReceived>(_privateChatReceived);
     on<PrivateChatSend>(_privateChatSend);
     on<RecepientDataRequested>(_initRecepient);
+    on<PrivateChatRefresh>((event, emit) async {
+      await chatRepo.refresh();
+      add(PrivateChatStarted());
+    });
   }
 
   FutureOr<void> _privateChatStarted(

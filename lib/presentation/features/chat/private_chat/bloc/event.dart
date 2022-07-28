@@ -7,6 +7,8 @@ abstract class PrivateChatEvent extends Equatable {
 
 class PrivateChatStarted extends PrivateChatEvent {}
 
+class PrivateChatRefresh extends PrivateChatEvent {}
+
 class PrivateChatSelected extends PrivateChatEvent {
   @override
   List<Object?> get props => [privatechat];

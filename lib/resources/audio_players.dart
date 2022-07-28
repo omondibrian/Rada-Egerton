@@ -7,7 +7,7 @@ class NotificationAudio {
     ..setSourceAsset("sounds/send.ogg");
   static final _messageReceivedAudio = AudioPlayer()
     ..setPlayerMode(PlayerMode.lowLatency)
-    ..setSourceAsset("sounds/received.ogg");
+    ..setSourceAsset("sounds/send.ogg");
   static messageSend() => _messageReceivedAudio.resume();
   static messageReceived() => _messageSendAudio.resume();
 }

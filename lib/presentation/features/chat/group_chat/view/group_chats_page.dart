@@ -68,7 +68,7 @@ class _GroupChatView extends StatelessWidget {
               duration: const Duration(seconds: 10),
               content: Text(
                 state.infoMessage!.message,
-                style:state.infoMessage!.style,
+                style: state.infoMessage!.style,
               ),
             ),
           );
@@ -78,16 +78,21 @@ class _GroupChatView extends StatelessWidget {
         }
       },
       buildWhen: (previous, current) => current.chats != previous.chats,
-      builder: (context, state) => ListView.builder(
-        controller: controller,
-        itemCount: state.chats.length + 1,
-        // Sized box provides a space at the bottom
-        itemBuilder: (BuildContext ctx, index) => index == state.chats.length
-            ? const SizedBox(height: 80)
-            : GroupChatItem(
-                chat: state.chats.elementAt(index),
-              ),
-        padding: const EdgeInsets.only(bottom: 30),
+      builder: (context, state) => RefreshIndicator(
+        onRefresh: () async =>
+            context.read<GroupBloc>().add(GroupChatRefresh()),
+        child: ListView.builder(
+          // itemExtent: ,
+          controller: controller,
+          itemCount: state.chats.length + 1,
+          // Sized box provides a space at the bottom
+          itemBuilder: (BuildContext ctx, index) => index == state.chats.length
+              ? const SizedBox(height: 80)
+              : GroupChatItem(
+                  chat: state.chats.elementAt(index),
+                ),
+          padding: const EdgeInsets.only(bottom: 30),
+        ),
       ),
     );
   }

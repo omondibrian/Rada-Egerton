@@ -49,6 +49,10 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
     on<GroupChatSend>(_groupChatSend);
     on<GroupUnsubscribe>(_groupUnsubscribe);
     on<DeleteGroup>(_groupDeleteGroup);
+    on<GroupChatRefresh>((event, emit) async {
+      await chatRepo.refresh();
+      add(GroupChatStarted());
+    });
   }
 
   FutureOr<void> _groupChatStarted(
