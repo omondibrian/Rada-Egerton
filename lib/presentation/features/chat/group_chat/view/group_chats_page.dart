@@ -82,7 +82,7 @@ class _GroupChatView extends StatelessWidget {
         onRefresh: () async =>
             context.read<GroupBloc>().add(GroupChatRefresh()),
         child: ListView.builder(
-          // itemExtent: ,
+          physics: const AlwaysScrollableScrollPhysics(),
           controller: controller,
           itemCount: state.chats.length + 1,
           // Sized box provides a space at the bottom

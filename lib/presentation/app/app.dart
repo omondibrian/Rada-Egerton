@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -38,6 +40,34 @@ class _RadaAppState extends State<RadaApp> {
   @override
   void initState() {
     super.initState();
+    flutterLocalNotificationsPlugin.initialize(
+        const InitializationSettings(
+          android: AndroidInitializationSettings("launch_background"),
+        ), onSelectNotification: (payload) {
+      if (payload == null) return;
+      try {
+        Map data = jsonDecode(payload);
+        if (data["Groups_id"] != null && data["Groups_id"] != "") {
+          context.pushNamed(
+            AppRoutes.goupChat,
+            params: {
+              "groupId": data["Groups_id"],
+            },
+          );
+        } else if (data["sender_id"] != null && data["sender_id"] != "") {
+         
+          context.pushNamed(
+            AppRoutes.privateChat,
+            params: {
+              "recepientId": data["sender_id"],
+            },
+          );
+        } else {
+          print("Not chat");
+          // TODO: show notification
+        }
+      } catch (e) {}
+    });
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) {
         RemoteNotification? notification = message.notification;
@@ -48,16 +78,21 @@ class _RadaAppState extends State<RadaApp> {
             notification.body,
             NotificationDetails(
               android: AndroidNotificationDetails(
-                  androidChannel.id, androidChannel.name,
-                  channelDescription: androidChannel.description,
-                  color: Palette.primary,
-                  sound: androidChannel.sound),
+                androidChannel.id,
+                androidChannel.name,
+                channelDescription: androidChannel.description,
+                color: Palette.primary,
+                sound: androidChannel.sound,
+                icon: "launch_background",
+              ),
               // TODO: configure ios notification details
             ),
+            payload: jsonEncode(message.data),
           );
         }
       },
     );
+
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) {
         if (message.data["Groups_id"] != null &&

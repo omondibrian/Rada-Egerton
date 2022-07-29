@@ -145,7 +145,7 @@ class ChatService {
         "groupId": groupId,
         "reply": reply,
         "status": "0",
-        "receipient": "",
+        // "receipient": "",
       };
 
       if (picture != null) {

@@ -11,20 +11,20 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message ${message.messageId}');
 }
 
-AndroidNotificationChannel androidChannel = const AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  description:
-      'This channel is used for important notifications.', // description
-  importance: Importance.high,
-  playSound: true,
-  //TODO: configure sound
-);
-
+late AndroidNotificationChannel androidChannel;
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 List<String> subscribedGroups = [];
 
 void initMessaging(RadaApplicationProvider applicationProvider) async {
+  androidChannel = const AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    description:
+        'This channel is used for important notifications.', // description
+    importance: Importance.high,
+    playSound: true,
+    //TODO: configure sound
+  );
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   messaging.setForegroundNotificationPresentationOptions(
@@ -32,6 +32,7 @@ void initMessaging(RadaApplicationProvider applicationProvider) async {
     badge: true,
     sound: true,
   );
+  messaging.subscribeToTopic("Notification");
 
   applicationProvider.addListener(
     () {
@@ -53,9 +54,8 @@ void initMessaging(RadaApplicationProvider applicationProvider) async {
     },
   );
 
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   if (!kIsWeb) {
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
     /// Create an Android Notification Channel.
     ///
     /// We use this channel in the `AndroidManifest.xml` file to override the

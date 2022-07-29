@@ -84,6 +84,7 @@ class _PrivateChatView extends StatelessWidget {
         onRefresh: () async =>
             context.read<PrivateChatBloc>().add(PrivateChatRefresh()),
         child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           controller: controller,
           itemCount: state.chats.length + 1,
           //SizedBox provide extra space at the bottom

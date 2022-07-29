@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:pusher_client/pusher_client.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
-import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/services/chat_service.dart';
 import 'package:rada_egerton/resources/audio_players.dart';
 import 'package:rada_egerton/resources/config.dart';
@@ -42,7 +40,7 @@ class ChatRepository {
   // List<ChatPayload> get forumchat => _forumchats ?? [];
   List<ChatPayload> get groupchat => _groupchats ?? [];
   List<ChatPayload> get privatechat => _privatechats ?? [];
-  
+
   Future refresh() async {
     final res = await ChatService.fetchUserMsgs();
     res.fold(
@@ -150,7 +148,17 @@ class ChatRepository {
 
   _chatReceived(Map<String, dynamic> chatData) {
     try {
-      ChatPayload chat = ChatPayload.fromJson(chatData);
+      ChatPayload chat = ChatPayload(
+        id: int.parse(chatData["_id"].toString()),
+        message: chatData["message"],
+        imageUrl: chatData["imageUrl"]?.isEmpty ? null : chatData["imageUrl"],
+        senderId: chatData["sender_id"],
+        groupsId: chatData["Groups_id"],
+        reply: chatData["reply"],
+        status: chatData["status"],
+        recipient: chatData["reciepient"],
+        role: chatData["user_type"],
+      );
       if (chat.groupsId != null && chat.groupsId.toString().isNotEmpty) {
         if (chat.senderId == GlobalConfig.instance.user.id.toString()) return;
         _groupchats ??= [];

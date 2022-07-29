@@ -138,6 +138,7 @@ class GroupSessionsTab extends StatelessWidget {
               );
             }
             return ListView.builder(
+              physics:const AlwaysScrollableScrollPhysics(),
               itemBuilder: conversationBuilder,
               itemCount: groups.length,
             );

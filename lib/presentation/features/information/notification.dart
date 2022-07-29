@@ -4,6 +4,7 @@ import 'package:rada_egerton/data/entities/news_dto.dart';
 import 'package:rada_egerton/data/services/news_location_service.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
 import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
+import 'package:rada_egerton/resources/utils/time_ago.dart';
 
 class UserNotification extends StatefulWidget {
   const UserNotification({Key? key}) : super(key: key);
@@ -24,8 +25,8 @@ class _UserNotificationState extends State<UserNotification> {
       (r) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar( behavior: SnackBarBehavior.floating, 
-
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
             content: Text(
               r.message,
               style: const TextStyle(color: Colors.red),
@@ -123,8 +124,8 @@ class _UserNotificationState extends State<UserNotification> {
         style: Theme.of(context).textTheme.bodyText1,
       ),
       trailing: Text(
-        "1h",
         //TODO: add time
+        "1h",
         // TimeAgo.timeAgoSinceDate(notification.timeCreated),
         style: Theme.of(context).textTheme.subtitle1,
       ),

@@ -51,6 +51,7 @@ class _PrivateChatTabView extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text("An error occured"),
                 TextButton(
@@ -72,6 +73,7 @@ class _PrivateChatTabView extends StatelessWidget {
           );
         }
         return ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (_, index) => _ChatItem(
             state.conversations[index],
           ),
@@ -103,9 +105,11 @@ class _ChatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String recipientId = chat.recipient!;
+    String recipientId =
+        GlobalConfig.instance.user.id.toString() == chat.recipient
+            ? chat.senderId!
+            : chat.recipient!;
     void _openChat() {
-      if (GlobalConfig.instance.user.id.toString() == recipientId) return;
       context.pushNamed(
         AppRoutes.privateChat,
         params: {
@@ -120,7 +124,7 @@ class _ChatItem extends StatelessWidget {
           .read<RadaApplicationProvider>()
           .getUser(
             userId: int.parse(
-              chat.recipient!,
+              recipientId,
             ),
             retryLog: (value) => ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
