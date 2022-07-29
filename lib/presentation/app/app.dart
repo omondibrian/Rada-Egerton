@@ -1,8 +1,13 @@
+import 'dart:convert';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
+import 'package:rada_egerton/main.dart';
 import 'package:rada_egerton/presentation/features/chat/group_chat/view/group_chats_page.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/view/private_chats_page.dart';
 import 'package:rada_egerton/presentation/features/contributors.dart';
@@ -24,8 +29,92 @@ import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/constants.dart';
 import 'package:rada_egerton/resources/theme.dart';
 
-class RadaApp extends StatelessWidget {
+class RadaApp extends StatefulWidget {
   const RadaApp({Key? key}) : super(key: key);
+
+  @override
+  State<RadaApp> createState() => _RadaAppState();
+}
+
+class _RadaAppState extends State<RadaApp> {
+  @override
+  void initState() {
+    super.initState();
+    flutterLocalNotificationsPlugin.initialize(
+        const InitializationSettings(
+          android: AndroidInitializationSettings("launch_background"),
+        ), onSelectNotification: (payload) {
+      if (payload == null) return;
+      try {
+        Map data = jsonDecode(payload);
+        if (data["Groups_id"] != null && data["Groups_id"] != "") {
+          context.pushNamed(
+            AppRoutes.goupChat,
+            params: {
+              "groupId": data["Groups_id"],
+            },
+          );
+        } else if (data["sender_id"] != null && data["sender_id"] != "") {
+         
+          context.pushNamed(
+            AppRoutes.privateChat,
+            params: {
+              "recepientId": data["sender_id"],
+            },
+          );
+        } else {
+          print("Not chat");
+          // TODO: show notification
+        }
+      } catch (e) {}
+    });
+    FirebaseMessaging.onMessage.listen(
+      (RemoteMessage message) {
+        RemoteNotification? notification = message.notification;
+        if (notification != null) {
+          flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                androidChannel.id,
+                androidChannel.name,
+                channelDescription: androidChannel.description,
+                color: Palette.primary,
+                sound: androidChannel.sound,
+                icon: "launch_background",
+              ),
+              // TODO: configure ios notification details
+            ),
+            payload: jsonEncode(message.data),
+          );
+        }
+      },
+    );
+
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      (RemoteMessage message) {
+        if (message.data["Groups_id"] != null &&
+            message.data["Groups_id"] != "") {
+          context.pushNamed(
+            AppRoutes.goupChat,
+            params: {
+              "groupId": message.data["Groups_id"].toString(),
+            },
+          );
+        } else if (message.data["recepient"] != null &&
+            message.data["recepient"] != "") {
+          context.pushNamed(
+            AppRoutes.privateChat,
+            params: {
+              "recepientId": message.data["recepient"].toString(),
+            },
+          );
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +126,6 @@ class RadaApp extends StatelessWidget {
         String location = state.location;
         AuthenticationStatus status =
             context.read<AuthenticationProvider>().status;
-
         //Redirect authenticated trying to access the app to login
         if (location.startsWith("/app") &&
             status != AuthenticationStatus.authenticated) {

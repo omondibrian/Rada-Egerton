@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
+import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/data/entities/user_roles.dart';
@@ -235,4 +236,45 @@ class AuthService {
       );
     }
   }
+
+
+  static Future<Either<bool, ErrorMessage>> registerDeviceToken(String token,{ Function(String)? onRetry}) async {
+    final dio = Dio(
+      
+    );
+    dio.interceptors.add(
+        RetryInterceptor(
+          dio: dio,
+          logPrint: onRetry,
+        ),
+      );
+    try {
+      final authToken = GlobalConfig.instance.authToken;
+      final response = await dio.post(
+        "$_hostUrl/api/v1/admin/user/device_token",
+        options: Options(
+          headers: {'Authorization': authToken},
+          sendTimeout: 50000,
+          receiveTimeout: 10000
+        ),
+        data: {"token":token}
+      );
+     
+      return const Left(
+        true
+      );
+    } catch (e, stackTrace) {
+      _firebaseCrashlytics.recordError(
+        e,
+        stackTrace,
+        reason: 'Error while registering device token',
+        fatal: true,
+      );
+      return Right(
+        ServiceUtility.handleDioExceptions(e),
+      );
+    }
+  }
+
+
 }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -58,16 +57,21 @@ class PrivateTabChatBloc
   }
 
   List<ChatPayload> _conversations(List<ChatPayload> chats) {
-    List<String> ids = [];
+    Set<String> ids = {};
     List<ChatPayload> conversations = [];
-    String id = GlobalConfig.instance.user.id.toString();
     for (var c in chats) {
-      if (c.recipient != id &&
-          !ids.contains(c.recipient) &&
-          c.groupsId == null) {
-        ids.add(c.recipient!);
-        conversations.add(c);
+      if (c.recipient != null && c.recipient!.isNotEmpty) {
+        String recipientId =
+            GlobalConfig.instance.user.id.toString() == c.recipient
+                ? c.senderId!
+                : c.recipient!;
+        ids.add(recipientId);
       }
+    }
+    for (var id in ids) {
+      ChatPayload chat =
+          chats.firstWhere((c) => c.recipient == id || c.senderId == id);
+      conversations.add(chat);
     }
     return conversations;
   }

@@ -208,7 +208,7 @@ class CounselingService {
       String imageFileName = imageFile!.path.split('/').last;
       FormData formData = FormData.fromMap(
         {
-          "profilePic": await MultipartFile.fromFile(imageFile.path,
+          "image": await MultipartFile.fromFile(imageFile.path,
               filename: imageFileName),
           "title": name,
           "description": desc,

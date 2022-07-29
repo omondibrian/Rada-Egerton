@@ -34,8 +34,8 @@ class Dashboard extends StatelessWidget {
                   left: 10, top: 2.0, right: 2.0, bottom: 2.0),
           leading: SvgPicture.asset(
             dashboardItems[index]['leadingIcon'],
-            width: SizeConfig.isTabletWidth ? 90 : 60,
-            height: SizeConfig.isTabletWidth ? 60 : 40,
+            width:  60,
+            height:  40,
           ),
           title: Text(
             dashboardItems[index]['title'],

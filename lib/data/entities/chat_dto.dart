@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 
 enum ChatType { peer, group, forum }
@@ -79,7 +81,10 @@ class ChatPayload extends Equatable {
         "reciepient": recipient,
         "user_type": role,
       };
-
+  @override
+  String toString() {
+    return jsonEncode(toMap());
+  }
   @override
   List<Object?> get props => [
         id,
