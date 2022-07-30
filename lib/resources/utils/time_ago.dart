@@ -1,11 +1,11 @@
 class TimeAgo {
-  static String timeAgoSinceDate(DateTime notificationDate,
-      {bool numericDates = true}) {
+  static String timeAgoSinceDate(DateTime date, {bool numericDates = false}) {
     final currentDate = DateTime.now();
-    final difference = currentDate.difference(notificationDate);
-
+    final difference = currentDate.difference(date);
     if (difference.inDays > 8) {
-      return notificationDate.toString();
+      String m = date.month.toString().padLeft(2, "0");
+      String day = date.day.toString().padLeft(2, "0");
+      return "${date.year}/$m/$day";
     } else if ((difference.inDays / 7).floor() >= 1) {
       return (numericDates) ? '1 week ago' : 'Last week';
     } else if (difference.inDays >= 2) {

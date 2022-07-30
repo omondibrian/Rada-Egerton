@@ -28,7 +28,7 @@ class ChatService {
       );
       Iterable groupChats = result.data["data"]["payload"]["groupMsgs"];
       Iterable privateChats = result.data["data"]["payload"]["peerMsgs"];
-
+      print(privateChats);
       Map<String, List<ChatPayload>> chats = {
         "groupChats": List<ChatPayload>.from(
           groupChats.map((c) => ChatPayload.fromJson(c)),

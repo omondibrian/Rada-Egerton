@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 enum ChatType { peer, group, forum }
 
@@ -17,6 +18,7 @@ class ChatPayload extends Equatable {
     this.role,
     this.picture,
     this.video,
+    required this.createdAt,
   });
 
   final int? id;
@@ -28,10 +30,18 @@ class ChatPayload extends Equatable {
   final String? status;
   final String? recipient;
   final String? role;
+  final DateTime createdAt;
   // final String? media;
   //formdata
   final String? picture;
   final String? video;
+  String get date {
+    String m = createdAt.month.toString().padLeft(2, "0");
+    String day = createdAt.day.toString().padLeft(2, "0");
+    String h = createdAt.hour.toString().padLeft(2, "0");
+    String min = createdAt.minute.toString().padLeft(2, "0");
+    return "${createdAt.year}-$m-$day $h:$min";
+  }
 
   factory ChatPayload.fromJson(Map<String, dynamic> json) => ChatPayload(
         id: json["_id"],
@@ -43,19 +53,22 @@ class ChatPayload extends Equatable {
         status: json["status"],
         recipient: json["reciepient"],
         role: json["user_type"],
+        createdAt: DateTime.parse(json["created_at"]),
       );
-  ChatPayload copyWith(
-      {int? id,
-      String? message,
-      String? imageUrl,
-      String? senderId,
-      dynamic groupsId,
-      String? reply,
-      String? status,
-      String? recipient,
-      String? role,
-      String? video,
-      String? picture}) {
+  ChatPayload copyWith({
+    int? id,
+    String? message,
+    String? imageUrl,
+    String? senderId,
+    dynamic groupsId,
+    String? reply,
+    String? status,
+    String? recipient,
+    String? role,
+    String? video,
+    String? picture,
+    DateTime? createdAt,
+  }) {
     return ChatPayload(
       id: id ?? this.id,
       message: message ?? this.message,
@@ -67,6 +80,7 @@ class ChatPayload extends Equatable {
       recipient: recipient ?? this.recipient,
       video: video ?? this.video,
       picture: picture ?? this.picture,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -80,11 +94,13 @@ class ChatPayload extends Equatable {
         "status": status,
         "reciepient": recipient,
         "user_type": role,
+        "created_at": createdAt.toIso8601String(),
       };
   @override
   String toString() {
     return jsonEncode(toMap());
   }
+
   @override
   List<Object?> get props => [
         id,

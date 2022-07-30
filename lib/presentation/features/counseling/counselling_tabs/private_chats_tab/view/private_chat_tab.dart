@@ -1,3 +1,4 @@
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
@@ -15,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:rada_egerton/resources/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
+import 'package:rada_egerton/resources/utils/time_ago.dart';
 
 class PrivateSessionsTab extends StatelessWidget {
   const PrivateSessionsTab({Key? key}) : super(key: key);
@@ -179,6 +181,11 @@ class _ChatItem extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                   fontSize: SizeConfig.isTabletWidth ? 16 : 14,
                 ),
+              ),
+              trailing: Text(
+                lastChat != null
+                    ? TimeAgo.timeAgoSinceDate(lastChat.createdAt)
+                    : "",
               ),
             );
           }),

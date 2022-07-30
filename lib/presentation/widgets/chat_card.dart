@@ -102,7 +102,11 @@ class ChatCard extends StatelessWidget {
                       style: const TextStyle(color: Colors.black),
                     )
                   ],
-                )
+                ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Text(chat.date),
+          )
         ],
       ),
     );

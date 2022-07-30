@@ -10,7 +10,15 @@ class News extends Equatable {
     required this.newsCategoriesId,
     required this.adminUsersId,
     required this.status,
+    required this.createdAt,
   });
+  String get date {
+    String m = createdAt.month.toString().padLeft(2, "0");
+    String day = createdAt.day.toString().padLeft(2, "0");
+    String h = createdAt.hour.toString().padLeft(2, "0");
+    String min = createdAt.minute.toString().padLeft(2, "0");
+    return "${createdAt.year}-$m-$day $h:$min";
+  }
 
   int id;
   String title;
@@ -19,6 +27,7 @@ class News extends Equatable {
   String newsCategoriesId;
   String adminUsersId;
   String status;
+  DateTime createdAt;
 
   factory News.fromJson(Map<String, dynamic> json) => News(
         id: json["_id"],
@@ -28,6 +37,7 @@ class News extends Equatable {
         newsCategoriesId: json["NewsCategories_id"],
         adminUsersId: json["Admin_Users_id"],
         status: json["status"],
+        createdAt: DateTime.parse(json["created_at"]),
       );
 
   ///absulute url
@@ -41,6 +51,7 @@ class News extends Equatable {
         "NewsCategories_id": newsCategoriesId,
         "Admin_Users_id": adminUsersId,
         "status": status,
+        "created_at": createdAt.toIso8601String(),
       };
 
   @override

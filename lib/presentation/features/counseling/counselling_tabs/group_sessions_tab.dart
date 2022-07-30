@@ -16,6 +16,7 @@ import 'package:rada_egerton/resources/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:rada_egerton/resources/utils/time_ago.dart';
 
 class GroupSessionsTab extends StatelessWidget {
   const GroupSessionsTab({Key? key}) : super(key: key);
@@ -79,6 +80,11 @@ class GroupSessionsTab extends StatelessWidget {
               color: Theme.of(ctx).primaryColor,
               fontSize: SizeConfig.isTabletWidth ? 16 : 14,
             ),
+          ),
+          trailing: Text(
+            lastChat != null
+                ? TimeAgo.timeAgoSinceDate(lastChat.createdAt)
+                : "",
           ),
         ),
       );

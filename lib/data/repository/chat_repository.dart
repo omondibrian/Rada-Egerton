@@ -158,6 +158,7 @@ class ChatRepository {
         status: chatData["status"],
         recipient: chatData["reciepient"],
         role: chatData["user_type"],
+        createdAt: DateTime.parse(chatData["created_at"]),
       );
       if (chat.groupsId != null && chat.groupsId.toString().isNotEmpty) {
         if (chat.senderId == GlobalConfig.instance.user.id.toString()) return;
