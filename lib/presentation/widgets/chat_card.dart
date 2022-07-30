@@ -41,7 +41,7 @@ class ChatCard extends StatelessWidget {
               // Text
               ? Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
+                  child: SelectableText(
                     chat.message,
                     style: const TextStyle(color: Colors.black),
                   ),
@@ -97,7 +97,7 @@ class ChatCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(
+                    SelectableText(
                       chat.message,
                       style: const TextStyle(color: Colors.black),
                     )

@@ -118,6 +118,8 @@ class _ChatItem extends StatelessWidget {
       );
     }
 
+    ChatPayload? lastChat =
+        context.read<ChatRepository>().lastPrivateChat(recipientId);
     Future<User?> initProfile() async {
       User? user;
       await context
@@ -170,7 +172,9 @@ class _ChatItem extends StatelessWidget {
               ),
               title: Text(user?.name ?? "Loading..."),
               subtitle: Text(
-                "say something",
+                lastChat?.message ?? "say something",
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: SizeConfig.isTabletWidth ? 16 : 14,

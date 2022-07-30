@@ -174,6 +174,25 @@ class ChatRepository {
     }
   }
 
+  ChatPayload? lastPrivateChat(String userId) {
+    for (var i = privatechat.length - 1; i >= 0; --i) {
+      if (privatechat[i].recipient == userId ||
+          privatechat[i].senderId == userId) {
+        return privatechat[i];
+      }
+    }
+    return null;
+  }
+
+  ChatPayload? lastGroupChat(String groupId) {
+    for (var i = groupchat.length - 1; i >= 0; --i) {
+      if (groupchat[i].groupsId == groupId) {
+        return groupchat[i];
+      }
+    }
+    return null;
+  }
+
   dispose() {
     _privateChatControler.close();
     _groupChatControler.close();

@@ -62,7 +62,8 @@ class ServiceUtility {
                   message: "Request timeout", status: "Request timeout");
             case DioErrorType.other:
               return const ErrorMessage(
-                  message: "Unexpected error occured", status: "Unexpected error occured");
+                  message: "Unexpected error occured",
+                  status: "Unexpected error occured");
           }
         }
       }
@@ -153,7 +154,10 @@ extension X on InfoMessage {
 
     return Colors.red[700] ?? Colors.red;
   }
-   TextStyle get style {
+
+  TextStyle get style {
     return TextStyle(color: messageTypeColor);
   }
 }
+
+
