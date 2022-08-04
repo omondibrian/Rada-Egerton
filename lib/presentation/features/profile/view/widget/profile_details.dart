@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/profile/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/widgets/button.dart';
-import 'package:rada_egerton/resources/config.dart';
 
 class ProfileDetails extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -97,7 +97,7 @@ class ProfileDetails extends StatelessWidget {
                     ),
                   ),
                   if (!state.readOnly &&
-                      state.user?.id == GlobalConfig.instance.user.id)
+                      state.user?.id == AuthenticationProvider.instance.user.id)
                     Row(
                       children: [
                         Expanded(

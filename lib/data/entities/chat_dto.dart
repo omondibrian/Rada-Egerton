@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-enum ChatType { peer, group, forum }
 
 class ChatPayload extends Equatable {
   const ChatPayload({

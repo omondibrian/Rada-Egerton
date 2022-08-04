@@ -6,7 +6,10 @@ class InformationCategory extends Equatable {
   final String name;
   final String id;
   const InformationCategory(this.id, this.name);
-
+  factory InformationCategory.fromJson(json) => InformationCategory(
+        json["_id"].toString(),
+        json["name"],
+      );
   @override
   List<Object?> get props => [
         name,

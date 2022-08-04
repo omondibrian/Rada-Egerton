@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/complaint_dto.dart';
-import 'package:rada_egerton/data/services/issues.dart';
+import 'package:rada_egerton/data/rest/client.dart';
 import 'package:rada_egerton/presentation/widgets/button.dart';
 
 class Issues extends StatefulWidget {
@@ -15,10 +15,9 @@ class _IssuesState extends State<Issues> {
   int? _selectedIssueCategory = 0;
   final TextEditingController _messageController = TextEditingController();
   List<IssueCategory> _issueCategories = [];
-  final IssueServiceProvider _issueService = IssueServiceProvider();
 
   Future<void> init() async {
-    final result = await _issueService.getIssueCategories();
+    final result = await Client.content.issueCategory();
     result.fold(
       (issueCategories) => setState(() {
         _issueCategories = issueCategories;
@@ -48,7 +47,7 @@ class _IssuesState extends State<Issues> {
           duration: const Duration(seconds: 10),
         ),
       );
-      final result = await _issueService.createNewIssue(
+      final result = await Client.content.createIssue(
         {
           "issueCategoryID": _selectedIssueCategory.toString(),
           "issue": _messageController.text,

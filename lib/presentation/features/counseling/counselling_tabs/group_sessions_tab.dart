@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/group_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/providers/counseling_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
@@ -24,7 +25,7 @@ class GroupSessionsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final appProvider = Provider.of<RadaApplicationProvider>(context);
     bool isCounsellor = context.watch<CounsellingProvider>().isCounsellor(
-          userId: GlobalConfig.instance.user.id,
+          userId: AuthenticationProvider.instance.user.id,
         );
 
     if (appProvider.groupStatus == ServiceStatus.initial) {

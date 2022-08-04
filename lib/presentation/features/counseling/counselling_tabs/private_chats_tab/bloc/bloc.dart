@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 part 'state.dart';
@@ -62,7 +62,7 @@ class PrivateTabChatBloc
     for (var c in chats) {
       if (c.recipient != null && c.recipient!.isNotEmpty) {
         String recipientId =
-            GlobalConfig.instance.user.id.toString() == c.recipient
+            AuthenticationProvider.instance.user.id.toString() == c.recipient
                 ? c.senderId!
                 : c.recipient!;
         ids.add(recipientId);

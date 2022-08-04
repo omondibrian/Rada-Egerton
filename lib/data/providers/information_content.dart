@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:rada_egerton/data/entities/information_data.dart';
-import 'package:rada_egerton/data/services/content_service.dart';
+import 'package:rada_egerton/data/rest/client.dart';
 import 'package:rada_egerton/data/status.dart';
 
 class InformationProvider with ChangeNotifier {
@@ -13,11 +13,11 @@ class InformationProvider with ChangeNotifier {
   }
 
   Future<void> init() async {
-      status = ServiceStatus.loading;
-      notifyListeners();
+    status = ServiceStatus.loading;
+    notifyListeners();
     if (informationData == null && informationCategory == null) {
       if (informationCategory == null) {
-        final result = await ContentService.getInformationCategory();
+        final result = await Client.content.category();
         result.fold(
           (data) {
             informationCategory = data;
@@ -27,7 +27,7 @@ class InformationProvider with ChangeNotifier {
       }
 
       if (informationData == null) {
-        final dataResult = await ContentService.getInformation();
+        final dataResult = await Client.content.all();
         dataResult.fold(
           (data) {
             informationData = data;
@@ -45,7 +45,7 @@ class InformationProvider with ChangeNotifier {
   }
 
   Future<void> refresh() async {
-    final result = await ContentService.getInformationCategory();
+    final result = await Client.content.category();
     result.fold(
       (data) {
         informationCategory = data;
@@ -53,7 +53,7 @@ class InformationProvider with ChangeNotifier {
       (error) {},
     );
 
-    final dataResult = await ContentService.getInformation();
+    final dataResult = await Client.content.all();
     dataResult.fold(
       (data) {
         informationData = data;

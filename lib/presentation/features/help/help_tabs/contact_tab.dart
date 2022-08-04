@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/contacts_dto.dart';
+import 'package:rada_egerton/data/rest/client.dart';
 import 'package:rada_egerton/data/services/news_location_service.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
 import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
@@ -18,8 +19,8 @@ class _ContactTabState extends State<ContactTab> {
   NewsAndLocationServiceProvider service = NewsAndLocationServiceProvider();
 
   Future<void> init() async {
-    final result = await service.getContacts(
-      retryLog: (_) => ScaffoldMessenger.of(context).showSnackBar(
+    final result = await Client.content.contacts(
+      (_) => ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           behavior: SnackBarBehavior.floating,
           content: Text(

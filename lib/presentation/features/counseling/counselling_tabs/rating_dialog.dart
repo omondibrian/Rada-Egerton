@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rada_egerton/data/services/counseling_service.dart';
+import 'package:rada_egerton/data/rest/client.dart';
+
 import 'package:rating_dialog/rating_dialog.dart';
 
 class CounsellorRatingDialog extends StatelessWidget {
@@ -34,17 +35,18 @@ class CounsellorRatingDialog extends StatelessWidget {
       submitButtonText: 'Submit',
       onSubmitted: (response) async {
         ScaffoldMessenger.of(context).showSnackBar(
-          const   SnackBar( behavior: SnackBarBehavior.floating, 
-
+          const SnackBar(
+            behavior: SnackBarBehavior.floating,
             content: Text(
               "Submitting, please wait",
               style: TextStyle(color: Colors.greenAccent),
             ),
           ),
         );
-        await CounselingService.rateCounsellor(
+        await Client.counselling.rateCounsellor(
           counsellorId,
           response.rating,
+          
         );
       },
     );

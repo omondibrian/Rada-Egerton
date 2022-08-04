@@ -5,7 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
-import 'package:rada_egerton/data/services/auth_service.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
+import 'package:rada_egerton/data/rest/client.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
@@ -21,7 +22,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     required this.provider,
   }) : super(const ProfileState()) {
     if (userId == null) {
-      final user = GlobalConfig.instance.user;
+      final user = AuthenticationProvider.instance.user;
       emit(
         state.copyWith(
           user: user,
@@ -43,7 +44,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       ),
     );
     final res = await provider.getUser(
-      userId: userId ?? GlobalConfig.instance.user.id,
+      userId: userId ?? AuthenticationProvider.instance.user.id,
       retryLog: (_) => emit(
         state.copyWith(
           message: InfoMessage(
@@ -106,7 +107,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         ),
       ),
     );
-    final res = await AuthService.updateProfile(
+    final res = await Client.users.profileUpdate(
       state.user!.copyWith(
         email: state.emailUpdate,
         phone: state.phoneUpdate,
@@ -122,7 +123,7 @@ class ProfileCubit extends Cubit<ProfileState> {
             message: InfoMessage("Profile Updated", MessageType.success),
           ),
         );
-        GlobalConfig.instance.inialize(user: user);
+        AuthenticationProvider.instance.inialize(user: user);
       },
       (error) => emit(
         state.copyWith(
@@ -152,7 +153,7 @@ class ProfileCubit extends Cubit<ProfileState> {
             filename: imageFileName),
       },
     );
-    final res = await AuthService.updateProfileImage(formData);
+    final res = await Client.users.updateImage(formData);
     res.fold(
       (user) {
         emit(
@@ -165,7 +166,7 @@ class ProfileCubit extends Cubit<ProfileState> {
             status: ServiceStatus.submissionSucess,
           ),
         );
-        GlobalConfig.instance.inialize(user: user);
+        AuthenticationProvider.instance.inialize(user: user);
       },
       (error) => emit(
         state.copyWith(

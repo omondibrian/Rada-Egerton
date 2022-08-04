@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/widgets/chat_card.dart';
-import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/theme.dart';
 import 'package:swipeable_tile/swipeable_tile.dart';
 
@@ -25,7 +25,6 @@ class PrivateChatItem extends StatelessWidget {
       color: Colors.transparent,
       swipeThreshold: 0.2,
       direction: SwipeDirection.startToEnd,
-
       onSwiped: (_) => context.read<PrivateChatBloc>().add(
             PrivateChatSelected(chat.copyWith()),
           ),
@@ -75,13 +74,14 @@ class PrivateChatItem extends StatelessWidget {
             ),
         child: Row(
           mainAxisAlignment: chat.senderId.toString() ==
-                  GlobalConfig.instance.user.id.toString()
+                  AuthenticationProvider.instance.user.id.toString()
               ? MainAxisAlignment.end
               : MainAxisAlignment.start,
           children: [
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-              child: chat.senderId == GlobalConfig.instance.user.id.toString()
+              child: chat.senderId ==
+                      AuthenticationProvider.instance.user.id.toString()
                   ? ChatCard(
                       chat,
                       Palette.sendMessage,

@@ -2,19 +2,18 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:pusher_client/pusher_client.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
-import 'package:rada_egerton/data/services/chat_service.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
+import 'package:rada_egerton/data/rest/client.dart';
 import 'package:rada_egerton/resources/audio_players.dart';
-import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 class ChatRepository {
   List<ChatPayload>? _groupchats;
   List<ChatPayload>? _privatechats;
   bool chatsInitialized = false;
-  List<Channel> groupChannels = [];
 
   final _groupChatControler = StreamController<ChatPayload>.broadcast();
   final _privateChatControler = StreamController<ChatPayload>.broadcast();
@@ -42,7 +41,7 @@ class ChatRepository {
   List<ChatPayload> get privatechat => _privatechats ?? [];
 
   Future refresh() async {
-    final res = await ChatService.fetchUserMsgs();
+    final res = await Client.chat.chats();
     res.fold(
       (chats) {
         _privatechats = chats["privateChats"];
@@ -56,7 +55,7 @@ class ChatRepository {
   Future<Either<InfoMessage, ErrorMessage>> initChats() async {
     if (!chatsInitialized) {
       try {
-        final res = await ChatService.fetchUserMsgs();
+        final res = await Client.chat.chats();
         res.fold(
           (chats) {
             _privatechats = chats["privateChats"];
@@ -83,31 +82,34 @@ class ChatRepository {
     File? video,
     Function(String)? retryLog,
   }) async {
-    //chatStream
-    final res = await ChatService.sendGroupChat(
-      message: message,
-      groupId: groupId,
-      senderId: senderId,
-      reply: reply,
-      picture: picture,
-      video: video,
-      onRetry: retryLog,
+    Map<String, dynamic> data = {
+      'message': message,
+      'sender_id': senderId,
+      "groupId": groupId,
+      "reply": reply,
+      "status": "0",
+      // "receipient": "",
+    };
+
+    if (picture != null) {
+      data["image"] = await MultipartFile.fromFile(
+        picture.path,
+        filename: picture.path.split("/").last,
+      );
+    }
+    final res = await Client.chat.sendGroupChat(
+      FormData.fromMap(data),
+      retryLog,
     );
-    late ChatPayload chat;
-    ErrorMessage? info;
     res.fold(
       (chat_) {
         NotificationAudio.messageSend();
-        chat = chat_;
+        _groupchats ??= [];
+        _groupchats!.add(chat_);
       },
-      (err) => info = err,
+      (err) => {},
     );
-    if (info != null) {
-      return Right(info!);
-    }
-    _groupchats ??= [];
-    _groupchats!.add(chat);
-    return Left(chat);
+    return res;
   }
 
   Future<Either<ChatPayload, ErrorMessage>> sendPrivateChat({
@@ -119,31 +121,34 @@ class ChatRepository {
     File? video,
     Function(String)? retryLog,
   }) async {
-    //chatStream
-    final res = await ChatService.sendPrivateMessage(
-      message: message,
-      recipientId: recipientId,
-      senderId: senderId,
-      reply: reply,
-      picture: picture,
-      video: video,
-      onRetry: retryLog,
-    );
-    late ChatPayload chat;
-    ErrorMessage? info;
+    Map<String, dynamic> data = {
+      'message': message,
+      'sender_id': senderId,
+      "receipient": recipientId,
+      "reply": reply,
+      "status": "0",
+      //TODO:Remove userType
+      "user_type": "counsellor"
+    };
+
+    if (picture != null) {
+      data["image"] = await MultipartFile.fromFile(
+        picture.path,
+        filename: picture.path.split("/").last,
+      );
+    }
+
+    FormData formData = FormData.fromMap(data);
+    final res = await Client.chat.sendPrivateChat(formData, retryLog);
     res.fold(
       (chat_) {
         NotificationAudio.messageSend();
-        chat = chat_;
+        _privatechats ??= [];
+        _privatechats!.add(chat_);
       },
-      (err) => info = err,
+      (err) => null,
     );
-    if (info != null) {
-      return Right(info!);
-    }
-    _privatechats ??= [];
-    _privatechats!.add(chat);
-    return Left(chat);
+    return res;
   }
 
   _chatReceived(Map<String, dynamic> chatData) {
@@ -161,7 +166,10 @@ class ChatRepository {
         createdAt: DateTime.parse(chatData["created_at"]),
       );
       if (chat.groupsId != null && chat.groupsId.toString().isNotEmpty) {
-        if (chat.senderId == GlobalConfig.instance.user.id.toString()) return;
+        if (chat.senderId ==
+            AuthenticationProvider.instance.user.id.toString()) {
+          return;
+        }
         _groupchats ??= [];
         _groupchats!.add(chat);
         _groupChatControler.add(chat);

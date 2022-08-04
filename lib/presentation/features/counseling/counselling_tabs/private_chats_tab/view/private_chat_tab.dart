@@ -1,9 +1,9 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
@@ -108,7 +108,7 @@ class _ChatItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String recipientId =
-        GlobalConfig.instance.user.id.toString() == chat.recipient
+        AuthenticationProvider.instance.user.id.toString() == chat.recipient
             ? chat.senderId!
             : chat.recipient!;
     void _openChat() {

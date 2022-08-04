@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/presentation/features/profile/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/features/profile/view/widget/avatar.dart';
-import 'package:rada_egerton/resources/config.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({
@@ -30,7 +30,7 @@ class ProfileHeader extends StatelessWidget {
                 color: Colors.black38,
               ),
             ),
-            if (state.user?.id == GlobalConfig.instance.user.id)
+            if (state.user?.id == AuthenticationProvider.instance.user.id)
               Container(
                 width: double.infinity,
                 height: 200,
