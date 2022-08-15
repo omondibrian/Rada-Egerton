@@ -1,5 +1,15 @@
 import 'package:equatable/equatable.dart';
 
+class Role {
+  String name;
+  dynamic id;
+  Role(this.name, this.id);
+  factory Role.fromJson(json) => Role(
+        json["name"],
+        json["_id"],
+      );
+}
+
 class UserRole extends Equatable {
   List<String> roles;
   UserRole(this.roles);

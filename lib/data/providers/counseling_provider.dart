@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/counsellors_dto.dart';
 import 'package:rada_egerton/data/entities/peer_counsellor_dto.dart';
+import 'package:rada_egerton/data/rest/client.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
-
-import '../services/counseling_service.dart';
 
 /// Manages counsellors and peer counsellors
 class CounsellingProvider with ChangeNotifier {
@@ -48,7 +47,7 @@ class CounsellingProvider with ChangeNotifier {
   Future<InfoMessage?> initCounsellors() async {
     counsellorStatus = ServiceStatus.loading;
     notifyListeners();
-    final res = await CounselingService.fetchCounsellors();
+    final res = await Client.counselling.counselors();
     try {
       res.fold(
         (counsellors) => this.counsellors = counsellors,
@@ -67,7 +66,7 @@ class CounsellingProvider with ChangeNotifier {
   Future<InfoMessage?> initPeerCounsellors() async {
     peerStatus = ServiceStatus.loading;
     notifyListeners();
-    final res = await CounselingService.fetchPeerCounsellors();
+    final res = await Client.counselling.peerCounselors();
     try {
       res.fold(
         (counsellors) => peerCounsellors = counsellors,
@@ -84,7 +83,7 @@ class CounsellingProvider with ChangeNotifier {
   }
 
   Future<void> refreshPeerCounsellors() async {
-    final res = await CounselingService.fetchPeerCounsellors();
+    final res = await Client.counselling.peerCounselors();
     res.fold((counsellors) {
       peerStatus = ServiceStatus.loadingSuccess;
       peerCounsellors = counsellors;
@@ -93,7 +92,7 @@ class CounsellingProvider with ChangeNotifier {
   }
 
   Future<void> refreshCounsellors() async {
-    final res = await CounselingService.fetchCounsellors();
+    final res = await Client.counselling.counselors();
     res.fold((counsellors) {
       this.counsellors = counsellors;
       counsellorStatus = ServiceStatus.loadingSuccess;

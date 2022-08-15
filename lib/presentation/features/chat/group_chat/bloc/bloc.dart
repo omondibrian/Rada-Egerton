@@ -6,9 +6,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 part 'state.dart';
@@ -20,7 +20,7 @@ class GroupBloc extends Bloc<GroupChatEvent, GroupState> {
   late StreamSubscription<ChatPayload> _streamSubscription;
   final RadaApplicationProvider appProvider;
   final ScrollController controller = ScrollController();
-  final String userId = GlobalConfig.instance.user.id.toString();
+  final String userId = AuthenticationProvider.instance.user.id.toString();
 
   GroupBloc({
     required this.groupId,

@@ -31,7 +31,7 @@ void main() async {
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (_) => AuthenticationProvider(),
+            create: (_) => AuthenticationProvider.instance,
           ),
           ChangeNotifierProvider(
             create: (_) => CounsellingProvider(),

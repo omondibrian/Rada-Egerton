@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/entities/counsellors_dto.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/providers/counseling_provider.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
@@ -82,7 +83,7 @@ class _CounselloItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _openForum() {
-      if (counsellor.user.id == GlobalConfig.instance.user.id) {
+      if (counsellor.user.id == AuthenticationProvider.instance.user.id) {
         return;
       }
       context.pushNamed(

@@ -1,7 +1,10 @@
 import 'package:go_router/go_router.dart';
+import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/group_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/providers/counseling_provider.dart';
+import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/new_group_create.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
@@ -14,6 +17,7 @@ import 'package:rada_egerton/resources/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:rada_egerton/resources/utils/time_ago.dart';
 
 class GroupSessionsTab extends StatelessWidget {
   const GroupSessionsTab({Key? key}) : super(key: key);
@@ -21,7 +25,7 @@ class GroupSessionsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final appProvider = Provider.of<RadaApplicationProvider>(context);
     bool isCounsellor = context.watch<CounsellingProvider>().isCounsellor(
-          userId: GlobalConfig.instance.user.id,
+          userId: AuthenticationProvider.instance.user.id,
         );
 
     if (appProvider.groupStatus == ServiceStatus.initial) {
@@ -39,6 +43,8 @@ class GroupSessionsTab extends StatelessWidget {
 
     Widget conversationBuilder(BuildContext ctx, int index) {
       GroupDTO group = groups[index];
+      ChatPayload? lastChat =
+          context.read<ChatRepository>().lastGroupChat(group.id);
       return GestureDetector(
         onTap: () => {
           context.pushNamed(
@@ -68,11 +74,18 @@ class GroupSessionsTab extends StatelessWidget {
           ),
           title: Text(group.title),
           subtitle: Text(
-            "say something",
+            lastChat?.message ?? "say something",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: Theme.of(ctx).primaryColor,
               fontSize: SizeConfig.isTabletWidth ? 16 : 14,
             ),
+          ),
+          trailing: Text(
+            lastChat != null
+                ? TimeAgo.timeAgoSinceDate(lastChat.createdAt)
+                : "",
           ),
         ),
       );
@@ -138,7 +151,7 @@ class GroupSessionsTab extends StatelessWidget {
               );
             }
             return ListView.builder(
-              physics:const AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               itemBuilder: conversationBuilder,
               itemCount: groups.length,
             );

@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rada_egerton/data/entities/group_dto.dart';
-import 'package:rada_egerton/data/entities/user_roles.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/providers/counseling_provider.dart';
 import 'package:rada_egerton/presentation/features/chat/group_chat/bloc/bloc.dart';
 import 'package:rada_egerton/presentation/features/chat/group_chat/view/widgets/add_members.dart';
@@ -19,7 +19,7 @@ class GroupAppBar extends StatelessWidget {
     String groupId = context.read<GroupBloc>().groupId;
     GroupDTO group = context.read<RadaApplicationProvider>().getGroup(groupId);
     bool isCounsellor = context.watch<CounsellingProvider>().isCounsellor(
-          userId: GlobalConfig.instance.user.id,
+          userId: AuthenticationProvider.instance.user.id,
         );
 
     return AppBar(
@@ -29,7 +29,9 @@ class GroupAppBar extends StatelessWidget {
             child: ClipOval(
               child: CachedNetworkImage(
                 color: Colors.white,
-                imageUrl:group.image !=null? imageUrl(group.image!):GlobalConfig.usersAvi,
+                imageUrl: group.image != null
+                    ? imageUrl(group.image!)
+                    : GlobalConfig.usersAvi,
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(

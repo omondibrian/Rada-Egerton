@@ -253,14 +253,7 @@ class _RadaAppState extends State<RadaApp> {
       ],
     );
 
-    context.read<AuthenticationProvider>().addListener(
-      () {
-        GlobalConfig.instance.inialize(
-          authToken: context.read<AuthenticationProvider>().authToken,
-          user: context.read<AuthenticationProvider>().user,
-        );
-      },
-    );
+    
     return MaterialApp.router(
       routeInformationProvider: router.routeInformationProvider,
       routerDelegate: router.routerDelegate,

@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
+import 'package:rada_egerton/data/rest/client.dart';
 import 'package:rada_egerton/presentation/widgets/button.dart';
 import 'package:rada_egerton/presentation/widgets/input.dart';
-import 'package:rada_egerton/data/services/counseling_service.dart';
 import 'package:rada_egerton/resources/size_config.dart';
 
 class AddMembers extends StatefulWidget {
@@ -52,9 +52,8 @@ class _AddMembersState extends State<AddMembers> {
                       title: 'search',
                       handleClick: () async {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const   SnackBar( behavior: SnackBarBehavior.floating, 
-
-
+                          const SnackBar(
+                            behavior: SnackBarBehavior.floating,
                             duration: Duration(seconds: 10),
                             content: Text(
                               "Searching, please wait...",
@@ -64,8 +63,17 @@ class _AddMembersState extends State<AddMembers> {
                             ),
                           ),
                         );
-                        var result = await CounselingService.queryUserData(
+                        var result = await Client.users.queryUser(
                           queryStringController.text,
+                          retryLog: (message) =>
+                              ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                message,
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ),
                         );
                         result.fold(
                           (user) => setState(
@@ -74,9 +82,8 @@ class _AddMembersState extends State<AddMembers> {
                             },
                           ),
                           (err) => ScaffoldMessenger.of(context).showSnackBar(
-                            
-                              SnackBar( behavior: SnackBarBehavior.floating, 
-
+                            SnackBar(
+                              behavior: SnackBarBehavior.floating,
                               content: Text(
                                 err.message,
                                 style: TextStyle(color: Colors.red[700]),
@@ -121,8 +128,8 @@ class _AddMembersState extends State<AddMembers> {
                     child: const Text('Add'),
                     onPressed: () async {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const   SnackBar( behavior: SnackBarBehavior.floating, 
-
+                        const SnackBar(
+                          behavior: SnackBarBehavior.floating,
                           duration: Duration(seconds: 10),
                           content: Text(
                             "Adding user, please wait...",
@@ -132,7 +139,7 @@ class _AddMembersState extends State<AddMembers> {
                           ),
                         ),
                       );
-                      var result = await CounselingService.subToNewGroup(
+                      var result = await Client.counselling.subGroup(
                         user!.id.toString(),
                         widget.groupId,
                       );
@@ -140,8 +147,8 @@ class _AddMembersState extends State<AddMembers> {
                       result.fold(
                         (_) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar( behavior: SnackBarBehavior.floating, 
-
+                            SnackBar(
+                              behavior: SnackBarBehavior.floating,
                               content: Text(
                                 "User ${user!.email}, has been added to the group",
                                 style: const TextStyle(
@@ -153,8 +160,8 @@ class _AddMembersState extends State<AddMembers> {
                           context.pop();
                         },
                         (err) => ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar( behavior: SnackBarBehavior.floating, 
-
+                          SnackBar(
+                            behavior: SnackBarBehavior.floating,
                             content: Text(
                               err.message,
                               style: TextStyle(color: Colors.red[700]),

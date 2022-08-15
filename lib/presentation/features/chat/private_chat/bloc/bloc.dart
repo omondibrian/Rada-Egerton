@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 part 'state.dart';
@@ -115,7 +115,7 @@ class PrivateChatBloc extends Bloc<PrivateChatEvent, PrivateChatState> {
     final res = await chatRepo.sendPrivateChat(
       message: event.message,
       recipientId: recepientId,
-      senderId: GlobalConfig.instance.user.id.toString(),
+      senderId: AuthenticationProvider.instance.user.id.toString(),
       picture: event.picture,
       reply: state.selectedChat?.id.toString(),
       video: event.video,

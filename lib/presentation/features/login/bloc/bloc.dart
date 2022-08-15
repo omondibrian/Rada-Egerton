@@ -4,7 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
 import 'package:rada_egerton/data/providers/authentication_provider.dart';
-import 'package:rada_egerton/data/services/auth_service.dart';
+import 'package:rada_egerton/data/rest/client.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
@@ -47,13 +47,23 @@ class LoginCubit extends Cubit<LoginState> {
           ),
         ),
       );
-      final res = await AuthService.logInUser(
+
+      final res = await Client.users.login(
         state.email,
         state.password,
+        (String error) => emit(
+          state.copyWith(
+            status: ServiceStatus.submissionSucess,
+            message: InfoMessage(
+              error,
+              MessageType.error,
+            ),
+          ),
+        ),
       );
 
       res.fold(
-        (data) {
+        (data) async{
           emit(
             state.copyWith(
               status: ServiceStatus.submissionSucess,
@@ -63,22 +73,23 @@ class LoginCubit extends Cubit<LoginState> {
               ),
             ),
           );
+         await storeLoginData(data);
           authenticationProvider.loginUser(
             user: data.user,
             authToken: data.authToken,
           );
           applicationProvider.init();
-          
+
           //Register user device token for firebase messaging
           messaging.getToken().then(
             (value) {
               if (value != null) {
-                AuthService.registerDeviceToken(value).then(
-                  (res) => res.fold(
-                    (l) => print(l),
-                    (r) => print(r),
-                  ),
-                );
+                Client.users.storeDeviceToken(value).then(
+                      (res) => res.fold(
+                        (l) => print(l),
+                        (r) => print(r),
+                      ),
+                    );
               }
             },
           );

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rada_egerton/data/entities/chat_dto.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/data/providers/application_provider.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/repository/chat_repository.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
@@ -15,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:rada_egerton/resources/size_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
+import 'package:rada_egerton/resources/utils/time_ago.dart';
 
 class PrivateSessionsTab extends StatelessWidget {
   const PrivateSessionsTab({Key? key}) : super(key: key);
@@ -106,7 +108,7 @@ class _ChatItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String recipientId =
-        GlobalConfig.instance.user.id.toString() == chat.recipient
+        AuthenticationProvider.instance.user.id.toString() == chat.recipient
             ? chat.senderId!
             : chat.recipient!;
     void _openChat() {
@@ -118,6 +120,8 @@ class _ChatItem extends StatelessWidget {
       );
     }
 
+    ChatPayload? lastChat =
+        context.read<ChatRepository>().lastPrivateChat(recipientId);
     Future<User?> initProfile() async {
       User? user;
       await context
@@ -170,11 +174,18 @@ class _ChatItem extends StatelessWidget {
               ),
               title: Text(user?.name ?? "Loading..."),
               subtitle: Text(
-                "say something",
+                lastChat?.message ?? "say something",
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: SizeConfig.isTabletWidth ? 16 : 14,
                 ),
+              ),
+              trailing: Text(
+                lastChat != null
+                    ? TimeAgo.timeAgoSinceDate(lastChat.createdAt)
+                    : "",
               ),
             );
           }),

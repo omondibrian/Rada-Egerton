@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/auth_dto.dart';
-import 'package:rada_egerton/data/services/auth_service.dart';
+import 'package:rada_egerton/data/rest/client.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
@@ -39,7 +39,7 @@ class RegisterCubit extends Cubit<RegisterState> {
           MessageType.success,
         ),
       ));
-      final res = await AuthService.registerNewUser(
+      final res = await Client.users.register(
         AuthDTO(
           email: state.email,
           password: state.password,

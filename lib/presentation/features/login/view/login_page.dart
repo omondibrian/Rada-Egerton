@@ -73,6 +73,7 @@ class _LoginForm extends StatelessWidget {
                 state.message!.message,
                 style: TextStyle(color: state.message!.messageTypeColor),
               ),
+              duration:const Duration(milliseconds: 10000),
             ),
           );
         }

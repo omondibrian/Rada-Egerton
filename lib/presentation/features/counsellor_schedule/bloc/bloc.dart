@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rada_egerton/data/entities/counsellors_dto.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/providers/counseling_provider.dart';
-import 'package:rada_egerton/data/services/counseling_service.dart';
+import 'package:rada_egerton/data/rest/client.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 part 'state.dart';
@@ -17,11 +17,11 @@ class CounsellorScheduleCubit extends Cubit<ScheduleState> {
     this.userId,
     required this.provider,
   }) : super(const ScheduleState()) {
-    userId ??= GlobalConfig.instance.user.id;
+    userId ??= AuthenticationProvider.instance.user.id;
     final councellor = provider.getCounsellor(userId: userId!);
     emit(
       state.copyWith(
-        canEdit: userId == GlobalConfig.instance.user.id,
+        canEdit: userId == AuthenticationProvider.instance.user.id,
         counsellor: councellor,
         status: ServiceStatus.loadingSuccess,
       ),
@@ -42,7 +42,7 @@ class CounsellorScheduleCubit extends Cubit<ScheduleState> {
   }
 
   _updateSchedule(List<Schedule> schedules) async {
-    final res = await CounselingService.updateSchedule(
+    final res = await Client.counselling.updateSchedule(
       schedules,
       retryLog: (_) => emit(
         state.copyWith(

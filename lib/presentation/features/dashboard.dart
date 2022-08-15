@@ -34,8 +34,8 @@ class Dashboard extends StatelessWidget {
                   left: 10, top: 2.0, right: 2.0, bottom: 2.0),
           leading: SvgPicture.asset(
             dashboardItems[index]['leadingIcon'],
-            width:  60,
-            height:  40,
+            width: 60,
+            height: 40,
           ),
           title: Text(
             dashboardItems[index]['title'],
@@ -61,7 +61,7 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isCounsellor = context.watch<CounsellingProvider>().isCounsellor(
-          userId: GlobalConfig.instance.user.id,
+          userId: AuthenticationProvider.instance.user.id,
         );
     return Scaffold(
       appBar: AppBar(
@@ -74,7 +74,7 @@ class Dashboard extends StatelessWidget {
                 context.read<AuthenticationProvider>().logout();
               } else if (selectedValue == FilterOptions.schedule) {
                 context.pushNamed(AppRoutes.schedule, params: {
-                  "userId": GlobalConfig.instance.user.id.toString()
+                  "userId": AuthenticationProvider.instance.user.id.toString()
                 });
               } else {
                 context.pushNamed(AppRoutes.contributors);

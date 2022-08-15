@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
 import 'package:rada_egerton/data/providers/counseling_provider.dart';
 import 'package:rada_egerton/data/status.dart';
 import 'package:rada_egerton/presentation/features/chat/private_chat/bloc/bloc.dart';
@@ -43,7 +44,7 @@ class PrivateChatAppBar extends StatelessWidget {
       builder: (context, state) {
         bool currentIsCounsellor =
             context.read<CounsellingProvider>().isCounsellor(
-                  userId: GlobalConfig.instance.user.id,
+                  userId: AuthenticationProvider.instance.user.id,
                 );
         bool recepientIsCounsellor = context
             .read<CounsellingProvider>()

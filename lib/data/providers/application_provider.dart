@@ -1,11 +1,13 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/user_dto.dart';
 import 'package:rada_egerton/data/entities/group_dto.dart';
-import 'package:rada_egerton/data/services/counseling_service.dart';
+import 'package:rada_egerton/data/providers/authentication_provider.dart';
+import 'package:rada_egerton/data/rest/client.dart';
 import 'package:rada_egerton/data/status.dart';
-import 'package:rada_egerton/resources/config.dart';
 import 'package:rada_egerton/resources/utils/main.dart';
 
 /// Manage state for  Forums, Groups, Users
@@ -36,7 +38,7 @@ class RadaApplicationProvider with ChangeNotifier {
   }
 
 //This method is called on spash screen when the app starts
-  init() async{
+  init() async {
     await initAllForums();
     await initGroups();
   }
@@ -44,7 +46,7 @@ class RadaApplicationProvider with ChangeNotifier {
   Future<void> initAllForums() async {
     allForumsStatus = ServiceStatus.loading;
     notifyListeners();
-    final res = await CounselingService.userForums();
+    final res = await Client.counselling.forumns();
     res.fold(
       (forums) {
         allForums = forums;
@@ -60,7 +62,7 @@ class RadaApplicationProvider with ChangeNotifier {
   }
 
   Future<void> refreshForums() async {
-    final res = await CounselingService.userForums();
+    final res = await Client.counselling.forumns();
     res.fold((forums) {
       allForums = forums;
       allForumsStatus = ServiceStatus.loadingSuccess;
@@ -72,7 +74,7 @@ class RadaApplicationProvider with ChangeNotifier {
   Future<void> initGroups() async {
     groupStatus = ServiceStatus.loading;
     notifyListeners();
-    final res = await CounselingService.fetchGroups();
+    final res = await Client.counselling.userGroups();
     res.fold(
       (groups) {
         this.groups = groups;
@@ -87,7 +89,7 @@ class RadaApplicationProvider with ChangeNotifier {
   }
 
   Future<void> refreshGroups() async {
-    final res = await CounselingService.fetchGroups();
+    final res = await Client.counselling.userGroups();
     res.fold((groups) {
       this.groups = groups;
       groupStatus = ServiceStatus.loadingSuccess;
@@ -99,10 +101,17 @@ class RadaApplicationProvider with ChangeNotifier {
       String name, String desc, File? imageFile, bool isForumn,
       {Function(String)? retryLog}) async {
     late InfoMessage info;
-    final result = await CounselingService.createGroup(
-      name,
-      desc,
-      imageFile,
+    String imageFileName = imageFile!.path.split('/').last;
+    FormData formData = FormData.fromMap(
+      {
+        "image": await MultipartFile.fromFile(imageFile.path,
+            filename: imageFileName),
+        "title": name,
+        "description": desc,
+      },
+    );
+    final result = await Client.counselling.createGroup(
+      formData,
       isForumn,
       retryLog: retryLog,
     );
@@ -134,7 +143,7 @@ class RadaApplicationProvider with ChangeNotifier {
     }
     try {
       late User user;
-      final res = await CounselingService.getUser(
+      final res = await Client.users.getUser(
         userId,
         retryLog: retryLog,
       );
@@ -156,8 +165,8 @@ class RadaApplicationProvider with ChangeNotifier {
   Future<InfoMessage> joinForum(String forumId,
       {Function(String)? retryLog}) async {
     late InfoMessage message;
-    final res = await CounselingService.subToNewGroup(
-        GlobalConfig.instance.user.id.toString(), forumId,
+    final res = await Client.counselling.subGroup(
+        AuthenticationProvider.instance.user.id.toString(), forumId,
         retryLog: retryLog);
     res.fold(
       (forum) {
@@ -175,40 +184,43 @@ class RadaApplicationProvider with ChangeNotifier {
 
   Future<Either<InfoMessage, ErrorMessage>> leaveGroup(String groupId,
       {Function(String)? retryLog}) async {
-    try {
-      final result =
-          await CounselingService.exitGroup(groupId, retryLog: retryLog);
-      result.fold(
-        (group) {
-          groups.remove(group);
-          notifyListeners();
-        },
-        (error) => throw (error),
-      );
-      return Left(
-        InfoMessage("You have left the group", MessageType.success),
-      );
-    } on ErrorMessage catch (e) {
-      return Right(e);
-    }
+    final response = Completer<Either<InfoMessage, ErrorMessage>>();
+    final result =
+        await Client.counselling.exitGroup(groupId, retryLog: retryLog);
+    result.fold(
+      (group) {
+        groups.remove(group);
+        notifyListeners();
+        response.complete(Left(
+          InfoMessage("You have left the group", MessageType.success),
+        ));
+      },
+      (error) => response.complete(
+        Right(error),
+      ),
+    );
+    return response.future;
   }
 
   Future<Either<InfoMessage, ErrorMessage>> deleteGroup(String groupId) async {
-    try {
-      final result = await CounselingService.deleteGroup(groupId);
-      result.fold(
-        (group) {
-          groups.remove(group);
-          allForums.remove(group);
-          notifyListeners();
-        },
-        (error) => throw (error),
-      );
-      return Left(
-        InfoMessage("You have left the group", MessageType.success),
-      );
-    } on ErrorMessage catch (e) {
-      return Right(e);
-    }
+    final response = Completer<Either<InfoMessage, ErrorMessage>>();
+
+    final result = await Client.counselling.deleteGroup(groupId);
+    result.fold(
+      (group) {
+        groups.remove(group);
+        allForums.remove(group);
+        notifyListeners();
+        response.complete(
+          Left(
+            InfoMessage("You have left the group", MessageType.success),
+          ),
+        );
+      },
+      (error) => response.complete(
+        Right(error),
+      ),
+    );
+    return response.future;
   }
 }

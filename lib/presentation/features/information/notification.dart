@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:rada_egerton/data/entities/news_dto.dart';
+import 'package:rada_egerton/data/rest/client.dart';
 import 'package:rada_egerton/data/services/news_location_service.dart';
 import 'package:rada_egerton/presentation/features/counseling/counselling_tabs/peer_counselors_tab.dart';
 import 'package:rada_egerton/presentation/loading_effect/shimmer.dart';
@@ -15,9 +16,8 @@ class UserNotification extends StatefulWidget {
 
 class _UserNotificationState extends State<UserNotification> {
   List<News>? _news;
-  NewsAndLocationServiceProvider service = NewsAndLocationServiceProvider();
   Future<void> init() async {
-    final result = await service.fetchNews();
+    final result = await Client.content.news();
     result.fold(
       (l) => setState(() {
         _news = l;
